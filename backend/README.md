@@ -11,15 +11,21 @@ RestAPI for our Code Coach app.
 
 1. **Clone the repository**
 
-```git clone <repository_url>```
+    ```bash 
+    git clone <repository_url>
+    ```
 
 2. **Navigate to folder**
 
-```cd <repository_folder/backend>```
+    ```bash
+        cd <repository_folder/backend>
+    ```
 
 3. **Install dependencies**
 
-```npm install```
+    ```bash 
+        npm install
+    ```
 
 4. **Set up environment variables**
 
@@ -32,7 +38,9 @@ RestAPI for our Code Coach app.
 
 5. **Start the server**
 
-```npm run dev```
+    ```bash 
+    npm run dev
+    ```
 
 6. **Access the server**
 
