@@ -18,13 +18,13 @@ RestAPI for our Code Coach app.
 2. **Navigate to folder**
 
     ```bash
-        cd <repository_folder/backend>
+    cd <repository_folder/backend>
     ```
 
 3. **Install dependencies**
 
     ```bash 
-        npm install
+    npm install
     ```
 
 4. **Set up environment variables**
@@ -44,4 +44,4 @@ RestAPI for our Code Coach app.
 
 6. **Access the server**
 
-Open your browser and navigate to `http://localhost:3500`
+    Open your browser and navigate to `http://localhost:3500`
