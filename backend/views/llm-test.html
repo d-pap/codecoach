@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AI Question Prompt</title>
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+    <body>
+        <div class="form-container">
+            <input
+                type="text"
+                id="question"
+                placeholder="Ask your question..."
+            />
+            <button id="askButton">Ask AI</button>
+        </div>
+
+        <div id="response">AI response will appear here...</div>
+
+        <script>
+            document
+                .getElementById("askButton")
+                .addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const question = document.getElementById("question").value;
+                    fetch("/llm-test", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({question}),
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            document.getElementById("response").textContent =
+                                data.answer;
+                        })
+                        .catch((error) => {
+                            console.error("Error:", error);
+                        });
+                });
+        </script>
+    </body>
+</html>
