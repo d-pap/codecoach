@@ -12,7 +12,8 @@ const chatBot = async (message) => {
             model: "mistral",
             messages: [{role: "user", content: message}],
         });
-        console.log(response.message.content);
+
+        return response.message.content;
     } catch (err) {
         console.log(err);
         return {error: "Failed to get response from model"};

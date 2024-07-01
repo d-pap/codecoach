@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AI Question Prompt</title>
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+    <body>
+        <div class="form-container">
+            <input
+                type="text"
+                id="question"
+                placeholder="Ask your question..."
+            />
+            <button id="askButton">ASK AI</button>
+        </div>
+
+        <div id="response">AI response will appear here...</div>
+
+        <script>
+            document
+                .getElementById("askButton")
+                .addEventListener("click", async function (event) {
+                    event.preventDefault();
+                    const question = document.getElementById("question").value;
+                    try {
+                        const response = await fetch("/llm-test", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({question}),
+                        });
+                        // get the text and display it
+                        const responseData = await response.text();
+                        document.getElementById("response").innerText =
+                            "AI SAYS: " + responseData.toString();
+                    } catch (error) {
+                        console.error("Error:", error);
+                    }
+                });
+            window.addEventListener("load", async function (event) {
+                event.preventDefault();
+                const question =
+                    "Please provide a greeting to our codecoach application and instruct the to input a text in the input filed above and to click the ASK AI button afterwords. Make your responce about two sentances long and be very nice. (add a smilly face)";
+                try {
+                    const response = await fetch("/llm-test", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({question}),
+                    });
+                    // get the text and display it
+                    const responseData = await response.text();
+                    document.getElementById("response").innerText =
+                        "AI SAYS: " + responseData.toString();
+                } catch (error) {
+                    console.error("Error:", error);
+                }
+            });
+        </script>
+    </body>
+</html>
