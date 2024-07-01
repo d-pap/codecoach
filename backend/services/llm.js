@@ -1,28 +1,22 @@
 /* Put `llm.js` file here instead of in middleware folder */
 
-const ollama = require("ollama")
+let ollama;
 
-let modelResponse = ""
-
-const chatConfig = {
-  model: "mistral",
-  role: "user",
-  content: "Default message",
-}
+(async () => {
+    ollama = (await import("ollama")).default;
+})();
 
 const chatBot = async (message) => {
-  try {
-    chatConfig.content = message
-    modelResponse = await ollama.chat({
-      model: chatConfig.model,
-      role: chatConfig.role,
-      content: chatConfig.content,
-    })
-    return modelResponse
-  } catch (err) {
-    console.log(err)
-    return { error: "Failed to get response from model" }
-  }
-}
+    try {
+        const response = await ollama.chat({
+            model: "mistral",
+            messages: [{role: "user", content: message}],
+        });
+        console.log(response.message.content);
+    } catch (err) {
+        console.log(err);
+        return {error: "Failed to get response from model"};
+    }
+};
 
-module.exports = { chatBot }
+module.exports = {chatBot};
