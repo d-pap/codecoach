@@ -35,14 +35,16 @@ app.use(express.json()) // add ability to process JSON
 
 app.use(cookieParser())
 
+/* ROUTING: */
+// serve static files from public directory
 app.use("/", express.static(path.join(__dirname, "public")))
-
-// ROUTING:
-app.use("/", require("./routes/root")) // this is the ROUTING to our root file, which is how we display the index page when we go to localhost3500
-app.use("/users", require("./routes/userRoutes")) // create the route for /users
-// app.use("/notes", require("./routes/noteRoutes")) // create the route for /notes
-app.use("/problems", require("./routes/problemRoutes")) // create the route for /problems
-// app.use("/submissions", require("./routes/submissionRoutes"))
+app.use("/", require("./routes/root")) // this is the routing to our root file, which displays the index page when we go to localhost3500
+// API ROUTING:
+app.use("/api/users", require("./routes/userRoutes")) // for user routes
+app.use("/api/problems", require("./routes/problemRoutes")) // for problems routes
+// app.use("/api/submissions", require("./routes/submissionRoutes")) // for submissions routes (not made yet)
+// app.use("/api/auth", require("./routes/authRoutes")) // for auth routes (not made yet)
+// app.use("/api/discussions", require("./routes/discussionRoutes")) // for discussion routes (not made yet)
 
 app.all("*", (req, res) => {
   res.status(404)
