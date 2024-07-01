@@ -7,7 +7,7 @@
     <meta name="keywords" content="ACM, coding, coaching, career preparation">
     <meta name="author" content="Your Name">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Article</title>
+    <title>AI Question Prompt</title>
     <style>
         /* CSS styles here */
     </style>
@@ -20,17 +20,51 @@
         <!-- menu navigation -->
         <nav class="menu">
             <a href="Home.html">Home</a>
-            <a href="LLMask.html">LLM Ask</a>
+            <a href="LLMask.html">Question Prompt</a>
             <a href="Modules.html">Modules</a>
-            <a href="Community.html">Community</a>
+            <a href="Forum.html">Forum</a>
             <a href="About Us.html">About Us</a>
         </nav>
     </header>
     <main>
-        <h2 class="page">Article for some information</h2>
-        <div id="reading">
-            <!-- Articles content here -->
-        </div>
+        <h2 class="page">AI Question Prompt</h2>
+        <article>
+            <div class="form-container">
+                <input
+                    type="text"
+                    id="question"
+                    placeholder="Ask your question..."
+                />
+                <button id="askButton">Ask AI</button>
+            </div>
+    
+            <div id="response">AI response will appear here...</div>
+        </article>
+
+        <script>
+            document
+                .getElementById("askButton")
+                .addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const question =
+                        document.getElementById("question").textContent;
+                    fetch("/llm-test", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: question,
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            document.getElementById("response").textContent =
+                                data.answer;
+                        })
+                        .catch((error) => {
+                            console.error("Error:", error);
+                        });
+                });
+        </script>
         
     </main>
     <footer>
