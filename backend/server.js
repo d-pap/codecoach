@@ -43,6 +43,7 @@ app.use("/", require("./routes/root")) // this is the routing to our root file, 
 // app.use("/api/auth", require("./routes/authRoutes")) // for auth routes (not made yet)
 app.use("/api/users", require("./routes/userRoutes")) // for user routes
 app.use("/api/problems", require("./routes/problemRoutes")) // for problems routes
+app.use("/api/llm", require("./routes/llmRoutes")) // for LLM integration (not done yet)
 // app.use("/api/submissions", require("./routes/submissionRoutes")) // for submissions routes (not made yet)
 // app.use("/api/discussions", require("./routes/discussionRoutes")) // for discussion routes (not made yet)
 
