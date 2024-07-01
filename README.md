@@ -6,7 +6,7 @@
 ---
 
 ## ⭐ Overview
-Our project aims to create an engaging platform designed to help students prepare for competitive programming contests and technical job interviews. The platform will offer the following features:
+Our project aims to create an engaging platform designed for the UM-Dearborn ACM student chapter as part of our senior design project to help members prepare for competitive programming contests and technical job interviews. The platform will offer the following features:
 
 - A responsive web interface for users to interact with the platform
 - A database of ACM ICPC problems and similar competitive programming challenges
