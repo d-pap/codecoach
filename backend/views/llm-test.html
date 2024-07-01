@@ -33,9 +33,9 @@
                             body: JSON.stringify({question}),
                         });
                         // get the text and display it
-                        const responseData = await response.text();
+                        const responseData = await response.json();
                         document.getElementById("response").innerText =
-                            "AI SAYS: " + responseData.toString();
+                            "AI SAYS: " + responseData.answer.toString();
                     } catch (error) {
                         console.error("Error:", error);
                     }
@@ -53,9 +53,9 @@
                         body: JSON.stringify({question}),
                     });
                     // get the text and display it
-                    const responseData = await response.text();
+                    const responseData = await response.json();
                     document.getElementById("response").innerText =
-                        "AI SAYS: " + responseData.toString();
+                        "AI SAYS: " + responseData.answer.toString();
                 } catch (error) {
                     console.error("Error:", error);
                 }
