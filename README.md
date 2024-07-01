@@ -1,13 +1,12 @@
-# Code Coach
-
-This project aims to develop an AI-powered platform that assists ACM student members in mastering 
-the skills to solve intricate ICPC problems. The platform will utilize a large language model to 
-assess and provide feedback on answers submitted by students.
+<h1 align="center"> Code Coach </h1>
+<h3 align="center"> Team: Derek Papierski, Marfn Mlakha, Yen Duong </h3>
+  
+<h3 align="center">  Project Advisor: Dr. Probir Roy </h3>
 
 ---
 
 ## ⭐ Overview
-Our project aims to create an engaging platform designed to help students prepare for competitive programming contests and technical job interviews. The platform will offer the following features:
+Our project aims to create an engaging platform designed for the UM-Dearborn ACM student chapter as part of our senior design project to help members prepare for competitive programming contests and technical job interviews. The platform will offer the following features:
 
 - A responsive web interface for users to interact with the platform
 - A database of ACM ICPC problems and similar competitive programming challenges
