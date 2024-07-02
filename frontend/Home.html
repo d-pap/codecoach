@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="ACM Coaching and Career Preparation Platform home page">
+    <meta name="keywords" content="Home page, ACM, coaching, career preparation, platform">
+    <meta name="author" content="Your Name">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        /* 600px max */
+        @media screen and (max-width: 768px) {}
+
+        /* 600px min */
+        @media only screen and (min-width: 768px) {
+            article {
+                width: 90%;
+                text-align: center;
+            }
+
+        }
+
+        @media only screen and (min-width: 1280px) {
+            article {
+                width: 80%;
+                column-count: 2;
+                column-rule: 2px solid rgba(97, 54, 2, 0.548);
+                column-width: auto;
+                padding-left: 10%;
+            }
+
+        }
+
+        main {
+            padding-right: 10%;
+        }
+
+        .animation {
+            width: 200px;
+            height: 200px;
+            background: url("Assets/acm_logo.jpg");
+            animation-name: ex1;
+            position: relative;
+            margin-left: 35%;
+            animation-duration: 5s;
+            animation-iteration-count: 2;
+
+        }
+
+        @keyframes ex1 {
+            0% {
+                transform: rotate(-360deg);
+            }
+
+            25% {
+                transform: scale(2);
+            }
+
+            50% {
+                transform: skew(30deg, -50deg);
+
+            }
+
+            75% {
+                transform: rotate(360deg);
+            }
+
+        }
+
+        article {
+            text-align: center;
+
+        }
+
+        #rollover {
+            display: flex;
+            justify-content: center;
+        }
+
+        .gallery {
+            background-image: url("Assets/feature_image.jpg");
+            width: 300px;
+            height: 200px;
+            background-repeat: no-repeat;
+        }
+
+        .gallery:hover {
+            background-image: url("assets/feature_image_hover.jpg");
+            width: 300px;
+            height: 200px;
+            background-repeat: no-repeat;
+        }
+
+        .rollover {
+            background-image: url("Assets/module_image.jpg");
+            width: 302px;
+            height: 200px;
+            background-repeat: no-repeat;
+            padding-bottom: 100px;
+        }
+
+        .rollover:hover {
+            background-image: url("assets/module_image_hover.jpg");
+            width: 300px;
+            height: 200px;
+            background-repeat: no-repeat;
+            padding-bottom: 100px;
+        }
+
+        figcaption {
+            font-size: large;
+            font-weight: bolder;
+            color: sienna;
+        }
+    </style>
+</head>
+<link rel="stylesheet" href="setting.css" type="text/css">
+
+<body>
+    <header>
+        <h1 id="name">U-M Code Coach</h1>
+        <!-- menu navigation -->
+        <nav class="menu">
+            <a href="Home.html">Home</a>
+            <a href="LLMask.html">Features</a>
+            <a href="Modules.html">Modules</a>
+            <a href="Community.html">Community</a>
+            <a href="AboutUs.html">About Us</a>
+        </nav>
+    </header>
+    <main>
+        <h2 class="page">Welcome to the ACM Coaching and Career Preparation Platform</h2>
+        <div class="animation"></div>
+        <article>
+            <figure>
+                <figcaption>Explore Our Features</figcaption>
+                <div id="rollover">
+                    <a class="gallery" href="Features.html"></a>
+                </div>
+            </figure>
+            <p>&emsp
