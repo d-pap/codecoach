@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="description" content="U-M Code Coach Article Page" />
-    <meta name="keywords" content="ACM, coding, coaching, career preparation" />
-    <meta name="author" content="Your Name" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Question Prompt</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
+    <!-- site metas -->
+    <title>Home</title>
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <meta name="author" content="" />
@@ -40,7 +42,6 @@
       media="screen"
     />
   </head>
-
   <body>
     <!--header section start -->
     <div class="header_section">
@@ -90,52 +91,27 @@
           </div>
         </nav>
       </div>
-    </div>
-
-    <main>
-      <!-- ask AI section start -->
-      <article>
-        <h2 class="page">AI Question Prompt</h2>
-        <div class="form-container">
-          <!-- <input type="text" id="question" placeholder="Ask your question..." />
-          <button id="askButton">Ask AI</button> -->
-          <div class="button_main">
-            <button class="all_text">Ask AI</button
-            ><input
-              type="text"
-              class="Enter_text"
-              placeholder="Enter keywords"
-              name=""
-            /><button class="search_text">Search</button>
-          </div>
+      <!-- header ended -->
+      <!-- body section start  -->
+      <div class="newsletter_section layout_padding">
+        <div class="container">
+           <!-- <h6 class="conect_text">Connect to caraft</h6> -->
+           <h1 class="newsletter_taital">Log in</h1>
+           <!-- <p class="newsletter_text">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration </p> -->
+           <div class="input-group mb-3">
+            <!-- <input type="text" class="form-control" placeholder="Enter your email" aria-label="Enter your email" aria-describedby="basic-addon2"> -->
+            <input type="text" class="form-control" placeholder="Enter your email" aria-label="Enter your email">
+            <input type="text" class="form-control" placeholder="Enter password" aria-label="Enter password" >
+                
+            <div class="input-group-append">
+                 <span class="input-group-text" id="basic-addon2">submit</span>
+              </div>
+           </div>
         </div>
-        <div id="response">AI response will appear here...</div>
-      </article>
-      <!-- ask AI section end -->
+     </div>
+     <!-- body section end  -->
 
-      <script>
-        document
-          .getElementById("askButton")
-          .addEventListener("click", function (event) {
-            event.preventDefault();
-            const question = document.getElementById("question").textContent;
-            fetch("/llm-test", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: question,
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                document.getElementById("response").textContent = data.answer;
-              })
-              .catch((error) => {
-                console.error("Error:", error);
-              });
-          });
-      </script>
-    </main>
+    
 
     <!-- footer section start -->
     <div class="footer_section layout_padding">
@@ -186,9 +162,9 @@
           </div>
         </div>
         <!-- <div class="copyright_section">
-              <h1 class="copyright_text">
-              Copyright 2020 All Right Reserved <a href="https://html.design"> Free Html Templates</a>
-           </div> -->
+               <h1 class="copyright_text">
+               Copyright 2020 All Right Reserved <a href="https://html.design"> Free Html Templates</a>
+            </div> -->
       </div>
     </div>
     <!-- footer section end -->
