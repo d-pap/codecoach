@@ -1,7 +1,7 @@
 // pages/events.js
 
 import React from "react"
-
+// import './css/style.css';  
 // const Events = () => {
 //   return (
 //     <div
