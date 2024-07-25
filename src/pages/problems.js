@@ -40,41 +40,7 @@ const problems = [
 const App = () => {
   return (
     <div>
-      <header className="header_section">
-        <div className="container">
-          <nav className="navbar navbar-dark bg-dark">
-            <a className="logo" href="home.html">
-              <img src="images/CodeCoachLogo.png" alt="Logo" />
-            </a>
-            <div className="search_section">
-              <ul>
-                <li><a href="#">Log In</a></li>
-                <li><a href="#"><img src="images/search-icon.png" alt="Search" /></a></li>
-              </ul>
-            </div>
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarsExample01"
-              aria-controls="navbarsExample01"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarsExample01">
-              <ul className="navbar-nav mr-auto">
-                <li className="nav-item active"><a className="nav-link" href="Home.html">Home</a></li>
-                <li className="nav-item"><a className="nav-link" href="LLMask.html">Question Prompt</a></li>
-                <li className="nav-item"><a className="nav-link" href="Modules.html">Modules</a></li>
-                <li className="nav-item"><a className="nav-link" href="Forum.html">Forum</a></li>
-                <li className="nav-item"><a className="nav-link" href="AboutUs.html">About Us</a></li>
-              </ul>
-            </div>
-          </nav>
-        </div>
-      </header>
+      
 
       <main className="newsletter_section layout_padding">
         <div className="container">
@@ -108,42 +74,7 @@ const App = () => {
         </div>
       </main>
 
-      <footer className="footer_section layout_padding">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-6 col-sm-12">
-              <h4 className="information_text">Category</h4>
-              <p className="dummy_text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-              </p>
-            </div>
-            <div className="col-lg-3 col-sm-6">
-              <div className="information_main">
-                <h4 className="information_text">Useful Links</h4>
-                <p className="many_text">
-                  Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                </p>
-              </div>
-            </div>
-            <div className="col-lg-3 col-sm-6">
-              <div className="information_main">
-                <h4 className="information_text">Contact Us</h4>
-                <p className="call_text"><a href="#">+01 1234567890</a></p>
-                <p className="call_text"><a href="#">+01 9876543210</a></p>
-                <p className="call_text"><a href="#">demo@gmail.com</a></p>
-                <div className="social_icon">
-                  <ul>
-                    <li><a href="#"><img src="images/fb-icon.png" alt="Facebook" /></a></li>
-                    <li><a href="#"><img src="images/twitter-icon.png" alt="Twitter" /></a></li>
-                    <li><a href="#"><img src="images/linkedin-icon.png" alt="LinkedIn" /></a></li>
-                    <li><a href="#"><img src="images/instagram-icon.png" alt="Instagram" /></a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      
     </div>
   );
 };

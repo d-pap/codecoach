@@ -2,7 +2,8 @@ import { FaBars } from "react-icons/fa"
 import { NavLink as Link } from "react-router-dom"
 import styled from "styled-components"
 
-export const Nav = styled.nav`
+export const Nav = styled.nav
+`
   background: #63d471;
   height: 85px;
   display: flex;
