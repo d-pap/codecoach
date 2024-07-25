@@ -1,20 +1,89 @@
-// pages/events.js
+// // src/pages/problems.js
+// import React, { useEffect, useState } from "react"
+// import { fetchProblems } from "../api"
 
-import React from "react"
+// const Problems = () => {
+//   const [problems, setProblems] = useState([])
 
-const Events = () => {
+//   useEffect(() => {
+//     const getProblems = async () => {
+//       try {
+//         const problemsData = await fetchProblems()
+//         setProblems(problemsData)
+//       } catch (error) {
+//         console.error("Failed to fetch problems:", error)
+//       }
+//     }
+
+//     getProblems()
+//   }, [])
+
+//   return (
+//     <div>
+//       <h1>Problems</h1>
+//       {problems.length ? (
+//         <ul>
+//           {problems.map((problem) => (
+//             <li key={problem._id}>
+//               <h2>{problem.title}</h2>
+//               <p>{problem.description}</p>
+//             </li>
+//           ))}
+//         </ul>
+//       ) : (
+//         <p>No problems found</p>
+//       )}
+//     </div>
+//   )
+// }
+
+// export default Problems
+
+import React, { useEffect, useState } from "react"
+import { fetchProblems } from "../api"
+
+const Problems = () => {
+  const [problems, setProblems] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const getProblems = async () => {
+      try {
+        setIsLoading(true)
+        const problemsData = await fetchProblems()
+        setProblems(problemsData)
+      } catch (error) {
+        console.error("Failed to fetch problems:", error)
+        setError("Failed to fetch problems. Please try again later.")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    getProblems()
+  }, [])
+
+  if (isLoading) return <p>Loading problems...</p>
+  if (error) return <p>{error}</p>
+
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "centre",
-        alignItems: "centre",
-        height: "100vh",
-      }}
-    >
+    <div>
       <h1>Problems</h1>
+      {problems.length > 0 ? (
+        <ul>
+          {problems.map((problem) => (
+            <li key={problem._id}>
+              <h2>{problem.title}</h2>
+              <p>{problem.description}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No problems found</p>
+      )}
     </div>
   )
 }
 
-export default Events
+export default Problems
