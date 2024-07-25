@@ -1,20 +1,20 @@
 // pages/index.js
 
-import React from 'react';
+import React from "react"
 
 const Home = () => {
   return (
     <div
       style={{
-        display: 'flex',
-        justifyContent: 'centre',
-        alignItems: 'centre',
-        height: '100vh'
+        display: "flex",
+        justifyContent: "centre",
+        alignItems: "centre",
+        height: "100vh",
       }}
     >
-      <h1>Welcome to GeeksforGeeks</h1>
+      <h1>Welcome to CodeCoach</h1>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
