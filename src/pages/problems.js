@@ -76,10 +76,11 @@ function Problems() {
   return (
     <div>
       <h1>Problems</h1>
+      <h3>Select a problem to get started</h3>
       <ul>
         {problems.map((problem) => (
-          <li key={problem.id}>
-            <Link to={`/problems/${problem.id}`}>{problem.title}</Link>
+          <li key={problem._id}>
+            <Link to={`/problems/${problem._id}`}>{problem.title}</Link>
             <p>{problem.description}</p>
           </li>
         ))}
