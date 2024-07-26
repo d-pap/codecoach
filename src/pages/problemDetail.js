@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { fetchProblemById } from "../api"
+import ProblemDetailLayout from "../components/Problems/ProblemDetailLayout"
+import CodeEditorPlaceholder from "../components/Problems/CodeEditorPlaceholder"
+import ProblemDetails from "../components/Problems/ProblemDetails"
 
 function ProblemDetail() {
   // hold problem data
@@ -41,17 +44,7 @@ function ProblemDetail() {
    * Page rendering
    */
   return (
-    <div>
-      <h1>{problem.title}</h1>
-      <h2>Description</h2>
-      <p>{problem.description}</p>
-      <h2>Example Inputs</h2>
-      <pre>{JSON.stringify(problem.exampleInputs, null, 2)}</pre>
-      <h2>Example Outputs</h2>
-      <pre>{JSON.stringify(problem.exampleOutputs, null, 2)}</pre>
-      <h2>Test Cases</h2>
-      <pre>{JSON.stringify(problem.testCases, null, 2)}</pre>
-    </div>
+    <ProblemDetailLayout problemDetails={<ProblemDetails problem={problem} />} codeEditor={<CodeEditorPlaceholder />} />
   )
 }
 
