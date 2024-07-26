@@ -145,6 +145,46 @@
   justify-content: center;
   color: #fff;
 }
+
+/* App.css */
+
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+#leftcolumn {
+  width: 20%;
+  padding: 10px;
+  border: navy, 1px, solid;
+  background-color: aquamarine;
+}
+
+#rightcolumn {
+  width: 80%;
+  padding: 30px;
+  border: navy, 1px, solid;
+  background-color: lightblue;
+}
+
+.dropdown {
+  margin-bottom: 20px;
+}
+
+.problem {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.problem h3 {
+  margin: 0;
+}
+
+.problem p {
+  margin: 5px 0;
+}
 #leftcolumn { 
     color: #333;
     border: 1px solid #ccc;
@@ -168,4 +208,5 @@
 }
 .problem {
     margin-bottom: 10px; /* Space between problems */
+
 }
