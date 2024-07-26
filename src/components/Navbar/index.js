@@ -14,6 +14,7 @@ const Navbar = () => {
             <Nav>
                 <Bars />
 
+
                 <NavMenu>
                     <NavLink to="/about">About</NavLink>
                     <NavLink to="/problems" activeStyle>
@@ -35,5 +36,25 @@ const Navbar = () => {
         </>
     );
 };
+
+        <NavMenu>
+        <NavLink to="/home">Home</NavLink>
+          <NavLink to="/about">About</NavLink>
+          <NavLink to="/problems" activeStyle>
+            Problems
+          </NavLink>
+          <NavLink to="/sign-up" activeStyle>
+            Sign Up
+          </NavLink>
+          {/* Second Nav */}
+          {/* <NavBtnLink to='/sign-in'>Sign In</NavBtnLink> */}
+        </NavMenu>
+        <NavBtn>
+          <NavBtnLink to="/signin">Sign In</NavBtnLink>
+        </NavBtn>
+      </Nav>
+    </>
+  )
+}
 
 export default Navbar;
