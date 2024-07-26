@@ -81,7 +81,7 @@ function Problems() {
       <div className="container">
         <div id="leftcolumn">
           <div className="dropdown">
-            <label htmlFor="language">Choose language:</label>
+            <label htmlFor="language">Choose language: </label>
             <select id="language">
               <option value="python">Python</option>
               <option value="cpp">C++</option>
@@ -89,7 +89,7 @@ function Problems() {
             </select>
           </div>
           <div className="dropdown">
-            <label htmlFor="difficulty">Choose difficulty:</label>
+            <label htmlFor="difficulty">Choose difficulty: </label>
             <select id="difficulty">
               <option value="easy">Easy</option>
               <option value="medium">Medium</option>
