@@ -74,44 +74,19 @@ function Problems() {
   if (error) return <div>{error}</div>
 
   return (
-
-    <div className="newsletter_section layout_padding">
-      <div className="header"><h1>Problems</h1>
-        <h3>Select a problem to get started</h3></div>
-      <div className="container">
-        <div id="leftcolumn">
-          <div className="dropdown">
-            <label htmlFor="language">Choose language:</label>
-            <select id="language">
-              <option value="python">Python</option>
-              <option value="cpp">C++</option>
-              <option value="java">Java</option>
-            </select>
-          </div>
-          <div className="dropdown">
-            <label htmlFor="difficulty">Choose difficulty:</label>
-            <select id="difficulty">
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-            </select>
-          </div>
-        </div>
-        <div id="rightcolumn">
-
-          <ul>
-            {problems.map((problem) => (
-              <li key={problem._id}>
-                <Link to={`/problems/${problem._id}`}>{problem.title}</Link>
-                <p>{problem.description}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+    <div>
+      <h1>Problems</h1>
+      <h3>Select a problem to get started</h3>
+      <ul>
+        {problems.map((problem) => (
+          <li key={problem._id}>
+            <Link to={`/problems/${problem._id}`}>{problem.title}</Link>
+            <p>{problem.description}</p>
+          </li>
+        ))}
+      </ul>
     </div>
-  );
+  )
 }
 
-
-export default Problems;
+export default Problems
