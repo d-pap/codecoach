@@ -6,16 +6,14 @@ import CodeEditorPlaceholder from "../components/Problems/CodeEditorPlaceholder"
 import ProblemDetails from "../components/Problems/ProblemDetails"
 
 function ProblemDetail() {
-  // hold problem data
-  const [problem, setProblem] = useState(null)
-  // indicate if data is still loading
-  const [loading, setLoading] = useState(true)
-  // hold any error message
-  const [error, setError] = useState(null)
-  // extract problem ID from the URL
-  const { id } = useParams()
+  // state variables
+  const [problem, setProblem] = useState(null) // hold problem data
+  const [loading, setLoading] = useState(true) // indicate if data is still loading
+  const [error, setError] = useState(null) // hold any error message
+  const { id } = useParams() // extract problem ID from URL
 
   useEffect(() => {
+    // run side effect to get problem data when component mounts or ID changes
     async function getProblem() {
       try {
         const data = await fetchProblemById(id)
@@ -44,7 +42,12 @@ function ProblemDetail() {
    * Page rendering
    */
   return (
-    <ProblemDetailLayout problemDetails={<ProblemDetails problem={problem} />} codeEditor={<CodeEditorPlaceholder />} />
+    <ProblemDetailLayout
+      // render layout and pass ProblemDetails and
+      // CodeEditorPlaceholder as props
+      problemDetails={<ProblemDetails problem={problem} />}
+      codeEditor={<CodeEditorPlaceholder />}
+    />
   )
 }
 

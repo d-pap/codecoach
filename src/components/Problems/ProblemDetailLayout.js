@@ -1,13 +1,29 @@
 /**
- * Layout component that splits page into 2 halves.
+ * Component that creates a flex container with 2 halves
  * For Problem Solving page and any split screen layouts we need
  */
 import React from "react"
-import styled from "styled-components"
+import styled, { createGlobalStyle } from "styled-components"
 
+// reset some default styling
+// these css rules make the container height fit perfect (no scroll bar)
+const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+  }
+`
+
+// container that takes up full viewport height
+// subtracted by height of navbar (85px)
 const LayoutContainer = styled.div`
   display: flex;
-  height: calc(100vh - 60px); // Adjust based on your navbar height
+  height: calc(100vh - 85px);
 `
 
 const LeftPanel = styled.div`
@@ -27,10 +43,13 @@ const RightPanel = styled.div`
 
 const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
   return (
-    <LayoutContainer>
-      <LeftPanel>{problemDetails}</LeftPanel>
-      <RightPanel>{codeEditor}</RightPanel>
-    </LayoutContainer>
+    <>
+      <GlobalStyle />
+      <LayoutContainer>
+        <LeftPanel>{problemDetails}</LeftPanel>
+        <RightPanel>{codeEditor}</RightPanel>
+      </LayoutContainer>
+    </>
   )
 }
 

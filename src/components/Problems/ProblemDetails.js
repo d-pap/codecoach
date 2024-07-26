@@ -1,11 +1,11 @@
 /**
- * Component that displays the problem details after
- * they click a problem they want to solve from the problems page.
+ * Component that displays the problem details on problem solving page
  * Use wherever we need to display problem details.
  */
 import React from "react"
 import styled from "styled-components"
 
+// styled container to show problem details
 const DetailContainer = styled.div`
   h1 {
     color: #333;
@@ -21,6 +21,7 @@ const DetailContainer = styled.div`
   }
 `
 
+// render the problem details
 const ProblemDetails = ({ problem }) => {
   if (!problem) return <div>Loading problem details...</div>
 

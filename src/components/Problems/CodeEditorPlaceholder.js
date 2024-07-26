@@ -1,6 +1,6 @@
 /**
- * Placeholder for where the compiler will eventually go
- * Will be replaced with code editor/compiler we choose.
+ * Placeholder div to indicate where code editor/compiler will go.
+ * Replace this with the code editor/compiler we choose.
  */
 import React from "react"
 import styled from "styled-components"
