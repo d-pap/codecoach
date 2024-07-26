@@ -3,9 +3,13 @@ import { useParams } from "react-router-dom"
 import { fetchProblemById } from "../api"
 
 function ProblemDetail() {
+  // hold problem data
   const [problem, setProblem] = useState(null)
+  // indicate if data is still loading
   const [loading, setLoading] = useState(true)
+  // hold any error message
   const [error, setError] = useState(null)
+  // extract problem ID from the URL
   const { id } = useParams()
 
   useEffect(() => {
@@ -19,21 +23,22 @@ function ProblemDetail() {
           testCases: data.testCases.map(({ _id, ...rest }) => rest),
         }
         setProblem(filteredData)
-        setLoading(false)
+        setLoading(false) // set loading to false
       } catch (err) {
+        // error message if fetch fails
         setError("Error fetching problem details")
-        setLoading(false)
+        setLoading(false) // set loading to false bc fetch attempt is complete
       }
     }
     getProblem()
-  }, [id])
+  }, [id]) // dependency array with ID to re-fetch if ID changes
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>{error}</div>
   if (!problem) return <div>Problem not found</div>
 
   /**
-   * Page styling
+   * Page rendering
    */
   return (
     <div>
