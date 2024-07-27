@@ -1,4 +1,8 @@
-// pages/signup.js
+/**
+ * Sign up page (if we want a page for this?)
+ * Can be temporary if we decide to do something
+ * else for users to sign up.
+ */
 
 import React from "react"
 

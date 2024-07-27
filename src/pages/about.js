@@ -1,3 +1,8 @@
+/**
+ * About page
+ * This can be temporary if we want to use it for something else
+ * or delete it completely. Was initially only made to construct navbar
+ */
 import React from "react"
 
 const About = () => {

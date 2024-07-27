@@ -1,9 +1,16 @@
+/**
+ * NavbarElements.js
+ * Uses styled-components to set style for the navbar
+ *
+ * (styled-components library lets you write CSS within JS
+ * so we can dynamically adjust styles based on props or state)
+ */
 import { FaBars } from "react-icons/fa"
 import { NavLink as Link } from "react-router-dom"
 import styled from "styled-components"
 
-export const Nav = styled.nav
-`
+// main navbar container
+export const Nav = styled.nav`
   background: #63d471;
   height: 85px;
   display: flex;
@@ -14,6 +21,7 @@ export const Nav = styled.nav
   /* justify-content: flex-start; */
 `
 
+// styled NavLink component
 export const NavLink = styled(Link)`
   color: #808080;
   display: flex;
@@ -27,6 +35,7 @@ export const NavLink = styled(Link)`
   }
 `
 
+// mobile menu icon styling
 export const Bars = styled(FaBars)`
   display: none;
   color: #808080;
@@ -41,6 +50,7 @@ export const Bars = styled(FaBars)`
   }
 `
 
+// container for navigation links
 export const NavMenu = styled.div`
   display: flex;
   align-items: center;
@@ -55,6 +65,7 @@ export const NavMenu = styled.div`
   }
 `
 
+// container for navigation buttons
 export const NavBtn = styled.nav`
   display: flex;
   align-items: center;
@@ -67,6 +78,7 @@ export const NavBtn = styled.nav`
   }
 `
 
+// styled component for navigation button links
 export const NavBtnLink = styled(Link)`
   border-radius: 4px;
   background: #808080;
