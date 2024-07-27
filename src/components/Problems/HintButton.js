@@ -6,7 +6,7 @@
  * trigger a AWS Lambda function (not yet made) to send the problem
  * and a pre-defined prompt to Mistral LLM and then return the response
  * to the user to help them solve the problem.
- * test
+ * test 2
  */
 
 import React, { useState } from "react"
