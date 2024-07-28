@@ -25,14 +25,59 @@ const Button = styled.button`
   cursor: pointer;
 `
 
+// const HintDisplay = styled.div`
+//   margin-top: 20px;
+//   padding: 10px;
+//   background-color: #f0f0f0;
+//   border-radius: 5px;
+// `
+
 const HintDisplay = styled.div`
   margin-top: 20px;
   padding: 10px;
   background-color: #f0f0f0;
   border-radius: 5px;
+  white-space: pre-line;
 `
 
-const HintButton = ({ problem }) => {
+// const HintButton = ({ problem }) => {
+//   const [hint, setHint] = useState("")
+//   const [isLoading, setIsLoading] = useState(false)
+
+//   // call the getHint function (defined in `api.js`)
+//   const handleGetHint = async () => {
+//     setIsLoading(true)
+//     try {
+//       const hintText = await getHint(problem)
+//       setHint(hintText)
+//     } catch (error) {
+//       console.error("Error fetching hint:", error)
+//       setHint("Error fetching hint. Please try again.")
+//     }
+//     setIsLoading(false)
+//   }
+//   // trigger it when user clicks the button and show results
+//   return (
+//     <div>
+//       <Button onClick={handleGetHint} disabled={isLoading}>
+//         {isLoading ? "Loading..." : "Get Hint"}
+//       </Button>
+//       {hint && <HintDisplay>{hint}</HintDisplay>}
+//     </div>
+//   )
+// }
+
+/**
+ * Prompts the ai to generate a hint for the problem
+ * once the user clicks the button. The ai will user
+ * infrances given the problem itself and the hints stored
+ * in the database for taht problem.
+ * @param {title} string - problem title
+ * @param {question} string - problem description
+ * @param {answer} string - problem answer
+ * @returns
+ */
+const HintButton = ({ title, question, answer }) => {
   const [hint, setHint] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
@@ -40,7 +85,7 @@ const HintButton = ({ problem }) => {
   const handleGetHint = async () => {
     setIsLoading(true)
     try {
-      const hintText = await getHint(problem)
+      const hintText = await getHint(title, question, answer)
       setHint(hintText)
     } catch (error) {
       console.error("Error fetching hint:", error)
@@ -48,7 +93,6 @@ const HintButton = ({ problem }) => {
     }
     setIsLoading(false)
   }
-
   // trigger it when user clicks the button and show results
   return (
     <div>
