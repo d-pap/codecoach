@@ -13,6 +13,7 @@ import About from "./pages/nav/about";
 import Problems from "./pages/nav/problems";
 import SignUp from "./pages/nav/signup";
 import ProblemDetail from "./pages/problems/problemDetail";
+import AddProblems from "./pages/nav/addProblems";
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/problems" element={<Problems />} />
                 <Route path="/problems/:id" element={<ProblemDetail />} />
                 <Route path="/sign-up" element={<SignUp />} />
+                <Route path="/addProblems" element={<AddProblems />} />
             </Routes>
         </Router>
     );
