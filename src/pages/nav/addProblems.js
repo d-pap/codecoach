@@ -60,6 +60,23 @@ const AddProblems = () => {
         e.preventDefault();
         const payload = {...formData};
         console.log(JSON.stringify(payload, null, 2)); // or send the payload to a server
+
+        alert("Input submitted!");
+
+        // Clear the form
+        setFormData({
+            title: "",
+            timeLimit: "",
+            memoryLimit: "",
+            problemDescription: "",
+            inputDescription: "",
+            outputDescription: "",
+            videoLink: "",
+            testCases: [{input: "", output: ""}],
+        });
+
+        // Reload the page
+        window.location.reload();
     };
 
     return (
