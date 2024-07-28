@@ -5,6 +5,7 @@
 import React from "react"
 import styled from "styled-components"
 import HintButton from "./HintButton"
+import SolveButton from "./SolveButton"
 
 // styled container to show problem details
 const DetailContainer = styled.div`
@@ -27,6 +28,26 @@ const DetailContainer = styled.div`
   }
 `
 
+// // render the problem details
+// const ProblemDetails = ({ problem }) => {
+//   if (!problem) return <div>Loading problem details...</div>
+
+//   return (
+//     <DetailContainer>
+//       <h1>{problem.title}</h1>
+//       <h2>Description</h2>
+//       <p>{problem.description}</p>
+//       <HintButton problem={problem} />
+//       <h2>Example Inputs</h2>
+//       <pre>{JSON.stringify(problem.exampleInputs, null, 2)}</pre>
+//       <h2>Example Outputs</h2>
+//       <pre>{JSON.stringify(problem.exampleOutputs, null, 2)}</pre>
+//       <h2>Test Cases</h2>
+//       <pre>{JSON.stringify(problem.testCases, null, 2)}</pre>
+//     </DetailContainer>
+//   )
+// }
+
 // render the problem details
 const ProblemDetails = ({ problem }) => {
   if (!problem) return <div>Loading problem details...</div>
@@ -36,7 +57,8 @@ const ProblemDetails = ({ problem }) => {
       <h1>{problem.title}</h1>
       <h2>Description</h2>
       <p>{problem.description}</p>
-      <HintButton problem={problem} />
+      <HintButton title={problem.title} question={problem.description} answer={"testing"} />
+      <SolveButton title={problem.title} question={problem.description} answer={"testing"} />
       <h2>Example Inputs</h2>
       <pre>{JSON.stringify(problem.exampleInputs, null, 2)}</pre>
       <h2>Example Outputs</h2>
