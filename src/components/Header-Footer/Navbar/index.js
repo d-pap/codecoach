@@ -2,6 +2,7 @@
  * Defines structure and functionality of navbar
  * using the components made in NavbarElements.js
  */
+
 import React from "react"
 import { Nav, NavLink, Bars, NavMenu, NavBtn, NavBtnLink } from "./NavbarElements"
 

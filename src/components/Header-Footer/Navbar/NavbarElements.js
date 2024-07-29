@@ -19,6 +19,7 @@ export const Nav = styled.nav`
   z-index: 12;
   /* Third Nav */
   /* justify-content: flex-start; */
+  
 `
 
 // styled NavLink component

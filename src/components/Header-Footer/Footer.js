@@ -3,12 +3,13 @@ import styled from 'styled-components';
 
 const FooterSection = styled.footer`
   width: 100%;
-  background-color: #252525;
+  background-color: #468585;
   padding: 90px 0;
   color: #b6b6b6;
 `;
 
 const FooterContainer = styled.div`
+
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -23,7 +24,7 @@ const Column = styled.div`
 `;
 
 const InformationText = styled.h3`
-  color: #fff;
+  color: #DEF9C4;
   margin-right: 20px;
 `;
 

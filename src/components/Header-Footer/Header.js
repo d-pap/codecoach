@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 const HeaderSection = styled.header`
   width: 100%;
-  background: #808080;
+  background: #468585;
   height: auto;
   background-size: 100%;
   background-repeat: no-repeat;
@@ -24,19 +24,19 @@ const HeaderContainer = styled.div`
 
 const ProjectTitle = styled.h1`
   font-size: 5rem;
-  color: #ffffff;
+  color: #DEF9C4;
 `;
 
 const Header = () => {
-  return (
-    <HeaderSection>
-      <HeaderContainer className="container">
-        <ProjectTitle>Code Coach</ProjectTitle>
-        
-      </HeaderContainer>
-      <Navbar />
-    </HeaderSection>
-  );
+    return (
+        <HeaderSection>
+            <HeaderContainer className="container">
+                <ProjectTitle>Code Coach</ProjectTitle>
+
+            </HeaderContainer>
+            <Navbar />
+        </HeaderSection>
+    );
 };
 
 export default Header;

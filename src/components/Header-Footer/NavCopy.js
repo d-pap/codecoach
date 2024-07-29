@@ -11,6 +11,8 @@ import styled from "styled-components";
 // main navbar container
 const Nav = styled.nav`
   background: #63d471;
+  border-top: 2px solid #1A3636;
+  border-bottom: 2px solid #1A3636;
   height: 85px;
   display: flex;
   justify-content: space-between;
@@ -38,6 +40,7 @@ const NavLink = styled(Link)`
 const Bars = styled(FaBars)`
   display: none;
   color: #808080;
+  
   @media screen and (max-width: 768px) {
     display: block;
     position: absolute;
@@ -54,6 +57,7 @@ const NavMenu = styled.div`
   display: flex;
   align-items: center;
   margin-right: -24px;
+  
   /* Second Nav */
   /* margin-right: 24px; */
   /* Third Nav */
