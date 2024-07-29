@@ -10,7 +10,7 @@
 
 import React, {useState} from "react";
 import styled from "styled-components";
-import {getSolution} from "../../api";
+import {getHint} from "../../api";
 
 const Button = styled.button`
     background-color: #4caf50;
@@ -25,7 +25,14 @@ const Button = styled.button`
     cursor: pointer;
 `;
 
-const SolveDisplay = styled.div`
+// const HintDisplay = styled.div`
+//   margin-top: 20px;
+//   padding: 10px;
+//   background-color: #f0f0f0;
+//   border-radius: 5px;
+// `
+
+const HintDisplay = styled.div`
     margin-top: 20px;
     padding: 10px;
     background-color: #f0f0f0;
@@ -34,7 +41,7 @@ const SolveDisplay = styled.div`
 `;
 
 /**
- * Prompts the ai to generate a solution for the problem
+ * Prompts the ai to generate a hint for the problem
  * once the user clicks the button. The ai will user
  * infrances given the problem itself and the hints stored
  * in the database for taht problem.
@@ -43,32 +50,31 @@ const SolveDisplay = styled.div`
  * @param {answer} string - problem answer
  * @returns
  */
-const SolveButton = ({title, question, answer}) => {
-    const [solution, setSolution] = useState("");
+const HintByAIButton = ({title, question, answer}) => {
+    const [hint, setHint] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
     // call the getHint function (defined in `api.js`)
-    const handleGetSolution = async () => {
+    const handleGetHint = async () => {
         setIsLoading(true);
         try {
-            const hintText = await getSolution(title, question, answer);
-            setSolution(hintText);
+            const hintText = await getHint(title, question, answer);
+            setHint(hintText);
         } catch (error) {
-            console.error("Error fetching solution:", error);
-            setSolution("Error fetching solution. Please try again.");
+            console.error("Error fetching hint:", error);
+            setHint("Error fetching hint. Please try again.");
         }
         setIsLoading(false);
     };
-
     // trigger it when user clicks the button and show results
     return (
         <div>
-            <Button onClick={handleGetSolution} disabled={isLoading}>
-                {isLoading ? "Loading..." : "Get solution"}
+            <Button onClick={handleGetHint} disabled={isLoading}>
+                {isLoading ? "Loading..." : "Get Hint"}
             </Button>
-            {solution && <SolveDisplay>{solution}</SolveDisplay>}
+            {hint && <HintDisplay>{hint}</HintDisplay>}
         </div>
     );
 };
 
-export default SolveButton;
+export default HintByAIButton;

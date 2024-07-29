@@ -4,8 +4,11 @@
  */
 import React from "react";
 import styled from "styled-components";
-import HintButton from "./HintButton";
-import SolveButton from "./SolveButton";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import CustomTabPanel from "./CustomTabPanel";
+import PropTypes from "prop-types";
+import ProblemTab from "./detailNavbar/ProblemTab";
 
 // styled container to show problem details
 const DetailContainer = styled.div`
@@ -28,33 +31,70 @@ const DetailContainer = styled.div`
     }
 `;
 
-// render the problem details
-const ProblemDetails = ({problem}) => {
-    if (!problem) return <div>Loading problem details...</div>;
-
-    return (
-        <DetailContainer>
-            <h1>{problem.title}</h1>
-            <h2>Description</h2>
-            <p>{problem.description}</p>
-            <HintButton
-                title={problem.title}
-                question={problem.description}
-                answer={"testing"}
-            />
-            <SolveButton
-                title={problem.title}
-                question={problem.description}
-                answer={"testing"}
-            />
-            <h2>Example Inputs</h2>
-            <pre>{JSON.stringify(problem.exampleInputs, null, 2)}</pre>
-            <h2>Example Outputs</h2>
-            <pre>{JSON.stringify(problem.exampleOutputs, null, 2)}</pre>
-            <h2>Test Cases</h2>
-            <pre>{JSON.stringify(problem.testCases, null, 2)}</pre>
-        </DetailContainer>
-    );
+CustomTabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
 };
 
+function a11yProps(index) {
+    return {
+        id: `simple-tab-${index}`,
+        "aria-controls": `simple-tabpanel-${index}`,
+    };
+}
+
+function ProblemDetails({problem}) {
+    const [value, setValue] = React.useState(0);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
+    // render the problem details
+    const getLayout = () => {
+        if (!problem) return <div>Loading problem details...</div>;
+
+        return (
+            <DetailContainer>
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    aria-label="basic tabs example"
+                >
+                    <Tab label="Problem" {...a11yProps(0)} />
+                    <Tab label="AI Hint" {...a11yProps(1)} />
+                    <Tab label="AI Solution" {...a11yProps(2)} />
+                    <Tab label="Hint/Video" {...a11yProps(3)} />
+                    <Tab label="Forum" {...a11yProps(4)} />
+                </Tabs>
+                <CustomTabPanel value={value} index={0}>
+                    <h1>Problem</h1>
+                    <div>
+                        {" "}
+                        <ProblemTab problem={problem} />{" "}
+                    </div>
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={1}>
+                    <h1>AI Hint</h1>
+                    <p>AI Hint Content</p>
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={2}>
+                    <h1>AI Solution</h1>
+                    <p>AI Solution Content</p>
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={3}>
+                    <h1>Hint/Video</h1>
+                    <p>Hint/Video Content</p>
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={4}>
+                    <h1>Forum</h1>
+                    <p>Forum Content</p>
+                </CustomTabPanel>
+            </DetailContainer>
+        );
+    };
+
+    return getLayout();
+}
 export default ProblemDetails;
