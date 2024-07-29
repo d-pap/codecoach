@@ -106,6 +106,7 @@ const Navbar = () => {
     <>
       <Nav>
         <Bars />
+
         <NavMenu>
           <NavLink to="/about">About</NavLink>
           <NavLink to="/problems" activeStyle>
@@ -113,6 +114,9 @@ const Navbar = () => {
           </NavLink>
           <NavLink to="/sign-up" activeStyle>
             Sign Up
+          </NavLink>
+          <NavLink to="/addProblems" activeStyle>
+            Add Problems
           </NavLink>
           {/* Second Nav */}
           {/* <NavBtnLink to='/sign-in'>Sign In</NavBtnLink> */}

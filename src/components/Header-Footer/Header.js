@@ -34,16 +34,16 @@ const ProjectTitle = styled.h1`
 `;
 
 const Header = () => {
-    return (
-        <HeaderSection>
-            <HeaderContainer>
-                <TitleWrapper>
-                    <ProjectTitle>Code Coach</ProjectTitle>
-                </TitleWrapper>                
-            </HeaderContainer>
-            <Navbar />
-        </HeaderSection>
-    );
+  return (
+    <HeaderSection>
+      <HeaderContainer>
+        <TitleWrapper>
+          <ProjectTitle>Code Coach</ProjectTitle>
+        </TitleWrapper>
+      </HeaderContainer>
+      <Navbar />
+    </HeaderSection>
+  );
 };
 
 export default Header;
