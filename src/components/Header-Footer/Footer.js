@@ -1,4 +1,6 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFacebook, faTwitter, faLinkedin, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import styled from 'styled-components';
 
 const FooterSection = styled.footer`
@@ -33,7 +35,7 @@ const CallText = styled.p`
   margin-right: 20px;
 
   a {
-    color: #b6b6b6;
+    color: #9CDBA6;
     text-decoration: none;
 
     &:hover {
@@ -56,7 +58,7 @@ const SocialIcon = styled.div`
     li {
       margin-left: 10px; 
       a {
-        color: #b6b6b6;
+        color: #9CDBA6;
         text-decoration: none;
         transition: color 0.3s ease;
         &:hover {
@@ -78,16 +80,16 @@ const Footer = () => {
         <Column>
           <div>
             <InformationText>Contact Us</InformationText>
-            <CallText><a href="#">+01 1234567890</a></CallText>
-            <CallText><a href="#">+01 9876543210</a></CallText>
-            <CallText><a href="#">demo@gmail.com</a></CallText>
+            <CallText><a tel="01 1234567890">+01 1234567890</a></CallText>
+            <CallText><a tel="01 9876543210">+01 9876543210</a></CallText>
+            <CallText><a mailto="demo@gmail.com">demo@gmail.com</a></CallText>
           </div>
           <SocialIcon>
-            <ul>
-              <li><a href="#"><img src="icons/fb-icon.png" alt="Facebook" /></a></li>
-              <li><a href="#"><img src="icons/twitter-icon.png" alt="Twitter" /></a></li>
-              <li><a href="#"><img src="icons/linkedin-icon.png" alt="LinkedIn" /></a></li>
-              <li><a href="#"><img src="icons/instagram-icon.png" alt="Instagram" /></a></li>
+          <ul>
+          <li><a href="#"><FontAwesomeIcon icon={faFacebook} /> Facebook</a></li>
+              <li><a href="#"><FontAwesomeIcon icon={faTwitter} /> Twitter</a></li>
+              <li><a href="#"><FontAwesomeIcon icon={faLinkedin} /> LinkedIn</a></li>
+              <li><a href="#"><FontAwesomeIcon icon={faInstagram} /> Instagram</a></li>
             </ul>
           </SocialIcon>
         </Column>
@@ -97,3 +99,41 @@ const Footer = () => {
 };
 
 export default Footer;
+
+
+// const SocialIcon = styled.div`
+//   ul {\
+//     margin: 0;\
+//     padding: 0;\
+//     list-style: none;\
+//     display: flex;\
+//     flex-direction: column;\
+//     li {\
+//       margin: 10px 0;\
+//       a {\
+//         display: flex;\
+//         align-items: center;\
+//         color: #b6b6b6;\
+//         text-decoration: none;\
+//         &:hover {\
+//           color: #878686;\
+//         }\
+//         svg {\
+//           margin-right: 10px;\
+//           width: 20px;\
+//           height: 20px;\
+//         }
+//       }
+//     }
+//   }
+// `;
+
+
+          {/* <SocialIcon>
+            <ul>
+              <li><a href="#"><FontAwesomeIcon icon={faFacebook} /> Facebook</a></li>
+              <li><a href="#"><FontAwesomeIcon icon={faTwitter} /> Twitter</a></li>
+              <li><a href="#"><FontAwesomeIcon icon={faLinkedin} /> LinkedIn</a></li>
+              <li><a href="#"><FontAwesomeIcon icon={faInstagram} /> Instagram</a></li>
+            </ul>
+          </SocialIcon> */}

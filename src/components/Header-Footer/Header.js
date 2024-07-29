@@ -1,8 +1,5 @@
 import React from 'react';
-// import Navbar from '../../Navbar';
 import Navbar from './NavCopy';
-
-
 import styled from 'styled-components';
 
 const HeaderSection = styled.header`
@@ -14,15 +11,24 @@ const HeaderSection = styled.header`
 `;
 
 const HeaderContainer = styled.div`
-  .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 0;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
 `;
 
 const ProjectTitle = styled.h1`
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  text-align: center;
   font-size: 5rem;
   color: #DEF9C4;
 `;
@@ -30,9 +36,10 @@ const ProjectTitle = styled.h1`
 const Header = () => {
     return (
         <HeaderSection>
-            <HeaderContainer className="container">
-                <ProjectTitle>Code Coach</ProjectTitle>
-
+            <HeaderContainer>
+                <TitleWrapper>
+                    <ProjectTitle>Code Coach</ProjectTitle>
+                </TitleWrapper>                
             </HeaderContainer>
             <Navbar />
         </HeaderSection>
