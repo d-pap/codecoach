@@ -3,6 +3,7 @@
  * Central hub where we assemble our other components and
  * tie everything together like layout, routes, etc.
  */
+
 import React from "react";
 import "./App.css";
 // import Navbar from "./components/Navbar"
@@ -32,6 +33,7 @@ function App() {
             <Footer />
         </Router>
     );
+
 }
 
-export default App;
+export default App

@@ -2,8 +2,8 @@
  * Placeholder div to indicate where code editor/compiler will go.
  * Replace this with the code editor/compiler we choose.
  */
-import React from "react"
-import styled from "styled-components"
+import React from 'react'
+import styled from 'styled-components'
 
 const PlaceholderContainer = styled.div`
   width: 100%;
