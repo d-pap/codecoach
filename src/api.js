@@ -4,29 +4,29 @@
  * AWS APIGW invoke URL is defined here and define functions
  * to handle API requests (e.g., get data, posting data, etc.)
  */
-import axios from "axios";
+import axios from 'axios'
 
 const API_GATEWAY_URL =
-    "https://appu3yu7tg.execute-api.us-east-1.amazonaws.com/dev";
-const LLM_URL = "http://localhost:3500";
+  'https://appu3yu7tg.execute-api.us-east-1.amazonaws.com/dev'
+const LLM_URL = 'http://localhost:3500'
 
 export const fetchProblems = async () => {
-    try {
-        const response = await axios.get(`${API_GATEWAY_URL}/problems`);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching problems:", error);
-        throw error;
-    }
-};
+  try {
+    const response = await axios.get(`${API_GATEWAY_URL}/problems`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching problems:', error)
+    throw error
+  }
+}
 
 export async function fetchProblemById(id) {
-    try {
-        const response = await axios.get(`${API_GATEWAY_URL}/problems/${id}`);
-        return response.data;
-    } catch (error) {
-        throw new Error("Failed to fetch problem details");
-    }
+  try {
+    const response = await axios.get(`${API_GATEWAY_URL}/problems/${id}`)
+    return response.data
+  } catch (error) {
+    throw new Error('Failed to fetch problem details')
+  }
 }
 
 // Function for LLM interaction which returns a hint
@@ -34,16 +34,16 @@ export async function fetchProblemById(id) {
 // as long as the LLM server is running locally
 // https://github.com/Marv2014-1/llm-server
 export async function getHint(question, answer) {
-    try {
-        const response = await axios.post(`${LLM_URL}/hint-problem`, {
-            question,
-            answer,
-        });
-        return response.data.answer;
-    } catch (error) {
-        console.error("Error fetching hint:", error);
-        throw new Error("Failed to fetch hint");
-    }
+  try {
+    const response = await axios.post(`${LLM_URL}/hint-problem`, {
+      question,
+      answer,
+    })
+    return response.data.answer
+  } catch (error) {
+    console.error('Error fetching hint:', error)
+    throw new Error('Failed to fetch hint')
+  }
 }
 
 // Function for LLM interaction which returns a solution
@@ -51,14 +51,14 @@ export async function getHint(question, answer) {
 // as long as the LLM server is running locally
 // https://github.com/Marv2014-1/llm-server
 export async function getSolution(question, answer) {
-    try {
-        const response = await axios.post(`${LLM_URL}/solve-problem`, {
-            question,
-            answer,
-        });
-        return response.data.answer;
-    } catch (error) {
-        console.error("Error fetching hint:", error);
-        throw new Error("Failed to fetch hint");
-    }
+  try {
+    const response = await axios.post(`${LLM_URL}/solve-problem`, {
+      question,
+      answer,
+    })
+    return response.data.answer
+  } catch (error) {
+    console.error('Error fetching hint:', error)
+    throw new Error('Failed to fetch hint')
+  }
 }
