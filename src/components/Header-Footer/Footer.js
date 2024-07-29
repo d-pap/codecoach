@@ -1,6 +1,8 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFacebook, faTwitter, faLinkedin, faInstagram } from '@fortawesome/free-brands-svg-icons';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import InstagramIcon from '@mui/icons-material/Instagram';
 import styled from 'styled-components';
 
 const FooterSection = styled.footer`
@@ -74,28 +76,28 @@ const SocialIcon = styled.div`
 `;
 
 const Footer = () => {
-  return (
-    <FooterSection>
-      <FooterContainer>
-        <Column>
-          <div>
-            <InformationText>Contact Us</InformationText>
-            <CallText><a tel="01 1234567890">+01 1234567890</a></CallText>
-            <CallText><a tel="01 9876543210">+01 9876543210</a></CallText>
-            <CallText><a mailto="demo@gmail.com">demo@gmail.com</a></CallText>
-          </div>
-          <SocialIcon>
-          <ul>
-          <li><a href="#"><FontAwesomeIcon icon={faFacebook} /> Facebook</a></li>
-              <li><a href="#"><FontAwesomeIcon icon={faTwitter} /> Twitter</a></li>
-              <li><a href="#"><FontAwesomeIcon icon={faLinkedin} /> LinkedIn</a></li>
-              <li><a href="#"><FontAwesomeIcon icon={faInstagram} /> Instagram</a></li>
-            </ul>
-          </SocialIcon>
-        </Column>
-      </FooterContainer>
-    </FooterSection>
-  );
+    return (
+        <FooterSection>
+            <FooterContainer>
+                <Column>
+                    <div>
+                        <InformationText>Contact Us</InformationText>
+                        <CallText><a tel="01 1234567890">+01 1234567890</a></CallText>
+                        <CallText><a tel="01 9876543210">+01 9876543210</a></CallText>
+                        <CallText><a mailto="demo@gmail.com">demo@gmail.com</a></CallText>
+                    </div>
+                    <SocialIcon>
+                        <ul>
+                            <li><a href="#"><FacebookIcon /> Facebook</a></li>
+                            <li><a href="#"><TwitterIcon /> Twitter</a></li>
+                            <li><a href="#"><LinkedInIcon /> LinkedIn</a></li>
+                            <li><a href="#"><InstagramIcon /> Instagram</a></li>
+                        </ul>
+                    </SocialIcon>
+                </Column>
+            </FooterContainer>
+        </FooterSection>
+    );
 };
 
 export default Footer;
@@ -129,7 +131,7 @@ export default Footer;
 // `;
 
 
-          {/* <SocialIcon>
+{/* <SocialIcon>
             <ul>
               <li><a href="#"><FontAwesomeIcon icon={faFacebook} /> Facebook</a></li>
               <li><a href="#"><FontAwesomeIcon icon={faTwitter} /> Twitter</a></li>
