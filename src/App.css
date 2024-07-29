@@ -154,6 +154,18 @@ Put CSS here to style the elements in App.js
   justify-content: space-between;
 }
 
+
+
+.dropdown {
+  margin-bottom: 20px;
+}
+
+.problem {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
 #leftcolumn {
   width: 20%;
   padding: 10px;
