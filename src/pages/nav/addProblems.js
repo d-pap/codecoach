@@ -8,76 +8,76 @@
  * once we adminster users and roles
  */
 
-import React, {useState} from "react";
-import {Box, Stack, Button, TextField} from "@mui/material";
+import React, { useState } from 'react'
+import { Box, Stack, Button, TextField } from '@mui/material'
 
 const AddProblems = () => {
-    const [formData, setFormData] = useState({
-        title: "",
-        timeLimit: "",
-        memoryLimit: "",
-        problemDescription: "",
-        inputDescription: "",
-        outputDescription: "",
-        videoLink: "",
-        testCases: [{input: "", output: ""}],
-    });
+  const [formData, setFormData] = useState({
+    title: '',
+    timeLimit: '',
+    memoryLimit: '',
+    problemDescription: '',
+    inputDescription: '',
+    outputDescription: '',
+    videoLink: '',
+    testCases: [{ input: '', output: '' }],
+  })
 
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData({
+      ...formData,
+      [name]: value,
+    })
+  }
 
-    const handleTestCaseChange = (index, e) => {
-        const {name, value} = e.target;
-        const testCases = [...formData.testCases];
-        testCases[index][name] = value;
-        setFormData({
-            ...formData,
-            testCases,
-        });
-    };
+  const handleTestCaseChange = (index, e) => {
+    const { name, value } = e.target
+    const testCases = [...formData.testCases]
+    testCases[index][name] = value
+    setFormData({
+      ...formData,
+      testCases,
+    })
+  }
 
-    const addTestCase = () => {
-        setFormData({
-            ...formData,
-            testCases: [...formData.testCases, {input: "", output: ""}],
-        });
-    };
+  const addTestCase = () => {
+    setFormData({
+      ...formData,
+      testCases: [...formData.testCases, { input: '', output: '' }],
+    })
+  }
 
-    const removeTestCase = (index) => {
-        const testCases = formData.testCases.filter((_, idx) => idx !== index);
-        setFormData({
-            ...formData,
-            testCases,
-        });
-    };
+  const removeTestCase = (index) => {
+    const testCases = formData.testCases.filter((_, idx) => idx !== index)
+    setFormData({
+      ...formData,
+      testCases,
+    })
+  }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const payload = {...formData};
-        console.log(JSON.stringify(payload, null, 2)); // or send the payload to a server
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const payload = { ...formData }
+    console.log(JSON.stringify(payload, null, 2)) // or send the payload to a server
 
-        alert("Input submitted!");
+    alert('Input submitted!')
 
-        // Clear the form
-        setFormData({
-            title: "",
-            timeLimit: "",
-            memoryLimit: "",
-            problemDescription: "",
-            inputDescription: "",
-            outputDescription: "",
-            videoLink: "",
-            testCases: [{input: "", output: ""}],
-        });
+    // Clear the form
+    setFormData({
+      title: '',
+      timeLimit: '',
+      memoryLimit: '',
+      problemDescription: '',
+      inputDescription: '',
+      outputDescription: '',
+      videoLink: '',
+      testCases: [{ input: '', output: '' }],
+    })
 
-        // Reload the page
-        window.location.reload();
-    };
+    // Reload the page
+    window.location.reload()
+  }
 
     return (
         <Box component="section" display={"flex"} padding={3} width={"95%"}>
@@ -202,12 +202,16 @@ const AddProblems = () => {
                         </Stack>
                     </div>
                 </Stack>
-                <Button variant="contained" type="submit">
-                    Submit
-                </Button>
-            </form>
-        </Box>
-    );
-};
+              ))}
+            </Stack>
+          </div>
+        </Stack>
+        <Button variant="contained" type="submit">
+          Submit
+        </Button>
+      </form>
+    </Box>
+  )
+}
 
-export default AddProblems;
+export default AddProblems

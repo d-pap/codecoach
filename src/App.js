@@ -6,7 +6,9 @@
 
 import React from "react";
 import "./App.css";
-import Navbar from "./components/navbar";
+// import Navbar from "./components/Navbar"
+import Header from "./components/Header-Footer/Header";
+import Footer from "./components/Header-Footer/Footer";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Home from "./pages";
 import About from "./pages/nav/about";
@@ -18,7 +20,8 @@ import AddProblems from "./pages/nav/addProblems";
 function App() {
     return (
         <Router>
-            <Navbar />
+            {/* <Navbar /> */}
+            <Header />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
@@ -27,8 +30,10 @@ function App() {
                 <Route path="/sign-up" element={<SignUp />} />
                 <Route path="/addProblems" element={<AddProblems />} />
             </Routes>
+            <Footer />
         </Router>
     );
+
 }
 
-export default App;
+export default App

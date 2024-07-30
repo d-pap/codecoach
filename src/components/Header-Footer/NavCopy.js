@@ -1,17 +1,18 @@
+import React from "react";
+import { FaBars } from "react-icons/fa";
+import { NavLink as Link } from "react-router-dom";
+import styled from "styled-components";
+
 /**
- * NavbarElements.js
- * Uses styled-components to set style for the navbar
- *
- * (styled-components library lets you write CSS within JS
- * so we can dynamically adjust styles based on props or state)
+ * Defines structure and functionality of navbar
+ * using the components made in NavbarElements.js
  */
-import { FaBars } from 'react-icons/fa'
-import { NavLink as Link } from 'react-router-dom'
-import styled from 'styled-components'
 
 // main navbar container
-export const Nav = styled.nav`
+const Nav = styled.nav`
   background: #63d471;
+  border-top: 2px solid #1A3636;
+  border-bottom: 2px solid #1A3636;
   height: 85px;
   display: flex;
   justify-content: space-between;
@@ -19,10 +20,10 @@ export const Nav = styled.nav`
   z-index: 12;
   /* Third Nav */
   /* justify-content: flex-start; */
-`
+`;
 
 // styled NavLink component
-export const NavLink = styled(Link)`
+const NavLink = styled(Link)`
   color: #808080;
   display: flex;
   align-items: center;
@@ -33,12 +34,13 @@ export const NavLink = styled(Link)`
   &.active {
     color: #000000;
   }
-`
+`;
 
 // mobile menu icon styling
-export const Bars = styled(FaBars)`
+const Bars = styled(FaBars)`
   display: none;
   color: #808080;
+  
   @media screen and (max-width: 768px) {
     display: block;
     position: absolute;
@@ -48,13 +50,14 @@ export const Bars = styled(FaBars)`
     font-size: 1.8rem;
     cursor: pointer;
   }
-`
+`;
 
 // container for navigation links
-export const NavMenu = styled.div`
+const NavMenu = styled.div`
   display: flex;
   align-items: center;
   margin-right: -24px;
+  
   /* Second Nav */
   /* margin-right: 24px; */
   /* Third Nav */
@@ -63,10 +66,10 @@ export const NavMenu = styled.div`
   @media screen and (max-width: 768px) {
     display: none;
   }
-`
+`;
 
 // container for navigation buttons
-export const NavBtn = styled.nav`
+const NavBtn = styled.nav`
   display: flex;
   align-items: center;
   margin-right: 24px;
@@ -76,10 +79,10 @@ export const NavBtn = styled.nav`
   @media screen and (max-width: 768px) {
     display: none;
   }
-`
+`;
 
 // styled component for navigation button links
-export const NavBtnLink = styled(Link)`
+const NavBtnLink = styled(Link)`
   border-radius: 4px;
   background: #808080;
   padding: 10px 22px;
@@ -96,4 +99,34 @@ export const NavBtnLink = styled(Link)`
     background: #fff;
     color: #808080;
   }
-`
+`;
+
+const Navbar = () => {
+  return (
+    <>
+      <Nav>
+        <Bars />
+
+        <NavMenu>
+          <NavLink to="/about">About</NavLink>
+          <NavLink to="/problems" activeStyle>
+            Problems
+          </NavLink>
+          <NavLink to="/sign-up" activeStyle>
+            Sign Up
+          </NavLink>
+          <NavLink to="/addProblems" activeStyle>
+            Add Problems
+          </NavLink>
+          {/* Second Nav */}
+          {/* <NavBtnLink to='/sign-in'>Sign In</NavBtnLink> */}
+        </NavMenu>
+        <NavBtn>
+          <NavBtnLink to="/signin">Sign In</NavBtnLink>
+        </NavBtn>
+      </Nav>
+    </>
+  );
+};
+
+export default Navbar;

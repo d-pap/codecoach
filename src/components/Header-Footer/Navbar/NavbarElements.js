@@ -5,9 +5,9 @@
  * (styled-components library lets you write CSS within JS
  * so we can dynamically adjust styles based on props or state)
  */
-import { FaBars } from 'react-icons/fa'
-import { NavLink as Link } from 'react-router-dom'
-import styled from 'styled-components'
+import { FaBars } from "react-icons/fa"
+import { NavLink as Link } from "react-router-dom"
+import styled from "styled-components"
 
 // main navbar container
 export const Nav = styled.nav`
@@ -19,6 +19,7 @@ export const Nav = styled.nav`
   z-index: 12;
   /* Third Nav */
   /* justify-content: flex-start; */
+  
 `
 
 // styled NavLink component
