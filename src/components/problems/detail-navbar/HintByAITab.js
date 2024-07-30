@@ -20,8 +20,6 @@ const HintByAiTab = ({problem}) => {
 
     const storedLocation = "hintText" + problem._id;
 
-    console.log("storedLocation: ", storedLocation);
-
     const [hintText, setHintText] = useState(() => {
         return localStorage.getItem(storedLocation) || "AI hint will appear here";
     });
