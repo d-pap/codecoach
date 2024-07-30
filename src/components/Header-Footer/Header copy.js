@@ -3,7 +3,10 @@ import Navbar from './NavCopy';
 import styled from 'styled-components';
 
 const HeaderSection = styled.header`
+  // width: 100%;
   background: #468585;
+  height: auto;
+  // background-size: 100%;
   background-repeat: no-repeat;
   display: flex;
   justify-content: space-between;
