@@ -8,9 +8,9 @@
  * to the user to help them solve the problem.
  */
 
-import React, {useState} from "react";
-import {getHint} from "../../api";
-import { Button } from "@mui/material";
+import React, { useState } from 'react'
+import { getHint } from '../../api'
+import { Button } from '@mui/material'
 
 /**
  * Prompts the ai to generate a hint for the problem
@@ -22,29 +22,34 @@ import { Button } from "@mui/material";
  * @param {answer} string - problem answer
  * @returns
  */
-const HintByAIButton = ({title, question, answer, updateHintText}) => {
-    const [isLoading, setIsLoading] = useState(false);
+const HintByAIButton = ({ title, question, answer, updateHintText }) => {
+  const [isLoading, setIsLoading] = useState(false)
 
-    // call the getHint function (defined in `api.js`)
-    const handleGetHint = async () => {
-        setIsLoading(true);
-        try {
-            const hintText = await getHint(title, question, answer);
-            updateHintText(hintText);
-        } catch (error) {
-            console.error("Error fetching hint:", error);
-            updateHintText("Error fetching hint. Please try again.");
-        }
-        setIsLoading(false);
-    };
-    // trigger it when user clicks the button and show results
-    return (
-        <div>
-            <Button variant="contained" type="button" onClick={handleGetHint} disabled={isLoading}>
-                {isLoading ? "Loading..." : "Get Hint"}
-            </Button>
-        </div>
-    );
-};
+  // call the getHint function (defined in `api.js`)
+  const handleGetHint = async () => {
+    setIsLoading(true)
+    try {
+      const hintText = await getHint(title, question, answer)
+      updateHintText(hintText)
+    } catch (error) {
+      console.error('Error fetching hint:', error)
+      updateHintText('Error fetching hint. Please try again.')
+    }
+    setIsLoading(false)
+  }
+  // trigger it when user clicks the button and show results
+  return (
+    <div>
+      <Button
+        variant="contained"
+        type="button"
+        onClick={handleGetHint}
+        disabled={isLoading}
+      >
+        {isLoading ? 'Loading...' : 'Get Hint'}
+      </Button>
+    </div>
+  )
+}
 
-export default HintByAIButton;
+export default HintByAIButton

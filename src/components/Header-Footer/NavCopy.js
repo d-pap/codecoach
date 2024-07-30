@@ -1,7 +1,7 @@
-import React from "react";
-import { FaBars } from "react-icons/fa";
-import { NavLink as Link } from "react-router-dom";
-import styled from "styled-components";
+import React from 'react'
+import { FaBars } from 'react-icons/fa'
+import { NavLink as Link } from 'react-router-dom'
+import styled from 'styled-components'
 
 /**
  * Defines structure and functionality of navbar
@@ -11,8 +11,8 @@ import styled from "styled-components";
 // main navbar container
 const Nav = styled.nav`
   background: #63d471;
-  border-top: 2px solid #1A3636;
-  border-bottom: 2px solid #1A3636;
+  border-top: 2px solid #1a3636;
+  border-bottom: 2px solid #1a3636;
   height: 85px;
   display: flex;
   justify-content: space-between;
@@ -20,7 +20,7 @@ const Nav = styled.nav`
   z-index: 12;
   /* Third Nav */
   /* justify-content: flex-start; */
-`;
+`
 
 // styled NavLink component
 const NavLink = styled(Link)`
@@ -34,13 +34,13 @@ const NavLink = styled(Link)`
   &.active {
     color: #000000;
   }
-`;
+`
 
 // mobile menu icon styling
 const Bars = styled(FaBars)`
   display: none;
   color: #808080;
-  
+
   @media screen and (max-width: 768px) {
     display: block;
     position: absolute;
@@ -50,14 +50,14 @@ const Bars = styled(FaBars)`
     font-size: 1.8rem;
     cursor: pointer;
   }
-`;
+`
 
 // container for navigation links
 const NavMenu = styled.div`
   display: flex;
   align-items: center;
   margin-right: -24px;
-  
+
   /* Second Nav */
   /* margin-right: 24px; */
   /* Third Nav */
@@ -66,7 +66,7 @@ const NavMenu = styled.div`
   @media screen and (max-width: 768px) {
     display: none;
   }
-`;
+`
 
 // container for navigation buttons
 const NavBtn = styled.nav`
@@ -79,7 +79,7 @@ const NavBtn = styled.nav`
   @media screen and (max-width: 768px) {
     display: none;
   }
-`;
+`
 
 // styled component for navigation button links
 const NavBtnLink = styled(Link)`
@@ -99,7 +99,7 @@ const NavBtnLink = styled(Link)`
     background: #fff;
     color: #808080;
   }
-`;
+`
 
 const Navbar = () => {
   return (
@@ -126,7 +126,7 @@ const Navbar = () => {
         </NavBtn>
       </Nav>
     </>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

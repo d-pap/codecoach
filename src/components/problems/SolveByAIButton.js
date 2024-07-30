@@ -8,9 +8,9 @@
  * to the user to help them solve the problem.
  */
 
-import React, {useState} from "react";
-import {getSolution} from "../../api";
-import { Button } from "@mui/material";
+import React, { useState } from 'react'
+import { getSolution } from '../../api'
+import { Button } from '@mui/material'
 
 /**
  * Prompts the ai to generate a solution for the problem
@@ -22,30 +22,35 @@ import { Button } from "@mui/material";
  * @param {answer} string - problem answer
  * @returns
  */
-const SolveByAIButton = ({title, question, answer, updateSolutionText}) => {
-    const [isLoading, setIsLoading] = useState(false);
+const SolveByAIButton = ({ title, question, answer, updateSolutionText }) => {
+  const [isLoading, setIsLoading] = useState(false)
 
-    // call the getHint function (defined in `api.js`)
-    const handleGetSolution = async () => {
-        setIsLoading(true);
-        try {
-            const hintText = await getSolution(title, question, answer);
-            updateSolutionText(hintText);
-        } catch (error) {
-            console.error("Error fetching solution:", error);
-            updateSolutionText("Error fetching solution. Please try again.");
-        }
-        setIsLoading(false);
-    };
+  // call the getHint function (defined in `api.js`)
+  const handleGetSolution = async () => {
+    setIsLoading(true)
+    try {
+      const hintText = await getSolution(title, question, answer)
+      updateSolutionText(hintText)
+    } catch (error) {
+      console.error('Error fetching solution:', error)
+      updateSolutionText('Error fetching solution. Please try again.')
+    }
+    setIsLoading(false)
+  }
 
-    // trigger it when user clicks the button and show results
-    return (
-        <div>
-            <Button variant="contained" type="button" onClick={handleGetSolution} disabled={isLoading}>
-                {isLoading ? "Loading..." : "Get solution"}
-            </Button>
-        </div>
-    );
-};
+  // trigger it when user clicks the button and show results
+  return (
+    <div>
+      <Button
+        variant="contained"
+        type="button"
+        onClick={handleGetSolution}
+        disabled={isLoading}
+      >
+        {isLoading ? 'Loading...' : 'Get solution'}
+      </Button>
+    </div>
+  )
+}
 
-export default SolveByAIButton;
+export default SolveByAIButton

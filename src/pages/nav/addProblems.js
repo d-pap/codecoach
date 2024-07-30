@@ -80,8 +80,8 @@ const AddProblems = () => {
   }
 
   return (
-    <Box component="section" display={"flex"} padding={3} width={"95%"}>
-      <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+    <Box component="section" display={'flex'} padding={3} width={'95%'}>
+      <form onSubmit={handleSubmit} style={{ width: '100%' }}>
         <Stack spacing={2}>
           <label>Title: </label>
           <TextField
@@ -147,11 +147,7 @@ const AddProblems = () => {
           />
           <div>
             <label>Test Cases: </label>
-            <Button
-              variant="contained"
-              type="button"
-              onClick={addTestCase}
-            >
+            <Button variant="contained" type="button" onClick={addTestCase}>
               Add Test Case
             </Button>
             <Stack
@@ -173,9 +169,7 @@ const AddProblems = () => {
                     type="text"
                     name="input"
                     value={testCase.input}
-                    onChange={(e) =>
-                      handleTestCaseChange(idx, e)
-                    }
+                    onChange={(e) => handleTestCaseChange(idx, e)}
                     label=""
                     variant="standard"
                   />
@@ -184,9 +178,7 @@ const AddProblems = () => {
                     type="text"
                     name="output"
                     value={testCase.output}
-                    onChange={(e) =>
-                      handleTestCaseChange(idx, e)
-                    }
+                    onChange={(e) => handleTestCaseChange(idx, e)}
                     label=""
                     variant="standard"
                   />
@@ -206,7 +198,7 @@ const AddProblems = () => {
           </Button>
         </Stack>
       </form>
-    </Box >
+    </Box>
   )
 }
 

@@ -4,16 +4,16 @@
  * their solutions with each other. This is a placeholder for now and.
  */
 
-import React from "react";
-import NavbarStack from "./NavbarStack";
+import React from 'react'
+import NavbarStack from './NavbarStack'
 
 const ForumTab = () => {
-    return (
-        <NavbarStack>
-            <h1>Forum</h1>
-            <p>Forum will be added soon</p>
-        </NavbarStack>
-    );
-};
+  return (
+    <NavbarStack>
+      <h1>Forum</h1>
+      <p>Forum will be added soon</p>
+    </NavbarStack>
+  )
+}
 
-export default ForumTab;
+export default ForumTab
