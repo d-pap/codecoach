@@ -92,7 +92,11 @@ const AddProblems = () => {
           />
           <div>
             <label>Test Cases: </label>
-            <Button variant="contained" type="button" onClick={() => addTestCase(formData, setFormData)}>
+            <Button
+              variant="contained"
+              type="button"
+              onClick={() => addTestCase(formData, setFormData)}
+            >
               Add Test Case
             </Button>
             <Stack
@@ -106,8 +110,12 @@ const AddProblems = () => {
                   key={idx}
                   index={idx}
                   testCase={testCase}
-                  handleTestCaseChange={(index, e) => handleTestCaseChange(index, e, formData, setFormData)}
-                  removeTestCase={() => removeTestCase(idx, formData, setFormData)}
+                  handleTestCaseChange={(index, e) =>
+                    handleTestCaseChange(index, e, formData, setFormData)
+                  }
+                  removeTestCase={() =>
+                    removeTestCase(idx, formData, setFormData)
+                  }
                 />
               ))}
             </Stack>

@@ -1,7 +1,12 @@
 import React from 'react'
 import { Button, Stack, TextField } from '@mui/material'
 
-const TestCase = ({ index, testCase, handleTestCaseChange, removeTestCase }) => {
+const TestCase = ({
+  index,
+  testCase,
+  handleTestCaseChange,
+  removeTestCase,
+}) => {
   return (
     <Stack
       direction="row"
@@ -27,11 +32,7 @@ const TestCase = ({ index, testCase, handleTestCaseChange, removeTestCase }) => 
         label=""
         variant="standard"
       />
-      <Button
-        variant="contained"
-        type="button"
-        onClick={removeTestCase}
-      >
+      <Button variant="contained" type="button" onClick={removeTestCase}>
         Remove
       </Button>
     </Stack>
