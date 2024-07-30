@@ -9,29 +9,8 @@
  */
 
 import React, { useState } from 'react'
-import styled from 'styled-components'
 import { getSolution } from '../../api'
-
-const Button = styled.button`
-  background-color: #4caf50;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-`
-
-const SolveDisplay = styled.div`
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-radius: 5px;
-  white-space: pre-line;
-`
+import { Button } from '@mui/material'
 
 /**
  * Prompts the ai to generate a solution for the problem
@@ -43,8 +22,7 @@ const SolveDisplay = styled.div`
  * @param {answer} string - problem answer
  * @returns
  */
-const SolveButton = ({ title, question, answer }) => {
-  const [solution, setSolution] = useState('')
+const SolveByAIButton = ({ title, question, answer, updateSolutionText }) => {
   const [isLoading, setIsLoading] = useState(false)
 
   // call the getHint function (defined in `api.js`)
@@ -52,10 +30,10 @@ const SolveButton = ({ title, question, answer }) => {
     setIsLoading(true)
     try {
       const hintText = await getSolution(title, question, answer)
-      setSolution(hintText)
+      updateSolutionText(hintText)
     } catch (error) {
       console.error('Error fetching solution:', error)
-      setSolution('Error fetching solution. Please try again.')
+      updateSolutionText('Error fetching solution. Please try again.')
     }
     setIsLoading(false)
   }
@@ -63,12 +41,16 @@ const SolveButton = ({ title, question, answer }) => {
   // trigger it when user clicks the button and show results
   return (
     <div>
-      <Button onClick={handleGetSolution} disabled={isLoading}>
+      <Button
+        variant="contained"
+        type="button"
+        onClick={handleGetSolution}
+        disabled={isLoading}
+      >
         {isLoading ? 'Loading...' : 'Get solution'}
       </Button>
-      {solution && <SolveDisplay>{solution}</SolveDisplay>}
     </div>
   )
 }
 
-export default SolveButton
+export default SolveByAIButton

@@ -133,7 +133,7 @@ const AddProblems = () => {
             name="outputDescription"
             value={formData.outputDescription}
             onChange={handleChange}
-            label="Please input a utput description"
+            label="Please input a output description"
             variant="outlined"
           />
           <label>Video: </label>
@@ -193,10 +193,10 @@ const AddProblems = () => {
               ))}
             </Stack>
           </div>
+          <Button variant="contained" type="submit">
+            Submit
+          </Button>
         </Stack>
-        <Button variant="contained" type="submit">
-          Submit
-        </Button>
       </form>
     </Box>
   )
