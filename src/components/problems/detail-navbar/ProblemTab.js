@@ -19,3 +19,5 @@ const ProblemTab = ({problem}) => {
         </div>
     );
 };
+
+export default ProblemTab;

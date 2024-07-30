@@ -4,13 +4,12 @@
  */
 
 import React from "react";
-import HintByAIButton from "./HintByAIButton";
+import HintByAIButton from "../HintByAIButton";
 
-const HintByAi = ({problem}) => {
+const HintByAiTab = ({problem}) => {
     return (
         <div>
             <h1>Hint By AI</h1>
-            <p>Hint by AI will be added soon</p>
             <HintByAIButton
                 title={problem.title}
                 question={problem.description}
@@ -19,3 +18,5 @@ const HintByAi = ({problem}) => {
         </div>
     );
 };
+
+export default HintByAiTab;

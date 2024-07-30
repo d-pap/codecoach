@@ -8,7 +8,11 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import CustomTabPanel from "./CustomTabPanel";
 import PropTypes from "prop-types";
-import ProblemTab from "./detailNavbar/ProblemTab";
+import ProblemTab from "./detail-navbar/ProblemTab";
+import HintByAiTab from "./detail-navbar/HintByAITab";
+import SolutionByAITab from "./detail-navbar/SolutionByAITab";
+import HintByDatabaseTab from "./detail-navbar/HintByDatabase";
+import ForumTab from "./detail-navbar/ForumTab";
 
 // styled container to show problem details
 const DetailContainer = styled.div`
@@ -69,27 +73,29 @@ function ProblemDetails({problem}) {
                     <Tab label="Forum" {...a11yProps(4)} />
                 </Tabs>
                 <CustomTabPanel value={value} index={0}>
-                    <h1>Problem</h1>
                     <div>
-                        {" "}
-                        <ProblemTab problem={problem} />{" "}
+                        <ProblemTab problem={problem} />
                     </div>
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                    <h1>AI Hint</h1>
-                    <p>AI Hint Content</p>
+                    <div>
+                        <HintByAiTab problem={problem} />
+                    </div>
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={2}>
-                    <h1>AI Solution</h1>
-                    <p>AI Solution Content</p>
+                    <div>
+                        <SolutionByAITab problem={problem} />
+                    </div>
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={3}>
-                    <h1>Hint/Video</h1>
-                    <p>Hint/Video Content</p>
+                    <div>
+                        <HintByDatabaseTab problem={problem} />
+                    </div>
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={4}>
-                    <h1>Forum</h1>
-                    <p>Forum Content</p>
+                    <div>
+                        <ForumTab problem={problem} />
+                    </div>
                 </CustomTabPanel>
             </DetailContainer>
         );

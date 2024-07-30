@@ -7,7 +7,7 @@
 
 import React from "react";
 
-const HintByDatabase = ({problem}) => {
+const HintByDatabaseTab = ({problem}) => {
     return (
         <div>
             <h1>Hint By Database</h1>
@@ -15,3 +15,5 @@ const HintByDatabase = ({problem}) => {
         </div>
     );
 };
+
+export default HintByDatabaseTab;

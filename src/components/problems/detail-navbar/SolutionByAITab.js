@@ -4,13 +4,12 @@
  */
 
 import React from "react";
-import SolveByAIButton from "./SolveByAIButton";
+import SolveByAIButton from "../SolveByAIButton";
 
 const SolutionByAITab = ({problem}) => {
     return (
         <div>
             <h1>Solution By AI</h1>
-            <p>Solution by AI will be added soon</p>
             <SolveByAIButton
                 title={problem.title}
                 question={problem.description}
@@ -19,3 +18,5 @@ const SolutionByAITab = ({problem}) => {
         </div>
     );
 };
+
+export default SolutionByAITab;
