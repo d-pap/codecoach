@@ -5,13 +5,14 @@
  */
 
 import React from "react";
+import NavbarStack from "./NavbarStack";
 
 const ForumTab = () => {
     return (
-        <div>
+        <NavbarStack>
             <h1>Forum</h1>
             <p>Forum will be added soon</p>
-        </div>
+        </NavbarStack>
     );
 };
 

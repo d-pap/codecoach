@@ -3,11 +3,11 @@
  */
 
 import React from "react";
+import NavbarStack from "./NavbarStack";
 
 const ProblemTab = ({problem}) => {
     return (
-        <div>
-            <h1>{problem.title}</h1>
+        <NavbarStack>
             <h2>Description</h2>
             <p>{problem.description}</p>
             <h2>Example Inputs</h2>
@@ -16,7 +16,7 @@ const ProblemTab = ({problem}) => {
             <pre>{JSON.stringify(problem.exampleOutputs, null, 2)}</pre>
             <h2>Test Cases</h2>
             <pre>{JSON.stringify(problem.testCases, null, 2)}</pre>
-        </div>
+        </NavbarStack>
     );
 };
 

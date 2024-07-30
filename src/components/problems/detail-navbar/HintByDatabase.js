@@ -6,13 +6,14 @@
  */
 
 import React from "react";
+import NavbarStack from "./NavbarStack";
 
 const HintByDatabaseTab = ({problem}) => {
     return (
-        <div>
+        <NavbarStack>
             <h1>Hint By Database</h1>
             <p>Hint by Database will be added soon</p>
-        </div>
+        </NavbarStack>
     );
 };
 
