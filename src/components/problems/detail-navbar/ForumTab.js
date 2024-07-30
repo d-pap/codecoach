@@ -6,7 +6,7 @@
 
 import React from "react";
 
-const Forum = () => {
+const ForumTab = () => {
     return (
         <div>
             <h1>Forum</h1>
@@ -15,4 +15,4 @@ const Forum = () => {
     );
 };
 
-export default Forum;
+export default ForumTab;
