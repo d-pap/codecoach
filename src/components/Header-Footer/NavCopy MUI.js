@@ -1,99 +1,64 @@
-import React from 'react'
-import { NavLink as Link } from 'react-router-dom'
-import styled from 'styled-components'
-import Stack from '@mui/material/Stack'
-import Divider from '@mui/material/Divider'
-import Paper from '@mui/material/Paper'
-import { styled as muiStyled } from '@mui/material/styles'
+import React from "react";
+import { NavLink as RouterLink } from "react-router-dom";
+import { AppBar, Toolbar, Button, IconButton, Box } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import { styled } from "@mui/system";
 
-const Item = muiStyled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#DEF9C4' : '#468585',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  display: 'flex',
-  alignItems: 'center',
-  whiteSpace: 'nowrap',
-  '&:hover': {
-    background: theme.palette.mode === 'dark' ? '#50B498' : '#256ce1',
-    color: theme.palette.mode === 'dark' ? '#fff' : '#DEF9C4',
+// Styled NavLink component using MUI
+const NavLink = styled(Button)(({ theme }) => ({
+  color: "#DEF9C4",
+  textDecoration: "none",
+  borderRadius: "10px",
+  whiteSpace: "nowrap", // Prevent text wrapping
+  "&:hover": {
+    background: "#9CDBA6",
+    color: "#468585",
   },
-}))
-
-const Nav = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 100%;
-  flex-wrap: nowrap;
-`
-
-const NavLink = styled(Link)`
-  color: #def9c4;
-  text-decoration: none;
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  white-space: nowrap; // Prevent text from wrapping
-  &.active {
-    font-weight: bold;
-    background-color: #50b498; // Active background color
-  }
-`
-
-const NavBtnLink = styled(Link)`
-  border-radius: 4px;
-  background: #256ce1;
-  padding: 10px 22px;
-  padding-right: 24px; // Padding right for spacing
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  white-space: nowrap; // Prevent text from wrapping
-  &:hover {
-    transition: all 0.2s ease-in-out;
-    background: #fff;
-    color: #010606;
-  }
-`
+  "&.active": {
+    color: "#DEF9C4",
+    backgroundColor: "#50B498", // Active background color
+  },
+}));
 
 const Navbar = () => {
   return (
-    <Nav>
-      <Stack
-        direction="row"
-        divider={<Divider orientation="vertical" flexItem />}
-        spacing={2}
-        sx={{ flexWrap: 'nowrap' }} // Prevent wrapping in Stack
-      >
-        <Item activeClassName="active">
-          <NavLink to="/about" activeClassName="active">
-            <span>About</span>
+    <AppBar position="static" sx={{ borderBottom: "2px solid #468585", backgroundColor: "transparent" }}>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between", height: "85px" }}>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ display: { xs: "block", sm: "none" } }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center" }}>
+          <NavLink component={RouterLink} to="/about" activeClassName="active">About</NavLink>
+          <NavLink component={RouterLink} to="/problems" activeClassName="active">Problems</NavLink>
+          <NavLink component={RouterLink} to="/sign-up" activeClassName="active">Sign Up</NavLink>
+          <NavLink component={RouterLink} to="/addProblems" activeClassName="active">Add Problems</NavLink>
+        </Box>
+        <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center" }}>
+          <NavLink
+            component={RouterLink}
+            to="/signin"
+            sx={{
+              backgroundColor: "#50B498",
+              padding: "10px 22px",
+              marginLeft: "24px",
+              transition: "all 0.2s ease-in-out",
+              "&:hover": {
+                background: "#9CDBA6",
+                color: "#468585",
+              },
+            }}
+          >
+            Sign In
           </NavLink>
-        </Item>
-        <Item>
-          <NavLink to="/problems" activeClassName="active">
-            <span>Problems</span>
-          </NavLink>
-        </Item>
-        <Item>
-          <NavLink to="/sign-up" activeClassName="active">
-            <span>Sign Up</span>
-          </NavLink>
-        </Item>
-        <Item>
-          <NavLink to="/addProblems" activeClassName="active">
-            <span>Add Problems</span>
-          </NavLink>
-        </Item>
-        <NavBtnLink to="/signin">Sign In</NavBtnLink>
-      </Stack>
-    </Nav>
-  )
-}
+        </Box>
+      </Toolbar>
+    </AppBar>
+  );
+};
 
-export default Navbar
+export default Navbar;

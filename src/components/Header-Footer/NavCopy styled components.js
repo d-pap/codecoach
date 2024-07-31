@@ -1,6 +1,6 @@
-import React from 'react'
-import { NavLink as Link } from 'react-router-dom'
-import styled from 'styled-components'
+import React from "react";
+import { NavLink as Link } from "react-router-dom";
+import styled from "styled-components";
 
 // Main navbar container
 const Nav = styled.nav`
@@ -10,34 +10,33 @@ const Nav = styled.nav`
   justify-content: space-between;
   padding: 0.2rem calc((100vw - 1000px) / 2);
   z-index: 12;
-`
+`;
 
 // Styled NavLink component
 const NavLink = styled(Link)`
-  color: #def9c4;
+  color: #DEF9C4;
   display: flex;
-  align-items: center;
+  // align-items: center;
   text-decoration: none;
   padding: 0 1rem;
   // height: 100%;
   cursor: pointer;
-  border-radius: 10px;
+  border-radius:10px;
   white-space: nowrap; // Prevent text wrapping
   &:hover {
-    background: #9cdba6;
+    background: #9CDBA6;
     color: #468585;
   }
   &.active {
-    color: #def9c4;
-    background-color: #50b498; // Active background color
+    color: #DEF9C4;
+    background-color: #50B498; // Active background color
   }
-`
+`;
 
 // Mobile menu icon styling
 const Bars = styled.div`
   display: none;
-  color: #def9c4;
-
+  color: #DEF9C4;
   @media screen and (max-width: 768px) {
     display: block;
     position: absolute;
@@ -47,18 +46,24 @@ const Bars = styled.div`
     font-size: 1.8rem;
     cursor: pointer;
   }
-`
+`;
 
 // Container for navigation links
 const NavMenu = styled.div`
   display: flex;
+  // justify-content: space-between;
   align-items: center;
-  margin-right: -24px;
+  // flexDirection: row;
+  // justifyContent: flex-end;
+  // alignItems: flex-end;
+  // alignItems: right;
+
+  // margin-right: 24px;
 
   @media screen and (max-width: 768px) {
     display: none;
   }
-`
+`;
 
 // Container for navigation buttons
 const NavBtn = styled.nav`
@@ -69,14 +74,14 @@ const NavBtn = styled.nav`
   @media screen and (max-width: 768px) {
     display: none;
   }
-`
+`;
 
 // Styled component for navigation button links
 const NavBtnLink = styled(Link)`
   border-radius: 4px;
-  background: #50b498;
+  background: #50B498;
   padding: 10px 22px;
-  color: #def9c4;
+  color: #DEF9C4;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   text-decoration: none;
@@ -84,34 +89,26 @@ const NavBtnLink = styled(Link)`
   white-space: nowrap; // Prevent text wrapping
 
   &:hover {
-    background: #9cdba6;
+    background: #9CDBA6;
     color: #468585;
   }
-`
+`;
 
 const Navbar = () => {
   return (
     <Nav>
       <Bars />
       <NavMenu>
-        <NavLink to="/about" activeClassName="active">
-          About
-        </NavLink>
-        <NavLink to="/problems" activeClassName="active">
-          Problems
-        </NavLink>
-        <NavLink to="/sign-up" activeClassName="active">
-          Sign Up
-        </NavLink>
-        <NavLink to="/addProblems" activeClassName="active">
-          Add Problems
-        </NavLink>
+        <NavLink to="/about" activeClassName="active">About</NavLink>
+        <NavLink to="/problems" activeClassName="active">Problems</NavLink>
+        <NavLink to="/sign-up" activeClassName="active">Sign Up</NavLink>
+        <NavLink to="/addProblems" activeClassName="active">Add Problems</NavLink>
       </NavMenu>
       <NavBtn>
         <NavBtnLink to="/signin">Sign In</NavBtnLink>
       </NavBtn>
     </Nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
