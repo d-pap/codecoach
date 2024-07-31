@@ -63,70 +63,64 @@ const Navbar = () => {
   return (
     <AppBar position="static" sx={{ borderBottom: "2px solid #468585", backgroundColor: "transparent" }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between", height: "85px" }}>
-        {isMobile ? (
-          <>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              onClick={handleDrawerToggle}
-              sx={{ display: { xs: "block", sm: "none" } }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Drawer
-              anchor="left"
-              open={mobileOpen}
-              onClose={handleDrawerToggle}
-              sx={{
-                "& .MuiDrawer-paper": { boxSizing: "border-box", width: 240 },
-              }}
-            >
-              {drawer}
-            </Drawer>
-          </>
-        ) : (
-          <>
-            <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center" }}>
-              <NavLink component={RouterLink} to="/about" activeClassName="active">About</NavLink>
-              <NavLink component={RouterLink} to="/problems" activeClassName="active">Problems</NavLink>
-              <NavLink component={RouterLink} to="/addProblems" activeClassName="active">Add Problems</NavLink>
-            </Box>
-            <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center", marginLeft: "auto", paddingRight: "20px" }}> {/* Add padding or margin here */}
-              <IconButton
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircleIcon />
-              </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                id={menuId}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-              >
-                <MenuItem onClick={handleMenuClose} component={RouterLink} to="/signin">Log In</MenuItem>
-                <MenuItem onClick={handleMenuClose} component={RouterLink} to="/signup">Sign Up</MenuItem>
-                <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-                <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-                <MenuItem onClick={handleMenuClose}>Log out</MenuItem>
-              </Menu>
-            </Box>
-          </>
-        )}
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          onClick={handleDrawerToggle}
+          sx={{ display: { xs: "block", sm: "none" } }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Drawer
+          anchor="left"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          sx={{
+            "& .MuiDrawer-paper": { boxSizing: "border-box", width: 240 },
+          }}
+        >
+          {drawer}
+        </Drawer>
+        <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center" }}>
+          <NavLink component={RouterLink} to="/" activeClassName="active">Home</NavLink>
+          <NavLink component={RouterLink} to="/about" activeClassName="active">About</NavLink>
+          <NavLink component={RouterLink} to="/problems" activeClassName="active">Problems</NavLink>
+          <NavLink component={RouterLink} to="/addProblems" activeClassName="active">Add Problems</NavLink>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center", marginLeft: "auto", paddingRight: "20px" }}>
+          <IconButton
+            edge="end"
+            aria-label="account of current user"
+            aria-controls={menuId}
+            aria-haspopup="true"
+            onClick={handleProfileMenuOpen}
+            color="inherit"
+          >
+            <AccountCircleIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            id={menuId}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={handleMenuClose} component={RouterLink} to="/signin">Log In</MenuItem>
+            <MenuItem onClick={handleMenuClose} component={RouterLink} to="/signup">Sign Up</MenuItem>
+            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={handleMenuClose}>Log out</MenuItem>
+          </Menu>
+        </Box>
       </Toolbar>
     </AppBar>
   );

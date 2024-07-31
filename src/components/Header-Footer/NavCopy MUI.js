@@ -89,6 +89,7 @@ const Navbar = () => {
           <>
             <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center" }}>
               <NavLink component={RouterLink} to="/about" activeClassName="active">About</NavLink>
+              <NavLink component={RouterLink} to="/about" activeClassName="active">About</NavLink>
               <NavLink component={RouterLink} to="/problems" activeClassName="active">Problems</NavLink>
               <NavLink component={RouterLink} to="/addProblems" activeClassName="active">Add Problems</NavLink>
             </Box>
