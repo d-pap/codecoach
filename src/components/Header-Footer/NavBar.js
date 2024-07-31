@@ -61,7 +61,8 @@ const Navbar = () => {
   const menuId = 'primary-search-account-menu';
 
   return (
-    <AppBar position="static" sx={{ borderBottom: "2px solid #468585", backgroundColor: "transparent" }}>
+    // <AppBar position="static" sx={{ borderBottom: "2px solid #468585", backgroundColor: "transparent" }}>
+    <AppBar position="static" sx={{ backgroundColor: "transparent" }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between", height: "85px" }}>
         <IconButton
           edge="start"

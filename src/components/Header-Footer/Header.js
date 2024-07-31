@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink as RouterLink } from "react-router-dom";
-import Navbar from "./NavCopy";
+import Navbar from "./NavBar";
 import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import Logo from './icons/CodeCoachLogo.png'; // Import the logo
