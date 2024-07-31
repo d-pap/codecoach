@@ -29,6 +29,16 @@ export async function fetchProblemById(id) {
   }
 }
 
+export async function addICPCProblem(problem) {
+  try {
+    const response = await axios.post(`${API_GATEWAY_URL}/problems`, problem)
+    return response.data
+  } catch (error) {
+    console.error('Error adding problem:', error)
+    throw new Error('Failed to add problem')
+  }
+}
+
 // Function for LLM interaction which returns a hint
 // Lambda function and APIGW endpoint. Currently works
 // as long as the LLM server is running locally
