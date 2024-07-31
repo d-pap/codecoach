@@ -6,8 +6,9 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { fetchProblems } from '../../api'
+import ProblemCard from '../../components/problems/ProblemCardLayout'
+import { Stack } from '@mui/material'
 
 function Problems() {
   const [problems, setProblems] = useState([])
@@ -59,10 +60,9 @@ function Problems() {
         <div id="rightcolumn">
           <ul>
             {problems.map((problem) => (
-              <li key={problem._id}>
-                <Link to={`/problems/${problem._id}`}>{problem.title}</Link>
-                <p>{problem.description}</p>
-              </li>
+              <Stack key={problem._id} spacing={2}>
+                <ProblemCard problem={problem} />
+              </Stack>
             ))}
           </ul>
         </div>
