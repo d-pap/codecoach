@@ -1,124 +1,88 @@
-import React from 'react'
-import FacebookIcon from '@mui/icons-material/Facebook'
-import TwitterIcon from '@mui/icons-material/Twitter'
-import LinkedInIcon from '@mui/icons-material/LinkedIn'
-import InstagramIcon from '@mui/icons-material/Instagram'
-import styled from 'styled-components'
+import React from 'react';
+import { Box, Container, Typography, Link as MuiLink, Grid } from '@mui/material';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import { styled } from '@mui/system';
 
-const FooterSection = styled.footer`
-  width: 100%;
-  background-color: #468585;
-  padding: 90px 0;
-  color: #b6b6b6;
-`
+const FooterSection = styled(Box)(({ theme }) => ({
+  width: '100%',
+  backgroundColor: '#468585',
+  padding: '90px 0',
+  color: '#b6b6b6',
+}));
 
-const FooterContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0 20px;
-`
+const InformationText = styled(Typography)(({ theme }) => ({
+  color: '#def9c4',
+  marginBottom: theme.spacing(2),
+}));
 
-const Column = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin: 0 20px;
-`
+const CallText = styled(Typography)(({ theme }) => ({
+  color: '#b6b6b6',
+  marginBottom: theme.spacing(2),
+  '& a': {
+    color: '#9cdba6',
+    textDecoration: 'none',
+    '&:hover': {
+      color: '#878686',
+    },
+  },
+}));
 
-const InformationText = styled.h3`
-  color: #def9c4;
-  margin-right: 20px;
-`
-
-const CallText = styled.p`
-  color: #b6b6b6;
-  margin-right: 20px;
-
-  a {
-    color: #9cdba6;
-    text-decoration: none;
-
-    &:hover {
-      color: #878686;
-    }
-  }
-`
-
-const SocialIcon = styled.div`
-  display: flex;
-  align-items: center;
-
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-
-    li {
-      margin-left: 10px; 
-      a {
-        color: #9CDBA6;
-        text-decoration: none;
-        transition: color 0.3s ease;
-        &:hover {
-          color: #878686;
-        }
-      img {
-        width: 20px;
-        height: 20px;
-      }
-
-    }
-  }
-`
+const SocialIcon = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  '& a': {
+    color: '#9CDBA6',
+    textDecoration: 'none',
+    marginBottom: theme.spacing(1),
+    display: 'flex',
+    alignItems: 'center',
+    '&:hover': {
+      color: '#878686',
+    },
+  },
+}));
 
 const Footer = () => {
   return (
     <FooterSection>
-      <FooterContainer>
-        <Column>
-          <div>
-            <InformationText>Contact Us</InformationText>
+      <Container>
+        <Grid container spacing={4} justifyContent="center">
+          <Grid item xs={12} sm={6} md={4}>
+            <InformationText variant="h6">Contact Us</InformationText>
             <CallText>
-              <a tel="01 1234567890">+01 1234567890</a>
+              <MuiLink href="tel:+011234567890">+01 1234567890</MuiLink>
             </CallText>
             <CallText>
-              <a tel="01 9876543210">+01 9876543210</a>
+              <MuiLink href="tel:+019876543210">+01 9876543210</MuiLink>
             </CallText>
             <CallText>
-              <a mailto="demo@gmail.com">demo@gmail.com</a>
+              <MuiLink href="mailto:demo@gmail.com">demo@gmail.com</MuiLink>
             </CallText>
-          </div>
-          <SocialIcon>
-            <ul>
-              <li>
-                <a href="#">
-                  <FacebookIcon /> Facebook
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <TwitterIcon /> Twitter
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <LinkedInIcon /> LinkedIn
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <InstagramIcon /> Instagram
-                </a>
-              </li>
-            </ul>
-          </SocialIcon>
-        </Column>
-      </FooterContainer>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <SocialIcon>
+              <MuiLink href="#">
+                <FacebookIcon /> Facebook
+              </MuiLink>
+              <MuiLink href="#">
+                <TwitterIcon /> Twitter
+              </MuiLink>
+              <MuiLink href="#">
+                <LinkedInIcon /> LinkedIn
+              </MuiLink>
+              <MuiLink href="#">
+                <InstagramIcon /> Instagram
+              </MuiLink>
+            </SocialIcon>
+          </Grid>
+        </Grid>
+      </Container>
     </FooterSection>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;
