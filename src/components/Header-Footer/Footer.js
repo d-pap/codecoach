@@ -1,22 +1,28 @@
-import React from 'react';
-import { Box, Container, Typography, Link as MuiLink, Grid } from '@mui/material';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import { styled } from '@mui/system';
+import React from 'react'
+import {
+  Box,
+  Container,
+  Typography,
+  Link as MuiLink,
+  Grid,
+} from '@mui/material'
+import FacebookIcon from '@mui/icons-material/Facebook'
+import TwitterIcon from '@mui/icons-material/Twitter'
+import LinkedInIcon from '@mui/icons-material/LinkedIn'
+import InstagramIcon from '@mui/icons-material/Instagram'
+import { styled } from '@mui/system'
 
 const FooterSection = styled(Box)(({ theme }) => ({
   width: '100%',
   backgroundColor: '#468585',
   padding: '90px 0',
   color: '#b6b6b6',
-}));
+}))
 
 const InformationText = styled(Typography)(({ theme }) => ({
   color: '#def9c4',
   marginBottom: theme.spacing(2),
-}));
+}))
 
 const CallText = styled(Typography)(({ theme }) => ({
   color: '#b6b6b6',
@@ -28,7 +34,7 @@ const CallText = styled(Typography)(({ theme }) => ({
       color: '#878686',
     },
   },
-}));
+}))
 
 const SocialIcon = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -44,7 +50,7 @@ const SocialIcon = styled(Box)(({ theme }) => ({
       color: '#878686',
     },
   },
-}));
+}))
 
 const Footer = () => {
   return (
@@ -82,7 +88,7 @@ const Footer = () => {
         </Grid>
       </Container>
     </FooterSection>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer
