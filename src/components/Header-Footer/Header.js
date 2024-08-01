@@ -1,49 +1,54 @@
-import React from 'react'
-import Navbar from './NavCopy'
-import styled from 'styled-components'
+import React from "react";
+import { NavLink as RouterLink } from "react-router-dom";
+import Navbar from "./NavBar";
+import { AppBar, Box, Toolbar, Typography } from "@mui/material";
+import { styled } from "@mui/system";
+import Logo from './icons/CodeCoachLogo.png'; // Import the logo
 
-const HeaderSection = styled.header`
-  width: 100%;
-  background: #468585;
-  height: auto;
-  background-size: 100%;
-  background-repeat: no-repeat;
-`
+// Styled header section using MUI
+const HeaderSection = styled(AppBar)(({ theme }) => ({
+  background: "#468585",
+  display: "flex",
+  justifyContent: "space-between",
+}));
 
-const HeaderContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px 0;
-`
+const TitleWrapper = styled(Box)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "flex-start",
+  alignItems: "center",
+  textDecoration: "none",
+}));
 
-const TitleWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 20px;
-`
+const ProjectTitle = styled(Typography)(({ theme }) => ({
+  fontWeight: "bold",
+  textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+  textAlign: "left",
+  fontSize: "2rem",
+  color: "#def9c4",
+  marginLeft: theme.spacing(2), // Add some space between the logo and title
+  textDecoration: "none", 
+}));
 
-const ProjectTitle = styled.h1`
-  font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  text-align: center;
-  font-size: 5rem;
-  color: #def9c4;
-`
+const LogoImage = styled('img')(({ theme }) => ({
+  height: 100, // Adjust the height as needed
+  marginRight: theme.spacing(2),
+  marginTop: theme.spacing(1)
+}));
 
 const Header = () => {
   return (
-    <HeaderSection>
-      <HeaderContainer>
-        <TitleWrapper>
-          <ProjectTitle>Code Coach</ProjectTitle>
+    <HeaderSection position="static">
+      <Toolbar sx={{ justifyContent: "space-between", width: "100%" }}>
+      <TitleWrapper component={RouterLink} to="/" sx={{ textDecoration: 'none' }}>
+          <LogoImage src={Logo} alt="CodeCoach Logo" />
+          <ProjectTitle variant="h1">Code Coach</ProjectTitle>
         </TitleWrapper>
-      </HeaderContainer>
-      <Navbar />
+        <Box sx={{ marginLeft: "auto" }}>
+          <Navbar />
+        </Box>
+      </Toolbar>
     </HeaderSection>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
