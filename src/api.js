@@ -6,9 +6,8 @@
  */
 import axios from 'axios'
 
-const API_GATEWAY_URL =
-  'https://appu3yu7tg.execute-api.us-east-1.amazonaws.com/dev'
-const LLM_URL = 'http://localhost:3500'
+const API_GATEWAY_URL = process.env.REACT_APP_API_URL
+const LLM_URL = process.env.REACT_APP_LLM_URL
 
 export const fetchProblems = async () => {
   try {
