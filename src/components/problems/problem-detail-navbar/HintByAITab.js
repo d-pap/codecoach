@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react'
-import HintByAIButton from '../HintByAIButton'
+import HintByAIButton from '../llm-components/HintByAIButton'
 import styled from 'styled-components'
 import NavbarStack from './NavbarStack'
 

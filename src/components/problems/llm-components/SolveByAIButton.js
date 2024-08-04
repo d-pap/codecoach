@@ -9,11 +9,11 @@
  */
 
 import React, { useState } from 'react'
-import { getHint } from '../../api'
+import { getSolution } from '../../../api'
 import { Button } from '@mui/material'
 
 /**
- * Prompts the ai to generate a hint for the problem
+ * Prompts the ai to generate a solution for the problem
  * once the user clicks the button. The ai will user
  * infrances given the problem itself and the hints stored
  * in the database for taht problem.
@@ -22,34 +22,35 @@ import { Button } from '@mui/material'
  * @param {answer} string - problem answer
  * @returns
  */
-const HintByAIButton = ({ title, question, answer, updateHintText }) => {
+const SolveByAIButton = ({ title, question, answer, updateSolutionText }) => {
   const [isLoading, setIsLoading] = useState(false)
 
   // call the getHint function (defined in `api.js`)
-  const handleGetHint = async () => {
+  const handleGetSolution = async () => {
     setIsLoading(true)
     try {
-      const hintText = await getHint(title, question, answer)
-      updateHintText(hintText)
+      const hintText = await getSolution(title, question, answer)
+      updateSolutionText(hintText)
     } catch (error) {
-      console.error('Error fetching hint:', error)
-      updateHintText('Error fetching hint. Please try again.')
+      console.error('Error fetching solution:', error)
+      updateSolutionText('Error fetching solution. Please try again.')
     }
     setIsLoading(false)
   }
+
   // trigger it when user clicks the button and show results
   return (
     <div>
       <Button
         variant="contained"
         type="button"
-        onClick={handleGetHint}
+        onClick={handleGetSolution}
         disabled={isLoading}
       >
-        {isLoading ? 'Loading...' : 'Get Hint'}
+        {isLoading ? 'Loading...' : 'Get solution'}
       </Button>
     </div>
   )
 }
 
-export default HintByAIButton
+export default SolveByAIButton

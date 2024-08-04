@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import SolveByAIButton from '../SolveByAIButton'
+import SolveByAIButton from '../llm-components/SolveByAIButton'
 import NavbarStack from './NavbarStack'
 
 const HintDisplay = styled.div`
