@@ -75,6 +75,7 @@ function Problems() {
               variant="contained"
               onClick={() => navigateTo('/problems/icpc')}
               style={{ width: '100%', marginBottom: '16px' }}
+              disabled={loading}
             >
               ICPC
             </Button>
@@ -108,6 +109,7 @@ function Problems() {
               variant="contained"
               onClick={() => navigateTo('/problems/programming')}
               style={{ width: '100%', marginBottom: '16px' }}
+              disabled={loading}
             >
               Programming
             </Button>
@@ -141,6 +143,7 @@ function Problems() {
               variant="contained"
               onClick={() => navigateTo('/problems/interview')}
               style={{ width: '100%', marginBottom: '16px' }}
+              disabled={loading}
             >
               Interview
             </Button>
