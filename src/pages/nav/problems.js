@@ -40,6 +40,11 @@ function Problems() {
     loadProblems()
   }, [])
 
+  /**
+   * Once the problems are loaded, they are stored in the state and can be passed to the problem pages.
+   * The state is preserved when navigating between pages, so the problems are available to the problem pages.
+   * The database will theoretically not be queried again when the user goes back to the problems page.
+   */
   const navigateTo = (path) => {
     if (!loading) {
       navigate(path, { state: { problems } })
