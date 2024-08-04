@@ -2,11 +2,10 @@
  * Component that creates a flex container with 2 halves
  * For Problem Solving page and any split screen layouts we need
  */
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
+import ResizableColumn from '../utility/ResizableColumn'
 
-// reset some default styling
-// these css rules make the container height fit perfect (no scroll bar)
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -19,8 +18,6 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-// container that takes up full viewport height
-// subtracted by height of navbar (85px)
 const LayoutContainer = styled.div`
   display: flex;
   height: calc(100vh - 85px);
@@ -42,11 +39,45 @@ const RightPanel = styled.div`
 `
 
 const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
+  const [resizableProps, setResizableProps] = useState(
+    getResizableColumnProps()
+  )
+
+  useEffect(() => {
+    const handleResize = () => {
+      setResizableProps(getResizableColumnProps())
+    }
+
+    window.addEventListener('resize', handleResize)
+    handleResize() // Initialize with the correct values
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
+  function getResizableColumnProps() {
+    const windowWidth = window.innerWidth
+
+    // Calculate dimensions based on window width
+    const minWidth = windowWidth * 0.3
+    const maxWidth = windowWidth * 0.7
+    const initialWidth = windowWidth * 0.5
+
+    return { initialWidth, maxWidth, minWidth }
+  }
+
   return (
     <>
       <GlobalStyle />
       <LayoutContainer>
-        <LeftPanel>{problemDetails}</LeftPanel>
+        <ResizableColumn
+          initialWidth={resizableProps.initialWidth}
+          maxWidth={resizableProps.maxWidth}
+          minWidth={resizableProps.minWidth}
+        >
+          <LeftPanel>{problemDetails}</LeftPanel>
+        </ResizableColumn>
         <RightPanel>{codeEditor}</RightPanel>
       </LayoutContainer>
     </>

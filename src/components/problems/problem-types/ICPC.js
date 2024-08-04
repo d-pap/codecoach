@@ -8,7 +8,7 @@ import { fetchProblems } from '../../../api'
 import ProblemCard from '../ProblemCardLayout'
 import { ICPCFilter, ICPCFilterDisplay } from './problem-filters/ICPCFilter'
 import { Stack } from '@mui/material'
-import ResizableColumn from '../../formating/ResizableColumn'
+import ResizableColumn from '../../utility/ResizableColumn'
 
 function ICPC() {
   const [problems, setProblems] = useState([])
@@ -16,6 +16,11 @@ function ICPC() {
   const [year, setYear] = useState('all')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [resizableColumnProps, setResizableColumnProps] = useState({
+    initialWidth: 0,
+    minWidth: 0,
+    maxWidth: 0,
+  })
 
   useEffect(() => {
     async function getProblems() {
@@ -29,6 +34,27 @@ function ICPC() {
       }
     }
     getProblems()
+  }, [])
+
+  useEffect(() => {
+    function getResizableColumnProps() {
+      const windowWidth = window.innerWidth
+
+      // Calculate dimensions based on window width
+      const minWidth = windowWidth * 0.2
+      const maxWidth = windowWidth * 0.3
+      const initialWidth = windowWidth * 0.25
+
+      return { initialWidth, maxWidth, minWidth }
+    }
+
+    const updateColumnProps = () => {
+      setResizableColumnProps(getResizableColumnProps())
+    }
+
+    updateColumnProps()
+    window.addEventListener('resize', updateColumnProps)
+    return () => window.removeEventListener('resize', updateColumnProps)
   }, [])
 
   const filteredProblems = ICPCFilter(problems, region, year)
@@ -50,7 +76,11 @@ function ICPC() {
         <h1>ICPC Problems</h1>
       </div>
       <div className="container" style={{ display: 'flex' }}>
-        <ResizableColumn initialWidth={200}>
+        <ResizableColumn
+          initialWidth={resizableColumnProps.initialWidth}
+          minWidth={resizableColumnProps.minWidth}
+          maxWidth={resizableColumnProps.maxWidth}
+        >
           <h3>Filters</h3>
           <ICPCFilterDisplay
             region={region}
