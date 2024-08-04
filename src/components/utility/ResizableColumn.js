@@ -13,27 +13,47 @@ function ResizableColumn({
   const [width, setWidth] = useState(initialWidth)
   const resizableRef = useRef(null)
 
-  const handleMouseDown = useCallback(
-    (e) => {
-      const startX = e.clientX
-
-      const handleMouseMove = (moveEvent) => {
+  const handleResize = useCallback(
+    (startPosition, event) => {
+      const handleMove = (moveEvent) => {
+        const clientX =
+          event.type === 'touchmove'
+            ? moveEvent.touches[0].clientX
+            : moveEvent.clientX
         const newWidth = Math.min(
           maxWidth,
-          Math.max(minWidth, width + (moveEvent.clientX - startX))
+          Math.max(minWidth, width + (clientX - startPosition))
         )
         setWidth(newWidth)
       }
 
-      const handleMouseUp = () => {
-        document.removeEventListener('mousemove', handleMouseMove)
-        document.removeEventListener('mouseup', handleMouseUp)
+      const handleEnd = () => {
+        document.removeEventListener('mousemove', handleMove)
+        document.removeEventListener('mouseup', handleEnd)
+        document.removeEventListener('touchmove', handleMove)
+        document.removeEventListener('touchend', handleEnd)
       }
 
-      document.addEventListener('mousemove', handleMouseMove)
-      document.addEventListener('mouseup', handleMouseUp)
+      document.addEventListener('mousemove', handleMove)
+      document.addEventListener('mouseup', handleEnd)
+      document.addEventListener('touchmove', handleMove, { passive: false })
+      document.addEventListener('touchend', handleEnd, { passive: false })
     },
     [width, minWidth, maxWidth]
+  )
+
+  const handleMouseDown = useCallback(
+    (e) => {
+      handleResize(e.clientX, e)
+    },
+    [handleResize]
+  )
+
+  const handleTouchStart = useCallback(
+    (e) => {
+      handleResize(e.touches[0].clientX, e)
+    },
+    [handleResize]
   )
 
   return (
@@ -58,6 +78,7 @@ function ResizableColumn({
           height: '100%',
         }}
         onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
       />
     </div>
   )
