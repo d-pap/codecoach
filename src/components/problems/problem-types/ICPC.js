@@ -4,34 +4,22 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { fetchProblems } from '../../../api'
+import { useLocation } from 'react-router-dom'
 import ProblemCard from '../ProblemCardLayout'
 import { ICPCFilter, ICPCFilterDisplay } from './problem-filters/ICPCFilter'
 import { Stack } from '@mui/material'
 import ResizableColumn from '../../formating/ResizableColumn'
 
 function ICPC() {
-  const [problems, setProblems] = useState([])
+  const location = useLocation()
+  const problems = location.state?.problems
   const [region, setRegion] = useState('all')
   const [year, setYear] = useState('all')
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [filteredProblems, setFilteredProblems] = useState(problems)
 
   useEffect(() => {
-    async function getProblems() {
-      try {
-        const data = await fetchProblems()
-        setProblems(data)
-        setLoading(false)
-      } catch (err) {
-        setError('Error fetching problems')
-        setLoading(false)
-      }
-    }
-    getProblems()
-  }, [])
-
-  const filteredProblems = ICPCFilter(problems, region, year)
+    setFilteredProblems(ICPCFilter(problems, region, year))
+  }, [problems, region, year])
 
   const handleRegionChange = (event) => {
     setRegion(event.target.value)
@@ -40,9 +28,6 @@ function ICPC() {
   const handleYearChange = (event) => {
     setYear(event.target.value)
   }
-
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>{error}</div>
 
   return (
     <div className="newsletter_section layout_padding">

@@ -5,7 +5,7 @@
 //  * then be taken to the Problem Detail page to solve it.
 //  */
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Stack,
@@ -15,14 +15,35 @@ import {
   useTheme,
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { fetchProblems } from '../../api'
 
 function Problems() {
   const navigate = useNavigate()
   const theme = useTheme()
   const isLaptopScreen = useMediaQuery(theme.breakpoints.up('md'))
 
+  const [loading, setLoading] = useState(true)
+  const [problems, setProblems] = useState([])
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    async function loadProblems() {
+      try {
+        const data = await fetchProblems()
+        setProblems(data)
+        setLoading(false)
+      } catch (err) {
+        setError('Error fetching problems')
+        setLoading(false)
+      }
+    }
+    loadProblems()
+  }, [])
+
   const navigateTo = (path) => {
-    navigate(path)
+    if (!loading) {
+      navigate(path, { state: { problems } })
+    }
   }
 
   return (
