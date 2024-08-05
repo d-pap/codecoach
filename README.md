@@ -2,8 +2,6 @@
 <h3 align="center"> Team: Derek Papierski, Marfn Mlakha, Yen Duong </h3>
   
 <h3 align="center">  Project Advisor: Dr. Probir Roy </h3>
-
-test
 ---
 
 ## ⭐ Overview
