@@ -11,6 +11,7 @@ import { fetchProblemById } from '../../api'
 import ProblemDetailLayout from '../../components/problems/ProblemDetailLayout'
 import CodeEditorPlaceholder from '../../components/problems/CodeEditorPlaceholder'
 import ProblemDetails from '../../components/problems/ProblemDetails'
+import CodeEditor from '../../components/problems/CodeEditor'
 
 function ProblemDetail() {
   // state variables
@@ -53,7 +54,7 @@ function ProblemDetail() {
       // render layout and pass ProblemDetails and
       // CodeEditorPlaceholder as props
       problemDetails={<ProblemDetails problem={problem} />}
-      codeEditor={<CodeEditorPlaceholder />}
+      codeEditor={<CodeEditor />}
     />
   )
 }
