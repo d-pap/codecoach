@@ -2,8 +2,9 @@
  * Component that creates a flex container with 2 halves
  * For Problem Solving page and any split screen layouts we need
  */
-import React from 'react'
+import React, { useState } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
+import CodeEditor from './CodeEditor'
 
 // reset some default styling
 // these css rules make the container height fit perfect (no scroll bar)
@@ -41,13 +42,19 @@ const RightPanel = styled.div`
   align-items: center;
 `
 
-const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
+const ProblemDetailLayout = ({ problemDetails }) => {
+  // state to hold the users code
+  const [code, setCode] =
+    useState(`# Your code goes here \ndef example_function():
+  print("Hello, world!")`)
   return (
     <>
       <GlobalStyle />
       <LayoutContainer>
         <LeftPanel>{problemDetails}</LeftPanel>
-        <RightPanel>{codeEditor}</RightPanel>
+        <RightPanel>
+          <CodeEditor code={code} setCode={setCode} />
+        </RightPanel>
       </LayoutContainer>
     </>
   )
