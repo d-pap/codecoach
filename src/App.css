@@ -101,8 +101,7 @@ Put CSS here to style the elements in App.js
 
 .text-big {
   font-weight: 500;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana,
-      sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 30px;
 }
 
@@ -143,7 +142,7 @@ Put CSS here to style the elements in App.js
 .text-footer {
   text-align: center;
   padding: 30px 0;
-  font-family: "Ubuntu", sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   display: flex;
   justify-content: center;
   color: #fff;
@@ -155,6 +154,16 @@ Put CSS here to style the elements in App.js
   justify-content: space-between;
 }
 
+.dropdown {
+  margin-bottom: 20px;
+}
+
+.problem {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
 #leftcolumn {
   width: 20%;
   padding: 10px;

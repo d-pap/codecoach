@@ -2,8 +2,8 @@
  * Component that creates a flex container with 2 halves
  * For Problem Solving page and any split screen layouts we need
  */
-import React from "react"
-import styled, { createGlobalStyle } from "styled-components"
+import React from 'react'
+import styled, { createGlobalStyle } from 'styled-components'
 
 // reset some default styling
 // these css rules make the container height fit perfect (no scroll bar)

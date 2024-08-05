@@ -5,12 +5,12 @@
  * from the problems list on Problems page
  */
 
-import React, { useState, useEffect } from "react"
-import { useParams } from "react-router-dom"
-import { fetchProblemById } from "../api"
-import ProblemDetailLayout from "../components/Problems/ProblemDetailLayout"
-import CodeEditorPlaceholder from "../components/Problems/CodeEditorPlaceholder"
-import ProblemDetails from "../components/Problems/ProblemDetails"
+import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import { fetchProblemById } from '../../api'
+import ProblemDetailLayout from '../../components/problems/ProblemDetailLayout'
+import CodeEditorPlaceholder from '../../components/problems/CodeEditorPlaceholder'
+import ProblemDetails from '../../components/problems/ProblemDetails'
 
 function ProblemDetail() {
   // state variables
@@ -34,7 +34,7 @@ function ProblemDetail() {
         setLoading(false) // set loading to false
       } catch (err) {
         // error message if fetch fails
-        setError("Error fetching problem details")
+        setError('Error fetching problem details')
         setLoading(false) // set loading to false bc fetch attempt is complete
       }
     }
