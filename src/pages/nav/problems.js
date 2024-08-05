@@ -5,7 +5,7 @@
 //  * then be taken to the Problem Detail page to solve it.
 //  */
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Stack,
@@ -15,14 +15,40 @@ import {
   useTheme,
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { fetchProblems } from '../../api'
 
 function Problems() {
   const navigate = useNavigate()
   const theme = useTheme()
   const isLaptopScreen = useMediaQuery(theme.breakpoints.up('md'))
 
+  const [loading, setLoading] = useState(true)
+  const [problems, setProblems] = useState([])
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    async function loadProblems() {
+      try {
+        const data = await fetchProblems()
+        setProblems(data)
+        setLoading(false)
+      } catch (err) {
+        setError('Error fetching problems')
+        setLoading(false)
+      }
+    }
+    loadProblems()
+  }, [])
+
+  /**
+   * Once the problems are loaded, they are stored in the state and can be passed to the problem pages.
+   * The state is preserved when navigating between pages, so the problems are available to the problem pages.
+   * The database will theoretically not be queried again when the user goes back to the problems page.
+   */
   const navigateTo = (path) => {
-    navigate(path)
+    if (!loading) {
+      navigate(path, { state: { problems } })
+    }
   }
 
   return (
@@ -49,6 +75,7 @@ function Problems() {
               variant="contained"
               onClick={() => navigateTo('/problems/icpc')}
               style={{ width: '100%', marginBottom: '16px' }}
+              disabled={loading}
             >
               ICPC
             </Button>
@@ -82,6 +109,7 @@ function Problems() {
               variant="contained"
               onClick={() => navigateTo('/problems/programming')}
               style={{ width: '100%', marginBottom: '16px' }}
+              disabled={loading}
             >
               Programming
             </Button>
@@ -115,6 +143,7 @@ function Problems() {
               variant="contained"
               onClick={() => navigateTo('/problems/interview')}
               style={{ width: '100%', marginBottom: '16px' }}
+              disabled={loading}
             >
               Interview
             </Button>
