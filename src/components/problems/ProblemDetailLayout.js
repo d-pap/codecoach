@@ -44,7 +44,9 @@ const RightPanel = styled.div`
 
 const ProblemDetailLayout = ({ problemDetails }) => {
   // state to hold the users code
-  const [code, setCode] = useState('')
+  const [code, setCode] =
+    useState(`# Your code goes here \ndef example_function():
+  print("Hello, world!")`)
   return (
     <>
       <GlobalStyle />
