@@ -9,8 +9,9 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { fetchProblemById } from '../../api'
 import ProblemDetailLayout from '../../components/problems/ProblemDetailLayout'
-import CodeEditorPlaceholder from '../../components/problems/CodeEditorPlaceholder'
+// import CodeEditorPlaceholder from '../../components/problems/CodeEditorPlaceholder'
 import ProblemDetails from '../../components/problems/ProblemDetails'
+import CodeEditor from '../../components/problems/CodeEditor'
 
 function ProblemDetail() {
   // state variables
@@ -51,9 +52,9 @@ function ProblemDetail() {
   return (
     <ProblemDetailLayout
       // render layout and pass ProblemDetails and
-      // CodeEditorPlaceholder as props
+      // codeEditor as props
       problemDetails={<ProblemDetails problem={problem} />}
-      codeEditor={<CodeEditorPlaceholder />}
+      codeEditor={<CodeEditor />}
     />
   )
 }

@@ -2,9 +2,11 @@
  * Component that creates a flex container with 2 halves
  * For Problem Solving page and any split screen layouts we need
  */
+
 import React, { useState, useEffect } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 import ResizableColumn from '../utility/ResizableColumn'
+import CodeEditor from './CodeEditor'
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -43,6 +45,10 @@ const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
     getResizableColumnProps()
   )
 
+  const [code, setCode] =
+    useState(`# Your code goes here \ndef example_function():
+  print("Hello, world!")`)
+
   useEffect(() => {
     const handleResize = () => {
       setResizableProps(getResizableColumnProps())
@@ -66,7 +72,6 @@ const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
 
     return { initialWidth, maxWidth, minWidth }
   }
-
   return (
     <>
       <GlobalStyle />
@@ -78,7 +83,9 @@ const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
         >
           <LeftPanel>{problemDetails}</LeftPanel>
         </ResizableColumn>
-        <RightPanel>{codeEditor}</RightPanel>
+        <RightPanel>
+          <CodeEditor code={code} setCode={setCode} />
+        </RightPanel>
       </LayoutContainer>
     </>
   )
