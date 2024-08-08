@@ -7,7 +7,7 @@
 <!-- HORIZONTAL TABLE OF CONTENTS -->
 <div align="center">
 
-[💡Overview](#-overview) &nbsp;&bull;&nbsp; [🚀 Motivation](#-motivation) &nbsp;&bull;&nbsp; [🛠️ Design Choices](#️-design-choices) &nbsp;&bull;&nbsp; [📆 Roadmap](#-roadmap) &nbsp;&bull;&nbsp; [📍 Installation](#-installation)
+💡[Overview](#-overview) &nbsp;&bull;&nbsp; 🚀 [Motivation](#-motivation) &nbsp;&bull;&nbsp; 🛠️ [Design Choices](#️-design-choices) &nbsp;&bull;&nbsp; 📆 [Roadmap](#-roadmap) &nbsp;&bull;&nbsp; 📍 [Installation](#-installation)
 
 </div>
 
