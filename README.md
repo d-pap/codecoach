@@ -1,7 +1,7 @@
 <!-- TITLE AND NAMES -->
 <h1 align="center"> Code Coach </h1>
-<h4 align="center"> <i>Team: Derek Papierski, Marfn Mlakha, Yen Duong</i> </h3>
-<h4 align="center">  <i>Project Advisor: Dr. Probir Roy</i> </h3>
+<h4 align="center"> <i>Team: Derek Papierski, Marfn Mlakha, Yen Duong</i> </h4>
+<h4 align="center">  <i>Project Advisor: Dr. Probir Roy</i> </h4>
 
 ---
 <!-- HORIZONTAL TABLE OF CONTENTS -->
