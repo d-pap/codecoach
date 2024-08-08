@@ -48,9 +48,7 @@ Our platform aims to create a supportive environment that encourages students to
 
 Our platform utilizes a **modern serverless architecture** to achieve scalability, flexibility, and cost-efficiency. By leveraging **AWS API Gateway** and **AWS Lambda** functions for our backend, we eliminate the need for traditional server management. API Gateway handles all incoming HTTP requests, routing them to specific Lambda functions that execute our backend logic. This setup allows us to scale seamlessly as our user base grows, reducing the overhead of managing dedicated servers.
 
-![Architecture Diagram](assets\basic-arch.png)
-
-<!-- <img src="assets\basic-arch.png" width="500" height="300"> -->
+<img src="assets\basic-arch.png">
 
 
 <!-- Tech Stack subsection -->
@@ -78,19 +76,20 @@ Our platform is designed to offer a comprehensive and user-friendly experience, 
 
 The landing page of our platform, offering an overview of features, highlighted problems, and navigation options.
 
-  ![Home Page Screenshot](assets\home-page.png)
+  <img src="assets\home-page.png">
+
 
 **Problems Page** 
 
 Displays a list of coding problems categorized by difficulty, region, and year. Users can filter and select problems to work on.
 
-  ![Problems Page Screenshot](assets\problems-page.png)
+  <img src="assets\problems-page.png">
 
 **Problem Solving Interface** 
 
 A dedicated area where users can view problem details and write, test, and submit their code in an integrated editor.
 
-  ![Problem Solving Interface Screenshot](assets\prob-solving-page.png)
+  <img src="assets\prob-solving-page.png">
 
 **AI Assistant** 
 
