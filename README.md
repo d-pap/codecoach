@@ -1,9 +1,29 @@
+<img src="assets\logo.png">
+
 <!-- TITLE AND NAMES -->
-<h1 align="center"> Code Coach </h1>
+
 <h4 align="center"> <i>Team: Derek Papierski, Marfn Mlakha, Yen Duong</i> </h4>
 <h4 align="center">  <i>Project Advisor: Dr. Probir Roy</i> </h4>
 
 ---
+<!-- 
+PROJECT STATUS BADGES:
+[![Contributors][contributors-shield]][contributors-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+
+LOGO BADGES:
+[![React.js]][React-url] [![AWS][AWS-blue]][AWS-url] [![MongoDB]][mongodb-url] 
+
+SMALL BADGES:
+[![React](https://img.shields.io/badge/React-%2320232a.svg?logo=react&logoColor=%2361DAFB)](#) 
+[![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?logo=amazon-web-services&logoColor=white)](#) 
+[![AWS](https://img.shields.io/badge/Amazon_AWS-232F3E?style=flat&logo=amazon-web-services&logoColor=white)](#) 
+[![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?logo=mongodb&logoColor=white)](#) 
+[![Netlify](https://img.shields.io/badge/Netlify-00C7B7?style=flat&logo=netlify&logoColor=white)](#)
+-->
+
 <!-- HORIZONTAL TABLE OF CONTENTS -->
 <div align="center">
 
@@ -154,3 +174,29 @@ To run the platform locally, you can follow the steps shown below.
 ## :star: Give a Star! 
 
 Support this research by **giving it a star**. Thanks!
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
+<!-- GitHub Project Status Badges: -->
+[contributors-shield]: https://img.shields.io/github/contributors/d-pap/codecoach.svg?style=for-the-badge
+[contributors-url]: https://github.com/d-pap/codecoach/graphs/contributors
+[stars-shield]: https://img.shields.io/github/stars/d-pap/codecoach.svg?style=for-the-badge
+[stars-url]: https://github.com/d-pap/codecoach/stargazers
+[issues-shield]: https://img.shields.io/github/issues/d-pap/codecoach.svg?style=for-the-badge
+[issues-url]: https://github.com/d-pap/codecoach/issues
+
+<!-- License Badge: -->
+[license-shield]: https://img.shields.io/github/license/d-pap/codecoach.svg?style=for-the-badge
+[license-url]: https://github.com/d-pap/codecoach/blob/master/LICENSE.txt
+
+<!-- Logo Badges: -->
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
+[Bootstrap-url]: https://getbootstrap.com
+[AWS-blue]: https://img.shields.io/badge/Amazon%20AWS-%23232F3E?logo=amazon-aws&logoColor=white&style=for-the-badge
+[AWS-orange]: https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white
+[AWS-url]: https://aws.com/
+[MongoDB]: https://img.shields.io/badge/-MongoDB-black?style=for-the-badge&logoColor=white&logo=mongodb&color=127237
+[mongodb-url]: https://www.mongodb.com/
