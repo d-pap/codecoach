@@ -1,56 +1,157 @@
+<!-- TITLE AND NAMES -->
 <h1 align="center"> Code Coach </h1>
-<h3 align="center"> Team: Derek Papierski, Marfn Mlakha, Yen Duong </h3>
-  
-<h3 align="center">  Project Advisor: Dr. Probir Roy </h3>
+<h4 align="center"> <i>Team: Derek Papierski, Marfn Mlakha, Yen Duong</i> </h3>
+<h4 align="center">  <i>Project Advisor: Dr. Probir Roy</i> </h3>
+
 ---
+<!-- HORIZONTAL TABLE OF CONTENTS -->
+<div align="center">
 
-## ⭐ Overview
-Our project aims to create an engaging platform designed for the UM-Dearborn ACM student chapter as part of our senior design project to help members prepare for competitive programming contests and technical job interviews. The platform will offer the following features:
+[💡Overview](#-overview) &nbsp;&bull;&nbsp; [🚀 Motivation](#-motivation) &nbsp;&bull;&nbsp; [🛠️ Design Choices](#️-design-choices) &nbsp;&bull;&nbsp; [📆 Roadmap](#-roadmap) &nbsp;&bull;&nbsp; [📍 Installation](#-installation)
 
-- A responsive web interface for users to interact with the platform
-- A database of ACM ICPC problems and similar competitive programming challenges
-- An integrated code editor where users can write and execute code in Python (initially), with support in other languages in the future.
-- An AI assistant that helps users understand and solve problems through its responses. 
-- A section where users can discuss problems and solutions, similar to a forum.
-- A dedicated area for users to practice interview questions.
+</div>
 
-Our platform will provide a supportive and interactive learning environment and leverage the power of AI to help students improve quicker.
 
+<!-- OVERVIEW -->
+## 💡 Overview
+
+**Code Coach** is a platform designed as part of our senior design project to empower students at the University of Michigan - Dearborn ACM chapter by providing a comprehensive suite of tools for preparing for competitive programming contests and technical interviews. 
+
+Our platform emphasizes:
+
+- **Interactive learning**: Users can engage with problems through an integrated code editor and receive AI-driven assistance.
+- **Scalability and Flexibility**: Built using **React** for the frontend and **AWS** for backend services, including **API Gateway** and **Lambda** functions, for a robust and scalable user experience.
+- **Community Collaboration**: Discussion forums and a collaborative environment for problem-solving and interview preparation.
+
+Our key features include a **Problems Page** for exploring coding challenges, a **Problem Solving Page** with real-time code execution and an AI assistant, and an **Interview Prep Page** to help students excel in their technical job interviews.
+
+For more details on the technology and architecture, visit our [Architecture](#️-architecture) and [Tech Stack](#️-tech-stack) sections.
+
+
+<!-- MOTIVATION -->
 ## 🚀 Motivation
-The motivation behind this project is to address the challenges faced by students in preparing for competitive programming contests and technical job interviews. The strategic aim is to provide an interactive and supportive learning environment that uses AI to enhance the user experience and learning outcomes. 
 
+The primary motivation for Code Coach is to address the challenges students face in preparing for competitive programming contests and technical job interviews. Research shows that early engagement in competitive programming can significantly enhance problem-solving skills, boost confidence, and improve academic performance.
+
+> "The participation of freshmen in competitions has a positive effect in early motivation and retention, as well as on their final grade in introductory courses."
+    — Ribeiro & Guerreiro, <a href="https://www.researchgate.net/publication/228411471_Early_introduction_of_competitive_programming" target="_blank">*Early Introduction of Competitive Programming*</a>
+
+
+Our platform aims to create a supportive environment that encourages students to start early, practice consistently, and ultimately excel in these critical areas. By integrating AI assistance, a curated problem database, and a collaborative community, Code Coach empowers students to achieve their full potential.
+
+
+<!-- DESIGN CHOICES -->
 ## 🛠️ Design Choices
 
-- **Tech Stack**: Our platform is built using the MERN stack (MongoDB, ExpressJS, ReactJS, and NodeJS) because it is flexible and scalable. 
-- **AI Assistant**: We plan to use Mistral LLM to help users break down complex problems and give feedback on solutions. Initially, we'll run Mistral locally during development. For production, we are considering using a cloud provider like AWS to ensure the necessary computational resources and scalability.
-- **Code Execution**: To allow users to run code, we plan to use Judge0 API or JDoodle API. These are services that run code and provide detailed feedback on submissions, such as whether the code passed or failed, execution time, and memory usage. Given our *very* limited budget as college students, we will use their free tier offerings, which limit the number of code executions allowed per day.
-- **Data Storage**: We are currently using the free tier version of MongoDB Atlas, which is their cloud platform, to store our data but may move this to our own server or a hosting provider in the future.
-- **Deployment**: Our initial deployment will leverage the free tier options of AWS. However, for a fully functional and scalable platform, we plan to look for funding to upgrade our hosting services and ensure better performance and reliability.
+<!-- Architecture subsection -->
+### 🏛️ Architecture
 
-## 💻 Conceptual UI Design
+Our platform utilizes a **modern serverless architecture** to achieve scalability, flexibility, and cost-efficiency. By leveraging **AWS API Gateway** and **AWS Lambda** functions for our backend, we eliminate the need for traditional server management. API Gateway handles all incoming HTTP requests, routing them to specific Lambda functions that execute our backend logic. This setup allows us to scale seamlessly as our user base grows, reducing the overhead of managing dedicated servers.
 
-Our conceptual UI design focuses on simplicity and functionality. We are currently working on creating UI mockups but until then, the key components include:
+![Architecture Diagram](assets\basic-arch.png)
 
-- **Home Page**: This page provides an overview of the platform, featuring highlighted problems, recent discussions, and updates. It serves as the main landing page for users to navigate through the site.
-- **Problems Page**: This page displays all the problems in a list format, allowing users to browse and select problems to work on. Each problem entry will include brief details like the problem title, difficulty level, and status (solved or unsolved).
-- **Problem Solving Page**: When a user selects a problem, they are taken to this page. It features:
-  - **Left Side**: Detailed problem information including the description, examples of input and output, test cases, etc.
-  - **Right Side**: Integrated code editor where users can write and run their solutions.
-  - **AI Assistance Button**: This button allows users to request help from the AI assistant to break down the problem and provide guidance.
-- **Discussion Page**: A forum-like interface where users can post questions, share solutions, and discuss problems. This is where users go to collaborate and talk to others. 
-- **Interview Prep Page**: This section helps users prepare for technical job interviews. It will include some common interview questions and helpful resources.
+<!-- <img src="assets\basic-arch.png" width="500" height="300"> -->
 
-## 📆 Expected Milestones
 
-1. **Project Initialization**: Project planning, set up the project repository and initial infrastructure. (_Completed_)
-2. **Backend Development**: Implement core backend functionalities. (_In Progress_)
-3. **Frontend Development**: Develop a basic frontend interface with React and integrate with the backend. (_In Progress_)
-4. **AI Assistant Integration**: Integrate the AI assistant to provide feedback and guidance. (_Upcoming_)
-5. **Testing and Debugging**: Conduct thorough testing and debugging. (_Upcoming_)
-6. **Final Deployment**: Deploy the application to a cloud provider and make it publicly accessible. (_Upcoming_)
+<!-- Tech Stack subsection -->
+### 🛠️ Tech Stack
 
-## 🎯 Deliverables 
-...
+**Frontend**
 
-## 📍 Installation
-...
+Built using **React**, providing a responsive and dynamic user interface. React's component-based architecture enables reusability and efficient state management.
+
+**Backend**
+  - **AWS API Gateway:** Serves as the entry point for all client requests, routing them to the appropriate Lambda functions.
+  - **AWS Lambda:** Executes backend logic in a serverless environment, ensuring effortless scalability without the need for physical server management.
+  - **MongoDB Atlas:** A cloud-based NoSQL database used for storing user data, problem sets, and other critical information. MongoDB was chosen for its flexibility in handling diverse data types and its robust querying capabilities.
+
+**AI Integration** 
+
+The platform utilizes a **Mistral LLM** to provide the AI-driven assistance in problem-solving. The AI assistant will be aware of the problem the user is currently working on and the user's written solution so that it can provide personalized assistance.
+
+<!-- Key Features subsection -->
+### ✅ Key Features
+
+Our platform is designed to offer a comprehensive and user-friendly experience, with the following key features:
+
+**Home Page** 
+
+The landing page of our platform, offering an overview of features, highlighted problems, and navigation options.
+
+  ![Home Page Screenshot](assets\home-page.png)
+
+**Problems Page** 
+
+Displays a list of coding problems categorized by difficulty, region, and year. Users can filter and select problems to work on.
+
+  ![Problems Page Screenshot](assets\problems-page.png)
+
+**Problem Solving Interface** 
+
+A dedicated area where users can view problem details and write, test, and submit their code in an integrated editor.
+
+  ![Problem Solving Interface Screenshot](assets\prob-solving-page.png)
+
+**AI Assistant** 
+
+An AI assistant that users can use to get personalized help to understand and solve problems through contextual guidance and suggestions.
+
+**Discussions Tab** 
+
+A collaborative space where users can discuss problem-solving strategies, share insights, and ask for help.
+
+**Interview Prep** 
+
+Focuses on preparing users for technical interviews with common questions and resources.
+
+
+<!-- ROADMAP -->
+## 📆 Roadmap
+
+- [x] **Project Initialization**: Project planning, set up the project repository and initial infrastructure. 
+- [x] **Backend Development**: Implement core backend functionalities. 
+- [x] **Frontend Development**: Develop a basic frontend interface with React and integrate with the backend. 
+- [ ] **AI Assistant Integration**: Integrate the AI assistant to provide feedback and guidance. 
+- [ ] **Testing and Debugging**: Conduct thorough testing and debugging.
+- [ ] **Final Deployment**: Deploy the application to a cloud provider and make it publicly accessible.
+
+
+<!-- INSTALLATION -->
+## 📍 Installation 
+
+To run the platform locally, you can follow the steps shown below. 
+
+Clone the project
+
+```bash
+  git clone https://github.com/d-pap/code-coach.git
+```
+
+Go to the project directory
+
+```bash
+  cd my-project
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Set up environment variables
+
+- Create a .env file in the root directory.
+- Add your API keys and other configurations as required.
+
+Run the application
+
+```bash
+  npm run start
+```
+
+
+<!-- SUPPORT -->
+## :star: Give a Star! 
+
+Support this research by **giving it a star**. Thanks!
