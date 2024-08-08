@@ -121,34 +121,34 @@ Focuses on preparing users for technical interviews with common questions and re
 
 To run the platform locally, you can follow the steps shown below. 
 
-Clone the project
+- Clone the project
 
-```bash
-  git clone https://github.com/d-pap/code-coach.git
-```
+  ```bash
+    git clone https://github.com/d-pap/code-coach.git
+  ```
 
-Go to the project directory
+- Go to the project directory
 
-```bash
-  cd my-project
-```
+  ```bash
+    cd my-project
+  ```
 
-Install dependencies
+- Install dependencies
 
-```bash
-  npm install
-```
+  ```bash
+    npm install
+  ```
 
-Set up environment variables
+- Set up environment variables
 
-- Create a .env file in the root directory.
-- Add your API keys and other configurations as required.
+  - Create a .env file in the root directory.
+  - Add your API keys and other configurations as required.
 
-Run the application
+- Run the application
 
-```bash
-  npm run start
-```
+  ```bash
+    npm run start
+  ```
 
 
 <!-- SUPPORT -->
