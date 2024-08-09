@@ -5,10 +5,13 @@
 
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import ProblemCard from '../ProblemCardLayout'
-import { ICPCFilter, ICPCFilterDisplay } from './problem-filters/ICPCFilter'
+import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
+import {
+  ICPCFilter,
+  ICPCFilterDisplay,
+} from '../../../components/problems/problem-filters/ICPCFilter'
 import { Stack } from '@mui/material'
-import ResizableColumn from '../../utility/ResizableColumn'
+import ResizableColumn from '../../../components/utility/ResizableColumn'
 
 function ICPC() {
   const location = useLocation()
@@ -81,7 +84,7 @@ function ICPC() {
             {filteredProblems.length > 0 ? (
               filteredProblems.map((problem) => (
                 <Stack key={problem._id} spacing={2}>
-                  <ProblemCard problem={problem} />
+                  <ProblemCardLayout problem={problem} />
                 </Stack>
               ))
             ) : (
