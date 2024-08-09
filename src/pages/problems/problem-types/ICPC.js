@@ -114,7 +114,12 @@ function ICPC() {
           <ul>
             {filteredProblems.length > 0 ? (
               filteredProblems.map((problem) => (
-                <Stack key={problem._id} spacing={2}>
+                <Stack
+                  key={problem._id}
+                  spacing={3}
+                  marginTop={1}
+                  marginBottom={1}
+                >
                   <ProblemCardLayout problem={problem} />
                 </Stack>
               ))
