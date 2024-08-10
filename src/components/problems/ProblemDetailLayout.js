@@ -41,9 +41,10 @@ const RightPanel = styled.div`
   flex-direction: column;
 `
 
+// important for flexbox to work correctly
 const EditorContainer = styled.div`
   flex: 1;
-  min-height: 0; // This is important for flexbox to work correctly
+  min-height: 0;
 `
 
 const OutputArea = styled.div`

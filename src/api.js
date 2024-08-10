@@ -72,9 +72,10 @@ export async function getSolution(question, answer) {
   }
 }
 
+// Function to execute code using Judge0 API
+// Passes source code and language to the API
+// and returns the result
 export const executeCode = async (sourceCode, language = 'python') => {
-  const encodedCode = btoa(sourceCode)
-
   const options = {
     method: 'POST',
     headers: {
@@ -83,26 +84,23 @@ export const executeCode = async (sourceCode, language = 'python') => {
       'X-RapidAPI-Host': process.env.REACT_APP_RAPIDAPI_HOST,
     },
     body: JSON.stringify({
-      language_id: 71, // Python (3.8.1)
-      source_code: encodedCode,
+      language_id: 71, // python judge0 language id = 71
+      source_code: sourceCode,
       stdin: '',
     }),
   }
 
   try {
-    const response = await fetch(
-      'https://judge0-ce.p.rapidapi.com/submissions',
-      options
-    )
+    const response = await fetch(process.env.REACT_APP_RAPID_API_URL, options)
     const data = await response.json()
     const token = data.token
 
-    // Poll for results
+    // poll for results
     let result
     do {
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // Wait for 1 second
+      await new Promise((resolve) => setTimeout(resolve, 1000)) // wait for 1 second
       const statusResponse = await fetch(
-        `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
+        `${process.env.REACT_APP_RAPID_API_URL}/${token}`,
         {
           method: 'GET',
           headers: {
@@ -112,7 +110,7 @@ export const executeCode = async (sourceCode, language = 'python') => {
         }
       )
       result = await statusResponse.json()
-    } while (result.status.id <= 2) // 1: In Queue, 2: Processing
+    } while (result.status.id <= 2) // 1: in queue, 2: processing
 
     return result
   } catch (error) {
