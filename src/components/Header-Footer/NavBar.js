@@ -38,7 +38,7 @@ const NavLink = styled(Button)(({ theme }) => ({
 
 const Navbar = () => {
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  useMediaQuery(theme.breakpoints.down('sm'))
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [anchorEl, setAnchorEl] = React.useState(null)
 

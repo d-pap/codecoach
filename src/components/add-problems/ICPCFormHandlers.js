@@ -1,5 +1,3 @@
-import { addICPCProblem } from '../../api'
-
 export const handleChange = (e, formData, setFormData) => {
   const { name, value } = e.target
   setFormData({

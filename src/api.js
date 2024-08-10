@@ -71,3 +71,52 @@ export async function getSolution(question, answer) {
     throw new Error('Failed to fetch hint')
   }
 }
+
+export const executeCode = async (sourceCode, language = 'python') => {
+  const encodedCode = btoa(sourceCode)
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY,
+      'X-RapidAPI-Host': process.env.REACT_APP_RAPIDAPI_HOST,
+    },
+    body: JSON.stringify({
+      language_id: 71, // Python (3.8.1)
+      source_code: encodedCode,
+      stdin: '',
+    }),
+  }
+
+  try {
+    const response = await fetch(
+      'https://judge0-ce.p.rapidapi.com/submissions',
+      options
+    )
+    const data = await response.json()
+    const token = data.token
+
+    // Poll for results
+    let result
+    do {
+      await new Promise((resolve) => setTimeout(resolve, 1000)) // Wait for 1 second
+      const statusResponse = await fetch(
+        `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
+        {
+          method: 'GET',
+          headers: {
+            'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY,
+            'X-RapidAPI-Host': process.env.REACT_APP_RAPIDAPI_HOST,
+          },
+        }
+      )
+      result = await statusResponse.json()
+    } while (result.status.id <= 2) // 1: In Queue, 2: Processing
+
+    return result
+  } catch (error) {
+    console.error('Error:', error)
+    throw error
+  }
+}

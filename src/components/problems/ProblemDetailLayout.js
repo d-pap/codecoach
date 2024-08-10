@@ -38,22 +38,42 @@ const RightPanel = styled.div`
   padding: 20px;
   background-color: #f0f0f0;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+`
+
+const EditorContainer = styled.div`
+  flex: 1;
+  min-height: 0; // This is important for flexbox to work correctly
+`
+
+const OutputArea = styled.div`
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  height: 200px;
+  overflow-y: auto;
 `
 
 const ProblemDetailLayout = ({ problemDetails }) => {
-  // state to hold the users code
-  const [code, setCode] =
-    useState(`# Your code goes here \ndef example_function():
-  print("Hello, world!")`)
+  const [code, setCode] = useState(
+    `# Your code goes here \ndef example_function():\n  print("Hello, world!")`
+  )
+  const [output, setOutput] = useState('')
+
   return (
     <>
       <GlobalStyle />
       <LayoutContainer>
         <LeftPanel>{problemDetails}</LeftPanel>
         <RightPanel>
-          <CodeEditor code={code} setCode={setCode} />
+          <EditorContainer>
+            <CodeEditor code={code} setCode={setCode} setOutput={setOutput} />
+          </EditorContainer>
+          <OutputArea>{output}</OutputArea>
         </RightPanel>
       </LayoutContainer>
     </>
