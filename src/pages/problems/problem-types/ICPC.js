@@ -4,16 +4,23 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { fetchProblems } from '../../../api'
-import ProblemCard from '../ProblemCardLayout'
-import { ICPCFilter, ICPCFilterDisplay } from './problem-filters/ICPCFilter'
+import { useLocation } from 'react-router-dom'
+import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
+import {
+  ICPCFilter,
+  ICPCFilterDisplay,
+} from '../../../components/problems/problem-filters/ICPCFilter'
 import { Stack } from '@mui/material'
-import ResizableColumn from '../../utility/ResizableColumn'
+import ResizableColumn from '../../../components/utility/ResizableColumn'
+import { fetchProblems } from '../../../api'
 
 function ICPC() {
-  const [problems, setProblems] = useState([])
+  const location = useLocation()
+  const problemsFromLocation = location.state?.problems
+  const [problems, setProblems] = useState(problemsFromLocation || [])
   const [region, setRegion] = useState('all')
   const [year, setYear] = useState('all')
+  const [filteredProblems, setFilteredProblems] = useState(problems)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [resizableColumnProps, setResizableColumnProps] = useState({
@@ -22,20 +29,31 @@ function ICPC() {
     maxWidth: 0,
   })
 
+  // Fetch problems if not loaded
   useEffect(() => {
-    async function getProblems() {
-      try {
-        const data = await fetchProblems()
-        setProblems(data)
-        setLoading(false)
-      } catch (err) {
-        setError('Error fetching problems')
+    async function loadProblems() {
+      if (!problemsFromLocation) {
+        try {
+          const data = await fetchProblems()
+          setProblems(data)
+        } catch (err) {
+          setError('Error fetching problems')
+        } finally {
+          setLoading(false)
+        }
+      } else {
         setLoading(false)
       }
     }
-    getProblems()
-  }, [])
+    loadProblems()
+  }, [problemsFromLocation])
 
+  // Filter problems based on region and year
+  useEffect(() => {
+    setFilteredProblems(ICPCFilter(problems, region, year))
+  }, [problems, region, year])
+
+  // Handle resizable column properties
   useEffect(() => {
     function getResizableColumnProps() {
       const windowWidth = window.innerWidth
@@ -57,8 +75,6 @@ function ICPC() {
     return () => window.removeEventListener('resize', updateColumnProps)
   }, [])
 
-  const filteredProblems = ICPCFilter(problems, region, year)
-
   const handleRegionChange = (event) => {
     setRegion(event.target.value)
   }
@@ -67,8 +83,13 @@ function ICPC() {
     setYear(event.target.value)
   }
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>{error}</div>
+  if (loading) {
+    return <p>Loading...</p>
+  }
+
+  if (error) {
+    return <p>{error}</p>
+  }
 
   return (
     <div className="newsletter_section layout_padding">
@@ -93,8 +114,13 @@ function ICPC() {
           <ul>
             {filteredProblems.length > 0 ? (
               filteredProblems.map((problem) => (
-                <Stack key={problem._id} spacing={2}>
-                  <ProblemCard problem={problem} />
+                <Stack
+                  key={problem._id}
+                  spacing={3}
+                  marginTop={1}
+                  marginBottom={1}
+                >
+                  <ProblemCardLayout problem={problem} />
                 </Stack>
               ))
             ) : (

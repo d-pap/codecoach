@@ -5,7 +5,7 @@
  */
 
 import React from 'react'
-import { ProgramingFilter } from './problem-filters/ProgramingFilter'
+import { ProgramingFilter } from '../../../components/problems/problem-filters/ProgramingFilter'
 
 function Programming() {
   return (
