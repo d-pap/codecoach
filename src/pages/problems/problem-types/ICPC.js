@@ -11,7 +11,7 @@ import {
   ICPCFilterDisplay,
 } from '../../../components/problems/problem-filters/ICPCFilter'
 import { Stack } from '@mui/material'
-import ResizableColumn from '../../../components/utility/ResizableColumn'
+import HorizontalResizableColumn from '../../../components/utility/HorizontalResizableColumn'
 import { fetchProblems } from '../../../api'
 
 function ICPC() {
@@ -97,7 +97,7 @@ function ICPC() {
         <h1>ICPC Problems</h1>
       </div>
       <div className="container" style={{ display: 'flex' }}>
-        <ResizableColumn
+        <HorizontalResizableColumn
           initialWidth={resizableColumnProps.initialWidth}
           minWidth={resizableColumnProps.minWidth}
           maxWidth={resizableColumnProps.maxWidth}
@@ -109,7 +109,7 @@ function ICPC() {
             onRegionChange={handleRegionChange}
             onYearChange={handleYearChange}
           />
-        </ResizableColumn>
+        </HorizontalResizableColumn>
         <div id="rightcolumn" style={{ flex: 1, padding: '0 10px' }}>
           <ul>
             {filteredProblems.length > 0 ? (

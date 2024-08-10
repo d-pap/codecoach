@@ -3,10 +3,12 @@
  * For Problem Solving page and any split screen layouts we need
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
-import ResizableColumn from '../utility/ResizableColumn'
+import HorizontalResizableColumn from '../utility/HorizontalResizableColumn'
+import VerticalResizableColumn from '../utility/VerticalResizableColumn'
 import CodeEditor from './CodeEditor'
+import ChatBox from './llm-components/ChatBox'
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -34,24 +36,48 @@ const LeftPanel = styled.div`
 const RightPanel = styled.div`
   flex: 1;
   padding: 20px;
+  height: 100%;
   background-color: #f0f0f0;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+`
+
+const EditorContainer = styled.div`
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+`
+
+const ChatboxContainer = styled.div`
+  flex: 0 1
+  width: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 `
 
 const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
-  const [resizableProps, setResizableProps] = useState(
-    getResizableColumnProps()
+  const [horizontalProps, setHorizontalProps] = useState(
+    getResizableHorizontalColumnProps()
+  )
+  const [verticalProps, setVerticalProps] = useState({
+    initialHeight: 0,
+    maxHeight: 0,
+    minHeight: 0,
+  })
+  const [code, setCode] = useState(
+    `# Your code goes here \ndef example_function():\n  print("Hello, world!")`
   )
 
-  const [code, setCode] =
-    useState(`# Your code goes here \ndef example_function():
-  print("Hello, world!")`)
+  const rightPanelRef = useRef(null)
 
   useEffect(() => {
     const handleResize = () => {
-      setResizableProps(getResizableColumnProps())
+      setHorizontalProps(getResizableHorizontalColumnProps())
+      // Update vertical props after horizontal props have been updated
+      updateVerticalProps()
     }
 
     window.addEventListener('resize', handleResize)
@@ -62,29 +88,58 @@ const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
     }
   }, [])
 
-  function getResizableColumnProps() {
-    const windowWidth = window.innerWidth
+  useEffect(() => {
+    if (rightPanelRef.current) {
+      // Ensure the vertical props are updated when the right panel is mounted
+      updateVerticalProps()
+    }
+  }, [rightPanelRef.current])
 
-    // Calculate dimensions based on window width
+  function getResizableHorizontalColumnProps() {
+    const windowWidth = window.innerWidth
     const minWidth = windowWidth * 0.3
     const maxWidth = windowWidth * 0.7
     const initialWidth = windowWidth * 0.5
-
     return { initialWidth, maxWidth, minWidth }
   }
+
+  function updateVerticalProps() {
+    if (rightPanelRef.current) {
+      const panelHeight = rightPanelRef.current.offsetHeight
+      const minHeight = panelHeight * 0.25
+      const maxHeight = panelHeight * 0.75
+      const initialHeight = panelHeight * 0.5
+
+      setVerticalProps({ initialHeight, maxHeight, minHeight })
+    }
+  }
+
   return (
     <>
       <GlobalStyle />
       <LayoutContainer>
-        <ResizableColumn
-          initialWidth={resizableProps.initialWidth}
-          maxWidth={resizableProps.maxWidth}
-          minWidth={resizableProps.minWidth}
+        <HorizontalResizableColumn
+          initialWidth={horizontalProps.initialWidth}
+          maxWidth={horizontalProps.maxWidth}
+          minWidth={horizontalProps.minWidth}
         >
           <LeftPanel>{problemDetails}</LeftPanel>
-        </ResizableColumn>
-        <RightPanel>
-          <CodeEditor code={code} setCode={setCode} />
+        </HorizontalResizableColumn>
+        <RightPanel ref={rightPanelRef}>
+          <VerticalResizableColumn
+            initialHeight={verticalProps.initialHeight}
+            maxHeight={verticalProps.maxHeight}
+            minHeight={verticalProps.minHeight}
+          >
+            <div style={{ height: '100%' }}>
+              <EditorContainer>
+                <CodeEditor code={code} setCode={setCode} />
+              </EditorContainer>
+            </div>
+          </VerticalResizableColumn>
+          <ChatboxContainer>
+            <ChatBox />
+          </ChatboxContainer>
         </RightPanel>
       </LayoutContainer>
     </>
