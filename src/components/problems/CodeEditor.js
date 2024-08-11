@@ -74,7 +74,8 @@ const CodeEditor = ({ code, setCode, setOutput }) => {
           tabSize: 2,
         }}
       />
-      <RunButton onClick={handleRunCode}>Run Code</RunButton>
+      <RunButton onClick={handleRunCode}>Run Code</RunButton>{' '}
+      {/* change to MUI button later? */}
     </EditorContainer>
   )
 }

@@ -8,6 +8,17 @@ Put CSS here to style the elements in App.js
   padding: 0;
 }
 
+/* Apply global fonts: 
+Fonts we imported from Google Fonts in `public/index.html` */
+body {
+  font-family: 'DM Sans', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', sans-serif;
+}
+
+
 .navbar {
   display: flex;
   align-items: center;
@@ -101,7 +112,7 @@ Put CSS here to style the elements in App.js
 
 .text-big {
   font-weight: 500;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 30px;
 }
 
@@ -142,7 +153,7 @@ Put CSS here to style the elements in App.js
 .text-footer {
   text-align: center;
   padding: 30px 0;
-  font-family: 'Ubuntu', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   display: flex;
   justify-content: center;
   color: #fff;
