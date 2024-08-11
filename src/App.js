@@ -16,6 +16,9 @@ import Problems from './pages/nav/problems'
 import SignUp from './pages/nav/signup'
 import ProblemDetail from './pages/problems/problemDetail'
 import AddProblems from './pages/nav/addProblems'
+import ICPC from './pages/problems/problem-types/ICPC'
+import Interview from './pages/problems/problem-types/Interview'
+import Programming from './pages/problems/problem-types/Programming'
 
 function App() {
   return (
@@ -29,6 +32,9 @@ function App() {
         <Route path="/problems/:id" element={<ProblemDetail />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/addProblems" element={<AddProblems />} />
+        <Route path="/problems/icpc" element={<ICPC />} />
+        <Route path="/problems/interview" element={<Interview />} />
+        <Route path="/problems/programming" element={<Programming />} />
       </Routes>
       <Footer />
     </Router>

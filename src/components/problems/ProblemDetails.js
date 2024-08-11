@@ -8,11 +8,11 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import CustomTabPanel from './CustomTabPanel'
 import PropTypes from 'prop-types'
-import ProblemTab from './detail-navbar/ProblemTab'
-import HintByAiTab from './detail-navbar/HintByAITab'
-import SolutionByAITab from './detail-navbar/SolutionByAITab'
-import HintByDatabaseTab from './detail-navbar/HintByDatabase'
-import ForumTab from './detail-navbar/ForumTab'
+import ProblemTab from './problem-detail-navbar/ProblemTab'
+import HintByAiTab from './problem-detail-navbar/HintByAITab'
+import SolutionByAITab from './problem-detail-navbar/SolutionByAITab'
+import HintByDatabaseTab from './problem-detail-navbar/HintByDatabase'
+import ForumTab from './problem-detail-navbar/ForumTab'
 
 // styled container to show problem details
 const DetailContainer = styled.div`
