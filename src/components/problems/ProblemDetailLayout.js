@@ -59,10 +59,11 @@ const OutputArea = styled.div`
   overflow-y: auto;
 `
 
+// default code shown in the code editor
+const pythonDefaultCode = `# Your code goes here \ndef example_function():\n  print("Hello, world!")`
+
 const ProblemDetailLayout = ({ problemDetails }) => {
-  const [code, setCode] = useState(
-    `# Your code goes here \ndef example_function():\n  print("Hello, world!")`
-  )
+  const [code, setCode] = useState(pythonDefaultCode)
   const [output, setOutput] = useState('')
 
   return (
