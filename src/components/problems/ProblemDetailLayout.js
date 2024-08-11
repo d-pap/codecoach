@@ -36,18 +36,37 @@ const RightPanel = styled.div`
   padding: 20px;
   background-color: #f0f0f0;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 `
+
+// important for flexbox to work correctly
+const EditorContainer = styled.div`
+  flex: 1;
+  min-height: 0;
+`
+
+const OutputArea = styled.div`
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  height: 200px;
+  overflow-y: auto;
+`
+
+// default code shown in the code editor
+const pythonDefaultCode = `# Your code goes here \ndef example_function():\n  print("Hello, world!")`
 
 const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
   const [resizableProps, setResizableProps] = useState(
     getResizableColumnProps()
   )
 
-  const [code, setCode] =
-    useState(`# Your code goes here \ndef example_function():
-  print("Hello, world!")`)
+  const [code, setCode] = useState(pythonDefaultCode)
+  const [output, setOutput] = useState('')
 
   useEffect(() => {
     const handleResize = () => {
@@ -84,7 +103,10 @@ const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
           <LeftPanel>{problemDetails}</LeftPanel>
         </ResizableColumn>
         <RightPanel>
-          <CodeEditor code={code} setCode={setCode} />
+          <EditorContainer>
+            <CodeEditor code={code} setCode={setCode} setOutput={setOutput} />
+          </EditorContainer>
+          <OutputArea>{output}</OutputArea>
         </RightPanel>
       </LayoutContainer>
     </>
