@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { fetchProblemById } from '../../api'
 import ProblemDetailLayout from '../../components/problems/ProblemDetailLayout'
 // import CodeEditorPlaceholder from '../../components/problems/CodeEditorPlaceholder'
@@ -15,23 +15,28 @@ import CodeEditor from '../../components/problems/CodeEditor'
 
 function ProblemDetail() {
   // state variables
+  const location = useLocation() // get location object
+  const problemFromLocation = location.state?.problem // get problem from location state
+  const { id } = useParams() // extract problem ID from URL
   const [problem, setProblem] = useState(null) // hold problem data
   const [loading, setLoading] = useState(true) // indicate if data is still loading
   const [error, setError] = useState(null) // hold any error message
-  const { id } = useParams() // extract problem ID from URL
 
   useEffect(() => {
     // run side effect to get problem data when component mounts or ID changes
     async function getProblem() {
       try {
-        const data = await fetchProblemById(id)
+        let problem = problemFromLocation
+        if (!problemFromLocation) {
+          problem = await fetchProblemById(id)
+        }
 
         // filter out `_id` field from test cases
-        const filteredData = {
-          ...data,
-          testCases: data.testCases.map(({ _id, ...rest }) => rest),
+        const filteredProlem = {
+          ...problem,
+          testCases: problem.testCases.map(({ _id, ...rest }) => rest),
         }
-        setProblem(filteredData)
+        setProblem(filteredProlem)
         setLoading(false) // set loading to false
       } catch (err) {
         // error message if fetch fails
