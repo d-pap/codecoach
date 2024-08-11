@@ -4,10 +4,10 @@ import {
   Stack,
   Button,
   TextField,
-  InputLabel,
   MenuItem,
   Select,
   FormControl,
+  InputLabel,
 } from '@mui/material'
 import TestCase from '../../components/add-problems/TestCase'
 import {
@@ -17,10 +17,18 @@ import {
   removeTestCase,
   handleSubmit,
 } from '../../components/add-problems/ICPCFormHandlers'
+import CustomLabel from '../../components/problems/add-problems/CustomLabel'
+
+// Define a style constant for the TextField
+const textFieldStyle = {
+  width: '100%',
+  minHeight: '50px', // Adjust this as needed
+  resize: 'vertical',
+}
 
 const AddProblems = () => {
   const [formData, setFormData] = useState({
-    type: 'icpc', // defult type is icpc
+    type: 'icpc',
     title: '',
     timeLimit: '',
     memoryLimit: '',
@@ -86,13 +94,20 @@ const AddProblems = () => {
   }
 
   return (
-    <Box component="section" display={'flex'} padding={3} width={'95%'}>
-      <form
+    <Box
+      component="section"
+      display="flex"
+      justifyContent="center" // Center horizontally
+      padding={3}
+      width="100%" // Full width of the container
+    >
+      <Box
+        component="form"
         onSubmit={(e) => handleSubmit(e, formData, setFormData)}
-        style={{ width: '100%' }}
+        width="80%" // Set the width to 80%
       >
         <Stack spacing={2}>
-          <label>Title: </label>
+          <CustomLabel>Title: </CustomLabel>
           <TextField
             type="text"
             name="title"
@@ -101,17 +116,20 @@ const AddProblems = () => {
             required
             label="Please input a title"
             variant="outlined"
+            style={textFieldStyle}
           />
-          <label>Problem Description: </label>
+          <CustomLabel>Problem Description: </CustomLabel>
           <TextField
-            name="problemDescription"
-            value={formData.problemDescription}
+            name="description"
+            value={formData.description}
             onChange={(e) => handleChange(e, formData, setFormData)}
             required
             label="Please input a problem description"
             variant="outlined"
+            style={textFieldStyle}
+            multiline
           />
-          <label>Time and Memory Limits: </label>
+          <CustomLabel>Time and Memory Limits: </CustomLabel>
           <TextField
             type="text"
             name="timeLimit"
@@ -119,6 +137,7 @@ const AddProblems = () => {
             onChange={(e) => handleChange(e, formData, setFormData)}
             label="Please input a time limit"
             variant="outlined"
+            style={textFieldStyle}
           />
           <TextField
             type="text"
@@ -127,25 +146,31 @@ const AddProblems = () => {
             onChange={(e) => handleChange(e, formData, setFormData)}
             label="Please input a memory limit"
             variant="outlined"
+            style={textFieldStyle}
           />
-          <label>Input and Output Description: </label>
+          <CustomLabel>Input Description: </CustomLabel>
           <TextField
-            name="inputDescription"
-            value={formData.inputDescription}
+            name="exampleInputs"
+            value={formData.exampleInputs}
             onChange={(e) => handleChange(e, formData, setFormData)}
             label="Please input an input description"
             variant="outlined"
+            style={textFieldStyle}
+            multiline
           />
+          <CustomLabel>Output Description: </CustomLabel>
           <TextField
-            name="outputDescription"
-            value={formData.outputDescription}
+            name="exampleOutputs"
+            value={formData.exampleOutputs}
             onChange={(e) => handleChange(e, formData, setFormData)}
             label="Please input an output description"
             variant="outlined"
+            style={textFieldStyle}
+            multiline
           />
 
           <div>
-            <label>Test Cases: </label>
+            <CustomLabel>Test Cases: </CustomLabel>
             <Button
               variant="contained"
               type="button"
@@ -174,16 +199,18 @@ const AddProblems = () => {
               ))}
             </Stack>
           </div>
-          <label>Additional comments: </label>
+          <CustomLabel>Additional comments: </CustomLabel>
           <TextField
             name="comments"
             value={formData.comments}
             onChange={(e) => handleChange(e, formData, setFormData)}
             label="Please input any additional comments"
             variant="outlined"
+            style={textFieldStyle}
+            multiline
           />
 
-          <label>Region and Year: </label>
+          <CustomLabel>Region and Year: </CustomLabel>
           <FormControl fullWidth>
             <InputLabel id="region-label">Contest Region</InputLabel>
             <Select
@@ -223,7 +250,7 @@ const AddProblems = () => {
               label="Contest Sub Region"
               value={formData.contestSubRegion}
               onChange={(e) => handleChange(e, formData, setFormData)}
-              disabled={!formData.contestRegion} // Disable if no region is selected
+              disabled={!formData.contestRegion}
             >
               {subregions[formData.contestRegion]?.map((subregion) => (
                 <MenuItem key={subregion} value={subregion}>
@@ -235,25 +262,28 @@ const AddProblems = () => {
 
           <TextField
             required
-            type="number" // Change type to number
+            type="number"
             name="contestYear"
             value={formData.contestYear}
             onChange={(e) => handleChange(e, formData, setFormData)}
             label="Please input a contest year"
             variant="outlined"
             inputProps={{
-              min: 2000, // Set minimum year
-              max: 2030, // Set maximum year
+              min: 2000,
+              max: 2030,
             }}
+            style={textFieldStyle}
           />
 
-          <label>Hint/Solution: </label>
+          <CustomLabel>Hint/Solution: </CustomLabel>
           <TextField
             name="hint"
             value={formData.hint}
             onChange={(e) => handleChange(e, formData, setFormData)}
             label="Please input a hint/solution"
             variant="outlined"
+            style={textFieldStyle}
+            multiline
           />
           <TextField
             type="text"
@@ -262,13 +292,14 @@ const AddProblems = () => {
             onChange={(e) => handleChange(e, formData, setFormData)}
             label="Please input a video link"
             variant="outlined"
+            style={textFieldStyle}
           />
 
           <Button variant="contained" type="submit">
             Submit
           </Button>
         </Stack>
-      </form>
+      </Box>
     </Box>
   )
 }
