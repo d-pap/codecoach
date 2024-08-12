@@ -21,7 +21,7 @@ function ProblemDetail() {
   const [error, setError] = useState(null) // hold any error message
 
   useEffect(() => {
-    // run side effect to get problem data when component mounts or ID changes
+    // run side effect to get problem data when component mounts or ID or problemFromLocation changes
     async function getProblem() {
       try {
         let problem = problemFromLocation
@@ -43,7 +43,7 @@ function ProblemDetail() {
       }
     }
     getProblem()
-  }, [id]) // dependency array with ID to re-fetch if ID changes
+  }, [id, problemFromLocation]) // dependency array with ID and problemFromLocation to re-fetch if ID or problemFromLocation changes
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>{error}</div>

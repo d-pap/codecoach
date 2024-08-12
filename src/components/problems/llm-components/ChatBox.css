@@ -1,0 +1,56 @@
+.chatbox-container {
+  width: 100%; /* Fill the width of the parent container */
+  height: 100%; /* Fill the height of the parent container */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box; /* Ensure padding and borders are included in the total width and height */
+}
+
+.chat-history {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  box-sizing: border-box; /* Include padding in the height calculation */
+}
+
+.input-container {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+}
+
+.input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.send-button {
+  margin-left: 10px;
+  padding: 10px 15px;
+  border-radius: 4px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.user-message {
+  text-align: right;
+  background-color: #e1f0ff;
+  padding: 8px;
+  border-radius: 5px;
+  margin: 5px 0;
+}
+
+.llm-message {
+  text-align: left;
+  background-color: #f0f0f0;
+  padding: 8px;
+  border-radius: 5px;
+  margin: 5px 0;
+}
