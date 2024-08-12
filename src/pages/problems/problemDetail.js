@@ -43,7 +43,7 @@ function ProblemDetail() {
       }
     }
     getProblem()
-  }, [id]) // dependency array with ID to re-fetch if ID changes
+  }, [id, problemFromLocation]) // dependency array with ID to re-fetch if ID changes
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>{error}</div>
