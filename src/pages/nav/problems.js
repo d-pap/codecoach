@@ -25,7 +25,6 @@ function Problems() {
 
   const [loading, setLoading] = useState(true)
   const [problems, setProblems] = useState([])
-  const [, setError] = useState(null) // removed error from `const [error, setError] = useState(null)` bc of error in ESLint
 
   useEffect(() => {
     async function loadProblems() {
@@ -34,13 +33,13 @@ function Problems() {
         setProblems(data)
         setLoading(false)
       } catch (err) {
-        setError('Error fetching problems')
+        console.error('Error fetching problems', err)
         // warn the user that there was an error
         setLoading(false)
       }
     }
     loadProblems()
-  }, [error])
+  }, [])
 
   const navigateTo = (path) => {
     if (!loading) {
