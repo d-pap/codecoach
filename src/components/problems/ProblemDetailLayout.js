@@ -132,10 +132,12 @@
 
 // // export default ProblemDetailLayout
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
-import ResizableColumn from '../utility/ResizableColumn'
+import HorizontalResizableColumn from '../utility/HorizontalResizableColumn'
+// import VerticalResizableColumn from '../utility/VerticalResizableColumn'
 import CodeEditor from './CodeEditor'
+// import ChatBox from './llm-components/ChatBox'
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -187,6 +189,7 @@ const EditorContainer = styled.div`
 `
 
 // styled component for the output area below the code editor (right side)
+
 const OutputArea = styled.div`
   margin-top: 20px;
   padding: 10px;
@@ -203,20 +206,36 @@ const OutputArea = styled.div`
   }
 `
 
+// const ChatboxContainer = styled.div`
+//   flex: 0 1
+//   width: 100%;
+//   overflow-y: auto;
+//   display: flex;
+//   flex-direction: column;
+// `
+
 // default code shown in the code editor
 const pythonDefaultCode = `# Your code goes here \ndef example_function():\n  print("Hello, world!")`
 
 const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
-  const [resizableProps, setResizableProps] = useState(
-    getResizableColumnProps()
+  const [horizontalProps, setHorizontalProps] = useState(
+    getResizableHorizontalColumnProps()
   )
+  // const [verticalProps, setVerticalProps] = useState({
+  //   initialHeight: 0,
+  //   maxHeight: 0,
+  //   minHeight: 0,
+  // })
 
+  const rightPanelRef = useRef(null)
   const [code, setCode] = useState(pythonDefaultCode)
   const [output, setOutput] = useState('')
 
   useEffect(() => {
     const handleResize = () => {
-      setResizableProps(getResizableColumnProps())
+      setHorizontalProps(getResizableHorizontalColumnProps())
+      // Update vertical props after horizontal props have been updated
+      // updateVerticalProps() ----------------------------------------
     }
 
     window.addEventListener('resize', handleResize)
@@ -227,29 +246,45 @@ const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
     }
   }, [])
 
-  function getResizableColumnProps() {
-    const windowWidth = window.innerWidth
+  // useEffect(() => {
+  //   if (rightPanelRef.current) {
+  //     // Ensure the vertical props are updated when the right panel is mounted
+  //     updateVerticalProps()
+  //   }
+  // }, [rightPanelRef.current])
 
-    // Calculate dimensions based on window width
+  function getResizableHorizontalColumnProps() {
+    const windowWidth = window.innerWidth
     const minWidth = windowWidth * 0.3
     const maxWidth = windowWidth * 0.7
     const initialWidth = windowWidth * 0.5
-
     return { initialWidth, maxWidth, minWidth }
   }
+
+  // allows for resizing of the vertical column
+  // function updateVerticalProps() {
+  //   if (rightPanelRef.current) {
+  //     const panelHeight = rightPanelRef.current.offsetHeight
+  //     const minHeight = panelHeight * 0.25
+  //     const maxHeight = panelHeight * 0.75
+  //     const initialHeight = panelHeight * 0.5
+
+  //     setVerticalProps({ initialHeight, maxHeight, minHeight })
+  //   }
+  // }
 
   return (
     <>
       <GlobalStyle />
       <LayoutContainer>
-        <ResizableColumn
-          initialWidth={resizableProps.initialWidth}
-          maxWidth={resizableProps.maxWidth}
-          minWidth={resizableProps.minWidth}
+        <HorizontalResizableColumn
+          initialWidth={horizontalProps.initialWidth}
+          maxWidth={horizontalProps.maxWidth}
+          minWidth={horizontalProps.minWidth}
         >
           <LeftPanel>{problemDetails}</LeftPanel>
-        </ResizableColumn>
-        <RightPanel>
+        </HorizontalResizableColumn>
+        <RightPanel ref={rightPanelRef}>
           <EditorContainer>
             <CodeEditor code={code} setCode={setCode} setOutput={setOutput} />
           </EditorContainer>
