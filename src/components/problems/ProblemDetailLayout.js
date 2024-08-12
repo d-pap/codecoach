@@ -163,7 +163,6 @@ const LeftPanel = styled.div`
   padding: 20px;
   overflow-y: auto;
   background-color: #f0f0f0;
-  border-right: 1px solid #ddd; /* Optional: adds a dividing line */
 `
 
 // styled component for the right side (code editor and output area)
