@@ -21,25 +21,37 @@ const SendChat = async (
       conversation,
     })
 
-    // Assuming chatWithLLM returns a readable stream
-    const reader = chatInit.body.getReader()
+    if (chatInit.error) {
+      throw new Error(chatInit.error)
+    }
+
     let textStream = ''
-    let done = false
 
-    while (!done) {
-      const { value, done: streamDone } = await reader.read()
-      done = streamDone
-      if (value) {
-        // Decode the stream and append it to textStream
-        const chunk = new TextDecoder().decode(value)
-        textStream += chunk
+    if (
+      chatInit.ok &&
+      chatInit.body &&
+      typeof chatInit.body.getReader === 'function'
+    ) {
+      const reader = chatInit.body.getReader()
+      const decoder = new TextDecoder()
+      let done = false
 
-        // Update chat history with streamed text
-        updateChatHistory(probId, [
-          ...conversation,
-          { sender: 'llm', message: textStream },
-        ])
+      while (!done) {
+        const { value, done: streamDone } = await reader.read()
+        done = streamDone
+        if (value) {
+          const chunk = decoder.decode(value, { stream: !done })
+          textStream += chunk
+
+          updateChatHistory(probId, [
+            ...conversation,
+            { sender: 'llm', message: textStream },
+          ])
+        }
       }
+    } else {
+      console.error('Invalid response or no readable stream available')
+      throw new Error('Invalid response or no readable stream available')
     }
 
     return textStream
