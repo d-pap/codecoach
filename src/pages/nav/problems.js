@@ -16,6 +16,7 @@ import {
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { fetchProblems } from '../../api'
+import './problems.css'
 
 function Problems() {
   const navigate = useNavigate()
@@ -24,7 +25,6 @@ function Problems() {
 
   const [loading, setLoading] = useState(true)
   const [problems, setProblems] = useState([])
-  const [, setError] = useState(null) // removed error from `const [error, setError] = useState(null)` bc of error in ESLint
 
   useEffect(() => {
     async function loadProblems() {
@@ -33,18 +33,14 @@ function Problems() {
         setProblems(data)
         setLoading(false)
       } catch (err) {
-        setError('Error fetching problems')
+        console.error('Error fetching problems', err)
+        // warn the user that there was an error
         setLoading(false)
       }
     }
     loadProblems()
   }, [])
 
-  /**
-   * Once the problems are loaded, they are stored in the state and can be passed to the problem pages.
-   * The state is preserved when navigating between pages, so the problems are available to the problem pages.
-   * The database will theoretically not be queried again when the user goes back to the problems page.
-   */
   const navigateTo = (path) => {
     if (!loading) {
       navigate(path, { state: { problems } })
@@ -52,38 +48,25 @@ function Problems() {
   }
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '20px' }}>
-      <div className="header" style={{ marginBottom: '20px' }}>
+    <div className="problems-container">
+      <div className="header">
         <h1>Problems</h1>
       </div>
-      <div
-        className="button-container"
-        style={{ display: 'flex', justifyContent: 'center' }}
-      >
+      <div className="button-container">
         <Stack spacing={4} alignItems="center">
           <Paper
             elevation={3}
-            style={{
-              padding: '20px',
-              backgroundColor: '#f5f5f5',
-              borderRadius: '8px',
-              width: isLaptopScreen ? '500px' : '90%', // Set width based on screen size
-              maxWidth: '600px', // Optional: max width for very large screens
-            }}
+            className={`problems-paper icpc-paper ${isLaptopScreen ? 'laptop' : ''}`}
           >
             <Button
               variant="contained"
               onClick={() => navigateTo('/problems/icpc')}
-              style={{ width: '100%', marginBottom: '16px' }}
+              className="button"
               disabled={loading}
             >
               ICPC
             </Button>
-            <Typography
-              variant="body1"
-              align="center"
-              style={{ maxWidth: '100%' }}
-            >
+            <Typography variant="body1" align="center" className="typography">
               ICPC stands for The International Collegiate Programming Contest.
               This contest is one of the most prestigious competitive
               programming contests globally. The problems included in the ICPC
@@ -95,29 +78,20 @@ function Problems() {
               scenarios and to think critically and efficiently.
             </Typography>
           </Paper>
+
           <Paper
             elevation={3}
-            style={{
-              padding: '20px',
-              backgroundColor: '#f5f5f5',
-              borderRadius: '8px',
-              width: isLaptopScreen ? '500px' : '90%', // Set width based on screen size
-              maxWidth: '600px', // Optional: max width for very large screens
-            }}
+            className={`problems-paper programming-paper ${isLaptopScreen ? 'laptop' : ''}`}
           >
             <Button
               variant="contained"
               onClick={() => navigateTo('/problems/programming')}
-              style={{ width: '100%', marginBottom: '16px' }}
+              className="button"
               disabled={loading}
             >
               Programming
             </Button>
-            <Typography
-              variant="body1"
-              align="center"
-              style={{ maxWidth: '100%' }}
-            >
+            <Typography variant="body1" align="center" className="typography">
               The Programming section includes a variety of problems designed to
               enhance your coding skills and problem-solving abilities. Topics
               covered in this section span a wide array of common programming
@@ -129,29 +103,20 @@ function Problems() {
               problems.
             </Typography>
           </Paper>
+
           <Paper
             elevation={3}
-            style={{
-              padding: '20px',
-              backgroundColor: '#f5f5f5',
-              borderRadius: '8px',
-              width: isLaptopScreen ? '500px' : '90%', // Set width based on screen size
-              maxWidth: '600px', // Optional: max width for very large screens
-            }}
+            className={`problems-paper interview-paper ${isLaptopScreen ? 'laptop' : ''}`}
           >
             <Button
               variant="contained"
               onClick={() => navigateTo('/problems/interview')}
-              style={{ width: '100%', marginBottom: '16px' }}
+              className="button"
               disabled={loading}
             >
               Interview
             </Button>
-            <Typography
-              variant="body1"
-              align="center"
-              style={{ maxWidth: '100%' }}
-            >
+            <Typography variant="body1" align="center" className="typography">
               The Interview section focuses on questions commonly asked by FANG
               (Facebook, Amazon, Netflix, Google) companies during technical
               interviews. This section is designed to help students and

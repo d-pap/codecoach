@@ -1,30 +1,30 @@
 /**
- * Allows the user to resize the columns on their screen.
+ * Allows the user to resize the columns vertically.
  */
 
 import React, { useState, useRef, useCallback } from 'react'
 
-function ResizableColumn({
+function VerticalResizableColumn({
   children,
-  initialWidth = 200,
-  minWidth = 150,
-  maxWidth = 250,
+  initialHeight = 200,
+  minHeight = 150,
+  maxHeight = 250,
 }) {
-  const [width, setWidth] = useState(initialWidth)
+  const [height, setHeight] = useState(initialHeight)
   const resizableRef = useRef(null)
 
   const handleResize = useCallback(
     (startPosition, event) => {
       const handleMove = (moveEvent) => {
-        const clientX =
+        const clientY =
           event.type === 'touchmove'
-            ? moveEvent.touches[0].clientX
-            : moveEvent.clientX
-        const newWidth = Math.min(
-          maxWidth,
-          Math.max(minWidth, width + (clientX - startPosition))
+            ? moveEvent.touches[0].clientY
+            : moveEvent.clientY
+        const newHeight = Math.min(
+          maxHeight,
+          Math.max(minHeight, height + (clientY - startPosition))
         )
-        setWidth(newWidth)
+        setHeight(newHeight)
       }
 
       const handleEnd = () => {
@@ -39,32 +39,38 @@ function ResizableColumn({
       document.addEventListener('touchmove', handleMove, { passive: false })
       document.addEventListener('touchend', handleEnd, { passive: false })
     },
-    [width, minWidth, maxWidth]
+    [height, minHeight, maxHeight]
   )
 
   const handleMouseDown = useCallback(
     (e) => {
-      handleResize(e.clientX, e)
+      handleResize(e.clientY, e)
     },
     [handleResize]
   )
 
   const handleTouchStart = useCallback(
     (e) => {
-      handleResize(e.touches[0].clientX, e)
+      handleResize(e.touches[0].clientY, e)
     },
     [handleResize]
   )
 
   return (
-    <div style={{ display: 'flex', alignItems: 'stretch' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch',
+      }}
+    >
       <div
         style={{
-          width: `${width}px`,
-          minWidth: `${minWidth}px`,
-          maxWidth: `${maxWidth}px`,
+          height: `${height}px`,
+          minHeight: `${minHeight}px`,
+          maxHeight: `${maxHeight}px`,
           overflow: 'auto',
-          borderRight: '2px solid #ccc',
+          borderBottom: '2px solid #ccc',
         }}
         ref={resizableRef}
       >
@@ -72,10 +78,10 @@ function ResizableColumn({
       </div>
       <div
         style={{
-          cursor: 'ew-resize',
-          width: '10px',
+          cursor: 'ns-resize',
+          height: '10px',
           backgroundColor: '#ddd',
-          height: '100%',
+          width: '100%',
         }}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
@@ -84,4 +90,4 @@ function ResizableColumn({
   )
 }
 
-export default ResizableColumn
+export default VerticalResizableColumn

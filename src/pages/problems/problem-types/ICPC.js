@@ -10,8 +10,8 @@ import {
   ICPCFilter,
   ICPCFilterDisplay,
 } from '../../../components/problems/problem-filters/ICPCFilter'
-import { Stack } from '@mui/material'
-import ResizableColumn from '../../../components/utility/ResizableColumn'
+import { Stack, Pagination } from '@mui/material'
+import HorizontalResizableColumn from '../../../components/utility/HorizontalResizableColumn'
 import { fetchProblems } from '../../../api'
 
 function ICPC() {
@@ -28,6 +28,8 @@ function ICPC() {
     minWidth: 0,
     maxWidth: 0,
   })
+  const [currentPage, setCurrentPage] = useState(1)
+  const problemsPerPage = 10
 
   // Fetch problems if not loaded
   useEffect(() => {
@@ -83,6 +85,10 @@ function ICPC() {
     setYear(event.target.value)
   }
 
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page)
+  }
+
   if (loading) {
     return <p>Loading...</p>
   }
@@ -91,13 +97,21 @@ function ICPC() {
     return <p>{error}</p>
   }
 
+  // Calculate the problems to display on the current page
+  const indexOfLastProblem = currentPage * problemsPerPage
+  const indexOfFirstProblem = indexOfLastProblem - problemsPerPage
+  const currentProblems = filteredProblems.slice(
+    indexOfFirstProblem,
+    indexOfLastProblem
+  )
+
   return (
     <div className="newsletter_section layout_padding">
       <div className="header">
         <h1>ICPC Problems</h1>
       </div>
       <div className="container" style={{ display: 'flex' }}>
-        <ResizableColumn
+        <HorizontalResizableColumn
           initialWidth={resizableColumnProps.initialWidth}
           minWidth={resizableColumnProps.minWidth}
           maxWidth={resizableColumnProps.maxWidth}
@@ -109,11 +123,11 @@ function ICPC() {
             onRegionChange={handleRegionChange}
             onYearChange={handleYearChange}
           />
-        </ResizableColumn>
+        </HorizontalResizableColumn>
         <div id="rightcolumn" style={{ flex: 1, padding: '0 10px' }}>
           <ul>
-            {filteredProblems.length > 0 ? (
-              filteredProblems.map((problem) => (
+            {currentProblems.length > 0 ? (
+              currentProblems.map((problem) => (
                 <Stack
                   key={problem._id}
                   spacing={3}
@@ -127,6 +141,17 @@ function ICPC() {
               <p>No problems found</p>
             )}
           </ul>
+          <Pagination
+            count={Math.ceil(filteredProblems.length / problemsPerPage)}
+            page={currentPage}
+            onChange={handlePageChange}
+            color="primary"
+            style={{
+              marginTop: '20px',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          />
         </div>
       </div>
     </div>

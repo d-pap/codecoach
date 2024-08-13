@@ -28,7 +28,7 @@ export async function fetchProblemById(id) {
   }
 }
 
-export async function addICPCProblem(problem) {
+export async function addProblem(problem) {
   try {
     const response = await axios.post(`${API_GATEWAY_URL}/problems`, problem)
     return response.data

@@ -11,27 +11,64 @@ const ProblemCardLayout = ({ problem }) => {
   }
 
   return (
-    <Card
-      onClick={handleNavigate} // Navigate to the problem details on card click
-      variant="outlined"
-      sx={{
-        margin: '10px',
-        cursor: 'pointer',
-        transition: 'transform 0.2s, box-shadow 0.2s, background-color 0.2s',
-        '&:hover': {
-          transform: 'scale(1.02)',
-          boxShadow: 3,
-          backgroundColor: 'rgba(0, 0, 0, 0.1)',
-        },
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
       }}
     >
-      <CardContent>
-        <Typography variant="h6">{problem.title}</Typography>
-        <Typography variant="body2" color="textSecondary">
-          {problem.description}
-        </Typography>
-      </CardContent>
-    </Card>
+      <Card
+        onClick={handleNavigate} // Navigate to the problem details on card click
+        variant="outlined"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '95%',
+          height: '125px', // Fixed height for the card
+          margin: '1px',
+          cursor: 'pointer',
+          transition: 'transform 0.2s, box-shadow 0.2s, background-color 0.2s',
+          '&:hover': {
+            transform: 'scale(1.02)',
+            boxShadow: 3,
+            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+          },
+        }}
+      >
+        <CardContent
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%', // Ensure CardContent takes full height of the Card
+            padding: '8px', // Adjust padding if necessary
+          }}
+        >
+          <Typography
+            variant="h6"
+            noWrap
+            sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+          >
+            {problem.title}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            sx={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              display: '-webkit-box',
+              WebkitLineClamp: 3, // Number of lines to show before truncating
+              WebkitBoxOrient: 'vertical',
+              whiteSpace: 'normal',
+            }}
+          >
+            {problem.description}
+          </Typography>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
 
