@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 import HorizontalResizableColumn from '../utility/HorizontalResizableColumn'
-// import VerticalResizableColumn from '../utility/VerticalResizableColumn'
 import CodeEditor from './CodeEditor'
-// import ChatBox from './llm-components/ChatBox'
+import { IconButton, Drawer, Box } from '@mui/material'
+import ChatBox from './llm-components/ChatBox'
+import ChatIcon from '@mui/icons-material/Chat'
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -55,7 +56,6 @@ const EditorContainer = styled.div`
 `
 
 // styled component for the output area below the code editor (right side)
-
 const OutputArea = styled.div`
   margin-top: 20px;
   padding: 10px;
@@ -72,53 +72,61 @@ const OutputArea = styled.div`
   }
 `
 
-// const ChatboxContainer = styled.div`
-//   flex: 0 1
-//   width: 100%;
-//   overflow-y: auto;
-//   display: flex;
-//   flex-direction: column;
-// `
+const ChatBubble = styled.div`
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 10;
+  padding: 10px 5px;
+  background-color: #3f51b5;
+  border-radius: 5px 0 0 5px;
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease;
+
+  &:hover {
+    transform: translate(-5px, -50%);
+    background-color: #303f9f;
+  }
+`
+
+const ChatLedger = styled(Box)`
+  width: 300px;
+  width: 25vw;
+  height: 98vh; // Adjust height to your preference
+  padding: 20px;
+  background-color: white;
+  border-radius: 4px 4px 0 0;
+`
 
 // default code shown in the code editor
 const pythonDefaultCode = `# Your code goes here \ndef example_function():\n  print("Hello, world!")`
 
-const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
+const ProblemDetailLayout = ({ problem, problemDetails, codeEditor }) => {
   const [horizontalProps, setHorizontalProps] = useState(
     getResizableHorizontalColumnProps()
   )
-  // const [verticalProps, setVerticalProps] = useState({
-  //   initialHeight: 0,
-  //   maxHeight: 0,
-  //   minHeight: 0,
-  // })
-
   const rightPanelRef = useRef(null)
   const [code, setCode] = useState(pythonDefaultCode)
   const [output, setOutput] = useState('')
+  const [isChatOpen, setIsChatOpen] = useState(false)
 
   useEffect(() => {
+    // if the user resizes the window, it changes the percentage of the width and height, thus we must update the horizontalProps
     const handleResize = () => {
       setHorizontalProps(getResizableHorizontalColumnProps())
-      // Update vertical props after horizontal props have been updated
-      // updateVerticalProps() ----------------------------------------
     }
 
     window.addEventListener('resize', handleResize)
-    handleResize() // Initialize with the correct values
+    handleResize()
 
     return () => {
       window.removeEventListener('resize', handleResize)
     }
   }, [])
 
-  // useEffect(() => {
-  //   if (rightPanelRef.current) {
-  //     // Ensure the vertical props are updated when the right panel is mounted
-  //     updateVerticalProps()
-  //   }
-  // }, [rightPanelRef.current])
-
+  // The locations are based on the percentage of the window width
   function getResizableHorizontalColumnProps() {
     const windowWidth = window.innerWidth
     const minWidth = windowWidth * 0.3
@@ -127,17 +135,10 @@ const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
     return { initialWidth, maxWidth, minWidth }
   }
 
-  // allows for resizing of the vertical column
-  // function updateVerticalProps() {
-  //   if (rightPanelRef.current) {
-  //     const panelHeight = rightPanelRef.current.offsetHeight
-  //     const minHeight = panelHeight * 0.25
-  //     const maxHeight = panelHeight * 0.75
-  //     const initialHeight = panelHeight * 0.5
-
-  //     setVerticalProps({ initialHeight, maxHeight, minHeight })
-  //   }
-  // }
+  // Occurs when the user clicks on the chat bubble
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen)
+  }
 
   return (
     <>
@@ -155,6 +156,21 @@ const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
             <CodeEditor code={code} setCode={setCode} setOutput={setOutput} />
           </EditorContainer>
           <OutputArea>{output}</OutputArea>
+          <ChatBubble>
+            <IconButton onClick={toggleChat} color="blue" size="large">
+              <ChatIcon />
+            </IconButton>
+          </ChatBubble>
+          <Drawer
+            anchor="right"
+            open={isChatOpen}
+            onClose={toggleChat}
+            PaperProps={{ style: { width: '25vw' } }}
+          >
+            <ChatLedger>
+              <ChatBox problem={problem} />
+            </ChatLedger>
+          </Drawer>
         </RightPanel>
       </LayoutContainer>
     </>

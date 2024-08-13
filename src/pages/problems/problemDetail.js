@@ -54,6 +54,7 @@ function ProblemDetail() {
    */
   return (
     <ProblemDetailLayout
+      problem={problem}
       // render layout and pass ProblemDetails and
       // codeEditor as props
       problemDetails={<ProblemDetails problem={problem} />}
