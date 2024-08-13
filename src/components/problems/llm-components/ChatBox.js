@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useChat } from './ChatContext'
 import './ChatBox.css'
+import SendChat from './AIChat'
 
 const ChatBox = ({ problem }) => {
   const [input, setInput] = useState('')
@@ -12,23 +13,30 @@ const ChatBox = ({ problem }) => {
     setInput(e.target.value)
   }
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim() === '') return
 
-    const newHistory = [
-      ...currentChatHistory,
-      { sender: 'user', message: input },
-    ]
+    const newHistory = [...currentChatHistory, { role: 'user', content: input }]
 
-    // Simulate a response from the LLM (replace with actual API call)
-    const response = 'This is a simulated response from the LLM.'
-    updateChatHistory(problem._id, [
-      ...newHistory,
-      { sender: 'llm', message: response },
-    ])
+    setInput('') // Clear the input immediately
 
-    // Clear the input
-    setInput('')
+    try {
+      // Send the chat and start streaming the response
+      await SendChat(
+        problem.title,
+        problem.description,
+        problem.hint,
+        newHistory,
+        updateChatHistory,
+        problem._id
+      )
+    } catch (error) {
+      console.error('Failed to send chat:', error)
+      updateChatHistory(problem._id, [
+        ...newHistory,
+        { role: 'llm', content: 'Failed to get response from model' },
+      ])
+    }
   }
 
   return (
@@ -37,9 +45,9 @@ const ChatBox = ({ problem }) => {
         {currentChatHistory.map((chat, index) => (
           <div
             key={index}
-            className={chat.sender === 'user' ? 'user-message' : 'llm-message'}
+            className={chat.role === 'user' ? 'user-message' : 'llm-message'}
           >
-            {chat.message}
+            {chat.content}
           </div>
         ))}
       </div>
