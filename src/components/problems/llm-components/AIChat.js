@@ -21,37 +21,27 @@ const SendChat = async (
       conversation,
     })
 
-    if (chatInit.error) {
-      throw new Error(chatInit.error)
+    console.log('chatInit:', chatInit)
+
+    const iter = chatInit.answer.iter
+
+    if (!iter) {
+      throw new Error('No valid async iterable stream available in chatInit')
     }
 
     let textStream = ''
 
-    if (
-      chatInit.ok &&
-      chatInit.body &&
-      typeof chatInit.body.getReader === 'function'
-    ) {
-      const reader = chatInit.body.getReader()
-      const decoder = new TextDecoder()
-      let done = false
+    // Assuming itr is an async iterable
+    for await (const chunk of iter) {
+      if (chunk && chunk.message && chunk.message.content) {
+        const content = chunk.message.content
+        textStream += content
 
-      while (!done) {
-        const { value, done: streamDone } = await reader.read()
-        done = streamDone
-        if (value) {
-          const chunk = decoder.decode(value, { stream: !done })
-          textStream += chunk
-
-          updateChatHistory(probId, [
-            ...conversation,
-            { sender: 'llm', message: textStream },
-          ])
-        }
+        updateChatHistory(probId, [
+          ...conversation,
+          { sender: 'llm', message: textStream },
+        ])
       }
-    } else {
-      console.error('Invalid response or no readable stream available')
-      throw new Error('Invalid response or no readable stream available')
     }
 
     return textStream
