@@ -1,8 +1,3 @@
-/**
- * Component that creates a flex container with 2 halves
- * For Problem Solving page and any split screen layouts we need
- */
-
 import React, { useState, useEffect, useRef } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 import HorizontalResizableColumn from '../utility/HorizontalResizableColumn'
@@ -15,24 +10,30 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    border-radius: 4px;
   }
 
   html, body {
     height: 100%;
   }
 `
-
+// styled component for the main layout container
+// containing the left and right panels
 const LayoutContainer = styled.div`
   display: flex;
   height: calc(100vh - 85px);
+  background-color: #f0f0f0;
 `
 
+// styled component for the left side (problem details)
 const LeftPanel = styled.div`
   flex: 1;
   padding: 20px;
   overflow-y: auto;
+  background-color: #f0f0f0;
 `
 
+// styled component for the right side (code editor and output area)
 const RightPanel = styled.div`
   flex: 1;
   padding: 20px;
@@ -42,12 +43,33 @@ const RightPanel = styled.div`
   flex-direction: column;
 `
 
+// important for flexbox to work correctly
+// this is the container for the code editor
+// and the run and submit buttons below it
 const EditorContainer = styled.div`
   flex: 1;
   width: 100%;
   height: 100%;
   overflow-y: auto;
   display: flex;
+`
+
+// styled component for the output area below the code editor (right side)
+
+const OutputArea = styled.div`
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #272822; // background color of monokai theme
+  color: #f8f8f2; // text color of monokai theme
+  border: 1px solid #75715e; // border color of monokai theme
+  border-radius: 4px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  height: 200px;
+  overflow-y: auto;
+  ::selection {
+    background: #49483e;
+  }
 `
 
 // const ChatboxContainer = styled.div`
@@ -57,18 +79,6 @@ const EditorContainer = styled.div`
 //   display: flex;
 //   flex-direction: column;
 // `
-
-const OutputArea = styled.div`
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #f8f8f8;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-family: monospace;
-  white-space: pre-wrap;
-  height: 200px;
-  overflow-y: auto;
-`
 
 // default code shown in the code editor
 const pythonDefaultCode = `# Your code goes here \ndef example_function():\n  print("Hello, world!")`
@@ -117,6 +127,7 @@ const ProblemDetailLayout = ({ problemDetails, codeEditor }) => {
     return { initialWidth, maxWidth, minWidth }
   }
 
+  // allows for resizing of the vertical column
   // function updateVerticalProps() {
   //   if (rightPanelRef.current) {
   //     const panelHeight = rightPanelRef.current.offsetHeight
