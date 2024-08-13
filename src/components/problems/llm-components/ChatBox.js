@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
-import './ChatBox.css' // Import the CSS file
+import { useChat } from './ChatContext'
+import './ChatBox.css'
 
-const ChatBox = () => {
+const ChatBox = ({ problem }) => {
   const [input, setInput] = useState('')
-  const [chatHistory, setChatHistory] = useState([])
+  const { chatHistory, updateChatHistory } = useChat()
+
+  const currentChatHistory = chatHistory[problem._id] || []
 
   const handleInputChange = (e) => {
     setInput(e.target.value)
@@ -12,13 +15,15 @@ const ChatBox = () => {
   const handleSend = () => {
     if (input.trim() === '') return
 
-    // Add user input to chat history
-    setChatHistory([...chatHistory, { sender: 'user', message: input }])
+    const newHistory = [
+      ...currentChatHistory,
+      { sender: 'user', message: input },
+    ]
 
     // Simulate a response from the LLM (replace with actual API call)
     const response = 'This is a simulated response from the LLM.'
-    setChatHistory((prevHistory) => [
-      ...prevHistory,
+    updateChatHistory(problem._id, [
+      ...newHistory,
       { sender: 'llm', message: response },
     ])
 
@@ -29,7 +34,7 @@ const ChatBox = () => {
   return (
     <div className="chatbox-container">
       <div className="chat-history">
-        {chatHistory.map((chat, index) => (
+        {currentChatHistory.map((chat, index) => (
           <div
             key={index}
             className={chat.sender === 'user' ? 'user-message' : 'llm-message'}
