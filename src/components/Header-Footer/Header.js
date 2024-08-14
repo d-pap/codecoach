@@ -27,6 +27,7 @@ const ProjectTitle = styled(Typography)(({ theme }) => ({
   color: '#def9c4',
   marginLeft: theme.spacing(2), // Add some space between the logo and title
   textDecoration: 'none',
+  fontFamily: 'Inter, sans-serif',
 }))
 
 // const LogoImage = styled('img')(({ theme }) => ({

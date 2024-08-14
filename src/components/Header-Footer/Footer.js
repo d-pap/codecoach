@@ -15,18 +15,21 @@ import { styled } from '@mui/system'
 const FooterSection = styled(Box)(({ theme }) => ({
   width: '100%',
   backgroundColor: '#468585',
-  padding: '90px 0',
+  padding: '30px 0', // reduced padding to make the footer less tall
   color: '#b6b6b6',
+  marginTop: '20px', // add some space between bottom of page n top of footer
 }))
 
 const InformationText = styled(Typography)(({ theme }) => ({
   color: '#def9c4',
-  marginBottom: theme.spacing(2),
+  marginBottom: theme.spacing(1), // reduced margin to save space
+  fontSize: '1rem', // adjusted font size for better fit
 }))
 
 const CallText = styled(Typography)(({ theme }) => ({
   color: '#b6b6b6',
-  marginBottom: theme.spacing(2),
+  marginBottom: theme.spacing(1), // tighter layout
+  fontSize: '0.9rem', // smaller font
   '& a': {
     color: '#9cdba6',
     textDecoration: 'none',
@@ -46,6 +49,11 @@ const SocialIcon = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(1),
     display: 'flex',
     alignItems: 'center',
+    fontSize: '0.9rem', // smaller font size for social links
+    '& svg': {
+      fontSize: '1.2rem', // smaller icon size
+      marginRight: theme.spacing(1),
+    },
     '&:hover': {
       color: '#878686',
     },
