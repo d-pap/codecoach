@@ -15,7 +15,6 @@ export function ICPCFilter(problems, region, year) {
 // styled components for filter dropdown items
 const FilterItems = styled(MenuItem)(({ theme }) => ({
   fontFamily: 'Inter, sans-serif',
-  fontSize: '0.875rem',
 }))
 
 // styled components for filter dropdown labels
