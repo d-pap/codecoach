@@ -73,8 +73,8 @@ function HorizontalResizableColumn({
       <div
         style={{
           cursor: 'ew-resize',
-          width: '10px',
-          backgroundColor: '#ddd',
+          width: '2px',
+          backgroundColor: '#ccc',
           height: '100%',
         }}
         onMouseDown={handleMouseDown}

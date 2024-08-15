@@ -2,7 +2,8 @@
  * Filter for ICPC problems based on region and year
  */
 
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
+import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material'
+import styled from '@mui/material/styles/styled'
 
 export function ICPCFilter(problems, region, year) {
   return problems.filter((problem) => {
@@ -11,6 +12,16 @@ export function ICPCFilter(problems, region, year) {
     return regionMatch && yearMatch
   })
 }
+// styled components for filter dropdown items
+const FilterItems = styled(MenuItem)(({ theme }) => ({
+  fontFamily: 'Inter, sans-serif',
+  fontSize: '0.875rem',
+}))
+
+// styled components for filter dropdown labels
+const FilterLabels = styled(InputLabel)(({ theme }) => ({
+  fontFamily: 'Inter, sans-serif',
+}))
 
 export function ICPCFilterDisplay({
   region,
@@ -19,35 +30,44 @@ export function ICPCFilterDisplay({
   onYearChange,
 }) {
   return (
-    <>
-      <FormControl fullWidth variant="outlined" margin="normal">
-        <InputLabel id="region-label">ICPC Contest Region</InputLabel>
+    <Box sx={{ width: '100%' }}>
+      <FormControl fullWidth variant="outlined" margin="normal" size="small">
+        <FilterLabels
+          id="region-label"
+          sx={{ fontFamily: 'Inter, sans-serif' }}
+        >
+          ICPC Contest Region
+        </FilterLabels>
         <Select
           labelId="region-label"
           value={region}
           onChange={onRegionChange}
           label="ICPC Contest Region"
+          sx={{ fontFamily: 'Inter, sans-serif' }}
         >
-          <MenuItem value="all">All Regions</MenuItem>
-          <MenuItem value="World">World</MenuItem>
-          <MenuItem value="NA">North America</MenuItem>
-          <MenuItem value="EU">Europe</MenuItem>
+          <FilterItems value="all">All Regions</FilterItems>
+          <FilterItems value="World">World</FilterItems>
+          <FilterItems value="NA">North America</FilterItems>
+          <FilterItems value="EU">Europe</FilterItems>
         </Select>
       </FormControl>
-      <FormControl fullWidth variant="outlined" margin="normal">
-        <InputLabel id="year-label">ICPC Contest Year</InputLabel>
+      <FormControl fullWidth variant="outlined" margin="normal" size="small">
+        <FilterLabels id="year-label" sx={{ fontFamily: 'Inter, sans-serif' }}>
+          ICPC Contest Year
+        </FilterLabels>
         <Select
           labelId="year-label"
           value={year}
           onChange={onYearChange}
           label="ICPC Contest Year"
+          sx={{ fontFamily: 'Inter, sans-serif' }}
         >
-          <MenuItem value="all">All Years</MenuItem>
-          <MenuItem value="2021">2021</MenuItem>
-          <MenuItem value="2020">2020</MenuItem>
-          <MenuItem value="2019">2019</MenuItem>
+          <FilterItems value="all">All Years</FilterItems>
+          <FilterItems value="2021">2021</FilterItems>
+          <FilterItems value="2020">2020</FilterItems>
+          <FilterItems value="2019">2019</FilterItems>
         </Select>
       </FormControl>
-    </>
+    </Box>
   )
 }
