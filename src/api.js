@@ -42,9 +42,10 @@ export async function addProblem(problem) {
 // Lambda function and APIGW endpoint. Currently works
 // as long as the LLM server is running locally
 // https://github.com/Marv2014-1/llm-server
-export async function getHint(question, answer) {
+export async function getHint(title, question, answer) {
   try {
     const response = await axios.post(`${LLM_URL}/hint-problem`, {
+      title,
       question,
       answer,
     })
@@ -59,9 +60,10 @@ export async function getHint(question, answer) {
 // Lambda function and APIGW endpoint. Currently works
 // as long as the LLM server is running locally
 // https://github.com/Marv2014-1/llm-server
-export async function getSolution(question, answer) {
+export async function getSolution(title, question, answer) {
   try {
     const response = await axios.post(`${LLM_URL}/solve-problem`, {
+      title,
       question,
       answer,
     })
@@ -69,6 +71,19 @@ export async function getSolution(question, answer) {
   } catch (error) {
     console.error('Error fetching hint:', error)
     throw new Error('Failed to fetch hint')
+  }
+}
+
+// Function for LLM interaction which returns a chat response
+export async function chatWithLLM(payload) {
+  try {
+    const response = await axios.post(`${LLM_URL}/chat`, {
+      payload,
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error fetching chat:', error)
+    throw new Error('Failed to fetch chat')
   }
 }
 
