@@ -78,7 +78,7 @@ export async function getSolution(title, question, answer) {
 export async function chatWithLLM(payload) {
   try {
     const response = await axios.post(`${LLM_URL}/chat`, {
-      payload
+      payload,
     })
     return response.data
   } catch (error) {

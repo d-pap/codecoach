@@ -4,14 +4,8 @@
 
 import { chatWithLLM } from '../../../api'
 
-const SendChat = async (
-  title,
-  question,
-  hint,
-  conversation,
-) => {
+const SendChat = async (title, question, hint, conversation) => {
   try {
-
     // make the payload for the chat
     let payload = {
       title: title,
@@ -22,11 +16,10 @@ const SendChat = async (
 
     // Initiating the conversation
     const chatResponse = await chatWithLLM({
-      payload
+      payload,
     })
 
     return chatResponse.answer
-
   } catch (error) {
     console.error('Error in SendChat:', error)
     throw error
