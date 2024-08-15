@@ -9,42 +9,24 @@ const SendChat = async (
   question,
   hint,
   conversation,
-  updateChatHistory,
-  probId
 ) => {
   try {
+
+    // make the payload for the chat
+    let payload = {
+      title: title,
+      question: question,
+      hint: hint,
+      conversation: conversation,
+    }
+
     // Initiating the conversation
-    const chatInit = await chatWithLLM({
-      title,
-      question,
-      hint,
-      conversation,
+    const chatResponse = await chatWithLLM({
+      payload
     })
 
-    console.log('chatInit:', chatInit)
+    return chatResponse.answer
 
-    const iter = chatInit.answer.iter
-
-    if (!iter) {
-      throw new Error('No valid async iterable stream available in chatInit')
-    }
-
-    let textStream = ''
-
-    // Assuming itr is an async iterable
-    for await (const chunk of iter) {
-      if (chunk && chunk.message && chunk.message.content) {
-        const content = chunk.message.content
-        textStream += content
-
-        updateChatHistory(probId, [
-          ...conversation,
-          { sender: 'llm', message: textStream },
-        ])
-      }
-    }
-
-    return textStream
   } catch (error) {
     console.error('Error in SendChat:', error)
     throw error
