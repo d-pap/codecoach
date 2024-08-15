@@ -23,7 +23,7 @@ import { useTheme } from '@mui/material/styles'
 const NavLink = styled(Button)(({ theme }) => ({
   color: '#DEF9C4',
   textDecoration: 'none',
-  borderRadius: '10px',
+  borderRadius: '10px', // rounded corners for navbar buttons
   whiteSpace: 'nowrap', // Prevent text wrapping
   margin: '0 15px', // Add more margin between links
   '&:hover': {
@@ -74,12 +74,15 @@ const Navbar = () => {
 
   return (
     // <AppBar position="static" sx={{ borderBottom: "2px solid #468585", backgroundColor: "transparent" }}>
-    <AppBar position="static" sx={{ backgroundColor: 'transparent' }}>
+    <AppBar
+      position="static"
+      sx={{ backgroundColor: 'transparent', borderRadius: '6px' }} // rounded corners for button container
+    >
       <Toolbar
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
-          height: '85px',
+          height: '56px', // height of the header is set here
         }}
       >
         <IconButton
