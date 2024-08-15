@@ -3,6 +3,7 @@
  * The user can filter the questions by region and year.
  */
 
+// export default ICPC
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
@@ -13,6 +14,7 @@ import {
 import { Stack, Pagination } from '@mui/material'
 import HorizontalResizableColumn from '../../../components/utility/HorizontalResizableColumn'
 import { fetchProblems } from '../../../api'
+import { Box, Container, Grid, Typography } from '@mui/material'
 
 function ICPC() {
   const location = useLocation()
@@ -23,11 +25,7 @@ function ICPC() {
   const [filteredProblems, setFilteredProblems] = useState(problems)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [resizableColumnProps, setResizableColumnProps] = useState({
-    initialWidth: 0,
-    minWidth: 0,
-    maxWidth: 0,
-  })
+  const [setFilterWidth] = useState(300) // Width of the filters column
   const [currentPage, setCurrentPage] = useState(1)
   const problemsPerPage = 10
 
@@ -55,28 +53,6 @@ function ICPC() {
     setFilteredProblems(ICPCFilter(problems, region, year))
   }, [problems, region, year])
 
-  // Handle resizable column properties
-  useEffect(() => {
-    function getResizableColumnProps() {
-      const windowWidth = window.innerWidth
-
-      // Calculate dimensions based on window width
-      const minWidth = windowWidth * 0.2
-      const maxWidth = windowWidth * 0.3
-      const initialWidth = windowWidth * 0.25
-
-      return { initialWidth, maxWidth, minWidth }
-    }
-
-    const updateColumnProps = () => {
-      setResizableColumnProps(getResizableColumnProps())
-    }
-
-    updateColumnProps()
-    window.addEventListener('resize', updateColumnProps)
-    return () => window.removeEventListener('resize', updateColumnProps)
-  }, [])
-
   const handleRegionChange = (event) => {
     setRegion(event.target.value)
   }
@@ -87,6 +63,11 @@ function ICPC() {
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page)
+  }
+
+  // Handle resizing of filter column
+  const handleResize = (newWidth) => {
+    setFilterWidth(newWidth)
   }
 
   if (loading) {
@@ -106,55 +87,76 @@ function ICPC() {
   )
 
   return (
-    <div className="newsletter_section layout_padding">
-      <div className="header">
-        <h1>ICPC Problems</h1>
-      </div>
-      <div className="container" style={{ display: 'flex' }}>
-        <HorizontalResizableColumn
-          initialWidth={resizableColumnProps.initialWidth}
-          minWidth={resizableColumnProps.minWidth}
-          maxWidth={resizableColumnProps.maxWidth}
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 4 }}>
+      <Container maxWidth="lg">
+        <Typography
+          variant="h2"
+          component="h1"
+          gutterBottom
+          align="center"
+          sx={{ mb: 4 }}
         >
-          <h3>Filters</h3>
-          <ICPCFilterDisplay
-            region={region}
-            year={year}
-            onRegionChange={handleRegionChange}
-            onYearChange={handleYearChange}
-          />
-        </HorizontalResizableColumn>
-        <div id="rightcolumn" style={{ flex: 1, padding: '0 10px' }}>
-          <ul>
+          ICPC Problems
+        </Typography>
+        <Grid
+          container
+          spacing={0}
+          sx={{ display: 'flex', flexWrap: 'nowrap' }}
+        >
+          <HorizontalResizableColumn
+            initialWidth={200}
+            minWidth={175}
+            maxWidth={400}
+            onResize={handleResize}
+          >
+            <Box sx={{ padding: 2 }}>
+              <Typography variant="h5" gutterBottom>
+                Filters
+              </Typography>
+              <ICPCFilterDisplay
+                region={region}
+                year={year}
+                onRegionChange={handleRegionChange}
+                onYearChange={handleYearChange}
+              />
+            </Box>
+          </HorizontalResizableColumn>
+          <Box sx={{ flexGrow: 1, paddingLeft: 2 }}>
+            <Box
+              sx={{
+                p: 1,
+                display: 'flex',
+                justifyContent: 'right',
+              }}
+            >
+              <Pagination
+                count={Math.ceil(filteredProblems.length / problemsPerPage)}
+                page={currentPage}
+                onChange={handlePageChange}
+                size="small"
+              />
+            </Box>
             {currentProblems.length > 0 ? (
-              currentProblems.map((problem) => (
-                <Stack
-                  key={problem._id}
-                  spacing={3}
-                  marginTop={1}
-                  marginBottom={1}
-                >
-                  <ProblemCardLayout problem={problem} />
-                </Stack>
-              ))
+              <Stack spacing={2}>
+                {currentProblems.map((problem) => (
+                  <ProblemCardLayout key={problem._id} problem={problem} />
+                ))}
+              </Stack>
             ) : (
-              <p>No problems found</p>
+              <Typography variant="body1">No problems found</Typography>
             )}
-          </ul>
-          <Pagination
-            count={Math.ceil(filteredProblems.length / problemsPerPage)}
-            page={currentPage}
-            onChange={handlePageChange}
-            color="primary"
-            style={{
-              marginTop: '20px',
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          />
-        </div>
-      </div>
-    </div>
+            <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
+              <Pagination
+                count={Math.ceil(filteredProblems.length / problemsPerPage)}
+                page={currentPage}
+                onChange={handlePageChange}
+                size="small"
+              />
+            </Box>
+          </Box>
+        </Grid>
+      </Container>
+    </Box>
   )
 }
 

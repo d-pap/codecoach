@@ -6,12 +6,14 @@ import { styled } from '@mui/system'
 //import Logo from './icons/CodeCoachLogo.png' // Import the logo
 
 // Styled header section using MUI
+// for the entire header section
 const HeaderSection = styled(AppBar)(({ theme }) => ({
   background: '#468585',
   display: 'flex',
   justifyContent: 'space-between',
 }))
 
+// a box to wrap the title in the header
 const TitleWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-start',
@@ -19,6 +21,7 @@ const TitleWrapper = styled(Box)(({ theme }) => ({
   textDecoration: 'none',
 }))
 
+// font styling for the project title in the header
 const ProjectTitle = styled(Typography)(({ theme }) => ({
   fontWeight: 'bold',
   textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
@@ -27,6 +30,7 @@ const ProjectTitle = styled(Typography)(({ theme }) => ({
   color: '#def9c4',
   marginLeft: theme.spacing(2), // Add some space between the logo and title
   textDecoration: 'none',
+  fontFamily: 'Inter, sans-serif',
 }))
 
 // const LogoImage = styled('img')(({ theme }) => ({

@@ -1,93 +1,113 @@
 import React from 'react'
-import {
-  Box,
-  Container,
-  Typography,
-  Link as MuiLink,
-  Grid,
-} from '@mui/material'
-import FacebookIcon from '@mui/icons-material/Facebook'
-import TwitterIcon from '@mui/icons-material/Twitter'
+import { Box, Container, Grid, Typography, Link } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import LinkedInIcon from '@mui/icons-material/LinkedIn'
+import YouTubeIcon from '@mui/icons-material/YouTube'
 import InstagramIcon from '@mui/icons-material/Instagram'
-import { styled } from '@mui/system'
 
-const FooterSection = styled(Box)(({ theme }) => ({
-  width: '100%',
+const FooterContainer = styled(Box)(({ theme }) => ({
   backgroundColor: '#468585',
-  padding: '90px 0',
-  color: '#b6b6b6',
+  color: theme.palette.primary.contrastText, // right now, this is using MUI's default theme styles. so this would be white
+  padding: theme.spacing(4, 0), // padding top and bottom=32px (4*8px=32), no padding on the sides
+  marginTop: 'auto',
 }))
 
-const InformationText = styled(Typography)(({ theme }) => ({
+const FooterTypography = styled(Typography)({
+  marginBottom: '0.5rem',
   color: '#def9c4',
-  marginBottom: theme.spacing(2),
-}))
+  fontFamily: 'Inter, sans-serif', // Inter for headings
+})
 
-const CallText = styled(Typography)(({ theme }) => ({
-  color: '#b6b6b6',
-  marginBottom: theme.spacing(2),
-  '& a': {
-    color: '#9cdba6',
-    textDecoration: 'none',
-    '&:hover': {
-      color: '#878686',
-    },
+const EmailLink = styled(Link)({
+  color: '#9cdba6',
+  fontFamily: 'DM Sans, sans-serif', // DM Sans for link font (same as body text)
+  textDecoration: 'none',
+  '&:hover': {
+    color: '#878686',
+    transition: 'color 0.3s ease',
   },
-}))
+})
 
 const SocialIcon = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
+  display: 'inline-flex',
+  marginRight: theme.spacing(1),
   '& a': {
     color: '#9CDBA6',
-    textDecoration: 'none',
-    marginBottom: theme.spacing(1),
-    display: 'flex',
-    alignItems: 'center',
     '&:hover': {
       color: '#878686',
+      transition: 'color 0.3s ease',
     },
   },
 }))
 
 const Footer = () => {
   return (
-    <FooterSection>
-      <Container>
-        <Grid container spacing={4} justifyContent="center">
+    <FooterContainer>
+      <Container maxWidth="lg">
+        <Grid container spacing={12} justifyContent="center">
           <Grid item xs={12} sm={6} md={4}>
-            <InformationText variant="h6">Contact Us</InformationText>
-            <CallText>
-              <MuiLink href="tel:+011234567890">+01 1234567890</MuiLink>
-            </CallText>
-            <CallText>
-              <MuiLink href="tel:+019876543210">+01 9876543210</MuiLink>
-            </CallText>
-            <CallText>
-              <MuiLink href="mailto:demo@gmail.com">demo@gmail.com</MuiLink>
-            </CallText>
+            <FooterTypography variant="h6" gutterBottom align="left">
+              Contact Us
+            </FooterTypography>
+            <FooterTypography
+              align="left"
+              sx={{ fontFamily: 'DM Sans, sans-serif' }} // DM Sans for body text
+            >
+              General Inquiries:{' '}
+              <EmailLink href="mailto:team@codecoach.com">
+                team@codecoach.com
+              </EmailLink>
+            </FooterTypography>
+            <FooterTypography
+              align="left"
+              sx={{ fontFamily: 'DM Sans, sans-serif' }} // DM Sans for body text
+            >
+              Support:{' '}
+              <EmailLink href="mailto:support@codecoach.com">
+                support@codecoach.com
+              </EmailLink>
+            </FooterTypography>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <SocialIcon>
-              <MuiLink href="#">
-                <FacebookIcon /> Facebook
-              </MuiLink>
-              <MuiLink href="#">
-                <TwitterIcon /> Twitter
-              </MuiLink>
-              <MuiLink href="#">
-                <LinkedInIcon /> LinkedIn
-              </MuiLink>
-              <MuiLink href="#">
-                <InstagramIcon /> Instagram
-              </MuiLink>
-            </SocialIcon>
+            <FooterTypography variant="h6" gutterBottom align="left">
+              Social
+            </FooterTypography>
+            <Box display="flex" alignItems="center">
+              <SocialIcon>
+                <Link
+                  href="https://www.linkedin.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  color="inherit"
+                >
+                  <LinkedInIcon />
+                </Link>
+              </SocialIcon>
+              <SocialIcon>
+                <Link
+                  href="https://www.youtube.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  color="inherit"
+                >
+                  <YouTubeIcon />
+                </Link>
+              </SocialIcon>
+              <SocialIcon>
+                <Link
+                  href="https://www.instagram.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  color="inherit"
+                >
+                  <InstagramIcon />
+                </Link>
+              </SocialIcon>
+            </Box>
           </Grid>
         </Grid>
       </Container>
-    </FooterSection>
+    </FooterContainer>
   )
 }
 

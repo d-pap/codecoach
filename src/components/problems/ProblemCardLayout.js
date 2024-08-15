@@ -48,7 +48,11 @@ const ProblemCardLayout = ({ problem }) => {
           <Typography
             variant="h6"
             noWrap
-            sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+            sx={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              fontFamily: 'Inter, sans-serif', //! set font of the title in the card
+            }}
           >
             {problem.title}
           </Typography>
@@ -62,6 +66,7 @@ const ProblemCardLayout = ({ problem }) => {
               WebkitLineClamp: 3, // Number of lines to show before truncating
               WebkitBoxOrient: 'vertical',
               whiteSpace: 'normal',
+              fontFamily: 'Inter, sans-serif', //! set font of the description in the card
             }}
           >
             {problem.description}
