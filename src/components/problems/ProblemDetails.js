@@ -1,13 +1,13 @@
-import React from 'react';
-import styled from 'styled-components';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import CustomTabPanel from './CustomTabPanel';
-import PropTypes from 'prop-types';
-import ProblemTab from './problem-detail-navbar/ProblemTab';
-import ChatAITab from './problem-detail-navbar/ChatAITab';
-import HintByDatabaseTab from './problem-detail-navbar/HintByDatabase';
-import ForumTab from './problem-detail-navbar/ForumTab';
+import React from 'react'
+import styled from 'styled-components'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import CustomTabPanel from './CustomTabPanel'
+import PropTypes from 'prop-types'
+import ProblemTab from './problem-detail-navbar/ProblemTab'
+//import ChatAITab from './problem-detail-navbar/ChatAITab';
+import HintByDatabaseTab from './problem-detail-navbar/HintByDatabase'
+import ForumTab from './problem-detail-navbar/ForumTab'
 
 const DetailContainer = styled.div`
   h1 {
@@ -23,34 +23,34 @@ const DetailContainer = styled.div`
     padding: 10px;
     border-radius: 5px;
   }
-`;
+`
 
 const ScrollableTabsContainer = styled.div`
   overflow-x: auto;
-`;
+`
 
 CustomTabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
-};
+}
 
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
-  };
+  }
 }
 
 function ProblemDetails({ problem }) {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(0)
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+    setValue(newValue)
+  }
 
   const getLayout = () => {
-    if (!problem) return <div>Loading problem details...</div>;
+    if (!problem) return <div>Loading problem details...</div>
 
     return (
       <div>
@@ -86,10 +86,10 @@ function ProblemDetails({ problem }) {
           </CustomTabPanel>
         </DetailContainer>
       </div>
-    );
-  };
+    )
+  }
 
-  return getLayout();
+  return getLayout()
 }
 
-export default ProblemDetails;
+export default ProblemDetails
