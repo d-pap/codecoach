@@ -38,7 +38,7 @@ const SectionHeader = styled(Typography)(({ theme }) => ({
 const Home = () => {
   return (
     <Container>
-      <Box sx={{ marginTop: 4 }}>
+      <Box sx={{ marginTop: 6 }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <OnboardingCard elevation={3}>

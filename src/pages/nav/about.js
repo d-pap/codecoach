@@ -4,19 +4,23 @@
  * or delete it completely. Was initially only made to construct navbar
  */
 import React from 'react'
+import { Box, Container, Typography } from '@mui/material'
 
 const About = () => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'centre',
-        alignItems: 'centre',
-        height: '100vh',
-      }}
-    >
-      <h1>About Us</h1>
-    </div>
+    <Box sx={{ bgcolor: 'background.default', py: 6 }}>
+      <Container maxWidth="lg">
+        <Typography
+          variant="h2"
+          component="h1"
+          gutterBottom
+          align="center"
+          sx={{ mb: 4 }}
+        >
+          About Code Coach
+        </Typography>
+      </Container>
+    </Box>
   )
 }
 
