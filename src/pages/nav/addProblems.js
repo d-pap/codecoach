@@ -10,12 +10,13 @@ import {
   InputLabel,
 } from '@mui/material'
 import TestCase from '../../components/add-problems/TestCase'
+import { addProblem } from '../../api'
 import {
   handleChange,
   handleTestCaseChange,
   addTestCase,
   removeTestCase,
-  handleSubmit,
+  //handleSubmit,
 } from '../../components/add-problems/ICPCFormHandlers'
 import CustomLabel from '../../components/problems/add-problems/CustomLabel'
 
@@ -93,6 +94,36 @@ const AddProblems = () => {
     'Africa and Arab Contests': ['Arab Collegiate Programming Championship'],
   }
 
+  const handleSubmits = async (e, formData, setFormData) => {
+    e.preventDefault()
+
+    try {
+      await addProblem(formData)
+
+      setFormData({
+        type: 'icpc',
+        title: '',
+        timeLimit: '',
+        memoryLimit: '',
+        description: '',
+        exampleInputs: '',
+        exampleOutputs: '',
+        videoLink: '',
+        testCases: [{ input: '', output: '' }],
+        comments: '',
+        contestRegion: '',
+        contestSubRegion: '',
+        contestYear: '',
+        hint: '',
+      })
+
+      alert('Problem added successfully!')
+    } catch (error) {
+      console.error('Error adding problem:', error)
+      alert('Failed to add problem. Please try again.')
+    }
+  }
+
   return (
     <Box
       component="section"
@@ -103,7 +134,7 @@ const AddProblems = () => {
     >
       <Box
         component="form"
-        onSubmit={(e) => handleSubmit(e, formData, setFormData)}
+        onSubmit={(e) => handleSubmits(e, formData, setFormData)}
         width="80%" // Set the width to 80%
       >
         <Stack spacing={2}>
@@ -212,7 +243,7 @@ const AddProblems = () => {
 
           <CustomLabel>Region and Year: </CustomLabel>
           <FormControl fullWidth>
-            <InputLabel id="region-label">Contest Region</InputLabel>
+            <InputLabel id="region-label">Contest Region *</InputLabel>
             <Select
               required
               labelId="region-label"
@@ -242,7 +273,7 @@ const AddProblems = () => {
           </FormControl>
 
           <FormControl fullWidth>
-            <InputLabel id="sub-region-label">Contest Sub Region</InputLabel>
+            <InputLabel id="sub-region-label">Contest Sub Region *</InputLabel>
             <Select
               required
               labelId="sub-region-label"
