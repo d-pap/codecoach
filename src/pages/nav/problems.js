@@ -1,28 +1,49 @@
-// /**
-//  * Problems page
-//  * This page shows all of the problems and is where
-//  * users will select a problem they want to solve,
-//  * then be taken to the Problem Detail page to solve it.
-//  */
-
+/**
+ * Problems page
+ * This page shows all of the problems and is where
+ * users will select a problem they want to solve,
+ * then be taken to the Problem Detail page to solve it.
+ */
 import React, { useState, useEffect } from 'react'
 import {
+  Box,
+  Container,
+  Grid,
   Button,
-  Stack,
   Typography,
-  Paper,
-  useMediaQuery,
-  useTheme,
+  styled,
+  Card,
+  CardContent,
+  CardActions,
+  CardMedia,
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { fetchProblems } from '../../api'
-import './problems.css'
+import icpcImage from '../../images/icpc-category.png'
+import programmingImage from '../../images/programming-category.png'
+import interviewImage from '../../images/interview-category.png'
+
+const CardStyled = styled(Card)(({ theme }) => ({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  borderRadius: theme.spacing(2),
+  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: theme.shadows[8],
+  },
+}))
+
+const CardMediaStyled = styled(CardMedia)(({ theme }) => ({
+  // the 2 lines below make sure to keep the aspect ratio of the image 16:9
+  height: 0, // important
+  paddingTop: '56.25%', // important - 16:9 aspect ratio
+  backgroundColor: theme.palette.primary.main, // if image doesnt load
+}))
 
 function Problems() {
   const navigate = useNavigate()
-  const theme = useTheme()
-  const isLaptopScreen = useMediaQuery(theme.breakpoints.up('md'))
-
   const [loading, setLoading] = useState(true)
   const [problems, setProblems] = useState([])
 
@@ -34,7 +55,6 @@ function Problems() {
         setLoading(false)
       } catch (err) {
         console.error('Error fetching problems', err)
-        // warn the user that there was an error
         setLoading(false)
       }
     }
@@ -46,91 +66,125 @@ function Problems() {
       navigate(path, { state: { problems } })
     }
   }
-
   return (
-    <div className="problems-container">
-      <div className="header">
-        <h1>Problems</h1>
-      </div>
-      <div className="button-container">
-        <Stack spacing={4} alignItems="center">
-          <Paper
-            elevation={3}
-            className={`problems-paper icpc-paper ${isLaptopScreen ? 'laptop' : ''}`}
+    <Box sx={{ bgcolor: 'background.default', py: 6 }}>
+      <Container maxWidth="lg">
+        <Typography
+          variant="h2"
+          component="h1"
+          gutterBottom
+          align="center"
+          sx={{ mb: 6 }}
+        >
+          Explore Problem Categories
+        </Typography>
+        <Grid container spacing={4}>
+          {/* ICPC problem section */}
+          <Grid
+            item
+            xs={12} // xs screens=1 card per row
+            sm={6} // sm=2 cards per row
+            md={4} // md and above=3 cards per row
           >
-            <Button
-              variant="contained"
-              onClick={() => navigateTo('/problems/icpc')}
-              className="button"
-              disabled={loading}
-            >
-              ICPC
-            </Button>
-            <Typography variant="body1" align="center" className="typography">
-              ICPC stands for The International Collegiate Programming Contest.
-              This contest is one of the most prestigious competitive
-              programming contests globally. The problems included in the ICPC
-              section are derived from various past ICPC competitions and cover
-              a broad range of topics. Participants are challenged with complex
-              algorithmic problems that test their problem-solving skills under
-              time constraints. These problems are designed to challenge
-              participants’ ability to apply theoretical knowledge to practical
-              scenarios and to think critically and efficiently.
-            </Typography>
-          </Paper>
-
-          <Paper
-            elevation={3}
-            className={`problems-paper programming-paper ${isLaptopScreen ? 'laptop' : ''}`}
+            <CardStyled>
+              <CardMediaStyled image={icpcImage} />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  ICPC
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  ICPC stands for The International Collegiate Programming
+                  Contest. This contest is one of the most prestigious
+                  competitive programming contests globally. The problems
+                  included in the ICPC section are derived from various past
+                  ICPC competitions and cover a broad range of topics.
+                </Typography>
+              </CardContent>
+              <CardActions sx={{ mt: 'auto' }}>
+                <Button
+                  size="large"
+                  fullWidth
+                  variant="contained"
+                  onClick={() => navigateTo('/problems/icpc')}
+                  disabled={loading}
+                >
+                  Explore ICPC Problems
+                </Button>
+              </CardActions>
+            </CardStyled>
+          </Grid>
+          {/* programming section */}
+          <Grid
+            item
+            xs={12} // xs screens=1 card per row
+            sm={6} // sm=2 cards per row
+            md={4} // md and above=3 cards per row
           >
-            <Button
-              variant="contained"
-              onClick={() => navigateTo('/problems/programming')}
-              className="button"
-              disabled={loading}
-            >
-              Programming
-            </Button>
-            <Typography variant="body1" align="center" className="typography">
-              The Programming section includes a variety of problems designed to
-              enhance your coding skills and problem-solving abilities. Topics
-              covered in this section span a wide array of common programming
-              challenges such as algorithms, data structures, complexity
-              analysis, sorting and searching, dynamic programming, and more.
-              This section aims to provide a comprehensive training ground for
-              individuals to refine their programming skills, prepare for coding
-              interviews, or simply enjoy solving interesting and challenging
-              problems.
-            </Typography>
-          </Paper>
-
-          <Paper
-            elevation={3}
-            className={`problems-paper interview-paper ${isLaptopScreen ? 'laptop' : ''}`}
+            <CardStyled>
+              <CardMediaStyled image={programmingImage} />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  Programming
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  The Programming section includes a variety of problems
+                  designed to enhance your coding skills and problem-solving
+                  abilities. Topics covered in this section span a wide array of
+                  common programming challenges such as algorithms, data
+                  structures, complexity analysis, sorting and searching,
+                  dynamic programming, and more.
+                </Typography>
+              </CardContent>
+              <CardActions sx={{ mt: 'auto' }}>
+                <Button
+                  size="large"
+                  fullWidth
+                  variant="contained"
+                  onClick={() => navigateTo('/problems/programming')}
+                  disabled={loading}
+                >
+                  Explore Programming Problems
+                </Button>
+              </CardActions>
+            </CardStyled>
+          </Grid>
+          {/* interview section */}
+          <Grid
+            item
+            xs={12} // xs screens=1 card per row
+            sm={6} // sm=2 cards per row
+            md={4} // md and above=3 cards per row
           >
-            <Button
-              variant="contained"
-              onClick={() => navigateTo('/problems/interview')}
-              className="button"
-              disabled={loading}
-            >
-              Interview
-            </Button>
-            <Typography variant="body1" align="center" className="typography">
-              The Interview section focuses on questions commonly asked by FANG
-              (Facebook, Amazon, Netflix, Google) companies during technical
-              interviews. This section is designed to help students and
-              professionals prepare for the types of questions they might
-              encounter in real-world technical interviews. Topics include
-              algorithmic problem solving, system design, coding challenges, and
-              behavioral questions. Each question is crafted to mimic real
-              interview scenarios, helping candidates to practice and improve
-              their responses to excel in their job interviews.
-            </Typography>
-          </Paper>
-        </Stack>
-      </div>
-    </div>
+            <CardStyled>
+              <CardMediaStyled image={interviewImage} />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  Interview
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  The Interview section focuses on questions commonly asked by
+                  FAANG (Facebook, Amazon, Netflix, Google) companies during
+                  technical interviews. This section is designed to help
+                  students and professionals prepare for the types of questions
+                  they might encounter in real-world technical interviews.
+                </Typography>
+              </CardContent>
+              <CardActions sx={{ mt: 'auto' }}>
+                <Button
+                  size="large"
+                  fullWidth
+                  variant="contained"
+                  onClick={() => navigateTo('/problems/interview')}
+                  disabled={loading}
+                >
+                  Explore Interview Problems
+                </Button>
+              </CardActions>
+            </CardStyled>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
   )
 }
 

@@ -9,6 +9,7 @@ import {
   Link,
 } from '@mui/material'
 import { styled } from '@mui/system'
+import { useNavigate } from 'react-router-dom'
 
 // Styled components
 const OnboardingCard = styled(Paper)(({ theme }) => ({
@@ -36,9 +37,11 @@ const SectionHeader = styled(Typography)(({ theme }) => ({
 }))
 
 const Home = () => {
+  const navigate = useNavigate()
+
   return (
     <Container>
-      <Box sx={{ marginTop: 4 }}>
+      <Box sx={{ marginTop: 6 }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <OnboardingCard elevation={3}>
@@ -46,7 +49,11 @@ const Home = () => {
               <Typography variant="body1">
                 You have not completed onboarding
               </Typography>
-              <Button variant="contained" sx={{ marginTop: 2 }}>
+              <Button
+                variant="contained"
+                onClick={() => navigate('/problems')} // redirect to problems page
+                sx={{ marginTop: 2 }}
+              >
                 Get Started
               </Button>
             </OnboardingCard>
@@ -96,7 +103,12 @@ const Home = () => {
             </RoadmapCard>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Button variant="outlined">All Roadmaps</Button>
+            <Button
+              variant="outlined"
+              onClick={() => navigate('/problems')} // redirect to problems page
+            >
+              All Roadmaps
+            </Button>
           </Grid>
         </Grid>
       </Box>
