@@ -55,8 +55,11 @@ const Navbar = () => {
   }
 
   const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+    <Box onClick={handleDrawerToggle}>
       <List>
+        <ListItem button component={RouterLink} to="/">
+          <ListItemText primary="Home" />
+        </ListItem>
         <ListItem button component={RouterLink} to="/about">
           <ListItemText primary="About" />
         </ListItem>
@@ -95,7 +98,7 @@ const Navbar = () => {
           <MenuIcon />
         </IconButton>
         <Drawer
-          anchor="left"
+          anchor="right"
           open={mobileOpen}
           onClose={handleDrawerToggle}
           sx={{
@@ -147,7 +150,7 @@ const Navbar = () => {
           <Menu
             anchorEl={anchorEl}
             anchorOrigin={{
-              vertical: 'top',
+              vertical: 'bottom',
               horizontal: 'right',
             }}
             id={menuId}
