@@ -12,7 +12,13 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Divider,
+  ListItemIcon,
 } from '@mui/material'
+import PersonAdd from '@mui/icons-material/PersonAdd'
+import LoginIcon from '@mui/icons-material/Login'
+import Settings from '@mui/icons-material/Settings'
+import Logout from '@mui/icons-material/Logout'
 import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { styled } from '@mui/system'
@@ -25,7 +31,7 @@ const NavLink = styled(Button)(({ theme }) => ({
   textDecoration: 'none',
   borderRadius: '10px', // rounded corners for navbar buttons
   whiteSpace: 'nowrap', // Prevent text wrapping
-  margin: '0 15px', // Add more margin between links
+  margin: '5px', // Add more margin between links
   '&:hover': {
     background: '#9CDBA6',
     color: '#468585',
@@ -79,7 +85,11 @@ const Navbar = () => {
     // <AppBar position="static" sx={{ borderBottom: "2px solid #468585", backgroundColor: "transparent" }}>
     <AppBar
       position="static"
-      sx={{ backgroundColor: 'transparent', borderRadius: '6px' }} // rounded corners for button container
+      sx={{
+        backgroundColor: 'transparent',
+        borderRadius: '6px', // rounded corners for button container
+        boxShadow: 'none', // remove shadow
+      }}
     >
       <Toolbar
         sx={{
@@ -107,12 +117,18 @@ const Navbar = () => {
         >
           {drawer}
         </Drawer>
-        <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: { xs: 'none', sm: 'flex' },
+            alignItems: 'center',
+            p: '20px', //! fix this - there was nothing set here for padding
+          }}
+        >
           <NavLink component={RouterLink} to="/" activeClassName="active">
             Home
           </NavLink>
           <NavLink component={RouterLink} to="/about" activeClassName="active">
-            About
+            Courses
           </NavLink>
           <NavLink
             component={RouterLink}
@@ -129,12 +145,13 @@ const Navbar = () => {
             Add Problems
           </NavLink>
         </Box>
+        <Divider orientation="vertical" flexItem variant="middle" />
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
-            marginLeft: 'auto',
-            paddingRight: '20px',
+            padding: '15px', //! fix this
+            paddingRight: '20px', //! fix this - it was just `paddingLeft: '20px'`
           }}
         >
           <IconButton
@@ -167,18 +184,36 @@ const Navbar = () => {
               component={RouterLink}
               to="/signin"
             >
-              Log In
+              <ListItemIcon>
+                <LoginIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Sign In</ListItemText>
             </MenuItem>
             <MenuItem
               onClick={handleMenuClose}
               component={RouterLink}
               to="/signup"
             >
-              Sign Up
+              <ListItemIcon>
+                <PersonAdd fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Register</ListItemText>
             </MenuItem>
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Log out</MenuItem>
+            <Divider variant="middle" />
+
+            <MenuItem onClick={handleMenuClose}>
+              <ListItemIcon>
+                <Settings fontSize="small" />
+              </ListItemIcon>
+              Settings
+            </MenuItem>
+
+            <MenuItem onClick={handleMenuClose}>
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
           </Menu>
         </Box>
       </Toolbar>
