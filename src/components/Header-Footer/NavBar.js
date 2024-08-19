@@ -21,24 +21,23 @@ import Settings from '@mui/icons-material/Settings'
 import Logout from '@mui/icons-material/Logout'
 import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import { styled } from '@mui/system'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
+import { styled, alpha } from '@mui/material/styles'
 
 // Styled NavLink component using MUI
 const NavLink = styled(Button)(({ theme }) => ({
-  color: '#DEF9C4',
+  // color: '#DEF9C4',
+  color: '#1f1f1f', // Text color
   textDecoration: 'none',
-  borderRadius: '10px', // rounded corners for navbar buttons
+  borderRadius: theme.spacing(2), // rounded corners for navbar buttons
   whiteSpace: 'nowrap', // Prevent text wrapping
   margin: '5px', // Add more margin between links
   '&:hover': {
-    background: '#9CDBA6',
-    color: '#468585',
-  },
-  '&.active': {
-    color: '#DEF9C4',
-    backgroundColor: '#50B498', // Active background color
+    //background: '#9CDBA6',
+    background: alpha('#1f1f1f', 0.1),
+    color: '#1f1f1f',
+    transition: 'background-color 0.3s ease',
   },
 }))
 
@@ -150,8 +149,8 @@ const Navbar = () => {
           sx={{
             display: 'flex',
             alignItems: 'center',
-            padding: '15px', //! fix this
-            paddingRight: '20px', //! fix this - it was just `paddingLeft: '20px'`
+            padding: '15px',
+            paddingRight: '20px',
           }}
         >
           <IconButton
@@ -160,7 +159,15 @@ const Navbar = () => {
             aria-controls={menuId}
             aria-haspopup="true"
             onClick={handleProfileMenuOpen}
-            color="inherit"
+            //color="default" //! color of the icon (it was 'inherit' when header was green and we didnt have sx prop below either:)
+            sx={{
+              color: '#1f1f1f', //! Icon color
+              '&:hover': {
+                background: alpha('#1f1f1f', 0.1),
+                color: '#1f1f1f',
+                transition: 'background-color 0.3s ease',
+              },
+            }}
           >
             <AccountCircleIcon />
           </IconButton>

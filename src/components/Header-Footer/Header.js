@@ -8,9 +8,13 @@ import { styled } from '@mui/system'
 // Styled header section using MUI
 // for the entire header section
 const HeaderSection = styled(AppBar)(({ theme }) => ({
-  background: '#468585',
+  //background: '#468585',
+  //background: '#A2AAAD',
+  //background: '#1f1f1f',
+  background: 'transparent',
   display: 'flex',
   justifyContent: 'space-between',
+  boxShadow: 'none',
 }))
 
 // a box to wrap the title in the header
@@ -23,14 +27,15 @@ const TitleWrapper = styled(Box)(({ theme }) => ({
 
 // font styling for the project title in the header
 const ProjectTitle = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Ubuntu',
   fontWeight: 'bold',
   textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
   textAlign: 'left',
   fontSize: '2rem',
-  color: '#def9c4',
+  color: '#1f1f1f', //! color if background is white or transparent
+  //color: '#def9c4',
   marginLeft: theme.spacing(2), // Add some space between the logo and title
   textDecoration: 'none',
-  fontFamily: 'Inter, sans-serif',
 }))
 
 // const LogoImage = styled('img')(({ theme }) => ({
