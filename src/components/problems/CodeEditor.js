@@ -83,7 +83,7 @@ const EditorButtons = ({ handleRunCode, currentThemeStyle }) => {
           startIcon={<PlayArrow />}
           sx={{
             fontSize: '12px',
-            fontFamily: 'DM Sans', // font family of the run button
+            fontFamily: 'Ubuntu', //! font family of the run button
             borderRadius: '6px',
             color: currentThemeStyle.color,
           }}
@@ -98,7 +98,7 @@ const EditorButtons = ({ handleRunCode, currentThemeStyle }) => {
             backgroundColor: 'green',
             '&:hover': { backgroundColor: 'darkgreen' },
             fontSize: '12px',
-            fontFamily: 'DM Sans', // font family of the submit button
+            fontFamily: 'Ubuntu', //! font family of the submit button
             borderRadius: '6px',
           }}
         >

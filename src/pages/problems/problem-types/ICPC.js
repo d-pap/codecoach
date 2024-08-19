@@ -9,16 +9,17 @@ import { useLocation } from 'react-router-dom'
 import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
 import {
   ICPCFilter,
-  ICPCFilterDisplay,
+  //ICPCFilterDisplay,
 } from '../../../components/problems/problem-filters/ICPCFilter'
 import { styled, alpha } from '@mui/material/styles'
 import { Stack, Pagination, Toolbar, Select } from '@mui/material'
-import HorizontalResizableColumn from '../../../components/utility/HorizontalResizableColumn'
+// import HorizontalResizableColumn from '../../../components/utility/HorizontalResizableColumn'
 import { fetchProblems } from '../../../api'
 import { Box, Container, Grid, Typography } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import AppBar from '@mui/material/AppBar'
 import InputBase from '@mui/material/InputBase'
+import MenuItem from '@mui/material/MenuItem'
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
   backgroundColor: 'transparent',
@@ -29,9 +30,9 @@ const AppBarStyled = styled(AppBar)(({ theme }) => ({
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.primary.main, 0.15),
+  backgroundColor: alpha(theme.palette.text.secondary, 0.15), //! color of search box bg (this is light grey)
   '&:hover': {
-    backgroundColor: alpha(theme.palette.primary.main, 0.25),
+    backgroundColor: alpha(theme.palette.text.secondary, 0.25), //! hover color of search box bg (this is light grey)
     transition: 'background-color 0.3s ease-in-out',
   },
   marginRight: theme.spacing(2),
@@ -61,10 +62,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
+    fontFamily: 'Ubuntu', //! font family for search box
     width: '100%',
     [theme.breakpoints.up('md')]: {
       width: '20ch',
     },
+  },
+}))
+
+const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+  fontFamily: 'Ubuntu', //! font family for filter dropdown items
+}))
+
+const StyledSelect = styled(Select)(({ theme }) => ({
+  fontFamily: 'Ubuntu',
+  sx: {
+    height: '40px',
+    minWidth: '150px',
+    padding: '0 10px',
   },
 }))
 
@@ -77,7 +92,7 @@ function ICPC() {
   const [filteredProblems, setFilteredProblems] = useState(problems)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [setFilterWidth] = useState(300) // Width of the filters column
+  //const [setFilterWidth] = useState(300) // Width of the filters column
   const [currentPage, setCurrentPage] = useState(1)
   const problemsPerPage = 10
 
@@ -117,10 +132,10 @@ function ICPC() {
     setCurrentPage(page)
   }
 
-  // Handle resizing of filter column
-  const handleResize = (newWidth) => {
-    setFilterWidth(newWidth)
-  }
+  // // Handle resizing of filter column
+  // const handleResize = (newWidth) => {
+  //   setFilterWidth(newWidth)
+  // }
 
   if (loading) {
     return <p>Loading...</p>
@@ -161,7 +176,8 @@ function ICPC() {
             sx={{
               backgroundColor: 'transparent',
               borderRadius: '6px', // rounded corners for button container
-              //boxShadow: 'none', //! remove box shadow? to match prob categories page?
+              boxShadow: 'none', // ! box shadow for app bar
+              //  '0px 4px 5px -2px rgba(0, 0, 0, 0.2), 4px 0px 5px -2px rgba(0, 0, 0, 0.2), -4px 0px 5px -2px rgba(0, 0, 0, 0.2)', //
             }}
           >
             <Toolbar
@@ -174,10 +190,10 @@ function ICPC() {
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 2, //! space between items
+                  gap: 2,
                 }}
               >
-                <Select
+                <StyledSelect
                   value={region}
                   onChange={handleRegionChange}
                   sx={{
@@ -186,12 +202,12 @@ function ICPC() {
                     padding: '0 10px',
                   }}
                 >
-                  <option value="all">All Regions</option>
-                  <option value="World">World</option>
-                  <option value="NA">North America</option>
-                  <option value="EU">Europe</option>
-                </Select>
-                <Select
+                  <StyledMenuItem value="all">All Regions</StyledMenuItem>
+                  <StyledMenuItem value="World">World</StyledMenuItem>
+                  <StyledMenuItem value="NA">North America</StyledMenuItem>
+                  <StyledMenuItem value="EU">Europe</StyledMenuItem>
+                </StyledSelect>
+                <StyledSelect
                   value={year}
                   onChange={handleYearChange}
                   sx={{
@@ -200,11 +216,11 @@ function ICPC() {
                     padding: '0 10px',
                   }}
                 >
-                  <option value="all">All Years</option>
-                  <option value="2021">2021</option>
-                  <option value="2020">2020</option>
-                  <option value="2019">2019</option>
-                </Select>
+                  <StyledMenuItem value="all">All Years</StyledMenuItem>
+                  <StyledMenuItem value="2021">2021</StyledMenuItem>
+                  <StyledMenuItem value="2020">2020</StyledMenuItem>
+                  <StyledMenuItem value="2019">2019</StyledMenuItem>
+                </StyledSelect>
               </Box>
               {/* SEARCH BOX HERE:  */}
               <Search>
@@ -225,12 +241,13 @@ function ICPC() {
           sx={{
             display: 'flex',
             flexWrap: 'nowrap',
-            backgroundColor: 'pink', //! bg color for testing
-            boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.75)', //! shadow for testing
-            borderRadius: '6px', //! rounded corners for the whole grid
+            //backgroundColor: 'pink', //! bg color for testing
+            boxShadow:
+              '0px 4px 5px -2px rgba(0, 0, 0, 0.2), 4px 0px 5px -2px rgba(0, 0, 0, 0.2), -4px 0px 5px -2px rgba(0, 0, 0, 0.2)',
+            borderRadius: '6px', // rounded corners for the whole grid
           }}
         >
-          <HorizontalResizableColumn
+          {/* <HorizontalResizableColumn
             initialWidth={200}
             minWidth={175}
             maxWidth={400}
@@ -252,20 +269,21 @@ function ICPC() {
                 onYearChange={handleYearChange}
               />
             </Box>
-          </HorizontalResizableColumn>
+          </HorizontalResizableColumn> */}
           <Box
             sx={{
               flexGrow: 1,
-              paddingLeft: 2,
-              backgroundColor: 'red', //! bg color for testing
+              //paddingLeft: 2, //! padding for the problem cards was 2
+              paddingLeft: 0,
+              //backgroundColor: 'red', //! bg color for testing
             }}
           >
             <Box
               sx={{
-                p: 1, //! this is the page number box on the top
+                p: 1, //* this Box is for page number on the top
                 display: 'flex',
                 justifyContent: 'right',
-                backgroundColor: 'lightgreen', //! bg color for testing
+                //backgroundColor: 'lightgreen', //! bg color for testing
               }}
             >
               <Pagination
@@ -286,7 +304,7 @@ function ICPC() {
             )}
             <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
               <Pagination
-                count={Math.ceil(filteredProblems.length / problemsPerPage)} //! this is the page number box on the bottom
+                count={Math.ceil(filteredProblems.length / problemsPerPage)}
                 page={currentPage}
                 onChange={handlePageChange}
                 size="small"
