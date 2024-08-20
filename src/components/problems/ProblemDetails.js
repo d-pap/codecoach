@@ -17,11 +17,15 @@ const DetailContainer = styled.div`
     color: #666;
     margin-top: 20px;
   }
+  h3 {
+    color: #666;
+    margin-top: 20px;
+  }
   pre,
   p {
     background-color: #f5f5f5;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 10px;
   }
 `
 
@@ -54,7 +58,7 @@ function ProblemDetails({ problem }) {
 
     return (
       <div>
-        <h1>{problem.title}</h1>
+        <h2>{problem.title}</h2>
         <DetailContainer>
           <ScrollableTabsContainer>
             <Tabs
@@ -66,7 +70,7 @@ function ProblemDetails({ problem }) {
             >
               <Tab label="Problem" {...a11yProps(0)} />
               <Tab label="Hint/Video" {...a11yProps(1)} />
-              <Tab label="Forum" {...a11yProps(2)} />
+              <Tab label="Discussions" {...a11yProps(2)} />
             </Tabs>
           </ScrollableTabsContainer>
           <CustomTabPanel value={value} index={0}>
@@ -88,8 +92,6 @@ function ProblemDetails({ problem }) {
       </div>
     )
   }
-
   return getLayout()
 }
-
 export default ProblemDetails

@@ -167,6 +167,7 @@ const CodeEditor = ({ code, setCode, setOutput }) => {
           enableLiveAutocompletion: true,
           showLineNumbers: true,
           tabSize: 2,
+          fontFamily: 'monospace', //! font family of the code editor
         }}
       />
       <EditorButtons

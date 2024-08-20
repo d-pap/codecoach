@@ -11,7 +11,7 @@ import NavbarStack from './NavbarStack'
 const HintByDatabaseTab = ({ problem }) => {
   return (
     <NavbarStack>
-      <h1>Hint By Database</h1>
+      <h3>Hint By Database</h3>
       <p>Hint by Database will be added soon</p>
     </NavbarStack>
   )
