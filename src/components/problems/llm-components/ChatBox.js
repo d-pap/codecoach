@@ -8,6 +8,8 @@ import {
   CircularProgress,
   Typography,
 } from '@mui/material'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 // Function to retrieve chat history from localStorage
 const getChatHistory = (problemId) => {
@@ -65,16 +67,13 @@ const ChatBox = ({ problem }) => {
     setIsLoading(true)
 
     try {
-      const query = await SendChat(problem.title, input)
+      const query = await SendChat(problem.title, problem.description, input)
 
       console.log('Response:', query)
 
       const updatedHistory = {
         ...newHistory,
-        data: [
-          ...newHistory.data,
-          { role: 'assistant', content: query.response },
-        ],
+        data: [...newHistory.data, { role: 'assistant', content: query }],
       }
 
       // Update convoId if it's provided in the response
@@ -106,6 +105,36 @@ const ChatBox = ({ problem }) => {
     setInput('')
   }
 
+  const formatChatContent = (content) => {
+    return (
+      <Box
+        sx={{
+          bgcolor: 'grey.900',
+          color: 'success.contrastText',
+          p: 1,
+          whiteSpace: 'pre-wrap',
+          overflowX: 'auto',
+          borderRadius: 1,
+          '& code': {
+            bgcolor: 'grey.800',
+            p: 0.5,
+            borderRadius: 1,
+          },
+          '& pre': {
+            bgcolor: 'grey.800',
+            p: 1,
+            borderRadius: 1,
+            overflowX: 'auto',
+          },
+          '& ul, & ol': {
+            pl: 4,
+          },
+        }}
+      >
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+      </Box>
+    )
+  }
   return (
     <Paper
       elevation={3}
@@ -139,13 +168,9 @@ const ChatBox = ({ problem }) => {
                 wordBreak: 'break-word',
               }}
             >
-              {chat.role === 'assistant' ? (
-                <Typography sx={{ whiteSpace: 'pre-wrap' }}>
-                  {chat.content}
-                </Typography>
-              ) : (
-                chat.content
-              )}
+              {chat.role === 'assistant'
+                ? formatChatContent(chat.content)
+                : chat.content}
             </Box>
           ))}
         {isLoading && (

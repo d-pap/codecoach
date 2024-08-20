@@ -4,21 +4,29 @@
 
 import { createNewChatConvo, sendChatMessage } from '../../../api'
 
-const SendChat = async (title, input, convoId) => {
+const SendChat = async (title, description, input, convoId) => {
   let id = convoId
-  let formatedInput = 'Problem title: ' + title + ' Question: ' + input
+  let formatedInput =
+    'Problem title: ' +
+    title +
+    'Problem Description:' +
+    description +
+    ' Question: ' +
+    input
 
   try {
     if (id == null) {
       // create a new chat conversation
-      const newChat = await createNewChatConvo()
-      id = newChat.pk
+      const newChatId = await createNewChatConvo()
+      id = newChatId.convoId
     }
 
     // Initiating the conversation
-    // const chatResponse = await sendChatMessage(id, formatedInput)
+    const chat = await sendChatMessage(id, formatedInput)
 
-    // return chatResponse
+    console.log('Chat response:', chat)
+
+    return chat.response
   } catch (error) {
     console.error('Error in SendChat:', error)
     throw error

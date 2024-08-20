@@ -186,7 +186,7 @@ const ProblemDetailLayout = ({ problem, problemDetails, codeEditor }) => {
                 anchor="right"
                 open={isChatOpen}
                 onClose={toggleChat}
-                PaperProps={{ style: { width: '25vw' } }}
+                PaperProps={{ style: { width: '28vw' } }}
               >
                 <ChatLedger>
                   <ChatBox problem={problem} />

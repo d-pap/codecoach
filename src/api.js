@@ -7,15 +7,7 @@
 import axios from 'axios'
 
 const API_GATEWAY_URL = process.env.REACT_APP_API_URL
-const LLM_URL_BASE =
-  'https://umgpt.umich.edu/maizey/api/projects/' +
-  process.env.REACT_APP_MAIZEY_PK +
-  '/conversation/'
-const LLM_HEADERS = {
-  accept: 'application/json',
-  Authorization: 'Bearer ' + process.env.REACT_APP_MAIZEY_API_KEY,
-  'Content-Type': 'application/json',
-}
+const LLM_URL = 'http://localhost:3500'
 
 export const fetchProblems = async () => {
   try {
@@ -98,9 +90,7 @@ export async function addProblem(problem) {
 // Function to create a new chat conversation
 export async function createNewChatConvo() {
   try {
-    console.error(LLM_HEADERS)
-    console.error(LLM_URL_BASE)
-    const response = await axios.post(LLM_URL_BASE, {}, { LLM_HEADERS })
+    const response = await axios.post(`${LLM_URL}/convo`)
     return response.data
   } catch (error) {
     console.error('Error creating chat convo:', error)
@@ -111,9 +101,10 @@ export async function createNewChatConvo() {
 // Function to send a chat message to an existing conversation
 export async function sendChatMessage(convoId, input) {
   try {
-    const url = LLM_URL_BASE + convoId + '/messages/'
-    console.log('Sending chat message:' + url)
-    const response = await axios.post(url, { query: input }, { LLM_HEADERS })
+    const response = await axios.post(`${LLM_URL}/message`, {
+      convoId,
+      input,
+    })
     return response.data
   } catch (error) {
     console.error('Error sending chat message:', error)
