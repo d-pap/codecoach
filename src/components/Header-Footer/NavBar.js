@@ -12,33 +12,38 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Divider,
+  ListItemIcon,
 } from '@mui/material'
+import PersonAdd from '@mui/icons-material/PersonAdd'
+import LoginIcon from '@mui/icons-material/Login'
+import Settings from '@mui/icons-material/Settings'
+import Logout from '@mui/icons-material/Logout'
 import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import { styled } from '@mui/system'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
+import { styled, alpha } from '@mui/material/styles'
 
 // Styled NavLink component using MUI
 const NavLink = styled(Button)(({ theme }) => ({
-  color: '#DEF9C4',
+  // color: '#DEF9C4',
+  color: '#1f1f1f', // Text color
   textDecoration: 'none',
-  borderRadius: '10px',
+  borderRadius: theme.spacing(2), // rounded corners for navbar buttons
   whiteSpace: 'nowrap', // Prevent text wrapping
-  margin: '0 15px', // Add more margin between links
+  margin: '5px', // Add more margin between links
   '&:hover': {
-    background: '#9CDBA6',
-    color: '#468585',
-  },
-  '&.active': {
-    color: '#DEF9C4',
-    backgroundColor: '#50B498', // Active background color
+    //background: '#9CDBA6',
+    background: alpha('#1f1f1f', 0.1),
+    color: '#1f1f1f',
+    transition: 'background-color 0.3s ease',
   },
 }))
 
 const Navbar = () => {
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  useMediaQuery(theme.breakpoints.down('sm'))
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -55,8 +60,11 @@ const Navbar = () => {
   }
 
   const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+    <Box onClick={handleDrawerToggle}>
       <List>
+        <ListItem button component={RouterLink} to="/">
+          <ListItemText primary="Home" />
+        </ListItem>
         <ListItem button component={RouterLink} to="/about">
           <ListItemText primary="About" />
         </ListItem>
@@ -74,12 +82,19 @@ const Navbar = () => {
 
   return (
     // <AppBar position="static" sx={{ borderBottom: "2px solid #468585", backgroundColor: "transparent" }}>
-    <AppBar position="static" sx={{ backgroundColor: 'transparent' }}>
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: 'transparent',
+        borderRadius: '6px', // rounded corners for button container
+        boxShadow: 'none', // remove shadow
+      }}
+    >
       <Toolbar
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
-          height: '85px',
+          height: '56px', // height of the header is set here
         }}
       >
         <IconButton
@@ -92,7 +107,7 @@ const Navbar = () => {
           <MenuIcon />
         </IconButton>
         <Drawer
-          anchor="left"
+          anchor="right"
           open={mobileOpen}
           onClose={handleDrawerToggle}
           sx={{
@@ -101,12 +116,18 @@ const Navbar = () => {
         >
           {drawer}
         </Drawer>
-        <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: { xs: 'none', sm: 'flex' },
+            alignItems: 'center',
+            p: '20px', //! fix this - there was nothing set here for padding
+          }}
+        >
           <NavLink component={RouterLink} to="/" activeClassName="active">
             Home
           </NavLink>
           <NavLink component={RouterLink} to="/about" activeClassName="active">
-            About
+            Courses
           </NavLink>
           <NavLink
             component={RouterLink}
@@ -123,11 +144,12 @@ const Navbar = () => {
             Add Problems
           </NavLink>
         </Box>
+        <Divider orientation="vertical" flexItem variant="middle" />
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
-            marginLeft: 'auto',
+            padding: '15px',
             paddingRight: '20px',
           }}
         >
@@ -137,14 +159,22 @@ const Navbar = () => {
             aria-controls={menuId}
             aria-haspopup="true"
             onClick={handleProfileMenuOpen}
-            color="inherit"
+            //color="default" //! color of the icon (it was 'inherit' when header was green and we didnt have sx prop below either:)
+            sx={{
+              color: '#1f1f1f', //! Icon color
+              '&:hover': {
+                background: alpha('#1f1f1f', 0.1),
+                color: '#1f1f1f',
+                transition: 'background-color 0.3s ease',
+              },
+            }}
           >
             <AccountCircleIcon />
           </IconButton>
           <Menu
             anchorEl={anchorEl}
             anchorOrigin={{
-              vertical: 'top',
+              vertical: 'bottom',
               horizontal: 'right',
             }}
             id={menuId}
@@ -161,18 +191,36 @@ const Navbar = () => {
               component={RouterLink}
               to="/signin"
             >
-              Log In
+              <ListItemIcon>
+                <LoginIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Sign In</ListItemText>
             </MenuItem>
             <MenuItem
               onClick={handleMenuClose}
               component={RouterLink}
               to="/signup"
             >
-              Sign Up
+              <ListItemIcon>
+                <PersonAdd fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Register</ListItemText>
             </MenuItem>
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Log out</MenuItem>
+            <Divider variant="middle" />
+
+            <MenuItem onClick={handleMenuClose}>
+              <ListItemIcon>
+                <Settings fontSize="small" />
+              </ListItemIcon>
+              Settings
+            </MenuItem>
+
+            <MenuItem onClick={handleMenuClose}>
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
           </Menu>
         </Box>
       </Toolbar>

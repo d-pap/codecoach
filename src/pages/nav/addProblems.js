@@ -1,34 +1,144 @@
 import React, { useState } from 'react'
-import { Box, Stack, Button, TextField } from '@mui/material'
+import {
+  Box,
+  Stack,
+  Button,
+  TextField,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from '@mui/material'
 import TestCase from '../../components/add-problems/TestCase'
+import { addProblem } from '../../api'
 import {
   handleChange,
   handleTestCaseChange,
   addTestCase,
   removeTestCase,
-  handleSubmit,
+  //handleSubmit,
 } from '../../components/add-problems/ICPCFormHandlers'
+import CustomLabel from '../../components/problems/add-problems/CustomLabel'
+
+// Define a style constant for the TextField
+const textFieldStyle = {
+  width: '100%',
+  minHeight: '50px', // Adjust this as needed
+  resize: 'vertical',
+}
 
 const AddProblems = () => {
   const [formData, setFormData] = useState({
+    type: 'icpc',
     title: '',
     timeLimit: '',
     memoryLimit: '',
-    problemDescription: '',
-    inputDescription: '',
-    outputDescription: '',
+    description: '',
+    exampleInputs: '',
+    exampleOutputs: '',
     videoLink: '',
     testCases: [{ input: '', output: '' }],
+    comments: '',
+    contestRegion: '',
+    contestSubRegion: '',
+    contestYear: '',
+    hint: '',
   })
 
+  const subregions = {
+    'World Finals': ['ICPC World Finals'],
+    'Europe Contests': [
+      'European Championship',
+      'Central Europe Regional Contest (CERC)',
+      'Northern Eurasia Finals (NERC)',
+      'Northwestern Europe Regional Contest (NWERC)',
+      'Southeastern Europe Regional Contest (SEERC)',
+      'Southwestern Europe Regional Contest (SWERC)',
+      'Benelux Algorithm Programming Contest (BAPC)',
+      'CTU Open Contest (Czech Technical University)',
+      'German Collegiate Programming Contest (GCPC)',
+      'Nordic Collegiate Programming Contest (NCPC)',
+      'UK and Ireland Programming Contest (UKIPC)',
+    ],
+    'Asia Pacific Contests': [
+      'Asia Pacific Championship',
+      'Indonesia',
+      'Japan',
+      'Philippines',
+      'Singapore',
+      'South Korea',
+      'Taiwan',
+      'Vietnam',
+    ],
+    'Asia East Continent Contests': [
+      'Hangzhou',
+      'Hefei',
+      'Hongkong',
+      'Jinan',
+      'Macau',
+      'Nanjing',
+      'Shanghai',
+      'Shenyang',
+      'Yinchuan',
+    ],
+    'North America Contests': [
+      'North America Championship',
+      'Mid-Atlantic USA Regional Contest',
+      'North Central Regional Contest',
+      'Rocky Mountain Regional Contest',
+    ],
+    'Latin American Contests': [
+      'Latin America Championship',
+      'Latin American Regional Contest',
+    ],
+    'Africa and Arab Contests': ['Arab Collegiate Programming Championship'],
+  }
+
+  const handleSubmits = async (e, formData, setFormData) => {
+    e.preventDefault()
+
+    try {
+      await addProblem(formData)
+
+      setFormData({
+        type: 'icpc',
+        title: '',
+        timeLimit: '',
+        memoryLimit: '',
+        description: '',
+        exampleInputs: '',
+        exampleOutputs: '',
+        videoLink: '',
+        testCases: [{ input: '', output: '' }],
+        comments: '',
+        contestRegion: '',
+        contestSubRegion: '',
+        contestYear: '',
+        hint: '',
+      })
+
+      alert('Problem added successfully!')
+    } catch (error) {
+      console.error('Error adding problem:', error)
+      alert('Failed to add problem. Please try again.')
+    }
+  }
+
   return (
-    <Box component="section" display={'flex'} padding={3} width={'95%'}>
-      <form
-        onSubmit={(e) => handleSubmit(e, formData, setFormData)}
-        style={{ width: '100%' }}
+    <Box
+      component="section"
+      display="flex"
+      justifyContent="center" // Center horizontally
+      padding={3}
+      width="100%" // Full width of the container
+    >
+      <Box
+        component="form"
+        onSubmit={(e) => handleSubmits(e, formData, setFormData)}
+        width="80%" // Set the width to 80%
       >
         <Stack spacing={2}>
-          <label>Title: </label>
+          <CustomLabel>Title: </CustomLabel>
           <TextField
             type="text"
             name="title"
@@ -37,17 +147,20 @@ const AddProblems = () => {
             required
             label="Please input a title"
             variant="outlined"
+            style={textFieldStyle}
           />
-          <label>Problem Description: </label>
+          <CustomLabel>Problem Description: </CustomLabel>
           <TextField
-            name="problemDescription"
-            value={formData.problemDescription}
+            name="description"
+            value={formData.description}
             onChange={(e) => handleChange(e, formData, setFormData)}
             required
             label="Please input a problem description"
             variant="outlined"
+            style={textFieldStyle}
+            multiline
           />
-          <label>Time Limit: </label>
+          <CustomLabel>Time and Memory Limits: </CustomLabel>
           <TextField
             type="text"
             name="timeLimit"
@@ -55,8 +168,8 @@ const AddProblems = () => {
             onChange={(e) => handleChange(e, formData, setFormData)}
             label="Please input a time limit"
             variant="outlined"
+            style={textFieldStyle}
           />
-          <label>Memory Limit: </label>
           <TextField
             type="text"
             name="memoryLimit"
@@ -64,34 +177,31 @@ const AddProblems = () => {
             onChange={(e) => handleChange(e, formData, setFormData)}
             label="Please input a memory limit"
             variant="outlined"
+            style={textFieldStyle}
           />
-          <label>Input Description: </label>
+          <CustomLabel>Input Description: </CustomLabel>
           <TextField
-            name="inputDescription"
-            value={formData.inputDescription}
+            name="exampleInputs"
+            value={formData.exampleInputs}
             onChange={(e) => handleChange(e, formData, setFormData)}
             label="Please input an input description"
             variant="outlined"
+            style={textFieldStyle}
+            multiline
           />
-          <label>Output Description: </label>
+          <CustomLabel>Output Description: </CustomLabel>
           <TextField
-            name="outputDescription"
-            value={formData.outputDescription}
+            name="exampleOutputs"
+            value={formData.exampleOutputs}
             onChange={(e) => handleChange(e, formData, setFormData)}
             label="Please input an output description"
             variant="outlined"
+            style={textFieldStyle}
+            multiline
           />
-          <label>Video: </label>
-          <TextField
-            type="text"
-            name="videoLink"
-            value={formData.videoLink}
-            onChange={(e) => handleChange(e, formData, setFormData)}
-            label="Please input a video link"
-            variant="outlined"
-          />
+
           <div>
-            <label>Test Cases: </label>
+            <CustomLabel>Test Cases: </CustomLabel>
             <Button
               variant="contained"
               type="button"
@@ -120,11 +230,107 @@ const AddProblems = () => {
               ))}
             </Stack>
           </div>
+          <CustomLabel>Additional comments: </CustomLabel>
+          <TextField
+            name="comments"
+            value={formData.comments}
+            onChange={(e) => handleChange(e, formData, setFormData)}
+            label="Please input any additional comments"
+            variant="outlined"
+            style={textFieldStyle}
+            multiline
+          />
+
+          <CustomLabel>Region and Year: </CustomLabel>
+          <FormControl fullWidth>
+            <InputLabel id="region-label">Contest Region *</InputLabel>
+            <Select
+              required
+              labelId="region-label"
+              name="contestRegion"
+              label="Contest Region"
+              value={formData.contestRegion}
+              onChange={(e) => handleChange(e, formData, setFormData)}
+            >
+              <MenuItem value="World Finals">World Finals</MenuItem>
+              <MenuItem value="Europe Contests">Europe Contests</MenuItem>
+              <MenuItem value="Asia Pacific Contests">
+                Asia Pacific Contests
+              </MenuItem>
+              <MenuItem value="Asia East Continent Contests">
+                Asia East Continent Contests
+              </MenuItem>
+              <MenuItem value="North America Contests">
+                North America Contests
+              </MenuItem>
+              <MenuItem value="Latin American Contests">
+                Latin American Contests
+              </MenuItem>
+              <MenuItem value="Africa and Arab Contests">
+                Africa and Arab Contests
+              </MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth>
+            <InputLabel id="sub-region-label">Contest Sub Region *</InputLabel>
+            <Select
+              required
+              labelId="sub-region-label"
+              name="contestSubRegion"
+              label="Contest Sub Region"
+              value={formData.contestSubRegion}
+              onChange={(e) => handleChange(e, formData, setFormData)}
+              disabled={!formData.contestRegion}
+            >
+              {subregions[formData.contestRegion]?.map((subregion) => (
+                <MenuItem key={subregion} value={subregion}>
+                  {subregion}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <TextField
+            required
+            type="number"
+            name="contestYear"
+            value={formData.contestYear}
+            onChange={(e) => handleChange(e, formData, setFormData)}
+            label="Please input a contest year"
+            variant="outlined"
+            inputProps={{
+              min: 2000,
+              max: 2030,
+            }}
+            style={textFieldStyle}
+          />
+
+          <CustomLabel>Hint/Solution: </CustomLabel>
+          <TextField
+            name="hint"
+            value={formData.hint}
+            onChange={(e) => handleChange(e, formData, setFormData)}
+            label="Please input a hint/solution"
+            variant="outlined"
+            style={textFieldStyle}
+            multiline
+          />
+          <TextField
+            type="text"
+            name="videoLink"
+            value={formData.videoLink}
+            onChange={(e) => handleChange(e, formData, setFormData)}
+            label="Please input a video link"
+            variant="outlined"
+            style={textFieldStyle}
+          />
+
           <Button variant="contained" type="submit">
             Submit
           </Button>
         </Stack>
-      </form>
+      </Box>
     </Box>
   )
 }

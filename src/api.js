@@ -28,7 +28,7 @@ export async function fetchProblemById(id) {
   }
 }
 
-export async function addICPCProblem(problem) {
+export async function addProblem(problem) {
   try {
     const response = await axios.post(`${API_GATEWAY_URL}/problems`, problem)
     return response.data
@@ -42,9 +42,10 @@ export async function addICPCProblem(problem) {
 // Lambda function and APIGW endpoint. Currently works
 // as long as the LLM server is running locally
 // https://github.com/Marv2014-1/llm-server
-export async function getHint(question, answer) {
+export async function getHint(title, question, answer) {
   try {
     const response = await axios.post(`${LLM_URL}/hint-problem`, {
+      title,
       question,
       answer,
     })
@@ -59,9 +60,10 @@ export async function getHint(question, answer) {
 // Lambda function and APIGW endpoint. Currently works
 // as long as the LLM server is running locally
 // https://github.com/Marv2014-1/llm-server
-export async function getSolution(question, answer) {
+export async function getSolution(title, question, answer) {
   try {
     const response = await axios.post(`${LLM_URL}/solve-problem`, {
+      title,
       question,
       answer,
     })
@@ -69,5 +71,65 @@ export async function getSolution(question, answer) {
   } catch (error) {
     console.error('Error fetching hint:', error)
     throw new Error('Failed to fetch hint')
+  }
+}
+
+// Function for LLM interaction which returns a chat response
+export async function chatWithLLM(payload) {
+  try {
+    const response = await axios.post(`${LLM_URL}/chat`, {
+      payload,
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error fetching chat:', error)
+    throw new Error('Failed to fetch chat')
+  }
+}
+
+// Function to execute code using Judge0 API
+// Passes source code and language to the API
+// and returns the result
+export const executeCode = async (sourceCode, language = 'python') => {
+  const options = {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY,
+      'X-RapidAPI-Host': process.env.REACT_APP_RAPIDAPI_HOST,
+    },
+    body: JSON.stringify({
+      language_id: 71, // python judge0 language id = 71
+      source_code: sourceCode,
+      stdin: '',
+    }),
+  }
+
+  try {
+    const response = await fetch(process.env.REACT_APP_RAPID_API_URL, options)
+    const data = await response.json()
+    const token = data.token
+
+    // poll for results
+    let result
+    do {
+      await new Promise((resolve) => setTimeout(resolve, 1000)) // wait for 1 second
+      const statusResponse = await fetch(
+        `${process.env.REACT_APP_RAPID_API_URL}/${token}`,
+        {
+          method: 'GET',
+          headers: {
+            'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY,
+            'X-RapidAPI-Host': process.env.REACT_APP_RAPIDAPI_HOST,
+          },
+        }
+      )
+      result = await statusResponse.json()
+    } while (result.status.id <= 2) // 1: in queue, 2: processing
+
+    return result
+  } catch (error) {
+    console.error('Error:', error)
+    throw error
   }
 }

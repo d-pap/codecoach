@@ -1,11 +1,33 @@
-import { addICPCProblem } from '../../api'
-
 export const handleChange = (e, formData, setFormData) => {
   const { name, value } = e.target
   setFormData({
     ...formData,
     [name]: value,
   })
+
+  // The user can only input a year between 2000 and 2030
+  if (name === 'contestYear') {
+    if (value >= 2000 && value <= 2030) {
+      setFormData({
+        ...formData,
+        [name]: value,
+      })
+    }
+  } else {
+    setFormData({
+      ...formData,
+      [name]: value,
+    })
+  }
+
+  // Reset the subregion if the region changes
+  if (name === 'contestRegion') {
+    setFormData({
+      ...formData,
+      contestRegion: value,
+      contestSubRegion: '',
+    })
+  }
 }
 
 export const handleTestCaseChange = (index, e, formData, setFormData) => {

@@ -1,39 +1,36 @@
-/**
- * Component that displays the problem details on problem solving page
- * Use wherever we need to display problem details.
- */
 import React from 'react'
 import styled from 'styled-components'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import CustomTabPanel from './CustomTabPanel'
 import PropTypes from 'prop-types'
-import ProblemTab from './detail-navbar/ProblemTab'
-import HintByAiTab from './detail-navbar/HintByAITab'
-import SolutionByAITab from './detail-navbar/SolutionByAITab'
-import HintByDatabaseTab from './detail-navbar/HintByDatabase'
-import ForumTab from './detail-navbar/ForumTab'
+import ProblemTab from './problem-detail-navbar/ProblemTab'
+//import ChatAITab from './problem-detail-navbar/ChatAITab';
+import HintByDatabaseTab from './problem-detail-navbar/HintByDatabase'
+import ForumTab from './problem-detail-navbar/ForumTab'
 
-// styled container to show problem details
 const DetailContainer = styled.div`
   h1 {
-    color: #333; // problem title
+    color: #333;
   }
   h2 {
-    color: #666; // problem details
+    color: #666;
+    margin-top: 20px;
+  }
+  h3 {
+    color: #666;
     margin-top: 20px;
   }
   pre,
   p {
     background-color: #f5f5f5;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 10px;
   }
 `
 
-// styled container to make tabs scrollable
 const ScrollableTabsContainer = styled.div`
-  overflow-x: auto; // enable horizontal scrolling for tabs
+  overflow-x: auto;
 `
 
 CustomTabPanel.propTypes = {
@@ -56,27 +53,24 @@ function ProblemDetails({ problem }) {
     setValue(newValue)
   }
 
-  // render the problem details
   const getLayout = () => {
     if (!problem) return <div>Loading problem details...</div>
 
     return (
       <div>
-        <h1>{problem.title}</h1>
+        <h2>{problem.title}</h2>
         <DetailContainer>
           <ScrollableTabsContainer>
             <Tabs
               value={value}
               onChange={handleChange}
               aria-label="basic tabs example"
-              variant="scrollable" // make the tabs scrollable
-              scrollButtons="auto" // show scroll buttons automatically
+              variant="scrollable"
+              scrollButtons="auto"
             >
               <Tab label="Problem" {...a11yProps(0)} />
-              <Tab label="AI Hint" {...a11yProps(1)} />
-              <Tab label="AI Solution" {...a11yProps(2)} />
-              <Tab label="Hint/Video" {...a11yProps(3)} />
-              <Tab label="Forum" {...a11yProps(4)} />
+              <Tab label="Hint/Video" {...a11yProps(1)} />
+              <Tab label="Discussions" {...a11yProps(2)} />
             </Tabs>
           </ScrollableTabsContainer>
           <CustomTabPanel value={value} index={0}>
@@ -86,20 +80,10 @@ function ProblemDetails({ problem }) {
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             <div>
-              <HintByAiTab problem={problem} />
-            </div>
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={2}>
-            <div>
-              <SolutionByAITab problem={problem} />
-            </div>
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={3}>
-            <div>
               <HintByDatabaseTab problem={problem} />
             </div>
           </CustomTabPanel>
-          <CustomTabPanel value={value} index={4}>
+          <CustomTabPanel value={value} index={2}>
             <div>
               <ForumTab problem={problem} />
             </div>
@@ -108,8 +92,6 @@ function ProblemDetails({ problem }) {
       </div>
     )
   }
-
   return getLayout()
 }
-
 export default ProblemDetails
