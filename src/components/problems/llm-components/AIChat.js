@@ -2,24 +2,23 @@
  * Allows the user to maintain a conversation with the AI
  */
 
-import { chatWithLLM } from '../../../api'
+import { createNewChatConvo, sendChatMessage } from '../../../api'
 
-const SendChat = async (title, question, hint, conversation) => {
+const SendChat = async (title, input, convoId) => {
+  let id = convoId
+  let formatedInput = 'Problem title: ' + title + ' Question: ' + input
+
   try {
-    // make the payload for the chat
-    let payload = {
-      title: title,
-      question: question,
-      hint: hint,
-      conversation: conversation,
+    if (id == null) {
+      // create a new chat conversation
+      const newChat = await createNewChatConvo()
+      id = newChat.pk
     }
 
     // Initiating the conversation
-    const chatResponse = await chatWithLLM({
-      payload,
-    })
+    // const chatResponse = await sendChatMessage(id, formatedInput)
 
-    return chatResponse.answer
+    // return chatResponse
   } catch (error) {
     console.error('Error in SendChat:', error)
     throw error

@@ -7,7 +7,15 @@
 import axios from 'axios'
 
 const API_GATEWAY_URL = process.env.REACT_APP_API_URL
-const LLM_URL = process.env.REACT_APP_LLM_URL
+const LLM_URL_BASE =
+  'https://umgpt.umich.edu/maizey/api/projects/' +
+  process.env.REACT_APP_MAIZEY_PK +
+  '/conversation/'
+const LLM_HEADERS = {
+  accept: 'application/json',
+  Authorization: 'Bearer ' + process.env.REACT_APP_MAIZEY_API_KEY,
+  'Content-Type': 'application/json',
+}
 
 export const fetchProblems = async () => {
   try {
@@ -38,52 +46,78 @@ export async function addProblem(problem) {
   }
 }
 
-// Function for LLM interaction which returns a hint
-// Lambda function and APIGW endpoint. Currently works
-// as long as the LLM server is running locally
-// https://github.com/Marv2014-1/llm-server
-export async function getHint(title, question, answer) {
-  try {
-    const response = await axios.post(`${LLM_URL}/hint-problem`, {
-      title,
-      question,
-      answer,
-    })
-    return response.data.answer
-  } catch (error) {
-    console.error('Error fetching hint:', error)
-    throw new Error('Failed to fetch hint')
-  }
-}
+// // Function for LLM interaction which returns a hint
+// // Lambda function and APIGW endpoint. Currently works
+// // as long as the LLM server is running locally
+// // https://github.com/Marv2014-1/llm-server
+// export async function getHint(title, question, answer) {
+//   try {
+//     const response = await axios.post(`${LLM_URL}/hint-problem`, {
+//       title,
+//       question,
+//       answer,
+//     })
+//     return response.data.answer
+//   } catch (error) {
+//     console.error('Error fetching hint:', error)
+//     throw new Error('Failed to fetch hint')
+//   }
+// }
 
-// Function for LLM interaction which returns a solution
-// Lambda function and APIGW endpoint. Currently works
-// as long as the LLM server is running locally
-// https://github.com/Marv2014-1/llm-server
-export async function getSolution(title, question, answer) {
-  try {
-    const response = await axios.post(`${LLM_URL}/solve-problem`, {
-      title,
-      question,
-      answer,
-    })
-    return response.data.answer
-  } catch (error) {
-    console.error('Error fetching hint:', error)
-    throw new Error('Failed to fetch hint')
-  }
-}
+// // Function for LLM interaction which returns a solution
+// // Lambda function and APIGW endpoint. Currently works
+// // as long as the LLM server is running locally
+// // https://github.com/Marv2014-1/llm-server
+// export async function getSolution(title, question, answer) {
+//   try {
+//     const response = await axios.post(`${LLM_URL}/solve-problem`, {
+//       title,
+//       question,
+//       answer,
+//     })
+//     return response.data.answer
+//   } catch (error) {
+//     console.error('Error fetching hint:', error)
+//     throw new Error('Failed to fetch hint')
+//   }
+// }
 
-// Function for LLM interaction which returns a chat response
-export async function chatWithLLM(payload) {
+// // Function for local LLM interaction which returns a chat response
+// export async function chatWithLLM(payload) {
+//   try {
+//     const response = await axios.post(`${LLM_URL}/chat`, {
+//       payload,
+//     })
+//     return response.data
+//   } catch (error) {
+//     console.error('Error fetching chat:', error)
+//     throw new Error('Failed to fetch chat')
+//   }
+// }
+
+// Function to create a new chat conversation
+export async function createNewChatConvo() {
   try {
-    const response = await axios.post(`${LLM_URL}/chat`, {
-      payload,
-    })
+    console.error(LLM_HEADERS)
+    console.error(LLM_URL_BASE)
+    const response = await axios.post(LLM_URL_BASE, {}, { LLM_HEADERS })
     return response.data
   } catch (error) {
-    console.error('Error fetching chat:', error)
-    throw new Error('Failed to fetch chat')
+    console.error('Error creating chat convo:', error)
+    throw new Error('Failed to create chat convo')
+  }
+}
+
+// Function to send a chat message to an existing conversation
+export async function sendChatMessage(convoId, input) {
+  try {
+    const url = LLM_URL_BASE + convoId + '/messages/'
+    console.log('Sending chat message:' + url)
+    const response = await axios.post(url, { query: input }, { LLM_HEADERS })
+    return response.data
+  } catch (error) {
+    console.error('Error sending chat message:', error)
+    throw new Error('Failed to send chat message')
   }
 }
 

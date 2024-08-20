@@ -11,8 +11,13 @@ import {
 
 // Function to retrieve chat history from localStorage
 const getChatHistory = (problemId) => {
-  const history = localStorage.getItem(`chatHistory-${problemId}`)
-  return history ? JSON.parse(history) : []
+  try {
+    const history = localStorage.getItem(`chatHistory-${problemId}`)
+    return history ? JSON.parse(history) : { convoId: null, data: [] }
+  } catch (error) {
+    console.error('Failed to parse chat history:', error)
+    return { convoId: null, data: [] }
+  }
 }
 
 // Function to save chat history to localStorage
@@ -28,14 +33,20 @@ const clearChatHistory = (problemId) => {
 const ChatBox = ({ problem }) => {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [currentChatHistory, setCurrentChatHistory] = useState([])
+  const [currentChatHistory, setCurrentChatHistory] = useState({
+    convoId: null,
+    data: [],
+  })
 
   // Retrieve chat history on component mount
   useEffect(() => {
     const history = getChatHistory(problem._id)
-    setCurrentChatHistory(history)
+    if (Array.isArray(history.data)) {
+      setCurrentChatHistory(history)
+    } else {
+      setCurrentChatHistory({ convoId: null, data: [] })
+    }
   }, [problem._id])
-
   const handleInputChange = (e) => {
     setInput(e.target.value)
   }
@@ -43,7 +54,10 @@ const ChatBox = ({ problem }) => {
   const handleSend = async () => {
     if (input.trim() === '') return
 
-    const newHistory = [...currentChatHistory, { role: 'user', content: input }]
+    const newHistory = {
+      ...currentChatHistory,
+      data: [...currentChatHistory.data, { role: 'user', content: input }],
+    }
     setCurrentChatHistory(newHistory)
     saveChatHistory(problem._id, newHistory)
 
@@ -51,27 +65,34 @@ const ChatBox = ({ problem }) => {
     setIsLoading(true)
 
     try {
-      const response = await SendChat(
-        problem.title,
-        problem.description,
-        problem.hint,
-        newHistory
-      )
+      const query = await SendChat(problem.title, input)
 
-      console.log('Response:', response)
+      console.log('Response:', query)
 
-      const updatedHistory = [
+      const updatedHistory = {
         ...newHistory,
-        { role: 'assistant', content: response },
-      ]
+        data: [
+          ...newHistory.data,
+          { role: 'assistant', content: query.response },
+        ],
+      }
+
+      // Update convoId if it's provided in the response
+      if (query.convoId) {
+        updatedHistory.convoId = query.convoId
+      }
+
       setCurrentChatHistory(updatedHistory)
       saveChatHistory(problem._id, updatedHistory)
     } catch (error) {
       console.error('Failed to send chat:', error)
-      const updatedHistory = [
+      const updatedHistory = {
         ...newHistory,
-        { role: 'assistant', content: 'Failed to get response from model' },
-      ]
+        data: [
+          ...newHistory.data,
+          { role: 'assistant', content: 'Failed to get response from model' },
+        ],
+      }
       setCurrentChatHistory(updatedHistory)
       saveChatHistory(problem._id, updatedHistory)
     } finally {
@@ -81,7 +102,7 @@ const ChatBox = ({ problem }) => {
 
   const handleDelete = () => {
     clearChatHistory(problem._id)
-    setCurrentChatHistory([])
+    setCurrentChatHistory({ convoId: null, data: [] })
     setInput('')
   }
 
@@ -100,30 +121,33 @@ const ChatBox = ({ problem }) => {
           borderRadius: 1,
         }}
       >
-        {currentChatHistory.map((chat, index) => (
-          <Box
-            key={index}
-            sx={{
-              alignSelf: chat.role === 'user' ? 'flex-end' : 'flex-start',
-              bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.300',
-              color:
-                chat.role === 'user' ? 'primary.contrastText' : 'text.primary',
-              borderRadius: 1,
-              p: 1,
-              mb: 1,
-              maxWidth: '100%',
-              wordBreak: 'break-word',
-            }}
-          >
-            {chat.role === 'assistant' ? (
-              <Typography sx={{ whiteSpace: 'pre-wrap' }}>
-                {chat.content}
-              </Typography>
-            ) : (
-              chat.content
-            )}
-          </Box>
-        ))}
+        {Array.isArray(currentChatHistory.data) &&
+          currentChatHistory.data.map((chat, index) => (
+            <Box
+              key={index}
+              sx={{
+                alignSelf: chat.role === 'user' ? 'flex-end' : 'flex-start',
+                bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.300',
+                color:
+                  chat.role === 'user'
+                    ? 'primary.contrastText'
+                    : 'text.primary',
+                borderRadius: 1,
+                p: 1,
+                mb: 1,
+                maxWidth: '100%',
+                wordBreak: 'break-word',
+              }}
+            >
+              {chat.role === 'assistant' ? (
+                <Typography sx={{ whiteSpace: 'pre-wrap' }}>
+                  {chat.content}
+                </Typography>
+              ) : (
+                chat.content
+              )}
+            </Box>
+          ))}
         {isLoading && (
           <Box
             sx={{
@@ -156,7 +180,7 @@ const ChatBox = ({ problem }) => {
           disabled={isLoading}
           sx={{
             width: '30%',
-            mx: .5,
+            mx: 0.5,
             mb: 1,
           }}
         >
@@ -167,7 +191,7 @@ const ChatBox = ({ problem }) => {
           disabled={isLoading}
           sx={{
             width: '30%',
-            mx: .5,
+            mx: 0.5,
             mb: 1,
           }}
         >
@@ -179,7 +203,7 @@ const ChatBox = ({ problem }) => {
           color="error"
           sx={{
             width: '30%',
-            mx: .5,
+            mx: 0.5,
             mb: 1,
           }}
           onClick={handleDelete}
