@@ -38,6 +38,12 @@ const StyledAceEditor = styled(AceEditor)`
   width: 100% !important;
   height: 100% !important;
 `
+// const StyledAceEditor = styled(AceEditor)`
+//   flex: 1;
+//   width: 100% !important;
+//   height: auto !important;
+//   min-height: 400px;
+// `
 
 const themeStyles = {
   monokai: {

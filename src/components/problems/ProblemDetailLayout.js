@@ -5,17 +5,18 @@ import CodeEditor from './CodeEditor'
 import { IconButton, Drawer, Box } from '@mui/material'
 import ChatBox from './llm-components/ChatBox'
 import ChatIcon from '@mui/icons-material/Chat'
+import { Container } from '@mui/material'
 
-const GlobalStyle = createGlobalStyle`
-  * {
-    margin: 0;
-    padding: 0;
-  }
+// const GlobalStyle = createGlobalStyle`
+//   * {
+//     margin: 0;
+//     padding: 0;
+//   }
 
-  html, body {
-    height: 100%;
-  }
-`
+//   html, body {
+//     height: 100%;
+//   }
+// `
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -32,7 +33,8 @@ const LeftPanel = styled.div`
 
 const RightPanel = styled.div`
   flex: 1;
-  padding: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
   height: 100%;
   background-color: #f0f0f0;
   display: flex;
@@ -131,37 +133,69 @@ const ProblemDetailLayout = ({ problem, problemDetails, codeEditor }) => {
 
   return (
     <>
-      <GlobalStyle />
-      <LayoutContainer>
-        <HorizontalResizableColumn
-          initialWidth={horizontalProps.initialWidth}
-          maxWidth={horizontalProps.maxWidth}
-          minWidth={horizontalProps.minWidth}
-        >
-          <LeftPanel>{problemDetails}</LeftPanel>
-        </HorizontalResizableColumn>
-        <RightPanel ref={rightPanelRef}>
-          <EditorContainer>
-            <CodeEditor code={code} setCode={setCode} setOutput={setOutput} />
-          </EditorContainer>
-          <OutputArea>{output}</OutputArea>
-          <ChatBubble>
-            <IconButton onClick={toggleChat} color="blue" size="large">
-              <ChatIcon />
-            </IconButton>
-          </ChatBubble>
-          <Drawer
-            anchor="right"
-            open={isChatOpen}
-            onClose={toggleChat}
-            PaperProps={{ style: { width: '25vw' } }}
+      {/* <GlobalStyle /> */}
+      <Container maxWidth="false">
+        <LayoutContainer>
+          <HorizontalResizableColumn
+            initialWidth={horizontalProps.initialWidth}
+            maxWidth={horizontalProps.maxWidth}
+            minWidth={horizontalProps.minWidth}
           >
-            <ChatLedger>
-              <ChatBox problem={problem} />
-            </ChatLedger>
-          </Drawer>
-        </RightPanel>
-      </LayoutContainer>
+            <Box
+              sx={{
+                flex: 1,
+                padding: '0',
+                height: '100%',
+                backgroundColor: '#f0f0f0',
+                display: 'flex',
+                flexDirection: 'column',
+                overflowY: 'auto',
+                boxSizing: 'border-box',
+              }}
+            >
+              <LeftPanel>{problemDetails}</LeftPanel>
+            </Box>
+          </HorizontalResizableColumn>
+          <Box
+            sx={{
+              flex: 1,
+              padding: '20px',
+              height: '100%',
+              backgroundColor: '#f0f0f0',
+              display: 'flex',
+              flexDirection: 'column',
+              overflowY: 'auto',
+              boxSizing: 'border-box',
+            }}
+          >
+            <RightPanel ref={rightPanelRef}>
+              <EditorContainer>
+                <CodeEditor
+                  code={code}
+                  setCode={setCode}
+                  setOutput={setOutput}
+                />
+              </EditorContainer>
+              <OutputArea>{output}</OutputArea>
+              <ChatBubble>
+                <IconButton onClick={toggleChat} color="blue" size="large">
+                  <ChatIcon />
+                </IconButton>
+              </ChatBubble>
+              <Drawer
+                anchor="right"
+                open={isChatOpen}
+                onClose={toggleChat}
+                PaperProps={{ style: { width: '25vw' } }}
+              >
+                <ChatLedger>
+                  <ChatBox problem={problem} />
+                </ChatLedger>
+              </Drawer>
+            </RightPanel>
+          </Box>
+        </LayoutContainer>
+      </Container>
     </>
   )
 }
