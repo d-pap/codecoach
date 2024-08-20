@@ -39,7 +39,19 @@ const CardMediaStyled = styled(CardMedia)(({ theme }) => ({
   // the 2 lines below make sure to keep the aspect ratio of the image 16:9
   height: 0, // important
   paddingTop: '56.25%', // important - 16:9 aspect ratio
-  backgroundColor: theme.palette.primary.main, // if image doesnt load
+  backgroundColor: '#ffffff', //! bg color if image doesnt load
+}))
+
+const CardTitle = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Ubuntu',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}))
+
+const CardBody = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  fontFamily: 'Ubuntu',
 }))
 
 function Problems() {
@@ -74,7 +86,10 @@ function Problems() {
           component="h1"
           gutterBottom
           align="center"
-          sx={{ mb: 6 }}
+          sx={{
+            mb: 6,
+            fontFamily: 'Ubuntu',
+          }}
         >
           Explore Problem Categories
         </Typography>
@@ -89,9 +104,9 @@ function Problems() {
             <CardStyled>
               <CardMediaStyled image={icpcImage} />
               <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
+                <CardTitle gutterBottom variant="h5" component="div">
                   ICPC
-                </Typography>
+                </CardTitle>
                 <Typography variant="body2" color="text.secondary">
                   ICPC stands for The International Collegiate Programming
                   Contest. This contest is one of the most prestigious
@@ -123,9 +138,9 @@ function Problems() {
             <CardStyled>
               <CardMediaStyled image={programmingImage} />
               <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
+                <CardTitle gutterBottom variant="h5" component="div">
                   Programming
-                </Typography>
+                </CardTitle>
                 <Typography variant="body2" color="text.secondary">
                   The Programming section includes a variety of problems
                   designed to enhance your coding skills and problem-solving
@@ -158,9 +173,9 @@ function Problems() {
             <CardStyled>
               <CardMediaStyled image={interviewImage} />
               <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
+                <CardTitle gutterBottom variant="h5" component="div">
                   Interview
-                </Typography>
+                </CardTitle>
                 <Typography variant="body2" color="text.secondary">
                   The Interview section focuses on questions commonly asked by
                   FAANG (Facebook, Amazon, Netflix, Google) companies during

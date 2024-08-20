@@ -38,6 +38,12 @@ const StyledAceEditor = styled(AceEditor)`
   width: 100% !important;
   height: 100% !important;
 `
+// const StyledAceEditor = styled(AceEditor)`
+//   flex: 1;
+//   width: 100% !important;
+//   height: auto !important;
+//   min-height: 400px;
+// `
 
 const themeStyles = {
   monokai: {
@@ -83,7 +89,7 @@ const EditorButtons = ({ handleRunCode, currentThemeStyle }) => {
           startIcon={<PlayArrow />}
           sx={{
             fontSize: '12px',
-            fontFamily: 'DM Sans', // font family of the run button
+            fontFamily: 'Ubuntu', //! font family of the run button
             borderRadius: '6px',
             color: currentThemeStyle.color,
           }}
@@ -98,7 +104,7 @@ const EditorButtons = ({ handleRunCode, currentThemeStyle }) => {
             backgroundColor: 'green',
             '&:hover': { backgroundColor: 'darkgreen' },
             fontSize: '12px',
-            fontFamily: 'DM Sans', // font family of the submit button
+            fontFamily: 'Ubuntu', //! font family of the submit button
             borderRadius: '6px',
           }}
         >
@@ -161,6 +167,7 @@ const CodeEditor = ({ code, setCode, setOutput }) => {
           enableLiveAutocompletion: true,
           showLineNumbers: true,
           tabSize: 2,
+          fontFamily: 'monospace', //! font family of the code editor
         }}
       />
       <EditorButtons

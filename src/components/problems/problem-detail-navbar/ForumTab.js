@@ -10,8 +10,8 @@ import NavbarStack from './NavbarStack'
 const ForumTab = () => {
   return (
     <NavbarStack>
-      <h1>Forum</h1>
-      <p>Forum will be added soon</p>
+      <h3>Discussions</h3>
+      <p>Discussions will be added soon</p>
     </NavbarStack>
   )
 }

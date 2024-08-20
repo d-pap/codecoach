@@ -6,21 +6,25 @@ import YouTubeIcon from '@mui/icons-material/YouTube'
 import InstagramIcon from '@mui/icons-material/Instagram'
 
 const FooterContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: '#468585',
+  //backgroundColor: '#468585',
+  //backgroundColor: '#1f1f1f',
+  backgroundColor: 'transparent',
   color: theme.palette.primary.contrastText, // right now, this is using MUI's default theme styles. so this would be white
   padding: theme.spacing(4, 0), // padding top and bottom=32px (4*8px=32), no padding on the sides
   marginTop: 'auto',
+  borderTop: '2px solid #e0e0e0',
 }))
 
 const FooterTypography = styled(Typography)({
   marginBottom: '0.5rem',
-  color: '#def9c4',
-  fontFamily: 'Inter, sans-serif', // Inter for headings
+  color: '#1f1f1f',
+  fontFamily: 'Ubuntu', //! font
 })
 
 const EmailLink = styled(Link)({
-  color: '#9cdba6',
-  fontFamily: 'DM Sans, sans-serif', // DM Sans for link font (same as body text)
+  //color: '#9cdba6',
+  color: '#1f1f1f',
+  fontFamily: 'Ubuntu', //! font
   textDecoration: 'none',
   '&:hover': {
     color: '#878686',
@@ -32,7 +36,8 @@ const SocialIcon = styled(Box)(({ theme }) => ({
   display: 'inline-flex',
   marginRight: theme.spacing(1),
   '& a': {
-    color: '#9CDBA6',
+    //color: '#9CDBA6',
+    color: '#1f1f1f',
     '&:hover': {
       color: '#878686',
       transition: 'color 0.3s ease',
@@ -51,7 +56,7 @@ const Footer = () => {
             </FooterTypography>
             <FooterTypography
               align="left"
-              sx={{ fontFamily: 'DM Sans, sans-serif' }} // DM Sans for body text
+              sx={{ fontFamily: 'Ubuntu' }} //! font
             >
               General Inquiries:{' '}
               <EmailLink href="mailto:team@codecoach.com">
@@ -60,7 +65,7 @@ const Footer = () => {
             </FooterTypography>
             <FooterTypography
               align="left"
-              sx={{ fontFamily: 'DM Sans, sans-serif' }} // DM Sans for body text
+              sx={{ fontFamily: 'Ubuntu' }} //! font
             >
               Support:{' '}
               <EmailLink href="mailto:support@codecoach.com">

@@ -1,6 +1,49 @@
 import React from 'react'
 import { Card, CardContent, Typography } from '@mui/material'
+import styled from '@mui/material/styles/styled'
 import { useNavigate } from 'react-router-dom'
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '95%',
+  height: '125px',
+  margin: '1px',
+  cursor: 'pointer',
+  borderRadius: theme.spacing(2),
+  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: theme.shadows[8],
+  },
+}))
+
+const StyledCardContent = styled(CardContent)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%', // Ensure CardContent takes full height of the Card
+  //padding: theme.spacing(2),
+}))
+
+const CardTitle = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Ubuntu',
+  fontWeight: 'bold',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}))
+
+const CardBody = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  fontFamily: 'Ubuntu',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  display: '-webkit-box',
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: 'vertical',
+  whiteSpace: 'normal',
+  paddingLeft: theme.spacing(0),
+}))
 
 const ProblemCardLayout = ({ problem }) => {
   const navigate = useNavigate() // Initialize the useNavigate hook
@@ -19,60 +62,17 @@ const ProblemCardLayout = ({ problem }) => {
         height: '100%',
       }}
     >
-      <Card
+      <StyledCard
         onClick={handleNavigate} // Navigate to the problem details on card click
         variant="outlined"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '95%',
-          height: '125px', // Fixed height for the card
-          margin: '1px',
-          cursor: 'pointer',
-          transition: 'transform 0.2s, box-shadow 0.2s, background-color 0.2s',
-          '&:hover': {
-            transform: 'scale(1.02)',
-            boxShadow: 3,
-            backgroundColor: 'rgba(0, 0, 0, 0.1)',
-          },
-        }}
       >
-        <CardContent
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100%', // Ensure CardContent takes full height of the Card
-            padding: '8px', // Adjust padding if necessary
-          }}
-        >
-          <Typography
-            variant="h6"
-            noWrap
-            sx={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              fontFamily: 'Inter, sans-serif', //! set font of the title in the card
-            }}
-          >
+        <StyledCardContent>
+          <CardTitle variant="h5" gutterBottom>
             {problem.title}
-          </Typography>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            sx={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              display: '-webkit-box',
-              WebkitLineClamp: 3, // Number of lines to show before truncating
-              WebkitBoxOrient: 'vertical',
-              whiteSpace: 'normal',
-              fontFamily: 'Inter, sans-serif', //! set font of the description in the card
-            }}
-          >
-            {problem.description}
-          </Typography>
-        </CardContent>
-      </Card>
+          </CardTitle>
+          <CardBody variant="body">{problem.description}</CardBody>
+        </StyledCardContent>
+      </StyledCard>
     </div>
   )
 }

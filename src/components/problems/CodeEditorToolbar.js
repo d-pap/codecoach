@@ -30,7 +30,7 @@ const CodeEditorToolbar = ({
           onChange={(e) => setLanguage(e.target.value)}
           sx={{
             fontSize: '14px',
-            fontFamily: 'DM Sans', // font family of the select input itself
+            fontFamily: 'Ubuntu', // font family of the select input itself
             color: currentThemeStyle.color,
             backgroundColor: currentThemeStyle.backgroundColor,
             minWidth: '100px',
@@ -53,7 +53,7 @@ const CodeEditorToolbar = ({
               sx: {
                 '& .MuiMenuItem-root': {
                   fontSize: '14px', // font size of the dropdown items
-                  fontFamily: 'DM Sans', // font family of the dropdown items
+                  fontFamily: 'Ubuntu', // font family of the dropdown items
                   padding: '3px 10px', // padding of the dropdown items
                   borderRadius: '10px', // border radius of the dropdown items
                 },
@@ -70,7 +70,7 @@ const CodeEditorToolbar = ({
           onChange={(e) => setTheme(e.target.value)}
           sx={{
             fontSize: '14px', // font size of the select input itself
-            fontFamily: 'DM Sans', // font family of the select input itself
+            fontFamily: 'Ubuntu', // font family of the select input itself
             color: currentThemeStyle.color,
             backgroundColor: currentThemeStyle.backgroundColor,
             minWidth: '100px',
@@ -93,7 +93,7 @@ const CodeEditorToolbar = ({
               sx: {
                 '& .MuiMenuItem-root': {
                   fontSize: '14px', // font size of the theme dropdown items
-                  fontFamily: 'DM Sans', // font family of the dropdown items
+                  fontFamily: 'Ubuntu', // font family of the dropdown items
                   padding: '3px 10px', // padding of the dropdown items
                   borderRadius: '10px', // border radius of the dropdown items
                 },

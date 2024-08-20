@@ -100,19 +100,19 @@ Our platform is designed to offer a comprehensive and user-friendly experience, 
 
 The landing page of our platform, offering an overview of features, highlighted problems, and navigation options.
 
-  <img src="assets\home-page.png">
+  <img src="assets\home-page1.png">
 
 **Problems Page**
 
 Displays a list of coding problems categorized by difficulty, region, and year. Users can filter and select problems to work on.
 
-  <img src="assets\problems-page.png">
+  <img src="assets\problems-page1.png">
 
 **Problem Solving Interface**
 
 A dedicated area where users can view problem details and write, test, and submit their code in an integrated editor.
 
-  <img src="assets\prob-solving-page.png">
+  <img src="assets\prob-solving-page1.png">
 
 **AI Assistant**
 

@@ -17,7 +17,7 @@ like "Problems", "About", etc.
 Fonts we imported from Google Fonts in `public/index.html`.
 this changes font of links, footer links */
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Ubuntu', sans-serif;
 }
 
 /* this didnt change anything when removed:*/
@@ -33,5 +33,5 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Inter', sans-serif; /* this changes h1 and header text */
+  font-family: 'Ubuntu', sans-serif; /* this changes h1 and header text */
 }
