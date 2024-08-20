@@ -39,7 +39,7 @@ const CardMediaStyled = styled(CardMedia)(({ theme }) => ({
   // the 2 lines below make sure to keep the aspect ratio of the image 16:9
   height: 0, // important
   paddingTop: '56.25%', // important - 16:9 aspect ratio
-  backgroundColor: theme.palette.primary.main, //! bg color if image doesnt load
+  backgroundColor: '#ffffff', //! bg color if image doesnt load
 }))
 
 const CardTitle = styled(Typography)(({ theme }) => ({

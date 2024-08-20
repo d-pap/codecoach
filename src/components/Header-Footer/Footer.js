@@ -12,6 +12,7 @@ const FooterContainer = styled(Box)(({ theme }) => ({
   color: theme.palette.primary.contrastText, // right now, this is using MUI's default theme styles. so this would be white
   padding: theme.spacing(4, 0), // padding top and bottom=32px (4*8px=32), no padding on the sides
   marginTop: 'auto',
+  borderTop: '2px solid #e0e0e0',
 }))
 
 const FooterTypography = styled(Typography)({

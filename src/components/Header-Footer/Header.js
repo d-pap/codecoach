@@ -14,7 +14,8 @@ const HeaderSection = styled(AppBar)(({ theme }) => ({
   background: 'transparent',
   display: 'flex',
   justifyContent: 'space-between',
-  boxShadow: 'none',
+  //boxShadow: '4px 4px 4px rgba(0, 0, 0, 0.25)',
+  borderBottom: '2px solid #e0e0e0',
 }))
 
 // a box to wrap the title in the header
