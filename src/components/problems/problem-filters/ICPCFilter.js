@@ -14,12 +14,12 @@ export function ICPCFilter(problems, region, year) {
 }
 // styled components for filter dropdown items
 const FilterItems = styled(MenuItem)(({ theme }) => ({
-  fontFamily: 'Inter, sans-serif',
+  fontFamily: 'Ubuntu', //! font family for filter dropdown items
 }))
 
 // styled components for filter dropdown labels
 const FilterLabels = styled(InputLabel)(({ theme }) => ({
-  fontFamily: 'Inter, sans-serif',
+  fontFamily: 'Ubuntu', //! font family for filter dropdown labels
 }))
 
 export function ICPCFilterDisplay({
@@ -31,10 +31,7 @@ export function ICPCFilterDisplay({
   return (
     <Box sx={{ width: '100%' }}>
       <FormControl fullWidth variant="outlined" margin="normal" size="small">
-        <FilterLabels
-          id="region-label"
-          sx={{ fontFamily: 'Inter, sans-serif' }}
-        >
+        <FilterLabels id="region-label" sx={{ fontFamily: 'Ubuntu' }}>
           ICPC Contest Region
         </FilterLabels>
         <Select
@@ -42,7 +39,7 @@ export function ICPCFilterDisplay({
           value={region}
           onChange={onRegionChange}
           label="ICPC Contest Region"
-          sx={{ fontFamily: 'Inter, sans-serif' }}
+          sx={{ fontFamily: 'Ubuntu' }}
         >
           <FilterItems value="all">All Regions</FilterItems>
           <FilterItems value="World">World</FilterItems>
@@ -51,7 +48,7 @@ export function ICPCFilterDisplay({
         </Select>
       </FormControl>
       <FormControl fullWidth variant="outlined" margin="normal" size="small">
-        <FilterLabels id="year-label" sx={{ fontFamily: 'Inter, sans-serif' }}>
+        <FilterLabels id="year-label" sx={{ fontFamily: 'Ubuntu' }}>
           ICPC Contest Year
         </FilterLabels>
         <Select
@@ -59,7 +56,7 @@ export function ICPCFilterDisplay({
           value={year}
           onChange={onYearChange}
           label="ICPC Contest Year"
-          sx={{ fontFamily: 'Inter, sans-serif' }}
+          sx={{ fontFamily: 'Ubuntu' }}
         >
           <FilterItems value="all">All Years</FilterItems>
           <FilterItems value="2021">2021</FilterItems>
