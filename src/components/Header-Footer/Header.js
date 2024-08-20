@@ -14,7 +14,7 @@ const HeaderSection = styled(AppBar)(({ theme }) => ({
   background: 'transparent',
   display: 'flex',
   justifyContent: 'space-between',
-  //boxShadow: '4px 4px 4px rgba(0, 0, 0, 0.25)',
+  boxShadow: 'none',
   borderBottom: '2px solid #e0e0e0',
 }))
 
