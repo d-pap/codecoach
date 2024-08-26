@@ -4,13 +4,14 @@
 
 import { createNewChatConvo, sendChatMessage } from '../../../api'
 
+// Format the input and send it to the AI model
 const SendChat = async (title, description, input, convoId) => {
   let id = convoId
   let formatedInput = ''
 
+  // If there is no conversation id, create a new one
   try {
     if (id == null) {
-      console.log('Null id', id)
       // create a new chat conversation
       const newChatId = await createNewChatConvo()
       id = newChatId.convoId
