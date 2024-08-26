@@ -27,6 +27,7 @@ const textFieldStyle = {
   resize: 'vertical',
 }
 
+// Define the AddProblems component
 const AddProblems = () => {
   const [formData, setFormData] = useState({
     type: 'icpc',
@@ -45,6 +46,7 @@ const AddProblems = () => {
     hint: '',
   })
 
+  // Define the subregions for each region
   const subregions = {
     'World Finals': ['ICPC World Finals'],
     'Europe Contests': [
@@ -94,6 +96,7 @@ const AddProblems = () => {
     'Africa and Arab Contests': ['Arab Collegiate Programming Championship'],
   }
 
+  // Handle the form submission
   const handleSubmits = async (e, formData, setFormData) => {
     e.preventDefault()
 
