@@ -50,7 +50,9 @@ For more details on the technology and architecture, visit our [Architecture](#�
 
 <!-- MOTIVATION -->
 
-## 🖥️ Demo
+## 🖥️ Video/Demo
+
+[(Click to watch)](https://www.youtube.com/watch?v=h4pg-E1RxY0)
 
 [![Watch the video](https://img.youtube.com/vi/h4pg-E1RxY0/0.jpg)](https://www.youtube.com/watch?v=h4pg-E1RxY0)
 
