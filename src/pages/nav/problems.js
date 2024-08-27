@@ -16,6 +16,7 @@ import {
   CardContent,
   CardActions,
   CardMedia,
+  CircularProgress,
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { fetchProblems } from '../../api'
@@ -39,20 +40,46 @@ const CardMediaStyled = styled(CardMedia)(({ theme }) => ({
   // the 2 lines below make sure to keep the aspect ratio of the image 16:9
   height: 0, // important
   paddingTop: '56.25%', // important - 16:9 aspect ratio
-  backgroundColor: '#ffffff', //! bg color if image doesnt load
+  backgroundColor: theme.palette.background.paper, // bg color if image doesnt load
 }))
 
 const CardTitle = styled(Typography)(({ theme }) => ({
-  fontFamily: 'Ubuntu',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
 }))
 
-const CardBody = styled(Typography)(({ theme }) => ({
-  color: theme.palette.text.secondary,
-  fontFamily: 'Ubuntu',
-}))
+//! Make reusable card component. will improve readability and maintainability and performance (with the use of children prop)
+function CategoryCard({ image, onClick, loading, buttonText, children }) {
+  return (
+    <CardStyled>
+      <CardMediaStyled image={image} />
+      <CardContent>{children}</CardContent>
+      <CardActions sx={{ mt: 'auto', display: 'flex', alignItems: 'center' }}>
+        <Button
+          size="large"
+          fullWidth
+          variant="contained"
+          onClick={onClick}
+          disabled={loading}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          {buttonText}
+          {loading && (
+            <CircularProgress
+              size={24}
+              sx={{ color: 'white', marginLeft: 2 }}
+            />
+          )}
+        </Button>
+      </CardActions>
+    </CardStyled>
+  )
+}
 
 function Problems() {
   const navigate = useNavigate()
@@ -82,120 +109,77 @@ function Problems() {
     <Box sx={{ bgcolor: 'background.default', py: 6 }}>
       <Container maxWidth="lg">
         <Typography
-          variant="h2"
+          variant="h3"
           component="h1"
           gutterBottom
           align="center"
           sx={{
             mb: 6,
-            fontFamily: 'Ubuntu',
           }}
         >
           Explore Problem Categories
         </Typography>
         <Grid container spacing={4}>
           {/* ICPC problem section */}
-          <Grid
-            item
-            xs={12} // xs screens=1 card per row
-            sm={6} // sm=2 cards per row
-            md={4} // md and above=3 cards per row
-          >
-            <CardStyled>
-              <CardMediaStyled image={icpcImage} />
-              <CardContent>
-                <CardTitle gutterBottom variant="h5" component="div">
-                  ICPC
-                </CardTitle>
-                <Typography variant="body2" color="text.secondary">
-                  ICPC stands for The International Collegiate Programming
-                  Contest. This contest is one of the most prestigious
-                  competitive programming contests globally. The problems
-                  included in the ICPC section are derived from various past
-                  ICPC competitions and cover a broad range of topics.
-                </Typography>
-              </CardContent>
-              <CardActions sx={{ mt: 'auto' }}>
-                <Button
-                  size="large"
-                  fullWidth
-                  variant="contained"
-                  onClick={() => navigateTo('/problems/icpc')}
-                  disabled={loading}
-                >
-                  Explore ICPC Problems
-                </Button>
-              </CardActions>
-            </CardStyled>
+          <Grid item xs={12} sm={6} md={4}>
+            <CategoryCard
+              image={icpcImage}
+              onClick={() => navigateTo('/problems/icpc')}
+              loading={loading}
+              buttonText="Explore ICPC Problems"
+            >
+              <CardTitle gutterBottom variant="h5" component="div">
+                ICPC
+              </CardTitle>
+              <Typography variant="body2">
+                ICPC stands for The International Collegiate Programming
+                Contest. This contest is one of the most prestigious competitive
+                programming contests globally. The problems included in the ICPC
+                section are derived from various past ICPC competitions and
+                cover a broad range of topics.
+              </Typography>
+            </CategoryCard>
           </Grid>
-          {/* programming section */}
-          <Grid
-            item
-            xs={12} // xs screens=1 card per row
-            sm={6} // sm=2 cards per row
-            md={4} // md and above=3 cards per row
-          >
-            <CardStyled>
-              <CardMediaStyled image={programmingImage} />
-              <CardContent>
-                <CardTitle gutterBottom variant="h5" component="div">
-                  Programming
-                </CardTitle>
-                <Typography variant="body2" color="text.secondary">
-                  The Programming section includes a variety of problems
-                  designed to enhance your coding skills and problem-solving
-                  abilities. Topics covered in this section span a wide array of
-                  common programming challenges such as algorithms, data
-                  structures, complexity analysis, sorting and searching,
-                  dynamic programming, and more.
-                </Typography>
-              </CardContent>
-              <CardActions sx={{ mt: 'auto' }}>
-                <Button
-                  size="large"
-                  fullWidth
-                  variant="contained"
-                  onClick={() => navigateTo('/problems/programming')}
-                  disabled={loading}
-                >
-                  Explore Programming Problems
-                </Button>
-              </CardActions>
-            </CardStyled>
+          {/* Programming section */}
+          <Grid item xs={12} sm={6} md={4}>
+            <CategoryCard
+              image={programmingImage}
+              onClick={() => navigateTo('/problems/programming')}
+              loading={loading}
+              buttonText="Explore Programming Problems"
+            >
+              <CardTitle gutterBottom variant="h5" component="div">
+                Programming
+              </CardTitle>
+              <Typography variant="body2">
+                The Programming section includes a variety of problems designed
+                to enhance your coding skills and problem-solving abilities.
+                Topics covered in this section span a wide array of common
+                programming challenges such as algorithms, data structures,
+                complexity analysis, sorting and searching, dynamic programming,
+                and more.
+              </Typography>
+            </CategoryCard>
           </Grid>
-          {/* interview section */}
-          <Grid
-            item
-            xs={12} // xs screens=1 card per row
-            sm={6} // sm=2 cards per row
-            md={4} // md and above=3 cards per row
-          >
-            <CardStyled>
-              <CardMediaStyled image={interviewImage} />
-              <CardContent>
-                <CardTitle gutterBottom variant="h5" component="div">
-                  Interview
-                </CardTitle>
-                <Typography variant="body2" color="text.secondary">
-                  The Interview section focuses on questions commonly asked by
-                  FAANG (Facebook, Amazon, Netflix, Google) companies during
-                  technical interviews. This section is designed to help
-                  students and professionals prepare for the types of questions
-                  they might encounter in real-world technical interviews.
-                </Typography>
-              </CardContent>
-              <CardActions sx={{ mt: 'auto' }}>
-                <Button
-                  size="large"
-                  fullWidth
-                  variant="contained"
-                  onClick={() => navigateTo('/problems/interview')}
-                  disabled={loading}
-                >
-                  Explore Interview Problems
-                </Button>
-              </CardActions>
-            </CardStyled>
+          {/* Interview section */}
+          <Grid item xs={12} sm={6} md={4}>
+            <CategoryCard
+              image={interviewImage}
+              onClick={() => navigateTo('/problems/interview')}
+              loading={loading}
+              buttonText="Explore Interview Problems"
+            >
+              <CardTitle gutterBottom variant="h5" component="div">
+                Interview
+              </CardTitle>
+              <Typography variant="body2">
+                The Interview section focuses on questions commonly asked by
+                FAANG (Facebook, Amazon, Netflix, Google) companies during
+                technical interviews. This section is designed to help students
+                and professionals prepare for the types of questions they might
+                encounter in real-world technical interviews.
+              </Typography>
+            </CategoryCard>
           </Grid>
         </Grid>
       </Container>

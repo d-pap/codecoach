@@ -12,7 +12,13 @@ import {
   //ICPCFilterDisplay,
 } from '../../../components/problems/problem-filters/ICPCFilter'
 import { styled, alpha } from '@mui/material/styles'
-import { Stack, Pagination, Toolbar, Select } from '@mui/material'
+import {
+  Stack,
+  Pagination,
+  Toolbar,
+  Select,
+  LinearProgress,
+} from '@mui/material'
 // import HorizontalResizableColumn from '../../../components/utility/HorizontalResizableColumn'
 import { fetchProblems } from '../../../api'
 import { Box, Container, Grid, Typography } from '@mui/material'
@@ -24,12 +30,11 @@ import MenuItem from '@mui/material/MenuItem'
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
   backgroundColor: 'transparent',
   borderRadius: theme.spacing(2), // rounded corners for button container
-  //boxShadow: 'none', //! remove box shadow? to match prob categories page?
 }))
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: theme.spacing(2),
   backgroundColor: alpha(theme.palette.text.secondary, 0.15), //! color of search box bg (this is light grey)
   '&:hover': {
     backgroundColor: alpha(theme.palette.text.secondary, 0.25), //! hover color of search box bg (this is light grey)
@@ -42,7 +47,7 @@ const Search = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(3),
     width: 'auto',
   },
-  color: 'black', //! font color of search box font and icon
+  color: theme.palette.text.primary,
 }))
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -62,7 +67,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
-    fontFamily: 'Ubuntu', //! font family for search box
     width: '100%',
     [theme.breakpoints.up('md')]: {
       width: '20ch',
@@ -70,16 +74,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }))
 
-const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
-  fontFamily: 'Ubuntu', //! font family for filter dropdown items
-}))
-
 const StyledSelect = styled(Select)(({ theme }) => ({
-  fontFamily: 'Ubuntu',
-  sx: {
-    height: '40px',
-    minWidth: '150px',
-    padding: '0 10px',
+  height: '40px',
+  minWidth: '150px',
+  padding: '0 10px',
+  borderRadius: theme.spacing(2),
+  '&.hover': {
+    color: theme.palette.text.primary,
+  },
+  '&.active': {
+    color: theme.palette.text.primary,
   },
 }))
 
@@ -92,7 +96,6 @@ function ICPC() {
   const [filteredProblems, setFilteredProblems] = useState(problems)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  //const [setFilterWidth] = useState(300) // Width of the filters column
   const [currentPage, setCurrentPage] = useState(1)
   const problemsPerPage = 10
 
@@ -132,13 +135,8 @@ function ICPC() {
     setCurrentPage(page)
   }
 
-  // // Handle resizing of filter column
-  // const handleResize = (newWidth) => {
-  //   setFilterWidth(newWidth)
-  // }
-
   if (loading) {
-    return <p>Loading...</p>
+    return <LinearProgress />
   }
 
   if (error) {
@@ -154,7 +152,7 @@ function ICPC() {
   )
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 6 }}>
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 2 }}>
       <Container maxWidth="lg">
         <Typography
           variant="h2"
@@ -177,7 +175,6 @@ function ICPC() {
               backgroundColor: 'transparent',
               borderRadius: '6px', // rounded corners for button container
               boxShadow: 'none', // ! box shadow for app bar
-              //  '0px 4px 5px -2px rgba(0, 0, 0, 0.2), 4px 0px 5px -2px rgba(0, 0, 0, 0.2), -4px 0px 5px -2px rgba(0, 0, 0, 0.2)', //
             }}
           >
             <Toolbar
@@ -202,10 +199,10 @@ function ICPC() {
                     padding: '0 10px',
                   }}
                 >
-                  <StyledMenuItem value="all">All Regions</StyledMenuItem>
-                  <StyledMenuItem value="World">World</StyledMenuItem>
-                  <StyledMenuItem value="NA">North America</StyledMenuItem>
-                  <StyledMenuItem value="EU">Europe</StyledMenuItem>
+                  <MenuItem value="all">All Regions</MenuItem>
+                  <MenuItem value="World">World</MenuItem>
+                  <MenuItem value="NA">North America</MenuItem>
+                  <MenuItem value="EU">Europe</MenuItem>
                 </StyledSelect>
                 <StyledSelect
                   value={year}
@@ -216,10 +213,10 @@ function ICPC() {
                     padding: '0 10px',
                   }}
                 >
-                  <StyledMenuItem value="all">All Years</StyledMenuItem>
-                  <StyledMenuItem value="2021">2021</StyledMenuItem>
-                  <StyledMenuItem value="2020">2020</StyledMenuItem>
-                  <StyledMenuItem value="2019">2019</StyledMenuItem>
+                  <MenuItem value="all">All Years</MenuItem>
+                  <MenuItem value="2021">2021</MenuItem>
+                  <MenuItem value="2020">2020</MenuItem>
+                  <MenuItem value="2019">2019</MenuItem>
                 </StyledSelect>
               </Box>
               {/* SEARCH BOX HERE:  */}
@@ -247,29 +244,6 @@ function ICPC() {
             borderRadius: '6px', // rounded corners for the whole grid
           }}
         >
-          {/* <HorizontalResizableColumn
-            initialWidth={200}
-            minWidth={175}
-            maxWidth={400}
-            onResize={handleResize}
-          >
-            <Box
-              sx={{
-                padding: 2,
-                backgroundColor: 'lightblue', //! bg color for testing
-              }}
-            >
-              <Typography variant="h5" gutterBottom>
-                Filters
-              </Typography>
-              <ICPCFilterDisplay
-                region={region}
-                year={year}
-                onRegionChange={handleRegionChange}
-                onYearChange={handleYearChange}
-              />
-            </Box>
-          </HorizontalResizableColumn> */}
           <Box
             sx={{
               flexGrow: 1,

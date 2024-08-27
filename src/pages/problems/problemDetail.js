@@ -10,6 +10,7 @@ import { useParams, useLocation } from 'react-router-dom'
 import { fetchProblemById } from '../../api'
 import ProblemDetailLayout from '../../components/problems/ProblemDetailLayout'
 import ProblemDetails from '../../components/problems/ProblemDetails'
+import { LinearProgress } from '@mui/material'
 
 function ProblemDetail() {
   // state variables
@@ -45,7 +46,7 @@ function ProblemDetail() {
     getProblem()
   }, [id, problemFromLocation]) // dependency array with ID and problemFromLocation to re-fetch if ID or problemFromLocation changes
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <LinearProgress />
   if (error) return <div>{error}</div>
   if (!problem) return <div>Problem not found</div>
 

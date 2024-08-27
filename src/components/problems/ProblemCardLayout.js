@@ -26,16 +26,13 @@ const StyledCardContent = styled(CardContent)(({ theme }) => ({
 }))
 
 const CardTitle = styled(Typography)(({ theme }) => ({
-  fontFamily: 'Ubuntu',
-  fontWeight: 'bold',
+  fontWeight: theme.typography.fontWeightBold,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
 }))
 
 const CardBody = styled(Typography)(({ theme }) => ({
-  color: theme.palette.text.secondary,
-  fontFamily: 'Ubuntu',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   display: '-webkit-box',
@@ -70,7 +67,7 @@ const ProblemCardLayout = ({ problem }) => {
           <CardTitle variant="h5" gutterBottom>
             {problem.title}
           </CardTitle>
-          <CardBody variant="body">{problem.description}</CardBody>
+          <CardBody variant="body1">{problem.description}</CardBody>
         </StyledCardContent>
       </StyledCard>
     </div>

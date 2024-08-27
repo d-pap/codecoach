@@ -8,9 +8,6 @@ import { styled } from '@mui/system'
 // Styled header section using MUI
 // for the entire header section
 const HeaderSection = styled(AppBar)(({ theme }) => ({
-  //background: '#468585',
-  //background: '#A2AAAD',
-  //background: '#1f1f1f',
   background: 'transparent',
   display: 'flex',
   justifyContent: 'space-between',
@@ -28,14 +25,7 @@ const TitleWrapper = styled(Box)(({ theme }) => ({
 
 // font styling for the project title in the header
 const ProjectTitle = styled(Typography)(({ theme }) => ({
-  fontFamily: 'Teko',
-  fontWeight: 'bold',
-  //textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
-  textAlign: 'left',
-  fontSize: '2rem',
-  color: '#000000', //! color if background is white or transparent
-  //color: '#def9c4',
-  marginLeft: theme.spacing(2), // Add some space between the logo and title
+  color: theme.palette.text.primary,
   textDecoration: 'none',
 }))
 
@@ -54,7 +44,7 @@ const Header = () => {
           to="/"
           sx={{ textDecoration: 'none' }}
         >
-          <ProjectTitle variant="h1">CC</ProjectTitle>
+          <ProjectTitle variant="h6">CC</ProjectTitle>
         </TitleWrapper>
         <Box sx={{ marginLeft: 'auto' }}>
           <Navbar />

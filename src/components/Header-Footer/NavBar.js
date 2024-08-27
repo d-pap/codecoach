@@ -25,19 +25,16 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
 import { styled, alpha } from '@mui/material/styles'
 
-// Styled NavLink component using MUI
+// Styled Nav buttons
 const NavLink = styled(Button)(({ theme }) => ({
-  // color: '#DEF9C4',
-  color: '#1f1f1f', // Text color
+  color: theme.palette.text.primary,
   textDecoration: 'none',
-  borderRadius: theme.spacing(2), // rounded corners for navbar buttons
-  whiteSpace: 'nowrap', // Prevent text wrapping
-  margin: '5px', // Add more margin between links
+  borderRadius: theme.spacing(2),
+  whiteSpace: 'nowrap',
+  margin: '5px',
   '&:hover': {
-    //background: '#9CDBA6',
-    background: alpha('#1f1f1f', 0.1),
-    color: '#1f1f1f',
-    transition: 'background-color 0.3s ease',
+    background: alpha(theme.palette.text.primary, 0.1),
+    transition: 'background-color 0.2s ease',
   },
 }))
 
