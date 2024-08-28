@@ -14,26 +14,26 @@ import { useNavigate } from 'react-router-dom'
 // Styled components
 const OnboardingCard = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
-  backgroundColor: '#FFF3CD',
-  color: '#856404',
+  backgroundColor: theme.palette.caution.bg,
+  color: theme.palette.caution.main,
 }))
 
 const RoadmapCard = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
-  backgroundColor: '#FFF',
-  color: '#333',
+  padding: theme.spacing(2),
+  backgroundColor: theme.palette.background.paper,
+  color: theme.palette.text.primary,
   textAlign: 'center',
 }))
 
 const StreakCard = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
-  backgroundColor: '#FFF',
-  color: '#333',
+  backgroundColor: theme.palette.background.paper,
+  color: theme.palette.text.primary,
   textAlign: 'center',
 }))
 
 const SectionHeader = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
+  marginBottom: theme.spacing(2),
 }))
 
 const Home = () => {
@@ -41,7 +41,12 @@ const Home = () => {
 
   return (
     <Container>
-      <Box sx={{ marginTop: 6 }}>
+      <Box
+        //* Onboarding section
+        sx={{
+          marginTop: 6,
+        }}
+      >
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <OnboardingCard elevation={3}>
@@ -71,13 +76,13 @@ const Home = () => {
                   marginTop: 2,
                 }}
               >
+                <Box>S</Box>
+                <Box>M</Box>
+                <Box>T</Box>
                 <Box>W</Box>
                 <Box>T</Box>
                 <Box>F</Box>
                 <Box>S</Box>
-                <Box>S</Box>
-                <Box>M</Box>
-                <Box>T</Box>
               </Box>
               <Link href="#" sx={{ marginTop: 2 }}>
                 View Profile
@@ -87,7 +92,12 @@ const Home = () => {
         </Grid>
       </Box>
 
-      <Box sx={{ marginTop: 4 }}>
+      <Box
+        //* Roadmaps section
+        sx={{
+          marginTop: 4,
+        }}
+      >
         <SectionHeader variant="h5">Roadmaps for you</SectionHeader>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
@@ -113,7 +123,13 @@ const Home = () => {
         </Grid>
       </Box>
 
-      <Box sx={{ marginTop: 4 }}>
+      <Box
+        //* Manage Bookmarks and Explore Blogs section
+        sx={{
+          paddingBottom: 4,
+          marginTop: 4,
+        }}
+      >
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <Paper elevation={3} sx={{ padding: 3 }}>
