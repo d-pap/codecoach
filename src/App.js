@@ -200,6 +200,7 @@ import Problems from './pages/nav/problems'
 import ProblemDetail from './pages/problems/problemDetail'
 //import SignUp from './components/SignUp'
 import AddProblems from './pages/nav/addProblems'
+import ICPCFormPage from './pages/problems/add-problems/ICPCFormPage'
 import ICPC from './pages/problems/problem-types/ICPC'
 import Interview from './pages/problems/problem-types/Interview'
 import Programming from './pages/problems/problem-types/Programming'
@@ -296,6 +297,16 @@ function App() {
                 element={
                   isAuthenticated || bypassAuth ? (
                     <AddProblems />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
+              />
+              <Route
+                path="/addProblems/singleICPC"
+                element={
+                  isAuthenticated || bypassAuth ? (
+                    <ICPCFormPage />
                   ) : (
                     <Navigate to="/" />
                   )
