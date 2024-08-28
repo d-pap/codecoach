@@ -19,7 +19,6 @@ const StyledCard = styled(Card)(({ theme }) => ({
 const StyledCardContent = styled(CardContent)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  //height: '100%', // Ensure CardContent takes full height of the Card
 }))
 
 const CardTitle = styled(Typography)(({ theme }) => ({
@@ -54,7 +53,6 @@ const ProblemCardLayout = ({ problem }) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        //height: '100%',
       }}
     >
       <StyledCard
