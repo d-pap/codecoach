@@ -5,8 +5,12 @@ import { useNavigate } from 'react-router-dom'
 const OriginalPage = () => {
   const navigate = useNavigate()
 
-  const handleNavigateToForm = () => {
+  const handleNavigateToSingleICPCForm = () => {
     navigate('/addProblems/singleICPC')
+  }
+
+  const handleNavigateToMultipleICPCForm = () => {
+    navigate('/addProblems/multipleICPC')
   }
 
   return (
@@ -18,8 +22,11 @@ const OriginalPage = () => {
       width="100%"
     >
       <Stack spacing={2}>
-        <Button variant="contained" onClick={handleNavigateToForm}>
-          Go to Problem Form
+        <Button variant="contained" onClick={handleNavigateToSingleICPCForm}>
+          Add one problem
+        </Button>
+        <Button variant="contained" onClick={handleNavigateToMultipleICPCForm}>
+          Add problem from pdf
         </Button>
       </Stack>
     </Box>

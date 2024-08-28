@@ -133,24 +133,24 @@ const ICPCFormPage = () => {
         width="80%" // Set the width to 80%
       >
         <Stack spacing={2}>
-        <CustomLabel>Type: </CustomLabel>
-        <FormControl fullWidth>
+          <CustomLabel>Type: </CustomLabel>
+          <FormControl fullWidth>
             <InputLabel id="type-label">Type</InputLabel>
             <Select
-            labelId="type-label"
-            name="type"
-            value={formData.type}
-            onChange={(e) => handleChange(e, formData, setFormData)}
-            label="Type"
-            required
+              labelId="type-label"
+              name="type"
+              value={formData.type}
+              onChange={(e) => handleChange(e, formData, setFormData)}
+              label="Type"
+              required
             >
-            <MenuItem value="icpc">ICPC</MenuItem>
-            <MenuItem value="interview">Interview</MenuItem>
+              <MenuItem value="icpc">ICPC</MenuItem>
+              <MenuItem value="interview">Interview</MenuItem>
             </Select>
-        </FormControl>
+          </FormControl>
 
-        <CustomLabel>Title: </CustomLabel>
-        <TextField
+          <CustomLabel>Title: </CustomLabel>
+          <TextField
             type="text"
             name="title"
             value={formData.title}
@@ -159,9 +159,9 @@ const ICPCFormPage = () => {
             label="Please input a title"
             variant="outlined"
             style={textFieldStyle}
-        />
-        <CustomLabel>Problem Description: </CustomLabel>
-        <TextField
+          />
+          <CustomLabel>Problem Description: </CustomLabel>
+          <TextField
             name="description"
             value={formData.description}
             onChange={(e) => handleChange(e, formData, setFormData)}
@@ -170,9 +170,9 @@ const ICPCFormPage = () => {
             variant="outlined"
             style={textFieldStyle}
             multiline
-        />
-        <CustomLabel>Time and Memory Limits: </CustomLabel>
-        <TextField
+          />
+          <CustomLabel>Time and Memory Limits: </CustomLabel>
+          <TextField
             type="text"
             name="timeLimit"
             value={formData.timeLimit}
@@ -180,8 +180,8 @@ const ICPCFormPage = () => {
             label="Please input a time limit"
             variant="outlined"
             style={textFieldStyle}
-        />
-        <TextField
+          />
+          <TextField
             type="text"
             name="memoryLimit"
             value={formData.memoryLimit}
@@ -189,9 +189,9 @@ const ICPCFormPage = () => {
             label="Please input a memory limit"
             variant="outlined"
             style={textFieldStyle}
-        />
-        <CustomLabel>Input Description: </CustomLabel>
-        <TextField
+          />
+          <CustomLabel>Input Description: </CustomLabel>
+          <TextField
             name="exampleInputs"
             value={formData.exampleInputs}
             onChange={(e) => handleChange(e, formData, setFormData)}
@@ -199,9 +199,9 @@ const ICPCFormPage = () => {
             variant="outlined"
             style={textFieldStyle}
             multiline
-        />
-        <CustomLabel>Output Description: </CustomLabel>
-        <TextField
+          />
+          <CustomLabel>Output Description: </CustomLabel>
+          <TextField
             name="exampleOutputs"
             value={formData.exampleOutputs}
             onChange={(e) => handleChange(e, formData, setFormData)}
@@ -209,36 +209,36 @@ const ICPCFormPage = () => {
             variant="outlined"
             style={textFieldStyle}
             multiline
-        />
+          />
 
-        <div>
+          <div>
             <CustomLabel>Test Cases: </CustomLabel>
             <Button
-            variant="contained"
-            type="button"
-            onClick={() => addTestCase(formData, setFormData)}
+              variant="contained"
+              type="button"
+              onClick={() => addTestCase(formData, setFormData)}
             >
-            Add Test Case
+              Add Test Case
             </Button>
             <Stack
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            spacing={3}
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+              spacing={3}
             >
-            {formData.testCases.map((testCase, idx) => (
+              {formData.testCases.map((testCase, idx) => (
                 <TestCase
-                key={idx}
-                index={idx}
-                testCase={testCase}
-                handleTestCaseChange={(index, e) =>
+                  key={idx}
+                  index={idx}
+                  testCase={testCase}
+                  handleTestCaseChange={(index, e) =>
                     handleTestCaseChange(index, e, formData, setFormData)
-                }
-                removeTestCase={() =>
+                  }
+                  removeTestCase={() =>
                     removeTestCase(idx, formData, setFormData)
-                }
+                  }
                 />
-            ))}
+              ))}
             </Stack>
           </div>
           <CustomLabel>Additional comments: </CustomLabel>
