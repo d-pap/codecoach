@@ -115,6 +115,7 @@ const ChatBox = ({ problem }) => {
           whiteSpace: 'pre-wrap',
           overflowX: 'auto',
           borderRadius: 1,
+          fontSize: '0.80rem',
           '& code': {
             bgcolor: 'grey.800',
             p: 0.5,
