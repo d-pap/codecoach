@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import SendChat from './AIChat'
-import {
-  Box,
-  TextField,
-  Button,
-  Paper,
-  CircularProgress,
-  Typography,
-} from '@mui/material'
+import { Box, TextField, Button, Paper, CircularProgress } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -15,10 +8,10 @@ import remarkGfm from 'remark-gfm'
 const getChatHistory = (problemId) => {
   try {
     const history = localStorage.getItem(`chatHistory-${problemId}`)
-    return history ? JSON.parse(history) : { convoId: null, data: [] }
+    return history ? JSON.parse(history) : { conversation_id: null, data: [] }
   } catch (error) {
     console.error('Failed to parse chat history:', error)
-    return { convoId: null, data: [] }
+    return { conversation_id: null, data: [] }
   }
 }
 
@@ -32,11 +25,12 @@ const clearChatHistory = (problemId) => {
   localStorage.removeItem(`chatHistory-${problemId}`)
 }
 
+// ChatBox component to display chat history and send messages
 const ChatBox = ({ problem }) => {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [currentChatHistory, setCurrentChatHistory] = useState({
-    convoId: null,
+    conversation_id: null,
     data: [],
   })
 
@@ -46,13 +40,15 @@ const ChatBox = ({ problem }) => {
     if (Array.isArray(history.data)) {
       setCurrentChatHistory(history)
     } else {
-      setCurrentChatHistory({ convoId: null, data: [] })
+      setCurrentChatHistory({ conversation_id: null, data: [] })
     }
   }, [problem._id])
+
   const handleInputChange = (e) => {
     setInput(e.target.value)
   }
 
+  // Function to send a message to the AI model
   const handleSend = async () => {
     if (input.trim() === '') return
 
@@ -67,18 +63,26 @@ const ChatBox = ({ problem }) => {
     setIsLoading(true)
 
     try {
-      const query = await SendChat(problem.title, problem.description, input)
+      const conversation_id = currentChatHistory.conversation_id
 
-      console.log('Response:', query)
+      const query = await SendChat(
+        problem.title,
+        problem.description,
+        input,
+        conversation_id
+      )
 
       const updatedHistory = {
         ...newHistory,
-        data: [...newHistory.data, { role: 'assistant', content: query }],
+        data: [
+          ...newHistory.data,
+          { role: 'assistant', content: query.response },
+        ],
       }
 
-      // Update convoId if it's provided in the response
-      if (query.convoId) {
-        updatedHistory.convoId = query.convoId
+      // Update conversation_id if it's provided in the response
+      if (query.conversation_id) {
+        updatedHistory.conversation_id = query.conversation_id
       }
 
       setCurrentChatHistory(updatedHistory)
@@ -99,10 +103,18 @@ const ChatBox = ({ problem }) => {
     }
   }
 
+  // Function to delete chat history
   const handleDelete = () => {
     clearChatHistory(problem._id)
-    setCurrentChatHistory({ convoId: null, data: [] })
+    setCurrentChatHistory({ conversation_id: null, data: [] })
     setInput('')
+  }
+
+  // Handle Enter key press in the input field
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter' && !isLoading) {
+      handleSend()
+    }
   }
 
   const formatChatContent = (content) => {
@@ -136,6 +148,7 @@ const ChatBox = ({ problem }) => {
       </Box>
     )
   }
+
   return (
     <Paper
       elevation={3}
@@ -250,6 +263,7 @@ const ChatBox = ({ problem }) => {
         <TextField
           value={input}
           onChange={handleInputChange}
+          onKeyPress={handleKeyPress}
           placeholder="Type a message..."
           variant="outlined"
           fullWidth

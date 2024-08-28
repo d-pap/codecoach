@@ -33,12 +33,14 @@ const ScrollableTabsContainer = styled.div`
   overflow-x: auto;
 `
 
+// The items to be displayed in the tabs
 CustomTabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
 }
 
+// The tab layout
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,

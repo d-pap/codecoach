@@ -119,6 +119,7 @@ const ProblemDetailLayout = ({ problem, problemDetails, codeEditor }) => {
     }
   }, [])
 
+  // Get the props for the horizontal resizable column
   function getResizableHorizontalColumnProps() {
     const windowWidth = window.innerWidth
     const minWidth = windowWidth * 0.3
@@ -127,6 +128,7 @@ const ProblemDetailLayout = ({ problem, problemDetails, codeEditor }) => {
     return { initialWidth, maxWidth, minWidth }
   }
 
+  // Toggle the chat drawer
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen)
   }

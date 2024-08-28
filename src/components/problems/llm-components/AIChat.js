@@ -4,16 +4,12 @@
 
 import { createNewChatConvo, sendChatMessage } from '../../../api'
 
+// Format the input and send it to the AI model
 const SendChat = async (title, description, input, convoId) => {
   let id = convoId
-  let formatedInput =
-    'Problem title: ' +
-    title +
-    'Problem Description:' +
-    description +
-    ' Question: ' +
-    input
+  let formatedInput = ''
 
+  // If there is no conversation id, create a new one
   try {
     if (id == null) {
       // create a new chat conversation
@@ -21,12 +17,18 @@ const SendChat = async (title, description, input, convoId) => {
       id = newChatId.convoId
     }
 
+    formatedInput =
+      'Problem title: ' +
+      title +
+      'Problem Description:' +
+      description +
+      ' Question: ' +
+      input
+
     // Initiating the conversation
     const chat = await sendChatMessage(id, formatedInput)
 
-    console.log('Chat response:', chat)
-
-    return chat.response
+    return chat
   } catch (error) {
     console.error('Error in SendChat:', error)
     throw error
