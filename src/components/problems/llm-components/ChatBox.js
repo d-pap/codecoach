@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import SendChat from './AIChat'
-import {
-  Box,
-  TextField,
-  Button,
-  Paper,
-  CircularProgress,
-  Typography,
-} from '@mui/material'
+import { Box, TextField, Button, Paper, CircularProgress } from '@mui/material'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 // Function to retrieve chat history from localStorage
 const getChatHistory = (problemId) => {
-  const history = localStorage.getItem(`chatHistory-${problemId}`)
-  return history ? JSON.parse(history) : []
+  try {
+    const history = localStorage.getItem(`chatHistory-${problemId}`)
+    return history ? JSON.parse(history) : { conversation_id: null, data: [] }
+  } catch (error) {
+    console.error('Failed to parse chat history:', error)
+    return { conversation_id: null, data: [] }
+  }
 }
 
 // Function to save chat history to localStorage
@@ -25,25 +25,37 @@ const clearChatHistory = (problemId) => {
   localStorage.removeItem(`chatHistory-${problemId}`)
 }
 
+// ChatBox component to display chat history and send messages
 const ChatBox = ({ problem }) => {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [currentChatHistory, setCurrentChatHistory] = useState([])
+  const [currentChatHistory, setCurrentChatHistory] = useState({
+    conversation_id: null,
+    data: [],
+  })
 
   // Retrieve chat history on component mount
   useEffect(() => {
     const history = getChatHistory(problem._id)
-    setCurrentChatHistory(history)
+    if (Array.isArray(history.data)) {
+      setCurrentChatHistory(history)
+    } else {
+      setCurrentChatHistory({ conversation_id: null, data: [] })
+    }
   }, [problem._id])
 
   const handleInputChange = (e) => {
     setInput(e.target.value)
   }
 
+  // Function to send a message to the AI model
   const handleSend = async () => {
     if (input.trim() === '') return
 
-    const newHistory = [...currentChatHistory, { role: 'user', content: input }]
+    const newHistory = {
+      ...currentChatHistory,
+      data: [...currentChatHistory.data, { role: 'user', content: input }],
+    }
     setCurrentChatHistory(newHistory)
     saveChatHistory(problem._id, newHistory)
 
@@ -51,27 +63,39 @@ const ChatBox = ({ problem }) => {
     setIsLoading(true)
 
     try {
-      const response = await SendChat(
+      const conversation_id = currentChatHistory.conversation_id
+
+      const query = await SendChat(
         problem.title,
         problem.description,
-        problem.hint,
-        newHistory
+        input,
+        conversation_id
       )
 
-      console.log('Response:', response)
-
-      const updatedHistory = [
+      const updatedHistory = {
         ...newHistory,
-        { role: 'assistant', content: response },
-      ]
+        data: [
+          ...newHistory.data,
+          { role: 'assistant', content: query.response },
+        ],
+      }
+
+      // Update conversation_id if it's provided in the response
+      if (query.conversation_id) {
+        updatedHistory.conversation_id = query.conversation_id
+      }
+
       setCurrentChatHistory(updatedHistory)
       saveChatHistory(problem._id, updatedHistory)
     } catch (error) {
       console.error('Failed to send chat:', error)
-      const updatedHistory = [
+      const updatedHistory = {
         ...newHistory,
-        { role: 'assistant', content: 'Failed to get response from model' },
-      ]
+        data: [
+          ...newHistory.data,
+          { role: 'assistant', content: 'Failed to get response from model' },
+        ],
+      }
       setCurrentChatHistory(updatedHistory)
       saveChatHistory(problem._id, updatedHistory)
     } finally {
@@ -79,10 +103,50 @@ const ChatBox = ({ problem }) => {
     }
   }
 
+  // Function to delete chat history
   const handleDelete = () => {
     clearChatHistory(problem._id)
-    setCurrentChatHistory([])
+    setCurrentChatHistory({ conversation_id: null, data: [] })
     setInput('')
+  }
+
+  // Handle Enter key press in the input field
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter' && !isLoading) {
+      handleSend()
+    }
+  }
+
+  const formatChatContent = (content) => {
+    return (
+      <Box
+        sx={{
+          bgcolor: 'grey.900',
+          color: 'success.contrastText',
+          p: 1,
+          whiteSpace: 'pre-wrap',
+          overflowX: 'auto',
+          borderRadius: 1,
+          fontSize: '0.80rem',
+          '& code': {
+            bgcolor: 'grey.800',
+            p: 0.5,
+            borderRadius: 1,
+          },
+          '& pre': {
+            bgcolor: 'grey.800',
+            p: 1,
+            borderRadius: 1,
+            overflowX: 'auto',
+          },
+          '& ul, & ol': {
+            pl: 4,
+          },
+        }}
+      >
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+      </Box>
+    )
   }
 
   return (
@@ -100,30 +164,29 @@ const ChatBox = ({ problem }) => {
           borderRadius: 1,
         }}
       >
-        {currentChatHistory.map((chat, index) => (
-          <Box
-            key={index}
-            sx={{
-              alignSelf: chat.role === 'user' ? 'flex-end' : 'flex-start',
-              bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.300',
-              color:
-                chat.role === 'user' ? 'primary.contrastText' : 'text.primary',
-              borderRadius: 1,
-              p: 1,
-              mb: 1,
-              maxWidth: '100%',
-              wordBreak: 'break-word',
-            }}
-          >
-            {chat.role === 'assistant' ? (
-              <Typography sx={{ whiteSpace: 'pre-wrap' }}>
-                {chat.content}
-              </Typography>
-            ) : (
-              chat.content
-            )}
-          </Box>
-        ))}
+        {Array.isArray(currentChatHistory.data) &&
+          currentChatHistory.data.map((chat, index) => (
+            <Box
+              key={index}
+              sx={{
+                alignSelf: chat.role === 'user' ? 'flex-end' : 'flex-start',
+                bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.300',
+                color:
+                  chat.role === 'user'
+                    ? 'primary.contrastText'
+                    : 'text.primary',
+                borderRadius: 1,
+                p: 1,
+                mb: 1,
+                maxWidth: '100%',
+                wordBreak: 'break-word',
+              }}
+            >
+              {chat.role === 'assistant'
+                ? formatChatContent(chat.content)
+                : chat.content}
+            </Box>
+          ))}
         {isLoading && (
           <Box
             sx={{
@@ -156,7 +219,7 @@ const ChatBox = ({ problem }) => {
           disabled={isLoading}
           sx={{
             width: '30%',
-            mx: .5,
+            mx: 0.5,
             mb: 1,
           }}
         >
@@ -167,7 +230,7 @@ const ChatBox = ({ problem }) => {
           disabled={isLoading}
           sx={{
             width: '30%',
-            mx: .5,
+            mx: 0.5,
             mb: 1,
           }}
         >
@@ -179,7 +242,7 @@ const ChatBox = ({ problem }) => {
           color="error"
           sx={{
             width: '30%',
-            mx: .5,
+            mx: 0.5,
             mb: 1,
           }}
           onClick={handleDelete}
@@ -200,6 +263,7 @@ const ChatBox = ({ problem }) => {
         <TextField
           value={input}
           onChange={handleInputChange}
+          onKeyPress={handleKeyPress}
           placeholder="Type a message..."
           variant="outlined"
           fullWidth

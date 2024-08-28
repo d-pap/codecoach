@@ -13,6 +13,7 @@ function VerticalResizableColumn({
   const [height, setHeight] = useState(initialHeight)
   const resizableRef = useRef(null)
 
+  // Handle resizing on mouse move or touch move events
   const handleResize = useCallback(
     (startPosition, event) => {
       const handleMove = (moveEvent) => {
@@ -42,6 +43,7 @@ function VerticalResizableColumn({
     [height, minHeight, maxHeight]
   )
 
+  // Handle resizing on mouse down
   const handleMouseDown = useCallback(
     (e) => {
       handleResize(e.clientY, e)
@@ -49,6 +51,7 @@ function VerticalResizableColumn({
     [handleResize]
   )
 
+  // Handle resizing on touch start
   const handleTouchStart = useCallback(
     (e) => {
       handleResize(e.touches[0].clientY, e)
