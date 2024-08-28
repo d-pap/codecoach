@@ -6,9 +6,7 @@ import { useNavigate } from 'react-router-dom'
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  width: '95%',
-  height: '125px',
-  margin: '1px',
+  width: '100%',
   cursor: 'pointer',
   borderRadius: theme.spacing(2),
   transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
@@ -21,8 +19,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
 const StyledCardContent = styled(CardContent)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  height: '100%', // Ensure CardContent takes full height of the Card
-  //padding: theme.spacing(2),
+  //height: '100%', // Ensure CardContent takes full height of the Card
 }))
 
 const CardTitle = styled(Typography)(({ theme }) => ({
@@ -52,11 +49,12 @@ const ProblemCardLayout = ({ problem }) => {
 
   return (
     <div
+      //* component for each problem card
       style={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100%',
+        //height: '100%',
       }}
     >
       <StyledCard
@@ -64,6 +62,9 @@ const ProblemCardLayout = ({ problem }) => {
         variant="outlined"
       >
         <StyledCardContent>
+          <Typography variant="overline" color="textSecondary">
+            {problem.contestYear} {problem.contestRegion}
+          </Typography>
           <CardTitle variant="h5" gutterBottom>
             {problem.title}
           </CardTitle>

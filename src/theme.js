@@ -119,6 +119,29 @@ const theme = createTheme({
         },
       },
     },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16, // select border radius
+          fontSize: '0.875rem',
+        },
+      },
+    },
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          borderRadius: 16, // menu border radius
+        },
+      },
+    },
+    MuiInputBase: {
+      // search box on icpc page
+      styleOverrides: {
+        root: {
+          fontSize: '0.875rem',
+        },
+      },
+    },
   },
 })
 
