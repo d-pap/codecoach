@@ -276,11 +276,9 @@ const OutputWindow = ({ output, currentThemeStyle }) => (
       wordWrap: 'break-word',
       boxSize: 'border-box',
       maxHeight: '8em',
+      height: '8em',
     }}
   >
-    ssss ssssssss ssssssssss sssssssssssssssssss ssssssss s ssss ssssssss
-    ssssssssss sssssssssssssssssss ssssssss
-    ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
     {output}
   </Box>
 )
