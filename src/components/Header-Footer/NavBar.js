@@ -25,19 +25,16 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
 import { styled, alpha } from '@mui/material/styles'
 
-// Styled NavLink component using MUI
+// Styled Nav buttons
 const NavLink = styled(Button)(({ theme }) => ({
-  // color: '#DEF9C4',
-  color: '#1f1f1f', // Text color
+  color: theme.palette.text.primary,
   textDecoration: 'none',
-  borderRadius: theme.spacing(2), // rounded corners for navbar buttons
-  whiteSpace: 'nowrap', // Prevent text wrapping
-  margin: '5px', // Add more margin between links
+  borderRadius: theme.spacing(2),
+  whiteSpace: 'nowrap',
+  margin: '5px',
   '&:hover': {
-    //background: '#9CDBA6',
-    background: alpha('#1f1f1f', 0.1),
-    color: '#1f1f1f',
-    transition: 'background-color 0.3s ease',
+    background: alpha(theme.palette.text.primary, 0.1),
+    transition: 'background-color 0.2s ease',
   },
 }))
 
@@ -81,12 +78,10 @@ const Navbar = () => {
   const menuId = 'primary-search-account-menu'
 
   return (
-    // <AppBar position="static" sx={{ borderBottom: "2px solid #468585", backgroundColor: "transparent" }}>
     <AppBar
       position="static"
       sx={{
         backgroundColor: 'transparent',
-        borderRadius: '6px', // rounded corners for button container
         boxShadow: 'none', // remove shadow
       }}
     >
@@ -99,28 +94,28 @@ const Navbar = () => {
       >
         <IconButton
           edge="start"
-          color="inherit"
           aria-label="menu"
           onClick={handleDrawerToggle}
-          sx={{ display: { xs: 'block', sm: 'none' } }}
+          sx={{
+            display: { xs: 'block', sm: 'none' },
+            p: (theme) => theme.spacing(2),
+            color: (theme) => theme.palette.text.primary,
+            '&:hover': {
+              background: 'none',
+            },
+          }}
         >
           <MenuIcon />
         </IconButton>
-        <Drawer
-          anchor="right"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          sx={{
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
-          }}
-        >
+        <Drawer anchor="right" open={mobileOpen} onClose={handleDrawerToggle}>
           {drawer}
         </Drawer>
         <Box
           sx={{
             display: { xs: 'none', sm: 'flex' },
             alignItems: 'center',
-            p: '20px', //! fix this - there was nothing set here for padding
+            p: (theme) => theme.spacing(2),
+            //! fix this - there was nothing set here for padding
           }}
         >
           <NavLink component={RouterLink} to="/" activeClassName="active">
@@ -149,19 +144,19 @@ const Navbar = () => {
           sx={{
             display: 'flex',
             alignItems: 'center',
-            padding: '15px',
-            paddingRight: '20px',
+            pr: (theme) => theme.spacing(1),
+            pl: (theme) => theme.spacing(1),
           }}
         >
           <IconButton
-            edge="end"
+            //edge="end"
             aria-label="account of current user"
             aria-controls={menuId}
             aria-haspopup="true"
             onClick={handleProfileMenuOpen}
             //color="default" //! color of the icon (it was 'inherit' when header was green and we didnt have sx prop below either:)
             sx={{
-              color: '#1f1f1f', //! Icon color
+              color: (theme) => theme.palette.text.primary,
               '&:hover': {
                 background: alpha('#1f1f1f', 0.1),
                 color: '#1f1f1f',

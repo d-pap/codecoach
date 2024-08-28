@@ -8,6 +8,58 @@ import Toolbar from '@mui/material/Toolbar'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
+// component to render language and theme dropdowns
+const EditorSelect = ({ value, onChange, options, currentThemeStyle, sx }) => {
+  return (
+    <Select
+      size="small"
+      value={value}
+      onChange={onChange}
+      sx={{
+        fontSize: (theme) => theme.typography.button.fontSize,
+        color: currentThemeStyle.color,
+        backgroundColor: currentThemeStyle.marginColor,
+        minWidth: '100px',
+        marginLeft: '20px',
+        borderRadius: (theme) => theme.spacing(2),
+        '& .MuiOutlinedInput-notchedOutline': {
+          borderColor: currentThemeStyle.color,
+        },
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+          borderColor: currentThemeStyle.color,
+        },
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+          borderColor: currentThemeStyle.color,
+        },
+        '& .MuiSvgIcon-root': {
+          color: currentThemeStyle.color,
+        },
+        height: '30px', // height of select box
+        ...sx, //* to allow additional styles to be passed in
+      }}
+      MenuProps={{
+        PaperProps: {
+          sx: {
+            borderRadius: (theme) => theme.spacing(2),
+            backgroundColor: currentThemeStyle.marginColor,
+            '& .MuiMenuItem-root': {
+              fontSize: (theme) => theme.typography.button.fontSize,
+              color: currentThemeStyle.color,
+              borderRadius: (theme) => theme.spacing(2),
+            },
+          },
+        },
+      }}
+    >
+      {options.map((option) => (
+        <MenuItem key={option.value} value={option.value}>
+          {option.label}
+        </MenuItem>
+      ))}
+    </Select>
+  )
+}
+
 const CodeEditorToolbar = ({
   theme,
   language,
@@ -15,99 +67,52 @@ const CodeEditorToolbar = ({
   setLanguage,
   currentThemeStyle,
 }) => {
+  const languageOptions = [
+    { value: 'python', label: 'Python' },
+    // add more languages here
+  ]
+
+  const themeOptions = [
+    { value: 'monokai', label: 'Monokai' },
+    { value: 'dracula', label: 'Dracula' },
+    { value: 'one_dark', label: 'One Dark' },
+    { value: 'terminal', label: 'Terminal' },
+    { value: 'github', label: 'GitHub Light' },
+    { value: 'xcode', label: 'XCode Light' },
+  ]
+
   return (
     <AppBar
       position="static"
       sx={{
-        backgroundColor: currentThemeStyle.backgroundColor,
+        backgroundColor: currentThemeStyle.marginColor,
         color: currentThemeStyle.color,
+        boxShadow: 'none',
+        borderRadius: (theme) => theme.spacing(2),
       }}
     >
-      <Toolbar variant="dense" sx={{ minHeight: '50px' }}>
-        <Select
-          size="small"
+      <Toolbar
+        variant="dense"
+        sx={{
+          minHeight: '50px',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'flex-start',
+          pl: 2,
+        }}
+      >
+        <EditorSelect
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
-          sx={{
-            fontSize: '14px',
-            fontFamily: 'Ubuntu', // font family of the select input itself
-            color: currentThemeStyle.color,
-            backgroundColor: currentThemeStyle.backgroundColor,
-            minWidth: '100px',
-            marginLeft: '20px',
-            borderRadius: '6px',
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: currentThemeStyle.color,
-            },
-            '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: currentThemeStyle.color,
-            },
-            '& .MuiSvgIcon-root': {
-              fontSize: '14px',
-              color: currentThemeStyle.color,
-            },
-            height: '30px', // height of language select box
-          }}
-          MenuProps={{
-            PaperProps: {
-              sx: {
-                '& .MuiMenuItem-root': {
-                  fontSize: '14px', // font size of the dropdown items
-                  fontFamily: 'Ubuntu', // font family of the dropdown items
-                  padding: '3px 10px', // padding of the dropdown items
-                  borderRadius: '10px', // border radius of the dropdown items
-                },
-              },
-            },
-          }}
-        >
-          <MenuItem value="python">Python</MenuItem>
-        </Select>
-
-        <Select
-          size="small"
+          options={languageOptions}
+          currentThemeStyle={currentThemeStyle}
+        />
+        <EditorSelect
           value={theme}
           onChange={(e) => setTheme(e.target.value)}
-          sx={{
-            fontSize: '14px', // font size of the select input itself
-            fontFamily: 'Ubuntu', // font family of the select input itself
-            color: currentThemeStyle.color,
-            backgroundColor: currentThemeStyle.backgroundColor,
-            minWidth: '100px',
-            marginLeft: '10px',
-            borderRadius: '6px',
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: currentThemeStyle.color,
-            },
-            '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: currentThemeStyle.color,
-            },
-            '& .MuiSvgIcon-root': {
-              fontSize: '14px',
-              color: currentThemeStyle.color,
-            },
-            height: '30px', // height of theme select box
-          }}
-          MenuProps={{
-            PaperProps: {
-              sx: {
-                '& .MuiMenuItem-root': {
-                  fontSize: '14px', // font size of the theme dropdown items
-                  fontFamily: 'Ubuntu', // font family of the dropdown items
-                  padding: '3px 10px', // padding of the dropdown items
-                  borderRadius: '10px', // border radius of the dropdown items
-                },
-              },
-            },
-          }}
-        >
-          <MenuItem value="monokai">Monokai</MenuItem>
-          <MenuItem value="dracula">Dracula</MenuItem>
-          <MenuItem value="one_dark">One Dark</MenuItem>
-          <MenuItem value="terminal">Terminal</MenuItem>
-          <MenuItem value="github">GitHub Light</MenuItem>
-          <MenuItem value="xcode">XCode Light</MenuItem>
-        </Select>
+          options={themeOptions}
+          currentThemeStyle={currentThemeStyle}
+        />
       </Toolbar>
     </AppBar>
   )

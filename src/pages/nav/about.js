@@ -15,7 +15,7 @@ const About = () => {
           component="h1"
           gutterBottom
           align="center"
-          sx={{ mb: 4, fontFamily: 'Ubuntu' }}
+          sx={{ mb: 6 }}
         >
           Courses
         </Typography>
