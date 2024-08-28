@@ -94,25 +94,6 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                   output={output}
                 />
               </Box>
-              {/* <Box
-                //* output window
-                sx={{
-                  mt: 2,
-                  mb: 4, //! added margin bottom - important for proper layout
-                  p: 2,
-                  backgroundColor: '#272822',
-                  color: '#f8f8f2',
-                  border: 1,
-                  borderColor: '#75715e',
-                  borderRadius: (theme) => theme.spacing(2),
-                  fontFamily: 'monospace',
-                  whiteSpace: 'pre-wrap',
-                  height: '20vh',
-                  overflowY: 'auto',
-                }}
-              >
-                {output}
-              </Box> */}
               <Box
                 //* chat bubble
                 sx={{
