@@ -17,7 +17,7 @@ const StyledPanelResizeHandle = styled(PanelResizeHandle)`
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #888; /* Change color on hover */
+    background-color: #888;
   }
 
   &::before {
@@ -44,7 +44,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
         sx={{
           display: 'flex',
           height: 'calc(100vh - 85px)',
-          backgroundColor: '#f0f0f0',
+          backgroundColor: (theme) => theme.palette.background.default,
         }}
       >
         <PanelGroup direction="horizontal">
@@ -52,8 +52,9 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
             <Box
               //* left panel
               sx={{
-                p: 2,
-                backgroundColor: '#f0f0f0',
+                pt: 2,
+                //pr: 2,
+                backgroundColor: (theme) => theme.palette.background.default,
                 display: 'flex',
                 flexDirection: 'column',
                 overflowY: 'auto',
@@ -67,9 +68,10 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
             <Box
               //* right panel
               sx={{
-                p: 2,
+                pt: 2,
+                pl: 2,
                 height: '100%',
-                backgroundColor: '#f0f0f0',
+                backgroundColor: (theme) => theme.palette.background.default,
                 display: 'flex',
                 flexDirection: 'column',
                 overflowY: 'auto',
@@ -79,8 +81,8 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                 //* code editor container
                 sx={{
                   flex: 1,
-                  width: '100%',
-                  height: '100%',
+                  //width: '100%', //! controlled by CodeEditor?
+                  //height: '100%', //! controlled by CodeEditor?
                   display: 'flex',
                   borderRadius: 1,
                 }}
@@ -89,13 +91,14 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                   code={code}
                   setCode={setCode}
                   setOutput={setOutput}
+                  output={output}
                 />
               </Box>
-              <Box
+              {/* <Box
                 //* output window
                 sx={{
                   mt: 2,
-                  mb: 4, //! added margin bottom
+                  mb: 4, //! added margin bottom - important for proper layout
                   p: 2,
                   backgroundColor: '#272822',
                   color: '#f8f8f2',
@@ -109,7 +112,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                 }}
               >
                 {output}
-              </Box>
+              </Box> */}
               <Box
                 //* chat bubble
                 sx={{

@@ -14,9 +14,7 @@ import { useNavigate } from 'react-router-dom'
 // Styled components
 const OnboardingCard = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
-  //backgroundColor: '#FFF3CD',
   backgroundColor: theme.palette.caution.bg,
-  //color: '#856404',
   color: theme.palette.caution.main,
 }))
 

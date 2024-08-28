@@ -109,7 +109,7 @@ function Problems() {
     <Box sx={{ bgcolor: 'background.default', py: 6 }}>
       <Container maxWidth="lg">
         <Typography
-          variant="h3"
+          variant="h2"
           component="h1"
           gutterBottom
           align="center"

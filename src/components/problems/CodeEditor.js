@@ -198,43 +198,49 @@ const themeStyles = {
     backgroundColor: '#272822',
     color: '#f8f8f2',
     borderColor: '#3e3d32',
+    marginColor: '#2F3129',
   },
   github: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#ffffff',
     color: '#333333',
     borderColor: '#cccccc',
+    marginColor: '#e8e8e8',
   },
   terminal: {
     backgroundColor: '#000000',
     color: '#00ff00',
     borderColor: '#333333',
+    marginColor: '#1a0005',
   },
   one_dark: {
     backgroundColor: '#282c34',
     color: '#abb2bf',
     borderColor: '#4b5263',
+    marginColor: '#282c34',
   },
   dracula: {
     backgroundColor: '#282a36',
     color: '#f8f8f2',
     borderColor: '#44475a',
+    marginColor: '#282a36',
   },
   xcode: {
     backgroundColor: '#ffffff',
     color: '#000000',
     borderColor: '#d1d1d1',
+    marginColor: '#e8e8e8',
   },
 }
 
 const EditorButtons = ({ handleRunCode, currentThemeStyle }) => (
-  <Box sx={{ paddingBottom: 1, paddingRight: 1 }}>
+  <Box sx={{ pt: 1, pr: 1 }}>
     <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
       <Button
         size="small"
         onClick={handleRunCode}
         variant="text"
         startIcon={<PlayArrow />}
-        sx={{ borderRadius: 2, color: currentThemeStyle.color }}
+        sx={{ color: currentThemeStyle.color }}
       >
         Run
       </Button>
@@ -245,7 +251,7 @@ const EditorButtons = ({ handleRunCode, currentThemeStyle }) => (
         sx={{
           backgroundColor: 'green',
           '&:hover': { backgroundColor: 'darkgreen' },
-          borderRadius: 2,
+          borderRadius: (theme) => theme.spacing(2),
         }}
       >
         Submit
@@ -254,7 +260,32 @@ const EditorButtons = ({ handleRunCode, currentThemeStyle }) => (
   </Box>
 )
 
-const CodeEditor = ({ code, setCode, setOutput }) => {
+const OutputWindow = ({ output, currentThemeStyle }) => (
+  <Box
+    sx={{
+      fontFamily: (theme) => theme.typography.code,
+      p: 2,
+      m: 1,
+      backgroundColor: currentThemeStyle.backgroundColor,
+      color: currentThemeStyle.color,
+      border: 1,
+      borderColor: currentThemeStyle.borderColor,
+      borderRadius: (theme) => theme.spacing(2),
+      overflow: 'auto',
+      whiteSpace: 'pre-wrap',
+      wordWrap: 'break-word',
+      boxSize: 'border-box',
+      maxHeight: '8em',
+    }}
+  >
+    ssss ssssssss ssssssssss sssssssssssssssssss ssssssss s ssss ssssssss
+    ssssssssss sssssssssssssssssss ssssssss
+    ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+    {output}
+  </Box>
+)
+
+const CodeEditor = ({ code, setCode, setOutput, output }) => {
   const [theme, setTheme] = useState('monokai')
   const [language, setLanguage] = useState('python')
 
@@ -282,12 +313,13 @@ const CodeEditor = ({ code, setCode, setOutput }) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100%',
+        // height: '100%', //! didnt change anything when removed. also set in Layout file
         width: '100%',
         border: 1,
         borderColor: currentThemeStyle.borderColor,
-        borderRadius: 2,
-        backgroundColor: currentThemeStyle.backgroundColor,
+        borderRadius: (theme) => theme.spacing(2),
+        backgroundColor: currentThemeStyle.marginColor,
+        marginBottom: 4, //! important for proper layout
       }}
     >
       <CodeEditorToolbar
@@ -322,6 +354,7 @@ const CodeEditor = ({ code, setCode, setOutput }) => {
         handleRunCode={handleRunCode}
         currentThemeStyle={currentThemeStyle}
       />
+      <OutputWindow output={output} currentThemeStyle={currentThemeStyle} />
     </Box>
   )
 }

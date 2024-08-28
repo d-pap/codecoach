@@ -8,7 +8,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
-// component to render the dropdowns for selecting language and theme
+// component to render language and theme dropdowns
 const EditorSelect = ({ value, onChange, options, currentThemeStyle, sx }) => {
   return (
     <Select
@@ -16,9 +16,9 @@ const EditorSelect = ({ value, onChange, options, currentThemeStyle, sx }) => {
       value={value}
       onChange={onChange}
       sx={{
-        fontSize: '14px',
+        fontSize: (theme) => theme.typography.button.fontSize,
         color: currentThemeStyle.color,
-        backgroundColor: currentThemeStyle.backgroundColor,
+        backgroundColor: currentThemeStyle.marginColor,
         minWidth: '100px',
         marginLeft: '20px',
         borderRadius: (theme) => theme.spacing(2),
@@ -32,7 +32,6 @@ const EditorSelect = ({ value, onChange, options, currentThemeStyle, sx }) => {
           borderColor: currentThemeStyle.color,
         },
         '& .MuiSvgIcon-root': {
-          fontSize: '14px',
           color: currentThemeStyle.color,
         },
         height: '30px', // height of select box
@@ -42,11 +41,10 @@ const EditorSelect = ({ value, onChange, options, currentThemeStyle, sx }) => {
         PaperProps: {
           sx: {
             borderRadius: (theme) => theme.spacing(2),
-            backgroundColor: currentThemeStyle.backgroundColor,
+            backgroundColor: currentThemeStyle.marginColor,
             '& .MuiMenuItem-root': {
-              fontSize: '14px',
+              fontSize: (theme) => theme.typography.button.fontSize,
               color: currentThemeStyle.color,
-              padding: '3px 10px',
               borderRadius: (theme) => theme.spacing(2),
             },
           },
@@ -87,7 +85,7 @@ const CodeEditorToolbar = ({
     <AppBar
       position="static"
       sx={{
-        backgroundColor: currentThemeStyle.backgroundColor,
+        backgroundColor: currentThemeStyle.marginColor,
         color: currentThemeStyle.color,
         boxShadow: 'none',
         borderRadius: (theme) => theme.spacing(2),
@@ -114,7 +112,6 @@ const CodeEditorToolbar = ({
           onChange={(e) => setTheme(e.target.value)}
           options={themeOptions}
           currentThemeStyle={currentThemeStyle}
-          sx={{ marginLeft: '10px' }} // Additional styles for spacing
         />
       </Toolbar>
     </AppBar>

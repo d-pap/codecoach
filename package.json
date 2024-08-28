@@ -27,7 +27,6 @@
     "react-resizable-panels": "^2.1.1",
     "react-router-dom": "^6.26.0",
     "react-scripts": "5.0.1",
-    "react-split": "^2.0.14",
     "styled-components": "^5.3.10",
     "web-vitals": "^2.1.4"
   },

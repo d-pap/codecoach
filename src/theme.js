@@ -11,22 +11,22 @@ const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      // for buttons bg, active links
+      // for buttons, active links/tabs
       main: '#6C63FF',
     },
     background: {
-      default: '#fffffe', // main background color
+      default: '#fffffe',
       paper: '#fffffe', // card background, etc.
-      caution: '#FFF3CD', // caution color
     },
     text: {
-      primary: '#333333', // default font color
-      secondary: '#6C63FF', // secondary font color
+      primary: '#333333',
+      //secondary: '#6C63FF', // search box bg, unactive tabs
     },
-    divider: '#0000001f', // default color
+    divider: '#0000001f',
     caution: {
-      main: '#856404', // caution font color
-      bg: '#FFF3CD', // caution background color
+      // yellow card on home page
+      main: '#856404', // font color
+      bg: '#FFF3CD',
     },
   },
   shape: {
@@ -46,7 +46,7 @@ const theme = createTheme({
       fontSize: '6rem',
       lineHeight: 1.167, // default h1 line height
       letterSpacing: '-0.01562em', // default h1 letter spacing
-      color: '#000000', //TODO: update color
+      color: '#333333', //TODO: update color
     },
     h2: {
       fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
@@ -94,6 +94,11 @@ const theme = createTheme({
       lineHeight: 1.43, // default body text line height
       letterSpacing: '0.01071em', // default body text letter spacing
       color: '#333333',
+    },
+    code: {
+      // for code output window Box
+      fontFamily: 'monospace',
+      fontSize: '14', // match ace editor font size
     },
     button: {
       //TODO: update this
