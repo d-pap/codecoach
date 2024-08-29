@@ -207,14 +207,14 @@ const Navbar = () => {
               <ListItemIcon>
                 <Settings fontSize="small" />
               </ListItemIcon>
-              Settings
+              <ListItemText>Settings</ListItemText>
             </MenuItem>
 
             <MenuItem onClick={handleMenuClose}>
               <ListItemIcon>
                 <Logout fontSize="small" />
               </ListItemIcon>
-              Logout
+              <ListItemText>Logout</ListItemText>
             </MenuItem>
           </Menu>
         </Box>

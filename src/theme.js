@@ -1,13 +1,6 @@
 import { createTheme } from '@mui/material/styles'
 
 const theme = createTheme({
-  /**
-   * TODO:
-   * - fonts
-   * - colors for button hover, links(?)
-   * - divider color
-   *
-   */
   palette: {
     mode: 'light',
     primary: {
@@ -111,6 +104,13 @@ const theme = createTheme({
     },
   },
   components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16, // paper border radius
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
@@ -139,6 +139,23 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           fontSize: '0.875rem',
+        },
+      },
+    },
+    MuiListItem: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16, // list item border radius
+        },
+      },
+    },
+    MuiListItemText: {
+      styleOverrides: {
+        root: {
+          color: '#333333',
+          '& .MuiTypography-root': {
+            fontSize: '0.875rem',
+          },
         },
       },
     },
