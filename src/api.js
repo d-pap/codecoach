@@ -38,29 +38,6 @@ export async function addProblem(problem) {
   }
 }
 
-// * Mock function to simulate fetching interview questions
-// * Replace with actual API call to fetch interview questions when available
-export const fetchInterviews = async () => {
-  // Simulate an API call delay with a promise
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // Resolve with dummy data
-      resolve([
-        {
-          id: 1,
-          title: 'Interview Question 1',
-          description: 'This is a mock interview question.',
-        },
-        {
-          id: 2,
-          title: 'Interview Question 2',
-          description: 'This is another mock interview question.',
-        },
-      ])
-    }, 1000) // Simulate a 1-second delay
-  })
-}
-
 // Function for LLM interaction which returns a hint
 // Lambda function and APIGW endpoint. Currently works
 // as long as the LLM server is running locally
