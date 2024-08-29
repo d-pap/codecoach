@@ -1,15 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   AppBar,
   Box,
   Button,
   Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Grid,
-  TextField,
   Toolbar,
   Typography,
 } from '@mui/material'
@@ -48,24 +43,7 @@ const FeatureCard = styled(Box)(({ theme }) => ({
   boxShadow: theme.shadows[3],
 }))
 
-const LandingPage = ({ onLogin, onRegister }) => {
-  const [openLogin, setOpenLogin] = useState(false)
-  const [openRegister, setOpenRegister] = useState(false)
-
-  const handleOpenLogin = () => setOpenLogin(true)
-  const handleCloseLogin = () => setOpenLogin(false)
-  const handleOpenRegister = () => setOpenRegister(true)
-  const handleCloseRegister = () => setOpenRegister(false)
-  const handleLogin = () => {
-    // perform login logic
-    onLogin()
-  }
-
-  const handleRegister = () => {
-    // perform registration logic
-    onRegister()
-  }
-
+const LandingPage = ({ onGetStarted }) => {
   return (
     <Box>
       <HeaderSection position="static">
@@ -73,10 +51,10 @@ const LandingPage = ({ onLogin, onRegister }) => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             CodeCoach
           </Typography>
-          <Button color="inherit" onClick={handleOpenLogin}>
+          <Button color="inherit" onClick={onGetStarted}>
             Login
           </Button>
-          <Button variant="contained" onClick={handleOpenRegister}>
+          <Button variant="contained" onClick={onGetStarted}>
             Register
           </Button>
         </Toolbar>
@@ -94,7 +72,7 @@ const LandingPage = ({ onLogin, onRegister }) => {
             variant="contained"
             size="large"
             sx={{ mt: 2 }}
-            onClick={handleOpenRegister}
+            onClick={onGetStarted}
           >
             Get Started
           </Button>
@@ -138,78 +116,6 @@ const LandingPage = ({ onLogin, onRegister }) => {
           </Grid>
         </Grid>
       </Container>
-
-      <Dialog open={openLogin} onClose={handleCloseLogin}>
-        <DialogTitle>Login</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="email"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="outlined"
-          />
-          <TextField
-            margin="dense"
-            id="password"
-            label="Password"
-            type="password"
-            fullWidth
-            variant="outlined"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseLogin}>Cancel</Button>
-          <Button onClick={handleLogin}>Login</Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog open={openRegister} onClose={handleCloseRegister}>
-        <DialogTitle>Account Details</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Full Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-          />
-          <TextField
-            margin="dense"
-            id="email"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="outlined"
-          />
-          <TextField
-            margin="dense"
-            id="password"
-            label="Password"
-            type="password"
-            fullWidth
-            variant="outlined"
-          />
-          <TextField
-            margin="dense"
-            id="confirmPassword"
-            label="Confirm Password"
-            type="password"
-            fullWidth
-            variant="outlined"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseRegister}>Cancel</Button>
-          <Button variant="contained" onClick={handleRegister}>
-            Register
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   )
 }

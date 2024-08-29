@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@aws-amplify/ui-react": "^5.3.3",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@fortawesome/fontawesome-free": "^6.6.0",
@@ -17,6 +18,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "ace-builds": "^1.35.4",
+    "aws-amplify": "^5.3.21",
     "axios": "^1.7.2",
     "cc-react-fe": "file:",
     "dotenv": "^16.4.5",

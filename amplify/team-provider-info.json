@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-codecoach-dev-e8d5a-authRole",
+      "UnauthRoleArn": "arn:aws:iam::654654229798:role/amplify-codecoach-dev-e8d5a-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::654654229798:role/amplify-codecoach-dev-e8d5a-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-codecoach-dev-e8d5a-deployment",
+      "UnauthRoleName": "amplify-codecoach-dev-e8d5a-unauthRole",
+      "StackName": "amplify-codecoach-dev-e8d5a",
+      "StackId": "arn:aws:cloudformation:us-east-1:654654229798:stack/amplify-codecoach-dev-e8d5a/0b17aa40-6628-11ef-92a2-0affedc2ba8d",
+      "AmplifyAppId": "d1qelpjf39im9s"
+    },
+    "categories": {
+      "auth": {
+        "codecoachd0b01bd8": {}
+      }
+    }
+  }
+}
