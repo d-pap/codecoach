@@ -92,7 +92,7 @@ function HeroSection({ onGetStarted }) {
           }}
         >
           Experience the next level of competitive programming preparation with
-          CodeCoach.
+          CodeCoach
         </Typography>
         <Button variant="contained" size="large" onClick={onGetStarted} sx={{}}>
           Get started for free <KeyboardDoubleArrowRightIcon sx={{ ml: 1 }} />
