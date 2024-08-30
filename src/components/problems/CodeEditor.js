@@ -139,7 +139,6 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        // height: '100%', //! didnt change anything when removed. also set in Layout file
         width: '100%',
         border: 1,
         borderColor: currentThemeStyle.borderColor,
