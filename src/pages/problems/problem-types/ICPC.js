@@ -173,7 +173,6 @@ function ICPC() {
             position="static"
             sx={{
               backgroundColor: 'transparent',
-              borderRadius: '6px', // rounded corners for button container
               boxShadow: 'none', // ! box shadow for app bar
             }}
           >
@@ -233,31 +232,28 @@ function ICPC() {
           </AppBarStyled>
         </Box>
         <Grid
+          // container holding all the problem cards
           container
           spacing={0}
           sx={{
             display: 'flex',
             flexWrap: 'nowrap',
-            //backgroundColor: 'pink', //! bg color for testing
             boxShadow:
               '0px 4px 5px -2px rgba(0, 0, 0, 0.2), 4px 0px 5px -2px rgba(0, 0, 0, 0.2), -4px 0px 5px -2px rgba(0, 0, 0, 0.2)',
-            borderRadius: '6px', // rounded corners for the whole grid
+            borderRadius: (theme) => theme.spacing(2),
           }}
         >
           <Box
             sx={{
               flexGrow: 1,
-              //paddingLeft: 2, //! padding for the problem cards was 2
-              paddingLeft: 0,
-              //backgroundColor: 'red', //! bg color for testing
+              padding: (theme) => theme.spacing(2),
             }}
           >
             <Box
               sx={{
-                p: 1, //* this Box is for page number on the top
+                p: 1,
                 display: 'flex',
                 justifyContent: 'right',
-                //backgroundColor: 'lightgreen', //! bg color for testing
               }}
             >
               <Pagination

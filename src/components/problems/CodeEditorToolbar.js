@@ -45,7 +45,6 @@ const EditorSelect = ({ value, onChange, options, currentThemeStyle, sx }) => {
             '& .MuiMenuItem-root': {
               fontSize: (theme) => theme.typography.button.fontSize,
               color: currentThemeStyle.color,
-              borderRadius: (theme) => theme.spacing(2),
             },
           },
         },
