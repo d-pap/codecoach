@@ -9,7 +9,8 @@ import {
   Typography,
 } from '@mui/material'
 import { styled } from '@mui/system'
-import HeroBg from '../images/hero-bg.jpg'
+import Trophy from '../images/icpc-trophy.png'
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 
 const HeaderSection = styled(AppBar)(({ theme }) => ({
   background: 'transparent',
@@ -17,18 +18,6 @@ const HeaderSection = styled(AppBar)(({ theme }) => ({
   justifyContent: 'space-between',
   boxShadow: 'none',
   color: theme.palette.text.primary,
-}))
-
-const HeroSection = styled(Box)(({ theme }) => ({
-  backgroundImage: `url(${HeroBg})`,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  height: '60vh',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: theme.palette.text.primary,
-  textAlign: 'center',
 }))
 
 const FeatureCard = styled(Box)(({ theme }) => ({
@@ -42,6 +31,92 @@ const FeatureCard = styled(Box)(({ theme }) => ({
   borderRadius: theme.spacing(2),
   boxShadow: theme.shadows[3],
 }))
+
+const HighlightedText = styled('span')(({ theme }) => ({
+  backgroundColor: theme.palette.text.primary,
+  color: theme.palette.common.white,
+  padding: theme.spacing(0.5, 2), // padding around the text
+  borderRadius: theme.spacing(5),
+}))
+
+const ImageContainer = styled(Box)(({ theme }) => ({
+  position: 'relative', // positioning for the image inside
+  width: '50%',
+  height: '350px',
+  padding: theme.spacing(2),
+  background: 'radial-gradient(circle, #fffffe, #6C63FF)', //6C63FF
+  borderRadius: theme.spacing(2),
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // optional shadow for 3D effect
+  overflow: 'unset', // allows the image to overflow the container
+}))
+
+function HeroSection({ onGetStarted }) {
+  return (
+    <Container
+      maxWidth="lg"
+      sx={{
+        display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' }, // stack on mobile
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        height: 'auto',
+        padding: (theme) => theme.spacing(4),
+        py: 8,
+      }}
+    >
+      {/* left side with text */}
+      <Box
+        sx={{
+          width: '40%',
+          textAlign: { xs: 'center', md: 'left' },
+          mb: { xs: 3, md: 0 },
+        }}
+      >
+        <Typography
+          variant="h3"
+          component="h1"
+          gutterBottom
+          sx={{
+            lineHeight: 1.2,
+          }}
+        >
+          Where Coders become <HighlightedText>Champions</HighlightedText>
+        </Typography>
+        <Typography
+          variant="h6"
+          component="h2"
+          gutterBottom
+          sx={{
+            color: 'text.secondary',
+            mb: 3,
+          }}
+        >
+          Experience the next level of competitive programming preparation with
+          CodeCoach.
+        </Typography>
+        <Button variant="contained" size="large" onClick={onGetStarted} sx={{}}>
+          Get started for free <KeyboardDoubleArrowRightIcon sx={{ ml: 1 }} />
+        </Button>
+      </Box>
+
+      {/* right side with image */}
+      <ImageContainer>
+        <Box
+          component="img"
+          src={Trophy}
+          alt="AI Robot"
+          sx={{
+            position: 'absolute',
+            bottom: 0,
+            zIndex: 1,
+            width: { xs: '400px', md: '700px', lg: '800px' },
+            height: 'auto',
+          }}
+        />
+      </ImageContainer>
+    </Container>
+  )
+}
 
 const LandingPage = ({ onGetStarted }) => {
   return (
@@ -59,63 +134,49 @@ const LandingPage = ({ onGetStarted }) => {
           </Button>
         </Toolbar>
       </HeaderSection>
+      <Box sx={{ bgcolor: 'background.default', py: 6 }}>
+        {/* hero section */}
+        <HeroSection onGetStarted={onGetStarted} />
 
-      <HeroSection>
-        <Container>
-          <Typography variant="h2" component="h1" gutterBottom>
-            Master Your Coding Skills
-          </Typography>
-          <Typography variant="h5" component="h2" gutterBottom>
-            Prepare, Learn, and Excel with CodeCoach
-          </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            sx={{ mt: 2 }}
-            onClick={onGetStarted}
-          >
-            Get Started
-          </Button>
+        {/* feature section */}
+        <Container sx={{ mt: 8, mb: 8 }}>
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={4}>
+              <FeatureCard>
+                <Typography variant="h5" component="h3" gutterBottom>
+                  Diverse Problem Set
+                </Typography>
+                <Typography>
+                  Access a wide range of coding challenges across various
+                  difficulty levels and topics.
+                </Typography>
+              </FeatureCard>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <FeatureCard>
+                <Typography variant="h5" component="h3" gutterBottom>
+                  Real-time Compiler
+                </Typography>
+                <Typography>
+                  Write, run, and test your code directly in the browser with
+                  our powerful compiler.
+                </Typography>
+              </FeatureCard>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <FeatureCard>
+                <Typography variant="h5" component="h3" gutterBottom>
+                  Track Your Progress
+                </Typography>
+                <Typography>
+                  Monitor your improvement and compare your solutions with
+                  others in the community.
+                </Typography>
+              </FeatureCard>
+            </Grid>
+          </Grid>
         </Container>
-      </HeroSection>
-
-      <Container sx={{ mt: 8, mb: 8 }}>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
-            <FeatureCard>
-              <Typography variant="h5" component="h3" gutterBottom>
-                Diverse Problem Set
-              </Typography>
-              <Typography>
-                Access a wide range of coding challenges across various
-                difficulty levels and topics.
-              </Typography>
-            </FeatureCard>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <FeatureCard>
-              <Typography variant="h5" component="h3" gutterBottom>
-                Real-time Compiler
-              </Typography>
-              <Typography>
-                Write, run, and test your code directly in the browser with our
-                powerful compiler.
-              </Typography>
-            </FeatureCard>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <FeatureCard>
-              <Typography variant="h5" component="h3" gutterBottom>
-                Track Your Progress
-              </Typography>
-              <Typography>
-                Monitor your improvement and compare your solutions with others
-                in the community.
-              </Typography>
-            </FeatureCard>
-          </Grid>
-        </Grid>
-      </Container>
+      </Box>
     </Box>
   )
 }
