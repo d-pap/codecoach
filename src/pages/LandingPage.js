@@ -44,7 +44,7 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   width: '50%',
   height: '350px',
   padding: theme.spacing(2),
-  background: 'radial-gradient(circle, #fffffe, #6C63FF)', //6C63FF
+  background: 'radial-gradient(circle, #6C63FF, #fffffe)',
   borderRadius: theme.spacing(2),
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // optional shadow for 3D effect
   overflow: 'unset', // allows the image to overflow the container
