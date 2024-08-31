@@ -6,12 +6,10 @@
 
 import React, { useEffect, useState } from 'react'
 import './App.css'
-
 import { Amplify, Auth } from 'aws-amplify'
 import { Authenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css' // amplify ui styles
 import awsExports from './aws-exports'
-
 import {
   BrowserRouter as Router,
   Routes,
@@ -26,7 +24,6 @@ import Home from './pages'
 import About from './pages/nav/about'
 import Problems from './pages/nav/problems'
 import ProblemDetail from './pages/problems/problemDetail'
-//import SignUp from './components/SignUp'
 import AddProblems from './pages/nav/addProblems'
 import ICPC from './pages/problems/problem-types/ICPC'
 import Interview from './pages/problems/problem-types/Interview'
@@ -38,8 +35,8 @@ Amplify.configure(awsExports)
 
 function App() {
   const [showAuth, setShowAuth] = useState(false)
+  const [authScreen, setAuthScreen] = useState('signin')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const handleShowAuth = () => setShowAuth(true)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -54,6 +51,11 @@ function App() {
       setIsAuthenticated(false)
     }
     setIsLoading(false)
+  }
+
+  const handleShowAuth = (mode) => {
+    setAuthScreen(mode)
+    setShowAuth(true)
   }
 
   if (isLoading) {
@@ -88,7 +90,11 @@ function App() {
                   isAuthenticated ? (
                     <Navigate to="/home" replace />
                   ) : showAuth ? (
-                    <Authenticator className="custom-authenticator">
+                    <Authenticator
+                      initialState={authScreen}
+                      className="custom-authenticator"
+                      //socialProviders={['google']}
+                    >
                       {() => {
                         setIsAuthenticated(true)
                         return <Navigate to="/home" replace />

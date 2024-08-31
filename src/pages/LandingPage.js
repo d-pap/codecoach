@@ -126,10 +126,10 @@ const LandingPage = ({ onGetStarted }) => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             CodeCoach
           </Typography>
-          <Button color="inherit" onClick={onGetStarted}>
+          <Button color="inherit" onClick={() => onGetStarted('signIn')}>
             Login
           </Button>
-          <Button variant="contained" onClick={onGetStarted}>
+          <Button variant="contained" onClick={() => onGetStarted('signUp')}>
             Register
           </Button>
         </Toolbar>

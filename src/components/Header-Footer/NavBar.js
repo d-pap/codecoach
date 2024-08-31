@@ -22,6 +22,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
 import { styled, alpha } from '@mui/material/styles'
+import { Auth } from 'aws-amplify'
 
 // Styled Nav buttons
 const NavLink = styled(Button)(({ theme }) => ({
@@ -41,6 +42,16 @@ const Navbar = () => {
   useMediaQuery(theme.breakpoints.down('sm'))
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [anchorEl, setAnchorEl] = React.useState(null)
+
+  const handleLogout = async () => {
+    try {
+      await Auth.signOut()
+      localStorage.clear()
+      window.location.reload()
+    } catch (error) {
+      console.error('Error signing out: ', error)
+    }
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
@@ -187,14 +198,7 @@ const Navbar = () => {
               <ListItemIcon>
                 <Logout fontSize="small" />
               </ListItemIcon>
-              <ListItemText
-                onClick={() => {
-                  localStorage.clear()
-                  window.location.reload()
-                }}
-              >
-                Logout
-              </ListItemText>
+              <ListItemText onClick={handleLogout}>Logout</ListItemText>
             </MenuItem>
           </Menu>
         </Box>
