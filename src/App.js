@@ -3,11 +3,9 @@
  * Central hub where we assemble our other components and
  * tie everything together like layout, routes, etc.
  */
-
 import React, { useEffect, useState } from 'react'
 import './App.css'
 import { Amplify, Auth } from 'aws-amplify'
-import { Authenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css' // amplify ui styles
 import awsExports from './aws-exports'
 import {
@@ -28,8 +26,9 @@ import AddProblems from './pages/nav/addProblems'
 import ICPC from './pages/problems/problem-types/ICPC'
 import Interview from './pages/problems/problem-types/Interview'
 import Programming from './pages/problems/problem-types/Programming'
-import ProtectedRoute from './components/ProtectedRoute'
+import ProtectedRoute from './components/auth/ProtectedRoute'
 import theme from './theme'
+import AuthModal from './components/auth/AuthModal'
 
 Amplify.configure(awsExports)
 
@@ -56,6 +55,14 @@ function App() {
   const handleShowAuth = (mode) => {
     setAuthScreen(mode)
     setShowAuth(true)
+  }
+
+  const handleCloseAuth = () => {
+    setShowAuth(false)
+  }
+  const handleAuthenticated = () => {
+    setIsAuthenticated(true)
+    setShowAuth(false)
   }
 
   if (isLoading) {
@@ -86,22 +93,19 @@ function App() {
                 path="/"
                 element={
                   // if logged in already, redirect to home
-                  // if not logged in, show landing page
+                  // if not logged in, redirect to landing page
                   isAuthenticated ? (
                     <Navigate to="/home" replace />
-                  ) : showAuth ? (
-                    <Authenticator
-                      initialState={authScreen}
-                      className="custom-authenticator"
-                      //socialProviders={['google']}
-                    >
-                      {() => {
-                        setIsAuthenticated(true)
-                        return <Navigate to="/home" replace />
-                      }}
-                    </Authenticator>
                   ) : (
-                    <LandingPage onGetStarted={handleShowAuth} />
+                    <>
+                      <LandingPage onGetStarted={handleShowAuth} />
+                      <AuthModal
+                        open={showAuth}
+                        onClose={handleCloseAuth}
+                        initialState={authScreen}
+                        onAuthenticated={handleAuthenticated}
+                      />
+                    </>
                   )
                 }
               />
