@@ -56,6 +56,18 @@ const AnswerCard = ({
             ))}
           </Select>
         </FormControl>
+
+        <TextField
+          fullWidth
+          label="Video Link"
+          value={answer.videoLink}
+          onChange={(e) =>
+            handleAnswerChange(index, 'videoLink', e.target.value)
+          }
+          variant="outlined"
+          margin="normal"
+        />
+
         <Button
           variant="contained"
           color="error"

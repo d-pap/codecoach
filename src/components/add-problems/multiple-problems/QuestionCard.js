@@ -1,11 +1,25 @@
 import React from 'react'
-import { Card, CardContent, CardHeader, TextField, Button } from '@mui/material'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Grid,
+  IconButton,
+} from '@mui/material'
+import { Delete as DeleteIcon, Add as AddIcon } from '@mui/icons-material'
 
 const QuestionCard = ({
   question,
   index,
   handleQuestionChange,
   handleDeleteQuestion,
+  handleTestCaseChange,
+  addTestCase,
+  removeTestCase,
 }) => {
   return (
     <Card
@@ -59,6 +73,76 @@ const QuestionCard = ({
           multiline
           rows={2}
         />
+
+        <Typography variant="h6" mt={2}>
+          Test Cases:
+        </Typography>
+        {question.testCases.map((testCase, testCaseIdx) => (
+          <Box key={testCaseIdx} mb={2} display="flex" alignItems="center">
+            <Grid container spacing={2}>
+              <Grid item xs={5}>
+                <TextField
+                  fullWidth
+                  label={`Input ${testCaseIdx + 1}`}
+                  value={testCase.input}
+                  onChange={(e) =>
+                    handleTestCaseChange(
+                      index,
+                      testCaseIdx,
+                      'input',
+                      e.target.value
+                    )
+                  }
+                  variant="outlined"
+                  margin="normal"
+                  multiline
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <TextField
+                  fullWidth
+                  label={`Output ${testCaseIdx + 1}`}
+                  value={testCase.output}
+                  onChange={(e) =>
+                    handleTestCaseChange(
+                      index,
+                      testCaseIdx,
+                      'output',
+                      e.target.value
+                    )
+                  }
+                  variant="outlined"
+                  margin="normal"
+                  multiline
+                />
+              </Grid>
+              <Grid
+                item
+                xs={2}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <IconButton
+                  color="secondary"
+                  onClick={() => removeTestCase(index, testCaseIdx)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Box>
+        ))}
+
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => addTestCase(index)}
+          style={{ marginTop: '16px' }}
+        >
+          Add Test Case
+        </Button>
+
         <Button
           variant="contained"
           color="error"

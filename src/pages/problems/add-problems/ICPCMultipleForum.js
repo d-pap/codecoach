@@ -28,13 +28,16 @@ const ICPCMultipleForum = () => {
     contestRegion: '',
     contestSubRegion: '',
     contestYear: '',
+    keywordRegex: 'Problem', // Default regex pattern
+    descriptionStartRegex: '', // Add default regex pattern for description start
+    descriptionEndRegex: 'Input', // Add default regex pattern for description end
   })
   const [error, setError] = useState(null)
+  const [uploading, setUploading] = useState(false)
   const [questionFile, setQuestionFile] = useState(null)
   const [answerFile, setAnswerFile] = useState(null)
   const [questionFileName, setQuestionFileName] = useState('')
   const [answerFileName, setAnswerFileName] = useState('')
-  const [uploading, setUploading] = useState(false)
 
   const onDrop = useCallback((acceptedFiles, fileType) => {
     if (acceptedFiles.length === 0) {
@@ -74,22 +77,33 @@ const ICPCMultipleForum = () => {
     }
   }
 
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }))
+  }
+
   const handleSubmit = async () => {
-    if (questionFile && answerFile) {
+    if (questionFile) {
       setUploading(true)
       try {
-        const questions = await parser.parsePdf(questionFile, 'question')
-        const answers = await parser.parsePdf(answerFile, 'answer')
-        setFormData((prevData) => ({ ...prevData, questions, answers }))
-      } catch (e) {
-        setError(e.message)
-      }
-      setUploading(false)
-    } else if (questionFile) {
-      setUploading(true)
-      try {
-        const questions = await parser.parsePdf(questionFile, 'question')
-        setFormData((prevData) => ({ ...prevData, questions }))
+        const questions = await parser.parsePdf(
+          questionFile,
+          'question',
+          formData.keywordRegex,
+          formData.descriptionStartRegex,
+          formData.descriptionEndRegex // Pass the description regexes
+        )
+        const answers = answerFile
+          ? await parser.parsePdf(answerFile, 'answer')
+          : []
+        setFormData((prevData) => ({
+          ...prevData,
+          questions,
+          answers,
+        }))
       } catch (e) {
         setError(e.message)
       }
@@ -99,10 +113,90 @@ const ICPCMultipleForum = () => {
     }
   }
 
+  const handleSendToDatabase = () => {
+    if (formData.questions.length === 0) {
+      setError('Please add at least one question.')
+      return
+    }
+
+    console.log('Sending to Database...')
+
+    const transformedData = formData.questions.map((question, index) => {
+      const answer = formData.answers.find((ans) => ans.questionIndex === index)
+      return {
+        type: 'icpc',
+        title: question.title,
+        timeLimit: question.timeLimit || '',
+        memoryLimit: question.memoryLimit || '',
+        description: question.description,
+        exampleInputs: question.exampleInputs,
+        exampleOutputs: question.exampleOutputs,
+        videoLink: question.videoLink || '',
+        testCases: question.testCases,
+        comments: question.comments || '',
+        contestRegion: formData.contestRegion,
+        contestSubRegion: formData.contestSubRegion,
+        contestYear: formData.contestYear,
+        hint: answer ? answer.answerContent : '',
+      }
+    })
+
+    transformedData.forEach((data, idx) => {
+      console.log(`Sending item ${idx + 1}:`, JSON.stringify(data, null, 2))
+    })
+
+    console.log('All items sent successfully')
+  }
+
   const handleQuestionChange = (index, field, value) => {
     setFormData((prevData) => {
       const updatedQuestions = [...prevData.questions]
       updatedQuestions[index] = { ...updatedQuestions[index], [field]: value }
+      return { ...prevData, questions: updatedQuestions }
+    })
+  }
+
+  const handleTestCaseChange = (questionIndex, testCaseIndex, field, value) => {
+    setFormData((prevData) => {
+      const updatedQuestions = [...prevData.questions]
+      const updatedTestCases = [...updatedQuestions[questionIndex].testCases]
+      updatedTestCases[testCaseIndex] = {
+        ...updatedTestCases[testCaseIndex],
+        [field]: value,
+      }
+      updatedQuestions[questionIndex] = {
+        ...updatedQuestions[questionIndex],
+        testCases: updatedTestCases,
+      }
+      return { ...prevData, questions: updatedQuestions }
+    })
+  }
+
+  const addTestCase = (questionIndex) => {
+    setFormData((prevData) => {
+      const updatedQuestions = [...prevData.questions]
+      const updatedTestCases = [
+        ...updatedQuestions[questionIndex].testCases,
+        { input: '', output: '' },
+      ]
+      updatedQuestions[questionIndex] = {
+        ...updatedQuestions[questionIndex],
+        testCases: updatedTestCases,
+      }
+      return { ...prevData, questions: updatedQuestions }
+    })
+  }
+
+  const removeTestCase = (questionIndex, testCaseIndex) => {
+    setFormData((prevData) => {
+      const updatedQuestions = [...prevData.questions]
+      const updatedTestCases = updatedQuestions[questionIndex].testCases.filter(
+        (_, idx) => idx !== testCaseIndex
+      )
+      updatedQuestions[questionIndex] = {
+        ...updatedQuestions[questionIndex],
+        testCases: updatedTestCases,
+      }
       return { ...prevData, questions: updatedQuestions }
     })
   }
@@ -169,14 +263,6 @@ const ICPCMultipleForum = () => {
     onDrop: (acceptedFiles) => onDrop(acceptedFiles, 'answer'),
     noClick: true,
   })
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }))
-  }
 
   const subregions = {
     'World Finals': ['ICPC World Finals'],
@@ -257,20 +343,35 @@ const ICPCMultipleForum = () => {
         </Grid>
       </Grid>
       {error && <Typography color="error">{error}</Typography>}
-      <Box mt={2}>
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          className="submit-button"
-          disabled={uploading}
-        >
-          Submit
-        </Button>
-      </Box>
 
-      {/* Region and Year Inputs */}
       <Stack spacing={2} mt={2}>
-        <CustomLabel>Region and Year: </CustomLabel>
+        <TextField
+          required
+          name="keywordRegex"
+          value={formData.keywordRegex}
+          onChange={handleChange}
+          label="Regex for Splitting Questions"
+          variant="outlined"
+          style={{ width: '100%', marginTop: '16px' }}
+        />
+        <TextField
+          name="descriptionStartRegex"
+          value={formData.descriptionStartRegex}
+          onChange={handleChange}
+          label="Regex for Description Start"
+          variant="outlined"
+          style={{ width: '100%', marginTop: '16px' }}
+        />
+        <TextField
+          required
+          name="descriptionEndRegex"
+          value={formData.descriptionEndRegex}
+          onChange={handleChange}
+          label="Regex for Description End"
+          variant="outlined"
+          style={{ width: '100%', marginTop: '16px' }}
+        />
+        <CustomLabel>Region and Year:</CustomLabel>
         <FormControl fullWidth>
           <InputLabel id="region-label">Contest Region *</InputLabel>
           <Select
@@ -326,7 +427,7 @@ const ICPCMultipleForum = () => {
           name="contestYear"
           value={formData.contestYear}
           onChange={handleChange}
-          label="Please input a contest year"
+          label="Please Input a Contest Year"
           variant="outlined"
           inputProps={{
             min: 2000,
@@ -337,6 +438,17 @@ const ICPCMultipleForum = () => {
       </Stack>
 
       <Box mt={2}>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          className="submit-button"
+          disabled={uploading}
+        >
+          Submit
+        </Button>
+      </Box>
+
+      <Box mt={2}>
         <Typography variant="h6">Questions:</Typography>
         {formData.questions.map((question, index) => (
           <QuestionCard
@@ -345,6 +457,9 @@ const ICPCMultipleForum = () => {
             index={index}
             handleQuestionChange={handleQuestionChange}
             handleDeleteQuestion={() => handleDeleteQuestion(index)}
+            handleTestCaseChange={handleTestCaseChange}
+            addTestCase={addTestCase}
+            removeTestCase={removeTestCase}
           />
         ))}
         <Button
@@ -354,6 +469,7 @@ const ICPCMultipleForum = () => {
         >
           Add Question
         </Button>
+
         <Typography variant="h6" mt={4}>
           Answers:
         </Typography>
@@ -373,6 +489,17 @@ const ICPCMultipleForum = () => {
           style={{ marginTop: '16px' }}
         >
           Add Answer
+        </Button>
+      </Box>
+
+      <Box mt={2}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleSendToDatabase}
+          style={{ marginTop: '16px' }}
+        >
+          Send to Database
         </Button>
       </Box>
     </div>
