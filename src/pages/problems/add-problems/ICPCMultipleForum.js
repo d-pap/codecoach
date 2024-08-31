@@ -19,20 +19,17 @@ const ICPCMultipleForum = () => {
   const [uploading, setUploading] = useState(false)
 
   const onDrop = useCallback((acceptedFiles, fileType) => {
-    // accept only one file at a time
     if (acceptedFiles.length === 0) {
       setError('No valid PDF file selected.')
       return
     }
 
     const file = acceptedFiles[0]
-    // check if the file is a PDF
     if (file.type !== 'application/pdf') {
       setError('Invalid file type. Please upload a PDF file.')
       return
     }
 
-    // parse the PDF file based on the file type (question or answer)
     if (fileType === 'question') {
       setQuestionFile(file)
       setQuestionFileName(file.name)
@@ -59,7 +56,6 @@ const ICPCMultipleForum = () => {
     }
   }
 
-  // parse the PDF files and update the form data
   const handleSubmit = async () => {
     if (questionFile && answerFile) {
       setUploading(true)
@@ -85,7 +81,6 @@ const ICPCMultipleForum = () => {
     }
   }
 
-  // update the question or answer content in the form data
   const handleQuestionChange = (index, field, value) => {
     setFormData((prevData) => {
       const updatedQuestions = [...prevData.questions]
@@ -94,7 +89,6 @@ const ICPCMultipleForum = () => {
     })
   }
 
-  // update the answer content in the form data
   const handleAnswerChange = (index, field, value) => {
     setFormData((prevData) => {
       const updatedAnswers = [...prevData.answers]
@@ -103,7 +97,29 @@ const ICPCMultipleForum = () => {
     })
   }
 
-  // add a new answer to the form data
+  const handleAddQuestion = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      questions: [
+        ...prevData.questions,
+        {
+          title: '',
+          description: '',
+          exampleInputs: '',
+          exampleOutputs: '',
+          testCases: [{ input: '', output: '' }],
+        },
+      ],
+    }))
+  }
+
+  const handleDeleteQuestion = (index) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      questions: prevData.questions.filter((_, i) => i !== index),
+    }))
+  }
+
   const handleAddAnswer = () => {
     setFormData((prevData) => ({
       ...prevData,
@@ -111,7 +127,6 @@ const ICPCMultipleForum = () => {
     }))
   }
 
-  // delete an answer from the form data
   const handleDeleteAnswer = (index) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -185,8 +200,16 @@ const ICPCMultipleForum = () => {
             question={question}
             index={index}
             handleQuestionChange={handleQuestionChange}
+            handleDeleteQuestion={() => handleDeleteQuestion(index)} // added prop
           />
         ))}
+        <Button
+          variant="contained"
+          onClick={handleAddQuestion}
+          style={{ marginTop: '16px' }}
+        >
+          Add Question
+        </Button>
         <Typography variant="h6" mt={4}>
           Answers:
         </Typography>
@@ -197,7 +220,7 @@ const ICPCMultipleForum = () => {
             index={index}
             handleAnswerChange={handleAnswerChange}
             questions={formData.questions}
-            handleDeleteAnswer={handleDeleteAnswer}
+            handleDeleteAnswer={() => handleDeleteAnswer(index)} // added prop
           />
         ))}
         <Button

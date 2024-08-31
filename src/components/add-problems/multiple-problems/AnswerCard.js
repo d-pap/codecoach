@@ -59,7 +59,7 @@ const AnswerCard = ({
         <Button
           variant="contained"
           color="error"
-          onClick={() => handleDeleteAnswer(index)}
+          onClick={handleDeleteAnswer}
           style={{ marginTop: '16px' }}
         >
           Delete Answer

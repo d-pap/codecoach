@@ -1,7 +1,12 @@
 import React from 'react'
-import { Card, CardContent, CardHeader, TextField } from '@mui/material'
+import { Card, CardContent, CardHeader, TextField, Button } from '@mui/material'
 
-const QuestionCard = ({ question, index, handleQuestionChange }) => {
+const QuestionCard = ({
+  question,
+  index,
+  handleQuestionChange,
+  handleDeleteQuestion,
+}) => {
   return (
     <Card
       key={`question-${index}`}
@@ -54,6 +59,14 @@ const QuestionCard = ({ question, index, handleQuestionChange }) => {
           multiline
           rows={2}
         />
+        <Button
+          variant="contained"
+          color="error"
+          onClick={handleDeleteQuestion}
+          style={{ marginTop: '16px' }}
+        >
+          Delete Question
+        </Button>
       </CardContent>
     </Card>
   )
