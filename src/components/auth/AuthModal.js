@@ -3,34 +3,6 @@ import { Box, Modal } from '@mui/material'
 import { Authenticator } from '@aws-amplify/ui-react'
 import { ThemeProvider as AmplifyThemeProvider } from '@aws-amplify/ui-react'
 
-// // Define your custom Amplify theme
-// const amplifyTheme = {
-//   name: 'MyCustomTheme',
-//   tokens: {
-//     colors: {
-//       background: {
-//         primary: { value: '#ffffff' }, // Background color
-//       },
-//       font: {
-//         primary: { value: '#333333' }, // Font color
-//         secondary: { value: '#6C63FF' }, // Secondary font color
-//       },
-//       border: {
-//         primary: { value: '#333333' }, // Border color
-//       },
-//     },
-//     components: {
-//       button: {
-//         primary: {
-//           backgroundColor: { value: '#6C63FF' }, // Button background color
-//           color: { value: '#ffffff' }, // Button text color
-//           borderRadius: { value: '8px' }, // Button border radius
-//         },
-//       },
-//     },
-//   },
-// }
-
 const amplifyTheme = {
   name: 'MyCustomTheme',
   tokens: {
