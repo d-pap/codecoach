@@ -1,16 +1,34 @@
 import React, { useState, useCallback } from 'react'
-import { Button, Typography, Grid, Box } from '@mui/material'
+import {
+  Button,
+  Typography,
+  Grid,
+  Box,
+  Stack,
+  TextField,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from '@mui/material'
 import { useDropzone } from 'react-dropzone'
 import './ICPCMultipleForum.css'
 import PDFUploader from '../../../components/add-problems/multiple-problems/PDFUploader'
 import QuestionCard from '../../../components/add-problems/multiple-problems/QuestionCard'
 import AnswerCard from '../../../components/add-problems/multiple-problems/AnswerCard'
 import PDFParser from '../../../components/add-problems/multiple-problems/PDFParser'
+import CustomLabel from '../../../components/add-problems/multiple-problems/CustomLabel'
 
 const parser = new PDFParser()
 
 const ICPCMultipleForum = () => {
-  const [formData, setFormData] = useState({ questions: [], answers: [] })
+  const [formData, setFormData] = useState({
+    questions: [],
+    answers: [],
+    contestRegion: '',
+    contestSubRegion: '',
+    contestYear: '',
+  })
   const [error, setError] = useState(null)
   const [questionFile, setQuestionFile] = useState(null)
   const [answerFile, setAnswerFile] = useState(null)
@@ -152,6 +170,63 @@ const ICPCMultipleForum = () => {
     noClick: true,
   })
 
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }))
+  }
+
+  const subregions = {
+    'World Finals': ['ICPC World Finals'],
+    'Europe Contests': [
+      'European Championship',
+      'Central Europe Regional Contest (CERC)',
+      'Northern Eurasia Finals (NERC)',
+      'Northwestern Europe Regional Contest (NWERC)',
+      'Southeastern Europe Regional Contest (SEERC)',
+      'Southwestern Europe Regional Contest (SWERC)',
+      'Benelux Algorithm Programming Contest (BAPC)',
+      'CTU Open Contest (Czech Technical University)',
+      'German Collegiate Programming Contest (GCPC)',
+      'Nordic Collegiate Programming Contest (NCPC)',
+      'UK and Ireland Programming Contest (UKIPC)',
+    ],
+    'Asia Pacific Contests': [
+      'Asia Pacific Championship',
+      'Indonesia',
+      'Japan',
+      'Philippines',
+      'Singapore',
+      'South Korea',
+      'Taiwan',
+      'Vietnam',
+    ],
+    'Asia East Continent Contests': [
+      'Hangzhou',
+      'Hefei',
+      'Hongkong',
+      'Jinan',
+      'Macau',
+      'Nanjing',
+      'Shanghai',
+      'Shenyang',
+      'Yinchuan',
+    ],
+    'North America Contests': [
+      'North America Championship',
+      'Mid-Atlantic USA Regional Contest',
+      'North Central Regional Contest',
+      'Rocky Mountain Regional Contest',
+    ],
+    'Latin American Contests': [
+      'Latin America Championship',
+      'Latin American Regional Contest',
+    ],
+    'Africa and Arab Contests': ['Arab Collegiate Programming Championship'],
+  }
+
   return (
     <div className="container">
       <Typography variant="h4" gutterBottom>
@@ -192,6 +267,75 @@ const ICPCMultipleForum = () => {
           Submit
         </Button>
       </Box>
+
+      {/* Region and Year Inputs */}
+      <Stack spacing={2} mt={2}>
+        <CustomLabel>Region and Year: </CustomLabel>
+        <FormControl fullWidth>
+          <InputLabel id="region-label">Contest Region *</InputLabel>
+          <Select
+            required
+            labelId="region-label"
+            name="contestRegion"
+            label="Contest Region"
+            value={formData.contestRegion}
+            onChange={handleChange}
+          >
+            <MenuItem value="World Finals">World Finals</MenuItem>
+            <MenuItem value="Europe Contests">Europe Contests</MenuItem>
+            <MenuItem value="Asia Pacific Contests">
+              Asia Pacific Contests
+            </MenuItem>
+            <MenuItem value="Asia East Continent Contests">
+              Asia East Continent Contests
+            </MenuItem>
+            <MenuItem value="North America Contests">
+              North America Contests
+            </MenuItem>
+            <MenuItem value="Latin American Contests">
+              Latin American Contests
+            </MenuItem>
+            <MenuItem value="Africa and Arab Contests">
+              Africa and Arab Contests
+            </MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth>
+          <InputLabel id="sub-region-label">Contest Sub Region *</InputLabel>
+          <Select
+            required
+            labelId="sub-region-label"
+            name="contestSubRegion"
+            label="Contest Sub Region"
+            value={formData.contestSubRegion}
+            onChange={handleChange}
+            disabled={!formData.contestRegion}
+          >
+            {subregions[formData.contestRegion]?.map((subregion) => (
+              <MenuItem key={subregion} value={subregion}>
+                {subregion}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <TextField
+          required
+          type="number"
+          name="contestYear"
+          value={formData.contestYear}
+          onChange={handleChange}
+          label="Please input a contest year"
+          variant="outlined"
+          inputProps={{
+            min: 2000,
+            max: 2030,
+          }}
+          style={{ width: '100%', marginTop: '16px' }}
+        />
+      </Stack>
+
       <Box mt={2}>
         <Typography variant="h6">Questions:</Typography>
         {formData.questions.map((question, index) => (
@@ -200,7 +344,7 @@ const ICPCMultipleForum = () => {
             question={question}
             index={index}
             handleQuestionChange={handleQuestionChange}
-            handleDeleteQuestion={() => handleDeleteQuestion(index)} // added prop
+            handleDeleteQuestion={() => handleDeleteQuestion(index)}
           />
         ))}
         <Button
@@ -220,7 +364,7 @@ const ICPCMultipleForum = () => {
             index={index}
             handleAnswerChange={handleAnswerChange}
             questions={formData.questions}
-            handleDeleteAnswer={() => handleDeleteAnswer(index)} // added prop
+            handleDeleteAnswer={() => handleDeleteAnswer(index)}
           />
         ))}
         <Button
