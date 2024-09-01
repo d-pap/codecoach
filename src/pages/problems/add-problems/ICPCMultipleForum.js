@@ -1,37 +1,27 @@
 import React, { useState, useCallback } from 'react'
-import {
-  Button,
-  Typography,
-  Grid,
-  Box,
-  Stack,
-  TextField,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-} from '@mui/material'
-import { useDropzone } from 'react-dropzone'
+import { Button, Typography, Box } from '@mui/material'
+import PDFUploaderPanel from '../../../components/add-problems/multiple-problems/pdf-elements/PDFUploaderPanel'
+import FormFields from '../../../components/add-problems/multiple-problems/form-elements/FormFields'
+import QuestionsSection from '../../../components/add-problems/multiple-problems/form-elements/QuestionsSection'
+import AnswersSection from '../../../components/add-problems/multiple-problems/form-elements/AnswersSection'
+import PDFParser from '../../../components/add-problems/multiple-problems/pdf-elements/PDFParser'
 import './ICPCMultipleForum.css'
-import PDFUploader from '../../../components/add-problems/multiple-problems/PDFUploader'
-import QuestionCard from '../../../components/add-problems/multiple-problems/QuestionCard'
-import AnswerCard from '../../../components/add-problems/multiple-problems/AnswerCard'
-import PDFParser from '../../../components/add-problems/multiple-problems/PDFParser'
-import CustomLabel from '../../../components/add-problems/multiple-problems/CustomLabel'
 
 const parser = new PDFParser()
 
+const initialFormData = {
+  questions: [],
+  answers: [],
+  contestRegion: '',
+  contestSubRegion: '',
+  contestYear: '',
+  keywordRegex: 'Problem',
+  descriptionStartRegex: '',
+  descriptionEndRegex: 'Input',
+}
+
 const ICPCMultipleForum = () => {
-  const [formData, setFormData] = useState({
-    questions: [],
-    answers: [],
-    contestRegion: '',
-    contestSubRegion: '',
-    contestYear: '',
-    keywordRegex: 'Problem', // Default regex pattern
-    descriptionStartRegex: '', // Add default regex pattern for description start
-    descriptionEndRegex: 'Input', // Add default regex pattern for description end
-  })
+  const [formData, setFormData] = useState(initialFormData)
   const [error, setError] = useState(null)
   const [uploading, setUploading] = useState(false)
   const [questionFile, setQuestionFile] = useState(null)
@@ -89,16 +79,33 @@ const ICPCMultipleForum = () => {
     if (questionFile) {
       setUploading(true)
       try {
+        const {
+          keywordRegex,
+          descriptionStartRegex,
+          descriptionEndRegex,
+          answerParsingMethod,
+        } = formData
+
         const questions = await parser.parsePdf(
           questionFile,
           'question',
-          formData.keywordRegex,
-          formData.descriptionStartRegex,
-          formData.descriptionEndRegex // Pass the description regexes
+          answerParsingMethod,
+          keywordRegex,
+          descriptionStartRegex,
+          descriptionEndRegex
         )
+
         const answers = answerFile
-          ? await parser.parsePdf(answerFile, 'answer')
+          ? await parser.parsePdf(
+              answerFile,
+              'answer',
+              answerParsingMethod,
+              keywordRegex,
+              descriptionStartRegex,
+              descriptionEndRegex
+            )
           : []
+
         setFormData((prevData) => ({
           ...prevData,
           questions,
@@ -246,24 +253,6 @@ const ICPCMultipleForum = () => {
     }))
   }
 
-  const {
-    getRootProps: getRootPropsForQuestions,
-    getInputProps: getInputPropsForQuestions,
-  } = useDropzone({
-    accept: '.pdf',
-    onDrop: (acceptedFiles) => onDrop(acceptedFiles, 'question'),
-    noClick: true,
-  })
-
-  const {
-    getRootProps: getRootPropsForAnswers,
-    getInputProps: getInputPropsForAnswers,
-  } = useDropzone({
-    accept: '.pdf',
-    onDrop: (acceptedFiles) => onDrop(acceptedFiles, 'answer'),
-    noClick: true,
-  })
-
   const subregions = {
     'World Finals': ['ICPC World Finals'],
     'Europe Contests': [
@@ -318,125 +307,29 @@ const ICPCMultipleForum = () => {
       <Typography variant="h4" gutterBottom>
         PDF Parser
       </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <PDFUploader
-            fileType="question"
-            file={questionFile}
-            fileName={questionFileName}
-            handleFileInputChange={handleFileInputChange}
-            getRootProps={getRootPropsForQuestions}
-            getInputProps={getInputPropsForQuestions}
-            uploading={uploading}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <PDFUploader
-            fileType="answer"
-            file={answerFile}
-            fileName={answerFileName}
-            handleFileInputChange={handleFileInputChange}
-            getRootProps={getRootPropsForAnswers}
-            getInputProps={getInputPropsForAnswers}
-            uploading={uploading}
-          />
-        </Grid>
-      </Grid>
-      {error && <Typography color="error">{error}</Typography>}
-
-      <Stack spacing={2} mt={2}>
-        <TextField
-          required
-          name="keywordRegex"
-          value={formData.keywordRegex}
-          onChange={handleChange}
-          label="Regex for Splitting Questions"
-          variant="outlined"
-          style={{ width: '100%', marginTop: '16px' }}
-        />
-        <TextField
-          name="descriptionStartRegex"
-          value={formData.descriptionStartRegex}
-          onChange={handleChange}
-          label="Regex for Description Start"
-          variant="outlined"
-          style={{ width: '100%', marginTop: '16px' }}
-        />
-        <TextField
-          required
-          name="descriptionEndRegex"
-          value={formData.descriptionEndRegex}
-          onChange={handleChange}
-          label="Regex for Description End"
-          variant="outlined"
-          style={{ width: '100%', marginTop: '16px' }}
-        />
-        <CustomLabel>Region and Year:</CustomLabel>
-        <FormControl fullWidth>
-          <InputLabel id="region-label">Contest Region *</InputLabel>
-          <Select
-            required
-            labelId="region-label"
-            name="contestRegion"
-            label="Contest Region"
-            value={formData.contestRegion}
-            onChange={handleChange}
-          >
-            <MenuItem value="World Finals">World Finals</MenuItem>
-            <MenuItem value="Europe Contests">Europe Contests</MenuItem>
-            <MenuItem value="Asia Pacific Contests">
-              Asia Pacific Contests
-            </MenuItem>
-            <MenuItem value="Asia East Continent Contests">
-              Asia East Continent Contests
-            </MenuItem>
-            <MenuItem value="North America Contests">
-              North America Contests
-            </MenuItem>
-            <MenuItem value="Latin American Contests">
-              Latin American Contests
-            </MenuItem>
-            <MenuItem value="Africa and Arab Contests">
-              Africa and Arab Contests
-            </MenuItem>
-          </Select>
-        </FormControl>
-
-        <FormControl fullWidth>
-          <InputLabel id="sub-region-label">Contest Sub Region *</InputLabel>
-          <Select
-            required
-            labelId="sub-region-label"
-            name="contestSubRegion"
-            label="Contest Sub Region"
-            value={formData.contestSubRegion}
-            onChange={handleChange}
-            disabled={!formData.contestRegion}
-          >
-            {subregions[formData.contestRegion]?.map((subregion) => (
-              <MenuItem key={subregion} value={subregion}>
-                {subregion}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <TextField
-          required
-          type="number"
-          name="contestYear"
-          value={formData.contestYear}
-          onChange={handleChange}
-          label="Please Input a Contest Year"
-          variant="outlined"
-          inputProps={{
-            min: 2000,
-            max: 2030,
-          }}
-          style={{ width: '100%', marginTop: '16px' }}
-        />
-      </Stack>
-
+      <PDFUploaderPanel
+        questionFileProps={{
+          fileType: 'question',
+          file: questionFile,
+          fileName: questionFileName,
+          handleFileInputChange,
+          onDrop,
+        }}
+        answerFileProps={{
+          fileType: 'answer',
+          file: answerFile,
+          fileName: answerFileName,
+          handleFileInputChange,
+          onDrop,
+        }}
+        uploading={uploading}
+        error={error}
+      />
+      <FormFields
+        formData={formData}
+        handleChange={handleChange}
+        subregions={subregions}
+      />
       <Box mt={2}>
         <Button
           variant="contained"
@@ -447,51 +340,22 @@ const ICPCMultipleForum = () => {
           Submit
         </Button>
       </Box>
-
-      <Box mt={2}>
-        <Typography variant="h6">Questions:</Typography>
-        {formData.questions.map((question, index) => (
-          <QuestionCard
-            key={`question-${index}`}
-            question={question}
-            index={index}
-            handleQuestionChange={handleQuestionChange}
-            handleDeleteQuestion={() => handleDeleteQuestion(index)}
-            handleTestCaseChange={handleTestCaseChange}
-            addTestCase={addTestCase}
-            removeTestCase={removeTestCase}
-          />
-        ))}
-        <Button
-          variant="contained"
-          onClick={handleAddQuestion}
-          style={{ marginTop: '16px' }}
-        >
-          Add Question
-        </Button>
-
-        <Typography variant="h6" mt={4}>
-          Answers:
-        </Typography>
-        {formData.answers.map((answer, index) => (
-          <AnswerCard
-            key={`answer-${index}`}
-            answer={answer}
-            index={index}
-            handleAnswerChange={handleAnswerChange}
-            questions={formData.questions}
-            handleDeleteAnswer={() => handleDeleteAnswer(index)}
-          />
-        ))}
-        <Button
-          variant="contained"
-          onClick={handleAddAnswer}
-          style={{ marginTop: '16px' }}
-        >
-          Add Answer
-        </Button>
-      </Box>
-
+      <QuestionsSection
+        questions={formData.questions}
+        handleQuestionChange={handleQuestionChange}
+        handleDeleteQuestion={handleDeleteQuestion}
+        handleTestCaseChange={handleTestCaseChange}
+        addTestCase={addTestCase}
+        removeTestCase={removeTestCase}
+        handleAddQuestion={handleAddQuestion}
+      />
+      <AnswersSection
+        answers={formData.answers}
+        questions={formData.questions}
+        handleAnswerChange={handleAnswerChange}
+        handleAddAnswer={handleAddAnswer}
+        handleDeleteAnswer={handleDeleteAnswer}
+      />
       <Box mt={2}>
         <Button
           variant="contained"

@@ -8,9 +8,11 @@ class PDFParser {
   async parsePdf(
     file,
     type,
+    parsingMethod = 'regex',
     keywordRegex = 'Problem ',
     descriptionStartRegex = null,
-    descriptionEndRegex = 'Input'
+    descriptionEndRegex = 'Input',
+    answerKeywordRegex = 'Problem'
   ) {
     try {
       const arrayBuffer = await file.arrayBuffer()
@@ -36,7 +38,11 @@ class PDFParser {
           descriptionEndRegex
         )
       } else if (type === 'answer') {
-        return this.parseAnswers(textContent)
+        if (parsingMethod === 'page') {
+          return this.parseAnswersByPage(pdf)
+        } else {
+          return this.parseAnswersByRegex(textContent, answerKeywordRegex)
+        }
       }
     } catch (err) {
       console.error('Error parsing PDF:', err)
@@ -61,9 +67,17 @@ class PDFParser {
     descriptionEndRegex
   ) {
     const regex = new RegExp(keywordRegex, 'g')
+
+    console.log('Keyword Regex:', regex)
+    console.log("Keyword Regex's ", keywordRegex)
+    console.log('Description Start Regex:', descriptionStartRegex)
+    console.log('Description End Regex:', descriptionEndRegex)
+
     const questions = text.split(regex).splice(1) // Remove pre-split part before the first problem
 
     console.log('Total questions found:', questions.length)
+
+    console.log('Description Start Regex:', questions)
 
     return questions
       .map((question, index) => {
@@ -130,14 +144,29 @@ class PDFParser {
       .filter((question) => question !== null)
   }
 
-  parseAnswers(text) {
-    const answers = text.split('Problem').slice(1)
-    return answers.map((answer) => {
-      return {
-        answerContent: answer.trim(),
-        questionIndex: -1,
-      }
-    })
+  async parseAnswersByPage(pdf) {
+    const pageAnswers = []
+
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum)
+      const text = await page.getTextContent()
+      const pageText = this.processTextContent(text.items)
+      pageAnswers.push({
+        pageIndex: pageNum,
+        pageContent: pageText.trim(),
+      })
+    }
+
+    return pageAnswers
+  }
+
+  parseAnswersByRegex(text, answerKeywordRegex) {
+    const regex = new RegExp(answerKeywordRegex, 'g')
+    const answers = text.split(regex).slice(1)
+    return answers.map((answer, index) => ({
+      answerContent: answer.trim(),
+      questionIndex: index,
+    }))
   }
 
   parseTestCases(text) {

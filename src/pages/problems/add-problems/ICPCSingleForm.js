@@ -17,7 +17,7 @@ import {
   addTestCase,
   removeTestCase,
 } from '../../../components/add-problems/ICPCFormHandlers'
-import CustomLabel from '../../../components/add-problems/multiple-problems/CustomLabel'
+import CustomLabel from '../../../components/add-problems/multiple-problems/custom-elements/CustomLabel'
 
 const textFieldStyle = {
   width: '100%',

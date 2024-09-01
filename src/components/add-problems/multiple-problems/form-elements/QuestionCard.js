@@ -134,23 +134,23 @@ const QuestionCard = ({
           </Box>
         ))}
 
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => addTestCase(index)}
-          style={{ marginTop: '16px' }}
-        >
-          Add Test Case
-        </Button>
-
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handleDeleteQuestion}
-          style={{ marginTop: '16px' }}
-        >
-          Delete Question
-        </Button>
+        <Box display="flex" justifyContent="flex-start" mt={2}>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => addTestCase(index)}
+            sx={{ mr: 2 }}
+          >
+            Add Test Case
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDeleteQuestion}
+          >
+            Delete Question
+          </Button>
+        </Box>
       </CardContent>
     </Card>
   )
