@@ -47,9 +47,7 @@ const Header = () => {
         >
           <ProjectTitle variant="h6">CC</ProjectTitle>
         </TitleWrapper>
-        <Box sx={{ marginLeft: 'auto' }}>
-          <Navbar />
-        </Box>
+        <Navbar />
       </Toolbar>
     </HeaderSection>
   )
