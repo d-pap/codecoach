@@ -3,15 +3,11 @@
  * Central hub where we assemble our other components and
  * tie everything together like layout, routes, etc.
  */
-
 import React, { useEffect, useState } from 'react'
 import './App.css'
-
 import { Amplify, Auth } from 'aws-amplify'
-import { Authenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css' // amplify ui styles
 import awsExports from './aws-exports'
-
 import {
   BrowserRouter as Router,
   Routes,
@@ -26,22 +22,22 @@ import Home from './pages'
 import About from './pages/nav/about'
 import Problems from './pages/nav/problems'
 import ProblemDetail from './pages/problems/problemDetail'
-//import SignUp from './components/SignUp'
 import AddProblems from './pages/nav/addProblems'
 import ICPCSingleForum from './pages/problems/add-problems/ICPCSingleForm'
 import ICPCMultipleForum from './pages/problems/add-problems/ICPCMultipleForum'
 import ICPC from './pages/problems/problem-types/ICPC'
 import Interview from './pages/problems/problem-types/Interview'
 import Programming from './pages/problems/problem-types/Programming'
-import ProtectedRoute from './components/ProtectedRoute'
+import ProtectedRoute from './components/auth/ProtectedRoute'
 import theme from './theme'
+import AuthModal from './components/auth/AuthModal'
 
 Amplify.configure(awsExports)
 
 function App() {
   const [showAuth, setShowAuth] = useState(false)
+  const [authScreen, setAuthScreen] = useState('signin')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const handleShowAuth = () => setShowAuth(true)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -56,6 +52,19 @@ function App() {
       setIsAuthenticated(false)
     }
     setIsLoading(false)
+  }
+
+  const handleShowAuth = (mode) => {
+    setAuthScreen(mode)
+    setShowAuth(true)
+  }
+
+  const handleCloseAuth = () => {
+    setShowAuth(false)
+  }
+  const handleAuthenticated = () => {
+    setIsAuthenticated(true)
+    setShowAuth(false)
   }
 
   if (isLoading) {
@@ -86,18 +95,19 @@ function App() {
                 path="/"
                 element={
                   // if logged in already, redirect to home
-                  // if not logged in, show landing page
+                  // if not logged in, redirect to landing page
                   isAuthenticated ? (
                     <Navigate to="/home" replace />
-                  ) : showAuth ? (
-                    <Authenticator className="custom-authenticator">
-                      {() => {
-                        setIsAuthenticated(true)
-                        return <Navigate to="/home" replace />
-                      }}
-                    </Authenticator>
                   ) : (
-                    <LandingPage onGetStarted={handleShowAuth} />
+                    <>
+                      <LandingPage onGetStarted={handleShowAuth} />
+                      <AuthModal
+                        open={showAuth}
+                        onClose={handleCloseAuth}
+                        initialState={authScreen}
+                        onAuthenticated={handleAuthenticated}
+                      />
+                    </>
                   )
                 }
               />
