@@ -10,7 +10,6 @@ like "Problems", "About", etc.
 * {
   margin: 0;
   padding: 0;
-
 }
 
 /* Apply global fonts: 
@@ -24,7 +23,7 @@ body {
 html,
 body {
   overflow-x: hidden;
-} 
+}
 
 /* this changes the font of the header text */
 h1,
@@ -35,4 +34,3 @@ h5,
 h6 {
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif; /* this changes h1 and header text */
 }
-
