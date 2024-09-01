@@ -44,7 +44,7 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   width: '50%',
   height: '350px',
   padding: theme.spacing(2),
-  background: 'radial-gradient(circle, #6C63FF, #fffffe)',
+  background: 'radial-gradient(circle, #fffffe, #6C63FF)', //6C63FF
   borderRadius: theme.spacing(2),
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // optional shadow for 3D effect
   overflow: 'unset', // allows the image to overflow the container
@@ -126,10 +126,10 @@ const LandingPage = ({ onGetStarted }) => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             CodeCoach
           </Typography>
-          <Button color="inherit" onClick={() => onGetStarted('signIn')}>
+          <Button color="inherit" onClick={onGetStarted}>
             Login
           </Button>
-          <Button variant="contained" onClick={() => onGetStarted('signUp')}>
+          <Button variant="contained" onClick={onGetStarted}>
             Register
           </Button>
         </Toolbar>
