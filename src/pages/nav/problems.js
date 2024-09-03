@@ -85,29 +85,6 @@ function CategoryCard({ image, onClick, loading, buttonText, children }) {
 
 function Problems() {
   const navigate = useNavigate()
-  // const [loading, setLoading] = useState(true)
-  // const [problems, setProblems] = useState([])
-
-  // useEffect(() => {
-  //   async function loadProblems() {
-  //     try {
-  //       const data = await fetchProblems()
-  //       setProblems(data)
-  //       setLoading(false)
-  //     } catch (err) {
-  //       console.error('Error fetching problems', err)
-  //       setLoading(false)
-  //     }
-  //   }
-  //   loadProblems()
-  // }, [])
-
-  // const navigateTo = (path) => {
-  //   if (!loading) {
-  //     navigate(path, { state: { problems } })
-  //   }
-  // }
-
   // use react query to fetch problems
   const {
     // eslint-disable-next-line no-unused-vars
