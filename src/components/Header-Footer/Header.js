@@ -3,7 +3,7 @@ import { NavLink as RouterLink } from 'react-router-dom'
 import Navbar from './NavBar'
 import { AppBar, Box, Toolbar, Typography } from '@mui/material'
 import { styled } from '@mui/system'
-//import Logo from './icons/CodeCoachLogo.png' // Import the logo
+// import Logo from './icons/CodeCoachLogo.png' // Import the logo
 
 // Styled header section using MUI
 // for the entire header section
@@ -33,8 +33,8 @@ const ProjectTitle = styled(Typography)(({ theme }) => ({
 // const LogoImage = styled('img')(({ theme }) => ({
 //   height: 100, // Adjust the height as needed
 //   marginRight: theme.spacing(2),
-//   marginTop: theme.spacing(1)
-// }));
+//   marginTop: theme.spacing(1),
+// }))
 
 const Header = () => {
   return (

@@ -5,6 +5,7 @@
  * to handle API requests (e.g., get data, posting data, etc.)
  */
 import axios from 'axios'
+import { Auth } from 'aws-amplify'
 
 const API_GATEWAY_URL = process.env.REACT_APP_API_URL
 const LLM_URL = 'http://localhost:3500'
@@ -37,55 +38,6 @@ export async function addProblem(problem) {
     throw new Error('Failed to add problem')
   }
 }
-
-// // Function for LLM interaction which returns a hint
-// // Lambda function and APIGW endpoint. Currently works
-// // as long as the LLM server is running locally
-// // https://github.com/Marv2014-1/llm-server
-// export async function getHint(title, question, answer) {
-//   try {
-//     const response = await axios.post(`${LLM_URL}/hint-problem`, {
-//       title,
-//       question,
-//       answer,
-//     })
-//     return response.data.answer
-//   } catch (error) {
-//     console.error('Error fetching hint:', error)
-//     throw new Error('Failed to fetch hint')
-//   }
-// }
-
-// // Function for LLM interaction which returns a solution
-// // Lambda function and APIGW endpoint. Currently works
-// // as long as the LLM server is running locally
-// // https://github.com/Marv2014-1/llm-server
-// export async function getSolution(title, question, answer) {
-//   try {
-//     const response = await axios.post(`${LLM_URL}/solve-problem`, {
-//       title,
-//       question,
-//       answer,
-//     })
-//     return response.data.answer
-//   } catch (error) {
-//     console.error('Error fetching hint:', error)
-//     throw new Error('Failed to fetch hint')
-//   }
-// }
-
-// // Function for local LLM interaction which returns a chat response
-// export async function chatWithLLM(payload) {
-//   try {
-//     const response = await axios.post(`${LLM_URL}/chat`, {
-//       payload,
-//     })
-//     return response.data
-//   } catch (error) {
-//     console.error('Error fetching chat:', error)
-//     throw new Error('Failed to fetch chat')
-//   }
-// }
 
 // Function to create a new chat conversation
 export async function createNewChatConvo() {
@@ -156,5 +108,31 @@ export const executeCode = async (sourceCode, language = 'python') => {
   } catch (error) {
     console.error('Error:', error)
     throw error
+  }
+}
+
+// function to save a submission to the database
+export async function saveSubmission(submissionData) {
+  try {
+    const response = await axios.post(
+      `${API_GATEWAY_URL}/submissions`,
+      submissionData
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error submitting code:', error)
+    throw new Error('Failed to submit code')
+  }
+}
+
+// function to get the current user ID
+// for submit code button, discussions, etc.
+export const getCurrentUserId = async () => {
+  try {
+    const user = await Auth.currentAuthenticatedUser()
+    const userId = user.attributes.sub
+    return userId
+  } catch (error) {
+    console.error('Error getting user ID:', error)
   }
 }

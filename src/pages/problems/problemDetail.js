@@ -16,7 +16,7 @@ function ProblemDetail() {
   // state variables
   const location = useLocation() // get location object
   const problemFromLocation = location.state?.problem // get problem from location state
-  const { id } = useParams() // extract problem ID from URL
+  const { problemId } = useParams() // extract problem ID from URL
   const [problem, setProblem] = useState(null) // hold problem data
   const [loading, setLoading] = useState(true) // indicate if data is still loading
   const [error, setError] = useState(null) // hold any error message
@@ -27,7 +27,7 @@ function ProblemDetail() {
       try {
         let problem = problemFromLocation
         if (!problemFromLocation) {
-          problem = await fetchProblemById(id)
+          problem = await fetchProblemById(problemId)
         }
 
         // filter out `_id` field from test cases
@@ -44,7 +44,7 @@ function ProblemDetail() {
       }
     }
     getProblem()
-  }, [id, problemFromLocation]) // dependency array with ID and problemFromLocation to re-fetch if ID or problemFromLocation changes
+  }, [problemId, problemFromLocation]) // dependency array with ID and problemFromLocation to re-fetch if ID or problemFromLocation changes
 
   if (loading) return <LinearProgress />
   if (error) return <div>{error}</div>

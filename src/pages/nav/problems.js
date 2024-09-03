@@ -5,6 +5,7 @@
  * then be taken to the Problem Detail page to solve it.
  */
 import React, { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   Box,
   Container,
@@ -17,6 +18,7 @@ import {
   CardActions,
   CardMedia,
   CircularProgress,
+  LinearProgress,
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { fetchProblems } from '../../api'
@@ -49,7 +51,6 @@ const CardTitle = styled(Typography)(({ theme }) => ({
   whiteSpace: 'nowrap',
 }))
 
-//! Make reusable card component. will improve readability and maintainability and performance (with the use of children prop)
 function CategoryCard({ image, onClick, loading, buttonText, children }) {
   return (
     <CardStyled>
@@ -61,7 +62,7 @@ function CategoryCard({ image, onClick, loading, buttonText, children }) {
           fullWidth
           variant="contained"
           onClick={onClick}
-          disabled={loading}
+          disabled={loading} //! REMOVE LOADING IF USING REACT QUERY
           sx={{
             display: 'flex',
             justifyContent: 'center',
@@ -71,6 +72,7 @@ function CategoryCard({ image, onClick, loading, buttonText, children }) {
           {buttonText}
           {loading && (
             <CircularProgress
+              //! REMOVE LOADING IF USING REACT QUERY
               size={24}
               sx={{ color: 'white', marginLeft: 2 }}
             />
@@ -83,28 +85,51 @@ function CategoryCard({ image, onClick, loading, buttonText, children }) {
 
 function Problems() {
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(true)
-  const [problems, setProblems] = useState([])
+  // const [loading, setLoading] = useState(true)
+  // const [problems, setProblems] = useState([])
 
-  useEffect(() => {
-    async function loadProblems() {
-      try {
-        const data = await fetchProblems()
-        setProblems(data)
-        setLoading(false)
-      } catch (err) {
-        console.error('Error fetching problems', err)
-        setLoading(false)
-      }
-    }
-    loadProblems()
-  }, [])
+  // useEffect(() => {
+  //   async function loadProblems() {
+  //     try {
+  //       const data = await fetchProblems()
+  //       setProblems(data)
+  //       setLoading(false)
+  //     } catch (err) {
+  //       console.error('Error fetching problems', err)
+  //       setLoading(false)
+  //     }
+  //   }
+  //   loadProblems()
+  // }, [])
 
-  const navigateTo = (path) => {
-    if (!loading) {
-      navigate(path, { state: { problems } })
-    }
+  // const navigateTo = (path) => {
+  //   if (!loading) {
+  //     navigate(path, { state: { problems } })
+  //   }
+  // }
+
+  // use react query to fetch problems
+  const {
+    // eslint-disable-next-line no-unused-vars
+    data: problems,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['problems'],
+    queryFn: fetchProblems,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    cacheTime: 1000 * 60 * 30, // 30 minutes
+  })
+  // handling loading state
+  if (isLoading) {
+    return <LinearProgress />
   }
+  // handling error state
+  if (isError) {
+    return <div>Error: {error.message}</div>
+  }
+
   return (
     <Box sx={{ bgcolor: 'background.default', py: 6 }}>
       <Container maxWidth="lg">
@@ -124,8 +149,9 @@ function Problems() {
           <Grid item xs={12} sm={6} md={4}>
             <CategoryCard
               image={icpcImage}
-              onClick={() => navigateTo('/problems/icpc')}
-              loading={loading}
+              onClick={() => navigate('/problems/icpc')}
+              //loading={loading}
+              // loading={isLoading}
               buttonText="Explore ICPC Problems"
             >
               <CardTitle gutterBottom variant="h5" component="div">
@@ -144,8 +170,9 @@ function Problems() {
           <Grid item xs={12} sm={6} md={4}>
             <CategoryCard
               image={programmingImage}
-              onClick={() => navigateTo('/problems/programming')}
-              loading={loading}
+              onClick={() => navigate('/problems/programming')}
+              //loading={loading}
+              // loading={isLoading}
               buttonText="Explore Programming Problems"
             >
               <CardTitle gutterBottom variant="h5" component="div">
@@ -165,8 +192,9 @@ function Problems() {
           <Grid item xs={12} sm={6} md={4}>
             <CategoryCard
               image={interviewImage}
-              onClick={() => navigateTo('/problems/interview')}
-              loading={loading}
+              onClick={() => navigate('/problems/interview')}
+              //loading={loading}
+              // loading={isLoading}
               buttonText="Explore Interview Problems"
             >
               <CardTitle gutterBottom variant="h5" component="div">

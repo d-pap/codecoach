@@ -136,7 +136,7 @@ function App() {
                 }
               />
               <Route
-                path="/problems/:id"
+                path="/problems/:problemId"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <ProblemDetail />

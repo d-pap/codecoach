@@ -5,6 +5,7 @@
  */
 
 import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
 import AceEditor from 'react-ace'
 import { executeCode } from '../../api'
 import 'ace-builds/src-noconflict/theme-monokai'
@@ -20,6 +21,7 @@ import { Button, Stack, Box } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
 import PlayArrow from '@mui/icons-material/PlayArrow'
 import CodeEditorToolbar from './CodeEditorToolbar'
+import { getCurrentUserId, saveSubmission } from '../../api'
 
 const themeStyles = {
   monokai: {
@@ -60,7 +62,11 @@ const themeStyles = {
   },
 }
 
-const EditorButtons = ({ handleRunCode, currentThemeStyle }) => (
+const EditorButtons = ({
+  handleRunCode,
+  handleSubmitCode,
+  currentThemeStyle,
+}) => (
   <Box sx={{ pt: 1, pr: 1 }}>
     <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
       <Button
@@ -74,6 +80,7 @@ const EditorButtons = ({ handleRunCode, currentThemeStyle }) => (
       </Button>
       <Button
         size="small"
+        onClick={handleSubmitCode}
         variant="contained"
         endIcon={<SendIcon />}
         sx={{
@@ -114,6 +121,7 @@ const OutputWindow = ({ output, currentThemeStyle }) => (
 const CodeEditor = ({ code, setCode, setOutput, output }) => {
   const [theme, setTheme] = useState('monokai')
   const [language, setLanguage] = useState('python')
+  const { problemId } = useParams() // get problem ID from URL
 
   const handleRunCode = async () => {
     try {
@@ -129,6 +137,60 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
       }
     } catch (error) {
       setOutput('Error executing code: ' + error.message)
+    }
+  }
+
+  const handleSubmitCode = async () => {
+    try {
+      const result = await executeCode(code)
+
+      // determine the status of the result
+      let status = 'Unknown Error'
+      if (result.status.id === 3) {
+        status = 'Accepted'
+      } else if (result.status.id === 6) {
+        status = 'Compilation Error'
+      } else if (result.status.id === 5) {
+        status = 'Time Limit Exceeded'
+      } else {
+        status = 'Runtime Error'
+      }
+
+      // prepare submission data
+      const userId = await getCurrentUserId() // get user ID
+
+      // submission data to be saved in the database
+      const submissionData = {
+        userId,
+        problemId,
+        code,
+        result: {
+          stdout: result.stdout,
+          stderr: result.stderr,
+          compile_output: result.compile_output, // will be 'null' for non-compiled languages like Python
+          memory: result.memory,
+          time: result.time,
+        },
+        status,
+        timestamp: new Date(),
+      }
+
+      // save submission to database
+      await saveSubmission(submissionData)
+
+      // display output with memory and execution time
+      let outputMessage = `Status: ${status}\nOutput: ${result.stdout || 'No output'}\nMemory: ${result.memory} KB\nExecution Time: ${result.time} seconds`
+      // add error messages if any
+      if (result.stderr) {
+        outputMessage += `\nError: ${result.stderr}`
+      }
+      // add compilation output if any //!(only for compiled languages we might add in the future)
+      if (result.compile_output) {
+        outputMessage += `\nCompilation Error: ${result.compile_output}`
+      }
+      setOutput(outputMessage)
+    } catch (error) {
+      setOutput('Error submitting code: ' + error.message)
     }
   }
 
@@ -177,6 +239,7 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
       />
       <EditorButtons
         handleRunCode={handleRunCode}
+        handleSubmitCode={handleSubmitCode}
         currentThemeStyle={currentThemeStyle}
       />
       <OutputWindow output={output} currentThemeStyle={currentThemeStyle} />
