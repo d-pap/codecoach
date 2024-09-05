@@ -43,7 +43,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
       <Box
         sx={{
           display: 'flex',
-          height: 'calc(100vh - 85px)',
+          height: 'calc(100vh - 56px)',
           backgroundColor: (theme) => theme.palette.background.default,
         }}
       >
