@@ -19,8 +19,10 @@ import LandingPage from './pages/LandingPage'
 import Header from './components/Header-Footer/Header'
 import Footer from './components/Header-Footer/Footer'
 import Home from './pages'
-// import Courses from './pages/nav/courses'
+// import Courses '
 import Courses from './pages/nav/Studentcourses'
+
+
 import Problems from './pages/nav/problems'
 import ProblemDetail from './pages/problems/problemDetail'
 import AddProblems from './pages/nav/addProblems'

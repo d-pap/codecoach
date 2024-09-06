@@ -1,133 +1,106 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import {
   Grid,
   Card,
   CardContent,
   Typography,
   Button,
-  Tabs,
-  Tab,
   Box,
-  Chip,
-  Avatar,
+  Paper,
   List,
   ListItem,
   ListItemText,
-  ListItemIcon,
-  Paper,
-  ToggleButtonGroup,
-  ToggleButton,
 } from "@mui/material";
-import { Code, TableChart, FilterList, School } from "@mui/icons-material";
+import ClassFormDialog from "../Courses/ClassFormDialog";
 
-const Courses = () => {
-  // Tab handling
-  const [value, setValue] = React.useState(0);
-  const handleTabChange = (event, newValue) => {
-    setValue(newValue);
+// Mock user context (replace or integrate with your actual auth context)
+const AuthContext = React.createContext({
+  isAuthenticated: true,
+  role: "teacher",
+});
+
+const initialCourses = [
+  { name: "ICPC beginner", students: 0 },
+  { name: "ICPC intermediate", students: 4 },
+  { name: "ICPC expertise", students: 0 },
+];
+
+const tools = [
+  { name: "Refresh My Knowledge", description: "Refresh your content knowledge in various subject areas." },
+  { name: "Lesson Plan", description: "Create structured, detailed lesson plans tailored to your curriculum and students' needs." },
+  { name: "Recommend Assignments", description: "Receive recommendations on what your students should work on next." },
+];
+
+const Studentcourses = () => {
+  const { isAuthenticated, role } = useContext(AuthContext);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [courses, setCourses] = useState(initialCourses);  // Maintain course list in state
+
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
   };
 
-  // Study plan data
-  const studyPlans = [
-    { title: "Top Interview 150", description: "Must-do List for Interviews", icon: <School /> },
-    { title: "ICPC Beginner", description: "start with easy questions", icon: <Code /> },
-    { title: "ICPC intermediate ", description: "learn more with medium questions", icon: <Code /> },
-    { title: "ICPC expert ", description: "Deeper understanding with tricky questions", icon: <Code /> },
-    { title: "SQL 50", description: "Crack SQL Interview in 50 Qs", icon: <TableChart /> },
-    { title: "30 Days of JavaScript", description: "Learn JS Basics", icon: <Code /> },
-  ];
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
 
-  // Problem list data
-  const problems = [
-    { id: 2028, title: "Find Missing Observations", difficulty: "Medium", acceptance: "55.2%" },
-    { id: 1, title: "Two Sum", difficulty: "Easy", acceptance: "53.6%" },
-    { id: 2, title: "Add Two Numbers", difficulty: "Medium", acceptance: "44.0%" },
-    { id: 3, title: "Longest Substring Without Repeating Characters", difficulty: "Medium", acceptance: "35.4%" },
-  ];
+  // Handle the creation of a new course
+  const handleCreateCourse = (courseName) => {
+    const newCourse = { name: courseName, students: 0 };
+    setCourses([...courses, newCourse]);  // Update course list with new course
+  };
 
   return (
-    <Box sx={{ p: 4 }}>
-      {/* Study Plan Section */}
-      <Typography variant="h4" gutterBottom>
-        Study Plan
-      </Typography>
+    <Box sx={{ flexGrow: 1, p: 3 }}>
       <Grid container spacing={3}>
-        {studyPlans.map((plan, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card elevation={3}>
+        <Grid item xs={12} md={9}>
+          {courses.map((cls, index) => (
+            <Card key={index} sx={{ mb: 2 }}>
               <CardContent>
-                <Avatar>{plan.icon}</Avatar>
-                <Typography variant="h6">{plan.title}</Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {plan.description}
-                </Typography>
+                <Typography variant="h5">{cls.name}</Typography>
+                <Typography variant="body2">Students: {cls.students} students</Typography>
+                <Button variant="outlined" sx={{ mt: 1 }}>Add students</Button>
               </CardContent>
             </Card>
-          </Grid>
-        ))}
-      </Grid>
-
-      {/* Topics Filter */}
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h5" gutterBottom>
-          Topics
-        </Typography>
-        <Tabs value={value} onChange={handleTabChange} aria-label="topics tabs">
-          <Tab label="All Topics" />
-          <Tab label="ICPC" />
-          <Tab label="Algorithms" />
-          <Tab label="Database" />
-        </Tabs>
-      </Box>
-
-      {/* Filters */}
-      <Box sx={{ mt: 2 }}>
-        <ToggleButtonGroup>
-          <ToggleButton value="all">
-            <Chip label="All" />
-          </ToggleButton>
-          <ToggleButton value="easy">
-            <Chip label="Easy" color="success" />
-          </ToggleButton>
-          <ToggleButton value="medium">
-            <Chip label="Medium" color="warning" />
-          </ToggleButton>
-          <ToggleButton value="hard">
-            <Chip label="Hard" color="error" />
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </Box>
-
-      {/* Problem List Section */}
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h6" gutterBottom>
-          Problem List
-        </Typography>
-        <Paper elevation={2}>
-          <List>
-            {problems.map((problem) => (
-              <ListItem key={problem.id} divider>
-                <ListItemIcon>
-                  <Avatar>{problem.id}</Avatar>
-                </ListItemIcon>
-                <ListItemText
-                  primary={problem.title}
-                  secondary={`Difficulty: ${problem.difficulty} | Acceptance: ${problem.acceptance}`}
-                />
+          ))}
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <Paper sx={{ p: 2, height: 'fit-content', display: 'flex', flexDirection: 'column' }}>
+            <List component="nav" aria-label="secondary mailbox folders">
+              {tools.map((tool, index) => (
+                <ListItem key={index}>
+                  <ListItemText primary={tool.name} secondary={tool.description} />
+                </ListItem>
+              ))}
+              {isAuthenticated && role === 'teacher' && (
+                <>
+                  <ListItem>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      onClick={handleDialogOpen}
+                    >
+                      Add New Course
+                    </Button>
+                  </ListItem>
+                  <ClassFormDialog open={dialogOpen} onClose={handleDialogClose} onCreate={handleCreateCourse} />
+                </>
+              )}
+              {isAuthenticated && (
+                <ListItem>
+                  <Button variant="contained" color="primary" fullWidth>Join Course</Button>
+                </ListItem>
+              )}
+              <ListItem>
+                <Button variant="contained" color="secondary" fullWidth>View all</Button>
               </ListItem>
-            ))}
-          </List>
-        </Paper>
-      </Box>
-
-      {/* Footer Section */}
-      <Box sx={{ mt: 4, textAlign: "center" }}>
-        <Button variant="contained" color="primary" startIcon={<FilterList />}>
-          See More
-        </Button>
-      </Box>
+            </List>
+          </Paper>
+        </Grid>
+      </Grid>
     </Box>
   );
 };
 
-export default Courses;
+export default Studentcourses;
