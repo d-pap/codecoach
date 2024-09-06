@@ -4,7 +4,8 @@
  * users will select a problem they want to solve,
  * then be taken to the Problem Detail page to solve it.
  */
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   Box,
   Container,
@@ -16,7 +17,7 @@ import {
   CardContent,
   CardActions,
   CardMedia,
-  CircularProgress,
+  Skeleton,
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { fetchProblems } from '../../api'
@@ -49,8 +50,7 @@ const CardTitle = styled(Typography)(({ theme }) => ({
   whiteSpace: 'nowrap',
 }))
 
-//! Make reusable card component. will improve readability and maintainability and performance (with the use of children prop)
-function CategoryCard({ image, onClick, loading, buttonText, children }) {
+function CategoryCard({ image, onClick, buttonText, children }) {
   return (
     <CardStyled>
       <CardMediaStyled image={image} />
@@ -61,7 +61,6 @@ function CategoryCard({ image, onClick, loading, buttonText, children }) {
           fullWidth
           variant="contained"
           onClick={onClick}
-          disabled={loading}
           sx={{
             display: 'flex',
             justifyContent: 'center',
@@ -69,42 +68,83 @@ function CategoryCard({ image, onClick, loading, buttonText, children }) {
           }}
         >
           {buttonText}
-          {loading && (
-            <CircularProgress
-              size={24}
-              sx={{ color: 'white', marginLeft: 2 }}
-            />
-          )}
         </Button>
       </CardActions>
     </CardStyled>
   )
 }
 
+const SkeletonCard = () => (
+  <Grid item xs={12} sm={6} md={4}>
+    <Skeleton variant="rounded" height={200} animation="wave" />
+    <Skeleton
+      variant="text"
+      sx={{ fontSize: '1.5rem', mt: 1 }}
+      animation="wave"
+    />
+    <Skeleton
+      variant="text"
+      sx={{ fontSize: '1rem', mb: 1 }}
+      animation="wave"
+    />
+    <Skeleton
+      variant="text"
+      sx={{ fontSize: '1rem', mb: 1 }}
+      animation="wave"
+    />
+    <Skeleton
+      variant="text"
+      sx={{ fontSize: '1rem', mb: 4 }}
+      animation="wave"
+    />
+    <Skeleton variant="rounded" height={40} animation="wave" />
+  </Grid>
+)
+
 function Problems() {
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(true)
-  const [problems, setProblems] = useState([])
-
-  useEffect(() => {
-    async function loadProblems() {
-      try {
-        const data = await fetchProblems()
-        setProblems(data)
-        setLoading(false)
-      } catch (err) {
-        console.error('Error fetching problems', err)
-        setLoading(false)
-      }
-    }
-    loadProblems()
-  }, [])
-
-  const navigateTo = (path) => {
-    if (!loading) {
-      navigate(path, { state: { problems } })
-    }
+  // use react query to fetch problems
+  const {
+    // eslint-disable-next-line no-unused-vars
+    data: problems,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['problems'],
+    queryFn: fetchProblems,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    cacheTime: 1000 * 60 * 30, // 30 minutes
+  })
+  if (isLoading) {
+    return (
+      <Box sx={{ bgcolor: 'background.default', py: 6 }}>
+        <Container maxWidth="lg">
+          <Typography
+            variant="h2"
+            component="h1"
+            gutterBottom
+            align="center"
+            sx={{
+              mb: 6,
+            }}
+          >
+            Explore Problem Categories
+          </Typography>
+          <Grid container spacing={4}>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </Grid>
+        </Container>
+      </Box>
+    )
   }
+  // handling error state
+  if (isError) {
+    return <div>Error: {error.message}</div>
+  }
+
   return (
     <Box sx={{ bgcolor: 'background.default', py: 6 }}>
       <Container maxWidth="lg">
@@ -124,8 +164,7 @@ function Problems() {
           <Grid item xs={12} sm={6} md={4}>
             <CategoryCard
               image={icpcImage}
-              onClick={() => navigateTo('/problems/icpc')}
-              loading={loading}
+              onClick={() => navigate('/problems/icpc')}
               buttonText="Explore ICPC Problems"
             >
               <CardTitle gutterBottom variant="h5" component="div">
@@ -144,8 +183,7 @@ function Problems() {
           <Grid item xs={12} sm={6} md={4}>
             <CategoryCard
               image={programmingImage}
-              onClick={() => navigateTo('/problems/programming')}
-              loading={loading}
+              onClick={() => navigate('/problems/programming')}
               buttonText="Explore Programming Problems"
             >
               <CardTitle gutterBottom variant="h5" component="div">
@@ -165,8 +203,7 @@ function Problems() {
           <Grid item xs={12} sm={6} md={4}>
             <CategoryCard
               image={interviewImage}
-              onClick={() => navigateTo('/problems/interview')}
-              loading={loading}
+              onClick={() => navigate('/problems/interview')}
               buttonText="Explore Interview Problems"
             >
               <CardTitle gutterBottom variant="h5" component="div">

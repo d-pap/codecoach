@@ -2,24 +2,13 @@
  * Section for loading ICPC questions and displaying to the user.
  * The user can filter the questions by region and year.
  */
-
-// export default ICPC
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
-import {
-  ICPCFilter,
-  //ICPCFilterDisplay,
-} from '../../../components/problems/problem-filters/ICPCFilter'
+import { ICPCFilter } from '../../../components/problems/problem-filters/ICPCFilter'
 import { styled, alpha } from '@mui/material/styles'
-import {
-  Stack,
-  Pagination,
-  Toolbar,
-  Select,
-  LinearProgress,
-} from '@mui/material'
-// import HorizontalResizableColumn from '../../../components/utility/HorizontalResizableColumn'
+import { Stack, Pagination, Toolbar, Select, Skeleton } from '@mui/material'
 import { fetchProblems } from '../../../api'
 import { Box, Container, Grid, Typography } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
@@ -29,15 +18,15 @@ import MenuItem from '@mui/material/MenuItem'
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
   backgroundColor: 'transparent',
-  borderRadius: theme.spacing(2), // rounded corners for button container
+  borderRadius: theme.spacing(2),
 }))
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.spacing(2),
-  backgroundColor: alpha(theme.palette.text.secondary, 0.15), //! color of search box bg (this is light grey)
+  backgroundColor: alpha(theme.palette.text.secondary, 0.15),
   '&:hover': {
-    backgroundColor: alpha(theme.palette.text.secondary, 0.25), //! hover color of search box bg (this is light grey)
+    backgroundColor: alpha(theme.palette.text.secondary, 0.25),
     transition: 'background-color 0.3s ease-in-out',
   },
   marginRight: theme.spacing(2),
@@ -87,38 +76,152 @@ const StyledSelect = styled(Select)(({ theme }) => ({
   },
 }))
 
+const FilterToolbar = ({ region, year, onRegionChange, onYearChange }) => (
+  <Box sx={{ flexGrow: 1 }}>
+    <AppBarStyled
+      position="static"
+      sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}
+    >
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+          }}
+        >
+          <StyledSelect
+            value={region}
+            onChange={onRegionChange}
+            sx={{
+              height: '40px',
+              minWidth: '150px',
+              padding: '0 10px',
+            }}
+          >
+            <MenuItem value="all">All Regions</MenuItem>
+            <MenuItem value="World">World</MenuItem>
+            <MenuItem value="NA">North America</MenuItem>
+            <MenuItem value="EU">Europe</MenuItem>
+          </StyledSelect>
+          <StyledSelect
+            value={year}
+            onChange={onYearChange}
+            sx={{
+              height: '40px',
+              minWidth: '150px',
+              padding: '0 10px',
+            }}
+          >
+            <MenuItem value="all">All Years</MenuItem>
+            <MenuItem value="2021">2021</MenuItem>
+            <MenuItem value="2020">2020</MenuItem>
+            <MenuItem value="2019">2019</MenuItem>
+          </StyledSelect>
+        </Box>
+        {/* SEARCH BOX HERE:  */}
+        <Search>
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+          <StyledInputBase
+            placeholder="Search questions..."
+            inputProps={{ 'aria-label': 'search' }}
+          />
+        </Search>
+      </Toolbar>
+    </AppBarStyled>
+  </Box>
+)
+
+const SkeletonProblemList = () => (
+  <Box
+    sx={{
+      bgcolor: 'background.default',
+      minHeight: '100vh',
+      py: 4, //TODO: match with problems.js page?
+    }}
+  >
+    <Container maxWidth="lg">
+      <Typography
+        variant="h2"
+        component="h1"
+        gutterBottom
+        align="center"
+        sx={{ mb: 2 }} //TODO: match with problems.js page?
+      >
+        ICPC Problems
+      </Typography>
+      <FilterToolbar region="all" year="all" />
+      {/* skeleton for problems */}
+      <Grid
+        container
+        spacing={0}
+        sx={{
+          display: 'flex',
+          flexWrap: 'nowrap',
+          boxShadow:
+            '0px 4px 5px -2px rgba(0, 0, 0, 0.2), 4px 0px 5px -2px rgba(0, 0, 0, 0.2), -4px 0px 5px -2px rgba(0, 0, 0, 0.2)',
+          borderRadius: (theme) => theme.spacing(2),
+        }}
+      >
+        <Box sx={{ flexGrow: 1, padding: (theme) => theme.spacing(2) }}>
+          {/* skeleton for pagination */}
+          <Box sx={{ display: 'flex', justifyContent: 'right' }}>
+            <Skeleton variant="text" width={150} sx={{ fontSize: '2rem' }} />
+          </Box>
+
+          {/* skeleton for problem cards list */}
+          <Stack spacing={2}>
+            {[...Array(5)].map((_, index) => (
+              <Skeleton
+                key={index}
+                variant="rectangular"
+                height={120}
+                sx={{ borderRadius: 1 }}
+              />
+            ))}
+          </Stack>
+
+          {/* skeleton for pagination */}
+          <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
+            <Skeleton
+              variant="rectangular"
+              width={150}
+              height={40}
+              sx={{ mt: 2 }}
+            />
+          </Box>
+        </Box>
+      </Grid>
+    </Container>
+  </Box>
+)
+
 function ICPC() {
   const location = useLocation()
   const problemsFromLocation = location.state?.problems
-  const [problems, setProblems] = useState(problemsFromLocation || [])
+
+  // use react query to get cached problems or fetch new problems if not cached
+  const {
+    data: problems = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['problems'],
+    queryFn: fetchProblems,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    initialData: problemsFromLocation,
+  })
+
   const [region, setRegion] = useState('all')
   const [year, setYear] = useState('all')
   const [filteredProblems, setFilteredProblems] = useState(problems)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const problemsPerPage = 10
 
-  // Fetch problems if not loaded
-  useEffect(() => {
-    async function loadProblems() {
-      if (!problemsFromLocation) {
-        try {
-          const data = await fetchProblems()
-          setProblems(data)
-        } catch (err) {
-          setError('Error fetching problems')
-        } finally {
-          setLoading(false)
-        }
-      } else {
-        setLoading(false)
-      }
-    }
-    loadProblems()
-  }, [problemsFromLocation])
-
-  // Filter problems based on region and year
+  // update filter problems when problems, region, or year change
   useEffect(() => {
     setFilteredProblems(ICPCFilter(problems, region, year))
   }, [problems, region, year])
@@ -135,12 +238,16 @@ function ICPC() {
     setCurrentPage(page)
   }
 
-  if (loading) {
-    return <LinearProgress />
+  if (isLoading) {
+    return <SkeletonProblemList />
   }
 
-  if (error) {
-    return <p>{error}</p>
+  if (isError) {
+    return (
+      <Typography variant="body1">
+        Error loading problems: {error.message}
+      </Typography>
+    )
   }
 
   // Calculate the problems to display on the current page
@@ -152,85 +259,29 @@ function ICPC() {
   )
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 2 }}>
+    <Box
+      sx={{
+        bgcolor: 'background.default',
+        minHeight: '100vh',
+        py: 4, //TODO: match with problems.js page?
+      }}
+    >
       <Container maxWidth="lg">
         <Typography
           variant="h2"
           component="h1"
           gutterBottom
           align="center"
-          sx={{ mb: 4 }}
+          sx={{ mb: 2 }} //TODO: match with problems.js page?
         >
           ICPC Problems
         </Typography>
-        {/* FILTERS TOOLBAR HERE: */}
-        <Box
-          sx={{
-            flexGrow: 1,
-          }}
-        >
-          <AppBarStyled
-            position="static"
-            sx={{
-              backgroundColor: 'transparent',
-              boxShadow: 'none', // ! box shadow for app bar
-            }}
-          >
-            <Toolbar
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between', // even space between items
-              }}
-            >
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 2,
-                }}
-              >
-                <StyledSelect
-                  value={region}
-                  onChange={handleRegionChange}
-                  sx={{
-                    height: '40px',
-                    minWidth: '150px',
-                    padding: '0 10px',
-                  }}
-                >
-                  <MenuItem value="all">All Regions</MenuItem>
-                  <MenuItem value="World">World</MenuItem>
-                  <MenuItem value="NA">North America</MenuItem>
-                  <MenuItem value="EU">Europe</MenuItem>
-                </StyledSelect>
-                <StyledSelect
-                  value={year}
-                  onChange={handleYearChange}
-                  sx={{
-                    height: '40px',
-                    minWidth: '150px',
-                    padding: '0 10px',
-                  }}
-                >
-                  <MenuItem value="all">All Years</MenuItem>
-                  <MenuItem value="2021">2021</MenuItem>
-                  <MenuItem value="2020">2020</MenuItem>
-                  <MenuItem value="2019">2019</MenuItem>
-                </StyledSelect>
-              </Box>
-              {/* SEARCH BOX HERE:  */}
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search questions..."
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </Search>
-            </Toolbar>
-          </AppBarStyled>
-        </Box>
+        <FilterToolbar
+          region={region}
+          year={year}
+          onRegionChange={handleRegionChange}
+          onYearChange={handleYearChange}
+        />
         <Grid
           // container holding all the problem cards
           container
@@ -243,19 +294,8 @@ function ICPC() {
             borderRadius: (theme) => theme.spacing(2),
           }}
         >
-          <Box
-            sx={{
-              flexGrow: 1,
-              padding: (theme) => theme.spacing(2),
-            }}
-          >
-            <Box
-              sx={{
-                p: 1,
-                display: 'flex',
-                justifyContent: 'right',
-              }}
-            >
+          <Box sx={{ flexGrow: 1, padding: (theme) => theme.spacing(2) }}>
+            <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
               <Pagination
                 count={Math.ceil(filteredProblems.length / problemsPerPage)}
                 page={currentPage}
