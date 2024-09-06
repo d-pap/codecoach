@@ -19,7 +19,8 @@ import LandingPage from './pages/LandingPage'
 import Header from './components/Header-Footer/Header'
 import Footer from './components/Header-Footer/Footer'
 import Home from './pages'
-import About from './pages/nav/about'
+// import Courses from './pages/nav/courses'
+import Courses from './pages/nav/Studentcourses'
 import Problems from './pages/nav/problems'
 import ProblemDetail from './pages/problems/problemDetail'
 import AddProblems from './pages/nav/addProblems'
@@ -120,10 +121,10 @@ function App() {
                 }
               />
               <Route
-                path="/about"
+                path="/Courses"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
-                    <About />
+                    <Courses />
                   </ProtectedRoute>
                 }
               />

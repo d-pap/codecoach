@@ -71,8 +71,11 @@ const Navbar = () => {
         <ListItem button component={RouterLink} to="/">
           <ListItemText primary="Home" />
         </ListItem>
-        <ListItem button component={RouterLink} to="/about">
-          <ListItemText primary="About" />
+        <ListItem button component={RouterLink} to="/courses">
+          <ListItemText primary="Courses" />
+        </ListItem>
+        <ListItem button component={RouterLink} to="/AddCourses">
+          <ListItemText primary="AddCourses" />
         </ListItem>
         <ListItem button component={RouterLink} to="/problems">
           <ListItemText primary="Problems" />
@@ -129,8 +132,11 @@ const Navbar = () => {
           <NavLink component={RouterLink} to="/" activeClassName="active">
             Home
           </NavLink>
-          <NavLink component={RouterLink} to="/about" activeClassName="active">
+          <NavLink component={RouterLink} to="/courses" activeClassName="active">
             Courses
+          </NavLink>
+          <NavLink component={RouterLink} to="/AddCourses" activeClassName="active">
+            Add Courses
           </NavLink>
           <NavLink
             component={RouterLink}

@@ -1,12 +1,7 @@
-/**
- * About page
- * This can be temporary if we want to use it for something else
- * or delete it completely. Was initially only made to construct navbar
- */
 import React from 'react'
 import { Box, Container, Typography } from '@mui/material'
 
-const About = () => {
+const AddCourses = () => {
   return (
     <Box sx={{ bgcolor: 'background.default', py: 6 }}>
       <Container maxWidth="lg">
@@ -17,11 +12,11 @@ const About = () => {
           align="center"
           sx={{ mb: 6 }}
         >
-          Courses
+          Add Courses
         </Typography>
       </Container>
     </Box>
   )
 }
 
-export default About
+export default AddCourses
