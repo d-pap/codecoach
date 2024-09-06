@@ -18,7 +18,6 @@ import {
 } from '@mui/material'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined'
-import NavbarStack from '../NavbarStack'
 import { FILTER_OPTIONS } from './ForumFilter'
 
 const ForumLayout = ({
@@ -33,11 +32,8 @@ const ForumLayout = ({
 }) => {
   return (
     <Box sx={{ maxHeight: '90vh', overflowY: 'auto' }}>
-      <Container
-        component={Paper}
-        sx={{ mt: 1, borderRadius: 2, position: 'relative' }}
-      >
-        <Typography variant="h5" gutterBottom>
+      <Container component={Paper} sx={{ position: 'relative', boxShadow: 0 }}>
+        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
           Discussions
         </Typography>
 
@@ -47,8 +43,6 @@ const ForumLayout = ({
             zIndex: 1,
             backgroundColor: 'white',
             p: 1,
-            borderBottom: 1,
-            borderColor: 'grey.300',
           }}
         >
           <TextField
