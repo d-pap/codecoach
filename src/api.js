@@ -138,7 +138,7 @@ export const getCurrentUserId = async () => {
 }
 
 // function to fetch messages from the database
-export async function fetchMessages(problemId) {
+export async function fetchForumComments(problemId) {
   try {
     const response = await axios.get(`${API_GATEWAY_URL}/messages/${problemId}`)
     return response.data
@@ -149,7 +149,7 @@ export async function fetchMessages(problemId) {
 }
 
 // function to post a message to the database
-export async function postMessage(problemId, userId, message) {
+export async function postForumComment(problemId, userId, message) {
   try {
     const response = await axios.post(`${API_GATEWAY_URL}/messages`, {
       problemId,
@@ -164,9 +164,11 @@ export async function postMessage(problemId, userId, message) {
 }
 
 // function to like a message
-export async function likeMessage(messageId) {
+export async function likeForumComment(messageId) {
   try {
-    const response = await axios.post(`${API_GATEWAY_URL}/messages/${messageId}/like`)
+    const response = await axios.post(
+      `${API_GATEWAY_URL}/messages/${messageId}/like`
+    )
     return response.data
   } catch (error) {
     console.error('Error liking message:', error)

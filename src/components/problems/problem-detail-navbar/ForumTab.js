@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { getCurrentUserId, postMessage, likeMessage } from '../../../api'
+import {
+  getCurrentUserId,
+  postForumComment,
+  likeForumComment,
+  fetchForumComments,
+} from '../../../api'
 import ForumLayout from './forum-elements/ForumLayout'
 import { FILTER_OPTIONS } from './forum-elements/ForumFilter'
 
@@ -15,6 +20,9 @@ const ForumTab = () => {
       try {
         const currentUserId = await getCurrentUserId()
         setUserId(currentUserId)
+
+        // ------------------- Comment out this block -------------------
+        // const messages = await fetchForumComments(problemId);
 
         const messages = [
           {
@@ -58,7 +66,7 @@ const ForumTab = () => {
     e.preventDefault()
     if (newMessage.trim()) {
       try {
-        const response = await postMessage(problemId, userId, newMessage)
+        const response = await postForumComment(problemId, userId, newMessage)
         setMessages((prevMessages) => [
           ...prevMessages,
           {
@@ -94,7 +102,7 @@ const ForumTab = () => {
         })
       )
 
-      await likeMessage(messageId)
+      await likeForumComment(messageId)
     } catch (error) {
       console.error('Error liking message:', error)
     }
