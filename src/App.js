@@ -23,8 +23,8 @@ import About from './pages/nav/about'
 import Problems from './pages/nav/problems'
 import ProblemDetail from './pages/problems/problemDetail'
 import AddProblems from './pages/nav/addProblems'
-import ICPCSingleForum from './pages/problems/add-problems/ICPCSingleForm'
-import ICPCMultipleForum from './pages/problems/add-problems/ICPCMultipleForum'
+import SingleFormLayout from './pages/problems/add-problems/ICPCSingleForm'
+import ICPCMultipleForm from './pages/problems/add-problems/ICPCMultipleForm'
 import ICPC from './pages/problems/problem-types/ICPC'
 import Interview from './pages/problems/problem-types/Interview'
 import Programming from './pages/problems/problem-types/Programming'
@@ -155,7 +155,7 @@ function App() {
                 path="/addProblems/singleICPC"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
-                    <ICPCSingleForum />
+                    <SingleFormLayout />
                   </ProtectedRoute>
                 }
               />
@@ -163,7 +163,7 @@ function App() {
                 path="/addProblems/multipleICPC"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
-                    <ICPCMultipleForum />
+                    <ICPCMultipleForm />
                   </ProtectedRoute>
                 }
               />

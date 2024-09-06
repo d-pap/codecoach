@@ -136,3 +136,42 @@ export const getCurrentUserId = async () => {
     console.error('Error getting user ID:', error)
   }
 }
+
+// function to fetch messages from the database
+export async function fetchForumComments(problemId) {
+  try {
+    const response = await axios.get(`${API_GATEWAY_URL}/messages/${problemId}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching messages:', error)
+    throw new Error('Failed to fetch messages')
+  }
+}
+
+// function to post a message to the database
+export async function postForumComment(problemId, userId, message) {
+  try {
+    const response = await axios.post(`${API_GATEWAY_URL}/messages`, {
+      problemId,
+      userId,
+      message,
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error posting message:', error)
+    throw new Error('Failed to post message')
+  }
+}
+
+// function to like a message
+export async function likeForumComment(messageId) {
+  try {
+    const response = await axios.post(
+      `${API_GATEWAY_URL}/messages/${messageId}/like`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error liking message:', error)
+    throw new Error('Failed to like message')
+  }
+}
