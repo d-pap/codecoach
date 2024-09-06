@@ -43,7 +43,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
       <Box
         sx={{
           display: 'flex',
-          height: 'calc(100vh - 56px)',
+          height: 'calc(100vh - 66px)', //! 56px is the height of the navbar
           backgroundColor: (theme) => theme.palette.background.default,
         }}
       >
@@ -57,6 +57,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                 backgroundColor: (theme) => theme.palette.background.default,
                 display: 'flex',
                 flexDirection: 'column',
+                height: '100%',
                 overflowY: 'auto',
               }}
             >

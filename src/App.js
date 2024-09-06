@@ -6,7 +6,7 @@
 import React, { useEffect, useState } from 'react'
 import './App.css'
 import { Amplify, Auth } from 'aws-amplify'
-import '@aws-amplify/ui-react/styles.css' // amplify ui styles
+import '@aws-amplify/ui-react/styles.css'
 import awsExports from './aws-exports'
 import {
   BrowserRouter as Router,

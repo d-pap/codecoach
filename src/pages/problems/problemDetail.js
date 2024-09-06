@@ -5,50 +5,56 @@
  * from the problems list on Problems page
  */
 
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useParams, useLocation } from 'react-router-dom'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { fetchProblemById } from '../../api'
 import ProblemDetailLayout from '../../components/problems/ProblemDetailLayout'
 import ProblemDetails from '../../components/problems/ProblemDetails'
 import { LinearProgress } from '@mui/material'
 
 function ProblemDetail() {
-  // state variables
-  const location = useLocation() // get location object
-  const problemFromLocation = location.state?.problem // get problem from location state
+  const location = useLocation()
+  const problemFromLocation = location.state?.problem
   const { problemId } = useParams() // extract problem ID from URL
-  const [problem, setProblem] = useState(null) // hold problem data
-  const [loading, setLoading] = useState(true) // indicate if data is still loading
-  const [error, setError] = useState(null) // hold any error message
+  const queryClient = useQueryClient() // get query client instance
 
-  useEffect(() => {
-    // run side effect to get problem data when component mounts or ID or problemFromLocation changes
-    async function getProblem() {
-      try {
-        let problem = problemFromLocation
-        if (!problemFromLocation) {
-          problem = await fetchProblemById(problemId)
-        }
+  // set problem data in the cache if passed from location
+  if (problemFromLocation) {
+    queryClient.setQueryData(['problem', problemId], problemFromLocation)
+  }
 
-        // filter out `_id` field from test cases
-        const filteredProlem = {
-          ...problem,
-          testCases: problem.testCases.map(({ _id, ...rest }) => rest),
-        }
-        setProblem(filteredProlem)
-        setLoading(false) // set loading to false
-      } catch (err) {
-        // error message if fetch fails
-        setError('Error fetching problem details')
-        setLoading(false) // set loading to false bc fetch attempt is complete
+  // use react query to get cached problem or fetch new problem if not cached
+  const {
+    data: problem,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['problem', problemId],
+    queryFn: () => fetchProblemById(problemId),
+    staleTime: 1000 * 60 * 5,
+    initialData: problemFromLocation,
+    select: (data) => {
+      // remove _id from testCases attribute
+      return {
+        ...data,
+        testCases: data.testCases.map(({ _id, ...rest }) => rest),
       }
-    }
-    getProblem()
-  }, [problemId, problemFromLocation]) // dependency array with ID and problemFromLocation to re-fetch if ID or problemFromLocation changes
+    },
+  })
 
-  if (loading) return <LinearProgress />
-  if (error) return <div>{error}</div>
-  if (!problem) return <div>Problem not found</div>
+  if (isLoading) {
+    return <LinearProgress /> //TODO: replace with skeleton loader?
+  }
+
+  if (isError) {
+    return <div>Error loading problem: {error.message}</div>
+  }
+
+  if (!problem) {
+    return <div>Problem not found</div>
+  }
 
   /**
    * Page rendering
@@ -56,8 +62,6 @@ function ProblemDetail() {
   return (
     <ProblemDetailLayout
       problem={problem}
-      // render layout and pass ProblemDetails and
-      // codeEditor as props
       problemDetails={<ProblemDetails problem={problem} />}
     />
   )

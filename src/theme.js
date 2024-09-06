@@ -116,6 +116,7 @@ const theme = createTheme({
         root: {
           textTransform: 'none', // don't capitalize button text
           borderRadius: 16, // button border radius
+          //padding: '8px 24px', // button padding
         },
       },
     },
@@ -156,6 +157,13 @@ const theme = createTheme({
           '& .MuiTypography-root': {
             fontSize: '0.875rem',
           },
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          fontSize: '0.875rem',
         },
       },
     },

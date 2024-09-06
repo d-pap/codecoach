@@ -8,6 +8,7 @@ import ProblemTab from './problem-detail-navbar/ProblemTab'
 //import ChatAITab from './problem-detail-navbar/ChatAITab';
 import HintByDatabaseTab from './problem-detail-navbar/HintByDatabase'
 import ForumTab from './problem-detail-navbar/ForumTab'
+import { Typography } from '@mui/material'
 
 const DetailContainer = styled.div`
   h1 {
@@ -60,7 +61,16 @@ function ProblemDetails({ problem }) {
 
     return (
       <div>
-        <h2>{problem.title}</h2>
+        <Typography
+          variant="h5"
+          component="h2"
+          gutterBottom
+          sx={{
+            fontWeight: 'bold',
+          }}
+        >
+          {problem.title}
+        </Typography>
         <DetailContainer>
           <ScrollableTabsContainer>
             <Tabs
