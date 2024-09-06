@@ -41,12 +41,8 @@ const Home = () => {
 
   return (
     <Container>
-      <Box
-        //* Onboarding section
-        sx={{
-          marginTop: 6,
-        }}
-      >
+      <Box sx={{ pt: 4 }}>
+        {/* Onboarding section */}
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <OnboardingCard elevation={3}>
@@ -57,7 +53,10 @@ const Home = () => {
               <Button
                 variant="contained"
                 onClick={() => navigate('/problems')} // redirect to problems page
-                sx={{ marginTop: 2 }}
+                sx={{
+                  marginTop: 2, //TODO: fix this after using a Box in the header (which forced this down more so need to readjust it)
+                  //padding: '8px 24px'
+                }}
               >
                 Get Started
               </Button>
@@ -116,6 +115,7 @@ const Home = () => {
             <Button
               variant="outlined"
               onClick={() => navigate('/problems')} // redirect to problems page
+              //sx={{ p: '8px 24px' }}
             >
               All Roadmaps
             </Button>

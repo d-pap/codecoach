@@ -4,7 +4,7 @@
  * users will select a problem they want to solve,
  * then be taken to the Problem Detail page to solve it.
  */
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import {
   Box,
@@ -17,8 +17,7 @@ import {
   CardContent,
   CardActions,
   CardMedia,
-  CircularProgress,
-  LinearProgress,
+  Skeleton,
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { fetchProblems } from '../../api'
@@ -51,7 +50,7 @@ const CardTitle = styled(Typography)(({ theme }) => ({
   whiteSpace: 'nowrap',
 }))
 
-function CategoryCard({ image, onClick, loading, buttonText, children }) {
+function CategoryCard({ image, onClick, buttonText, children }) {
   return (
     <CardStyled>
       <CardMediaStyled image={image} />
@@ -62,7 +61,6 @@ function CategoryCard({ image, onClick, loading, buttonText, children }) {
           fullWidth
           variant="contained"
           onClick={onClick}
-          disabled={loading} //! REMOVE LOADING IF USING REACT QUERY
           sx={{
             display: 'flex',
             justifyContent: 'center',
@@ -70,18 +68,38 @@ function CategoryCard({ image, onClick, loading, buttonText, children }) {
           }}
         >
           {buttonText}
-          {loading && (
-            <CircularProgress
-              //! REMOVE LOADING IF USING REACT QUERY
-              size={24}
-              sx={{ color: 'white', marginLeft: 2 }}
-            />
-          )}
         </Button>
       </CardActions>
     </CardStyled>
   )
 }
+
+const SkeletonCard = () => (
+  <Grid item xs={12} sm={6} md={4}>
+    <Skeleton variant="rounded" height={200} animation="wave" />
+    <Skeleton
+      variant="text"
+      sx={{ fontSize: '1.5rem', mt: 1 }}
+      animation="wave"
+    />
+    <Skeleton
+      variant="text"
+      sx={{ fontSize: '1rem', mb: 1 }}
+      animation="wave"
+    />
+    <Skeleton
+      variant="text"
+      sx={{ fontSize: '1rem', mb: 1 }}
+      animation="wave"
+    />
+    <Skeleton
+      variant="text"
+      sx={{ fontSize: '1rem', mb: 4 }}
+      animation="wave"
+    />
+    <Skeleton variant="rounded" height={40} animation="wave" />
+  </Grid>
+)
 
 function Problems() {
   const navigate = useNavigate()
@@ -98,9 +116,29 @@ function Problems() {
     staleTime: 1000 * 60 * 5, // 5 minutes
     cacheTime: 1000 * 60 * 30, // 30 minutes
   })
-  // handling loading state
   if (isLoading) {
-    return <LinearProgress />
+    return (
+      <Box sx={{ bgcolor: 'background.default', py: 6 }}>
+        <Container maxWidth="lg">
+          <Typography
+            variant="h2"
+            component="h1"
+            gutterBottom
+            align="center"
+            sx={{
+              mb: 6,
+            }}
+          >
+            Explore Problem Categories
+          </Typography>
+          <Grid container spacing={4}>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </Grid>
+        </Container>
+      </Box>
+    )
   }
   // handling error state
   if (isError) {
@@ -127,8 +165,6 @@ function Problems() {
             <CategoryCard
               image={icpcImage}
               onClick={() => navigate('/problems/icpc')}
-              //loading={loading}
-              // loading={isLoading}
               buttonText="Explore ICPC Problems"
             >
               <CardTitle gutterBottom variant="h5" component="div">
@@ -148,8 +184,6 @@ function Problems() {
             <CategoryCard
               image={programmingImage}
               onClick={() => navigate('/problems/programming')}
-              //loading={loading}
-              // loading={isLoading}
               buttonText="Explore Programming Problems"
             >
               <CardTitle gutterBottom variant="h5" component="div">
@@ -170,8 +204,6 @@ function Problems() {
             <CategoryCard
               image={interviewImage}
               onClick={() => navigate('/problems/interview')}
-              //loading={loading}
-              // loading={isLoading}
               buttonText="Explore Interview Problems"
             >
               <CardTitle gutterBottom variant="h5" component="div">
