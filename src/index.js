@@ -8,6 +8,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 import App from './App'
+import reportWebVitals from './reportWebVitals'
 
 const queryClient = new QueryClient()
 
@@ -20,3 +21,5 @@ root.render(
     </QueryClientProvider>
   </React.StrictMode>
 )
+
+reportWebVitals(console.log) // log web vitals

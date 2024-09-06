@@ -22,6 +22,7 @@ import SendIcon from '@mui/icons-material/Send'
 import PlayArrow from '@mui/icons-material/PlayArrow'
 import CodeEditorToolbar from './CodeEditorToolbar'
 import { getCurrentUserId, saveSubmission } from '../../api'
+import FeedbackDialog from '../problems/FeedbackDialog'
 
 const themeStyles = {
   monokai: {
@@ -122,6 +123,7 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
   const [theme, setTheme] = useState('monokai')
   const [language, setLanguage] = useState('python')
   const { problemId } = useParams() // get problem ID from URL
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
 
   const handleRunCode = async () => {
     try {
@@ -184,14 +186,23 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
       if (result.stderr) {
         outputMessage += `\nError: ${result.stderr}`
       }
-      // add compilation output if any //!(only for compiled languages we might add in the future)
+      // add compilation output if any //!(only if we add compiled languages in the future)
       if (result.compile_output) {
         outputMessage += `\nCompilation Error: ${result.compile_output}`
       }
       setOutput(outputMessage)
+
+      // open feedback dialog after 3 seconds
+      setTimeout(() => setFeedbackOpen(true), 3000)
     } catch (error) {
       setOutput('Error submitting code: ' + error.message)
     }
+  }
+
+  // feedback function
+  const handleFeedbackSubmit = (feedback) => {
+    //TODO: implement feedback submission to backend here
+    console.log(feedback)
   }
 
   const currentThemeStyle = themeStyles[theme]
@@ -243,6 +254,11 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
         currentThemeStyle={currentThemeStyle}
       />
       <OutputWindow output={output} currentThemeStyle={currentThemeStyle} />
+      <FeedbackDialog
+        open={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+        onSubmit={handleFeedbackSubmit}
+      />
     </Box>
   )
 }

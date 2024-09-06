@@ -98,7 +98,7 @@ const Navbar = () => {
         sx={{
           display: 'flex',
           justifyContent: 'flex-end',
-          height: '56px', // height of the header
+          height: '56px', // height of the header?
         }}
       >
         <IconButton
