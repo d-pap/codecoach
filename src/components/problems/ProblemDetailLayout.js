@@ -57,6 +57,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                 backgroundColor: (theme) => theme.palette.background.default,
                 display: 'flex',
                 flexDirection: 'column',
+                height: '100%',
                 overflowY: 'auto',
               }}
             >
