@@ -5,7 +5,7 @@ import FormFields from '../../../components/add-problems/multiple-problems/form-
 import QuestionsSection from '../../../components/add-problems/multiple-problems/form-elements/QuestionsSection'
 import AnswersSection from '../../../components/add-problems/multiple-problems/form-elements/AnswersSection'
 import PDFParser from '../../../components/add-problems/multiple-problems/pdf-elements/PDFParser'
-import './ICPCMultipleForum.css'
+import './ICPCMultipleForm.css'
 
 const parser = new PDFParser()
 
@@ -20,7 +20,7 @@ const initialFormData = {
   descriptionEndRegex: 'Input',
 }
 
-const ICPCMultipleForum = () => {
+const ICPCMultipleForm = () => {
   const [formData, setFormData] = useState(initialFormData)
   const [error, setError] = useState(null)
   const [uploading, setUploading] = useState(false)
@@ -370,4 +370,4 @@ const ICPCMultipleForum = () => {
   )
 }
 
-export default ICPCMultipleForum
+export default ICPCMultipleForm
