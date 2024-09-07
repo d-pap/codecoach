@@ -1,8 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import SendChat from './AIChat'
-import { Box, TextField, Button, Paper, CircularProgress } from '@mui/material'
+import {
+  Box,
+  TextField,
+  Button,
+  Paper,
+  CircularProgress,
+  IconButton,
+  Typography,
+  Collapse,
+} from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import AddIcon from '@mui/icons-material/Add'
+import RemoveIcon from '@mui/icons-material/Remove'
+import SettingsIcon from '@mui/icons-material/Settings'
 
 // Function to retrieve chat history from localStorage
 const getChatHistory = (problemId) => {
@@ -26,13 +38,14 @@ const clearChatHistory = (problemId) => {
 }
 
 // ChatBox component to display chat history and send messages
-const ChatBox = ({ problem }) => {
+const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [currentChatHistory, setCurrentChatHistory] = useState({
     conversation_id: null,
     data: [],
   })
+  const [showSettings, setShowSettings] = useState(false)
 
   // Retrieve chat history on component mount
   useEffect(() => {
@@ -162,11 +175,49 @@ const ChatBox = ({ problem }) => {
     )
   }
 
+  const incrementDrawerWidth = () => {
+    setDrawerWidth((prevWidth) => Math.min(prevWidth + 5, 70))
+  }
+
+  const decrementDrawerWidth = () => {
+    setDrawerWidth((prevWidth) => Math.max(prevWidth - 5, 20))
+  }
+
   return (
     <Paper
       elevation={3}
       sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}
     >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 1,
+        }}
+      >
+        <Typography variant="h6" sx={{ flexGrow: 1, textAlign: 'center' }}>
+          Chat With AI
+        </Typography>
+        <IconButton onClick={() => setShowSettings(!showSettings)}>
+          <SettingsIcon />
+        </IconButton>
+      </Box>
+
+      <Collapse in={showSettings}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 1 }}>
+          <IconButton onClick={incrementDrawerWidth}>
+            <AddIcon />
+          </IconButton>
+          <Box sx={{ display: 'flex', alignItems: 'center', mx: 1 }}>
+            {drawerWidth}%
+          </Box>
+          <IconButton onClick={decrementDrawerWidth}>
+            <RemoveIcon />
+          </IconButton>
+        </Box>
+      </Collapse>
+
       <Box
         sx={{
           flex: 1,

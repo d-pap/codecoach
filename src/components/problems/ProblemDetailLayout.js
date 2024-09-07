@@ -33,6 +33,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
   const [code, setCode] = useState(pythonDefaultCode)
   const [output, setOutput] = useState('')
   const [isChatOpen, setIsChatOpen] = useState(false)
+  const [drawerWidth, setDrawerWidth] = useState(35) // Width in percentage (default is 35%)
 
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen)
@@ -43,17 +44,15 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
       <Box
         sx={{
           display: 'flex',
-          height: 'calc(100vh - 66px)', //! 56px is the height of the navbar
+          height: 'calc(100vh - 66px)',
           backgroundColor: (theme) => theme.palette.background.default,
         }}
       >
         <PanelGroup direction="horizontal">
           <Panel defaultSize={50} minSize={20}>
             <Box
-              //* left panel
               sx={{
                 pt: 2,
-                //pr: 2,
                 backgroundColor: (theme) => theme.palette.background.default,
                 display: 'flex',
                 flexDirection: 'column',
@@ -67,7 +66,6 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
           <StyledPanelResizeHandle />
           <Panel minSize={20}>
             <Box
-              //* right panel
               sx={{
                 pt: 2,
                 pl: 2,
@@ -79,11 +77,8 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
               }}
             >
               <Box
-                //* code editor container
                 sx={{
                   flex: 1,
-                  //width: '100%', //! controlled by CodeEditor?
-                  //height: '100%', //! controlled by CodeEditor?
                   display: 'flex',
                   borderRadius: 1,
                 }}
@@ -96,7 +91,6 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                 />
               </Box>
               <Box
-                //* chat bubble
                 sx={{
                   position: 'fixed',
                   top: '50%',
@@ -125,7 +119,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                 anchor="right"
                 open={isChatOpen}
                 onClose={toggleChat}
-                PaperProps={{ style: { width: '33vw' } }}
+                PaperProps={{ style: { width: `${drawerWidth}vw` } }}
               >
                 <Box
                   sx={{
@@ -136,7 +130,11 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                     borderRadius: '4px 4px 0 0',
                   }}
                 >
-                  <ChatBox problem={problem} />
+                  <ChatBox
+                    problem={problem}
+                    drawerWidth={drawerWidth}
+                    setDrawerWidth={setDrawerWidth}
+                  />
                 </Box>
               </Drawer>
             </Box>
