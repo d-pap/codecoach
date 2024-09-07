@@ -29,7 +29,7 @@ const ForumTab = () => {
             id: 1,
             userId: 1,
             username: 'John Doe',
-            message: 'First message',
+            message: 'First message lorem ipsum dolor sit amet',
             likes: 5,
             likedBy: [1, 2],
             timestamp: new Date('2023-10-01'),
@@ -38,7 +38,8 @@ const ForumTab = () => {
             id: 2,
             userId: 2,
             username: 'Alice Smith',
-            message: 'Second message',
+            message:
+              'Second message lorem ipsum dolor sit amet lorem ipsum dolor sit amet',
             likes: 2,
             likedBy: [3],
             timestamp: new Date('2023-10-02'),
@@ -47,7 +48,8 @@ const ForumTab = () => {
             id: 3,
             userId: 3,
             username: 'Bob Brown',
-            message: 'Third message',
+            message:
+              'Third message lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet',
             likes: 8,
             likedBy: [1, 2, 3],
             timestamp: new Date('2023-10-03'),
