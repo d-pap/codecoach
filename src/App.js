@@ -22,12 +22,14 @@ import Home from './pages'
 import About from './pages/nav/about'
 import Problems from './pages/nav/problems'
 import ProblemDetail from './pages/problems/problemDetail'
-import AddProblems from './pages/nav/addProblems'
+import ManageProblemsPage from './pages/nav/manageProblems'
 import SingleFormLayout from './pages/problems/add-problems/ICPCSingleForm'
 import ICPCMultipleForm from './pages/problems/add-problems/ICPCMultipleForm'
+import InterviewForm from './pages/problems/add-problems/InterviewForm'
+import EditICPCProblem from './pages/problems/edit-problems/editICPCProblem'
+import EditInterviewProblem from './pages/problems/edit-problems/editInterviewProblem'
 import ICPC from './pages/problems/problem-types/ICPC'
 import Interview from './pages/problems/problem-types/Interview'
-import Programming from './pages/problems/problem-types/Programming'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import theme from './theme'
 import AuthModal from './components/auth/AuthModal'
@@ -144,15 +146,15 @@ function App() {
                 }
               />
               <Route
-                path="/addProblems"
+                path="/manage-problems"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
-                    <AddProblems />
+                    <ManageProblemsPage />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="/addProblems/singleICPC"
+                path="/manage-problems/singleICPC"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <SingleFormLayout />
@@ -160,10 +162,34 @@ function App() {
                 }
               />
               <Route
-                path="/addProblems/multipleICPC"
+                path="/manage-problems/multipleICPC"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <ICPCMultipleForm />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/interview"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <InterviewForm />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/edit/icpc/"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <EditICPCProblem />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/edit/interview/"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <EditInterviewProblem />
                   </ProtectedRoute>
                 }
               />
@@ -180,14 +206,6 @@ function App() {
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <Interview />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/problems/programming"
-                element={
-                  <ProtectedRoute isAuthenticated={isAuthenticated}>
-                    <Programming />
                   </ProtectedRoute>
                 }
               />
