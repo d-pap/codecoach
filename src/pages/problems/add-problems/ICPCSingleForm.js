@@ -99,8 +99,6 @@ const ICPCFormPage = () => {
       setFormData({
         type: 'icpc',
         title: '',
-        timeLimit: '',
-        memoryLimit: '',
         description: '',
         exampleInputs: '',
         exampleOutputs: '',

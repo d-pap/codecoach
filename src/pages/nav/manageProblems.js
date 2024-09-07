@@ -14,10 +14,10 @@ import {
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import icpcImage from '../../images/icpc_logo.png'
-import multipleICPCImage from '../../images/pdf-parser.jpg'
-import interviewImage from '../../images/interview-icon.png'
-import editICPCImage from '../../images/placeholder.jpg'
-import editInterviewImage from '../../images/placeholder.jpg'
+import multipleICPCImage from '../../images/pdf-parser.png'
+import interviewImage from '../../images/interview-icon.jpg'
+import editICPCImage from '../../images/edit-icpc.jpg'
+import editInterviewImage from '../../images/edit-interview.jpg'
 
 const CardStyled = styled(Card)(({ theme }) => ({
   height: '100%',
@@ -35,6 +35,7 @@ const CardStyled = styled(Card)(({ theme }) => ({
 const CardMediaStyled = styled(CardMedia)(({ theme }) => ({
   height: 140,
   backgroundColor: theme.palette.background.paper,
+  backgroundSize: 'contain',
 }))
 
 function CategoryCard({ image, onClick, buttonText, title, description }) {
@@ -60,23 +61,23 @@ const ManageProblemsPage = () => {
   const navigate = useNavigate()
 
   const handleNavigateToSingleICPCForm = () => {
-    navigate('/manage-problems/singleICPC')
+    navigate('/manage-problems/add-single-icpc')
   }
 
   const handleNavigateToMultipleICPCForm = () => {
-    navigate('/manage-problems/multipleICPC')
+    navigate('/manage-problems/add-multiple-icpc')
   }
 
   const handleNavigateToInterviewForm = () => {
-    navigate('/manage-problems/interview')
+    navigate('/manage-problems/add-interview')
   }
 
   const handleNavigateToEditICPCForm = () => {
-    navigate('/manage-problems/editICPC')
+    navigate('/manage-problems/edit-icpc')
   }
 
   const handleNavigateToEditInterviewForm = () => {
-    navigate('/manage-problems/editInterview')
+    navigate('/manage-problems/edit-interview')
   }
 
   return (

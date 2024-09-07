@@ -13,14 +13,16 @@ const PDFUploaderPanel = ({
   const { onDrop: onDropAnswers, ...answerOtherProps } = answerFileProps
 
   const questionDropzone = useDropzone({
-    accept: '.pdf',
+    accept: 'application/pdf',
     onDrop: onDropQuestions,
     noClick: true,
+    noKeyboard: true,
   })
   const answerDropzone = useDropzone({
-    accept: '.pdf',
+    accept: 'application/pdf',
     onDrop: onDropAnswers,
     noClick: true,
+    noKeyboard: true,
   })
 
   return (

@@ -21,6 +21,9 @@ const QuestionCard = ({
   addTestCase,
   removeTestCase,
 }) => {
+  // Provide a default empty array for testCases if undefined
+  const testCases = question.testCases || []
+
   return (
     <Card
       key={`question-${index}`}
@@ -31,7 +34,7 @@ const QuestionCard = ({
       <CardContent>
         <TextField
           fullWidth
-          label="Title"
+          label="Problem Title"
           value={question.title}
           onChange={(e) => handleQuestionChange(index, 'title', e.target.value)}
           variant="outlined"
@@ -39,7 +42,7 @@ const QuestionCard = ({
         />
         <TextField
           fullWidth
-          label="Description"
+          label="Problem Description"
           value={question.description}
           onChange={(e) =>
             handleQuestionChange(index, 'description', e.target.value)
@@ -51,7 +54,7 @@ const QuestionCard = ({
         />
         <TextField
           fullWidth
-          label="Input"
+          label="Input Description"
           value={question.exampleInputs}
           onChange={(e) =>
             handleQuestionChange(index, 'exampleInputs', e.target.value)
@@ -63,7 +66,7 @@ const QuestionCard = ({
         />
         <TextField
           fullWidth
-          label="Output"
+          label="Output Description"
           value={question.exampleOutputs}
           onChange={(e) =>
             handleQuestionChange(index, 'exampleOutputs', e.target.value)
@@ -74,10 +77,24 @@ const QuestionCard = ({
           rows={2}
         />
 
+        {/* Comments Section */}
+        <TextField
+          fullWidth
+          label="Additional Comments"
+          value={question.comments || ''}
+          onChange={(e) =>
+            handleQuestionChange(index, 'comments', e.target.value)
+          }
+          variant="outlined"
+          margin="normal"
+          multiline
+          rows={2}
+        />
+
         <Typography variant="h6" mt={2}>
           Test Cases:
         </Typography>
-        {question.testCases.map((testCase, testCaseIdx) => (
+        {testCases.map((testCase, testCaseIdx) => (
           <Box key={testCaseIdx} mb={2} display="flex" alignItems="center">
             <Grid container spacing={2}>
               <Grid item xs={5}>

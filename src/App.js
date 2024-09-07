@@ -154,7 +154,7 @@ function App() {
                 }
               />
               <Route
-                path="/manage-problems/singleICPC"
+                path="/manage-problems/add-single-icpc"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <SingleFormLayout />
@@ -162,7 +162,7 @@ function App() {
                 }
               />
               <Route
-                path="/manage-problems/multipleICPC"
+                path="/manage-problems/add-multiple-icpc"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <ICPCMultipleForm />
@@ -170,15 +170,7 @@ function App() {
                 }
               />
               <Route
-                path="/manage-problems/interview"
-                element={
-                  <ProtectedRoute isAuthenticated={isAuthenticated}>
-                    <InterviewForm />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/manage-problems/edit/icpc/"
+                path="/manage-problems/edit-icpc"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <EditICPCProblem />
@@ -186,7 +178,15 @@ function App() {
                 }
               />
               <Route
-                path="/manage-problems/edit/interview/"
+                path="/manage-problems/add-interview"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <InterviewForm />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/edit-interview"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <EditInterviewProblem />

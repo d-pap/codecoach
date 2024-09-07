@@ -1,10 +1,20 @@
 import React, { useState, useCallback } from 'react'
-import { Button, Typography, Box } from '@mui/material'
+import {
+  Button,
+  Typography,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material'
 import PDFUploaderPanel from '../../../components/add-problems/multiple-problems/pdf-elements/PDFUploaderPanel'
 import FormFields from '../../../components/add-problems/multiple-problems/form-elements/FormFields'
 import QuestionsSection from '../../../components/add-problems/multiple-problems/form-elements/QuestionsSection'
 import AnswersSection from '../../../components/add-problems/multiple-problems/form-elements/AnswersSection'
 import PDFParser from '../../../components/add-problems/multiple-problems/pdf-elements/PDFParser'
+import { addProblem } from '../../../api'
+import { debounce, cloneDeep } from 'lodash'
 import './ICPCMultipleForm.css'
 
 const parser = new PDFParser()
@@ -28,6 +38,7 @@ const ICPCMultipleForm = () => {
   const [answerFile, setAnswerFile] = useState(null)
   const [questionFileName, setQuestionFileName] = useState('')
   const [answerFileName, setAnswerFileName] = useState('')
+  const [openDialog, setOpenDialog] = useState(false)
 
   const onDrop = useCallback((acceptedFiles, fileType) => {
     if (acceptedFiles.length === 0) {
@@ -69,13 +80,14 @@ const ICPCMultipleForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }))
+    setFormData((prevData) => {
+      const newFormData = cloneDeep(prevData)
+      newFormData[name] = value
+      return newFormData
+    })
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = debounce(async () => {
     if (questionFile) {
       setUploading(true)
       try {
@@ -83,13 +95,12 @@ const ICPCMultipleForm = () => {
           keywordRegex,
           descriptionStartRegex,
           descriptionEndRegex,
-          answerParsingMethod,
+          answerKeywordRegex,
         } = formData
 
         const questions = await parser.parsePdf(
           questionFile,
           'question',
-          answerParsingMethod,
           keywordRegex,
           descriptionStartRegex,
           descriptionEndRegex
@@ -99,10 +110,10 @@ const ICPCMultipleForm = () => {
           ? await parser.parsePdf(
               answerFile,
               'answer',
-              answerParsingMethod,
-              keywordRegex,
-              descriptionStartRegex,
-              descriptionEndRegex
+              '',
+              '',
+              '',
+              answerKeywordRegex
             )
           : []
 
@@ -118,14 +129,29 @@ const ICPCMultipleForm = () => {
     } else {
       setError('Please select at least a question file.')
     }
+  }, 300) // Debounce to prevent multiple rapid submissions
+
+  const resetForm = () => {
+    setFormData(initialFormData)
+    setQuestionFile(null)
+    setAnswerFile(null)
+    setQuestionFileName('')
+    setAnswerFileName('')
+    setError(null)
   }
 
+  // handle errors and confirm sending to database
   const handleSendToDatabase = () => {
     if (formData.questions.length === 0) {
       setError('Please add at least one question.')
       return
     }
+    setOpenDialog(true)
+  }
 
+  // send data to database
+  const confirmSendToDatabase = () => {
+    setOpenDialog(false)
     console.log('Sending to Database...')
 
     const transformedData = formData.questions.map((question, index) => {
@@ -133,8 +159,6 @@ const ICPCMultipleForm = () => {
       return {
         type: 'icpc',
         title: question.title,
-        timeLimit: question.timeLimit || '',
-        memoryLimit: question.memoryLimit || '',
         description: question.description,
         exampleInputs: question.exampleInputs,
         exampleOutputs: question.exampleOutputs,
@@ -148,11 +172,22 @@ const ICPCMultipleForm = () => {
       }
     })
 
-    transformedData.forEach((data, idx) => {
+    transformedData.forEach(async (data, idx) => {
       console.log(`Sending item ${idx + 1}:`, JSON.stringify(data, null, 2))
+      try {
+        await addProblem(data)
+        console.log(`Item ${idx + 1} sent successfully`)
+      } catch (e) {
+        console.error(`Error sending item ${idx + 1}:`, e)
+      }
     })
 
     console.log('All items sent successfully')
+    resetForm() // Reset the form after processing
+  }
+
+  const cancelSendToDatabase = () => {
+    setOpenDialog(false)
   }
 
   const handleQuestionChange = (index, field, value) => {
@@ -366,6 +401,22 @@ const ICPCMultipleForm = () => {
           Send to Database
         </Button>
       </Box>
+      <Dialog open={openDialog} onClose={cancelSendToDatabase}>
+        <DialogTitle>Confirm Send</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to send the data to the database?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={cancelSendToDatabase} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={confirmSendToDatabase} color="secondary">
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   )
 }
