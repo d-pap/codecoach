@@ -125,7 +125,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                 anchor="right"
                 open={isChatOpen}
                 onClose={toggleChat}
-                PaperProps={{ style: { width: '28vw' } }}
+                PaperProps={{ style: { width: '33vw' } }}
               >
                 <Box
                   sx={{

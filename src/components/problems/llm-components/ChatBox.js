@@ -49,12 +49,25 @@ const ChatBox = ({ problem }) => {
   }
 
   // Function to send a message to the AI model
-  const handleSend = async () => {
-    if (input.trim() === '') return
+  const handleSend = async (command = undefined) => {
+    if (command === 'user' && input.trim() === '') return
+
+    let message = ''
+
+    if (command === 'user') {
+      message = input
+    } else if (command === 'hint') {
+      message = 'Requesting a hint...'
+    } else if (command === 'solution') {
+      message = 'Requesting a solution...'
+    } else {
+      console.error('Invalid command:', command)
+      return
+    }
 
     const newHistory = {
       ...currentChatHistory,
-      data: [...currentChatHistory.data, { role: 'user', content: input }],
+      data: [...currentChatHistory.data, { role: 'user', content: message }],
     }
     setCurrentChatHistory(newHistory)
     saveChatHistory(problem._id, newHistory)
@@ -68,8 +81,9 @@ const ChatBox = ({ problem }) => {
       const query = await SendChat(
         problem.title,
         problem.description,
-        input,
-        conversation_id
+        message,
+        conversation_id,
+        command
       )
 
       const updatedHistory = {
@@ -80,7 +94,6 @@ const ChatBox = ({ problem }) => {
         ],
       }
 
-      // Update conversation_id if it's provided in the response
       if (query.conversation_id) {
         updatedHistory.conversation_id = query.conversation_id
       }
@@ -113,7 +126,7 @@ const ChatBox = ({ problem }) => {
   // Handle Enter key press in the input field
   const handleKeyPress = (event) => {
     if (event.key === 'Enter' && !isLoading) {
-      handleSend()
+      handleSend('user')
     }
   }
 
@@ -165,28 +178,33 @@ const ChatBox = ({ problem }) => {
         }}
       >
         {Array.isArray(currentChatHistory.data) &&
-          currentChatHistory.data.map((chat, index) => (
-            <Box
-              key={index}
-              sx={{
-                alignSelf: chat.role === 'user' ? 'flex-end' : 'flex-start',
-                bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.300',
-                color:
-                  chat.role === 'user'
-                    ? 'primary.contrastText'
-                    : 'text.primary',
-                borderRadius: 1,
-                p: 1,
-                mb: 1,
-                maxWidth: '100%',
-                wordBreak: 'break-word',
-              }}
-            >
-              {chat.role === 'assistant'
-                ? formatChatContent(chat.content)
-                : chat.content}
-            </Box>
-          ))}
+          currentChatHistory.data.map(
+            (chat, index) => (
+              console.log(chat),
+              (
+                <Box
+                  key={index}
+                  sx={{
+                    alignSelf: chat.role === 'user' ? 'flex-end' : 'flex-start',
+                    bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.900',
+                    color:
+                      chat.role === 'user'
+                        ? 'primary.contrastText'
+                        : 'text.primary',
+                    borderRadius: 1,
+                    p: 1,
+                    mb: 1,
+                    maxWidth: '100%',
+                    wordBreak: 'break-word',
+                  }}
+                >
+                  {chat.role === 'assistant'
+                    ? formatChatContent(chat.content)
+                    : chat.content}
+                </Box>
+              )
+            )
+          )}
         {isLoading && (
           <Box
             sx={{
@@ -217,22 +235,16 @@ const ChatBox = ({ problem }) => {
         <Button
           variant="outlined"
           disabled={isLoading}
-          sx={{
-            width: '30%',
-            mx: 0.5,
-            mb: 1,
-          }}
+          sx={{ width: '30%', mx: 0.5, mb: 1 }}
+          onClick={() => handleSend('hint')}
         >
           Hint
         </Button>
         <Button
           variant="outlined"
           disabled={isLoading}
-          sx={{
-            width: '30%',
-            mx: 0.5,
-            mb: 1,
-          }}
+          sx={{ width: '30%', mx: 0.5, mb: 1 }}
+          onClick={() => handleSend('solution')}
         >
           Solution
         </Button>
@@ -269,7 +281,11 @@ const ChatBox = ({ problem }) => {
           fullWidth
           sx={{ mr: 1 }}
         />
-        <Button onClick={handleSend} disabled={isLoading} variant="contained">
+        <Button
+          onClick={() => handleSend('user')} // Use arrow function
+          disabled={isLoading}
+          variant="contained"
+        >
           Send
         </Button>
       </Box>
