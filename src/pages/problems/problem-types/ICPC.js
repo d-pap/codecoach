@@ -1,20 +1,28 @@
-/**
- * Section for loading ICPC questions and displaying to the user.
- * The user can filter the questions by region and year.
- */
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
 import { ICPCFilter } from '../../../components/problems/problem-filters/ICPCFilter'
+import { getSubregions } from '../../../components/problems/subregions'
 import { styled, alpha } from '@mui/material/styles'
-import { Stack, Pagination, Toolbar, Select, Skeleton } from '@mui/material'
+import {
+  Stack,
+  Pagination,
+  Toolbar,
+  Select,
+  Skeleton,
+  MenuItem,
+  Box,
+  Container,
+  Grid,
+  Typography,
+  InputBase,
+  AppBar,
+} from '@mui/material'
 import { fetchProblems } from '../../../api'
-import { Box, Container, Grid, Typography } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
-import AppBar from '@mui/material/AppBar'
-import InputBase from '@mui/material/InputBase'
-import MenuItem from '@mui/material/MenuItem'
+
+const subregions = getSubregions()
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
   backgroundColor: 'transparent',
@@ -53,7 +61,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -76,84 +83,92 @@ const StyledSelect = styled(Select)(({ theme }) => ({
   },
 }))
 
-const FilterToolbar = ({ region, year, onRegionChange, onYearChange }) => (
-  <Box sx={{ flexGrow: 1 }}>
-    <AppBarStyled
-      position="static"
-      sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}
-    >
-      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2,
-          }}
-        >
-          <StyledSelect
-            value={region}
-            onChange={onRegionChange}
-            sx={{
-              height: '40px',
-              minWidth: '150px',
-              padding: '0 10px',
-            }}
-          >
-            <MenuItem value="all">All Regions</MenuItem>
-            <MenuItem value="World">World</MenuItem>
-            <MenuItem value="NA">North America</MenuItem>
-            <MenuItem value="EU">Europe</MenuItem>
-          </StyledSelect>
-          <StyledSelect
-            value={year}
-            onChange={onYearChange}
-            sx={{
-              height: '40px',
-              minWidth: '150px',
-              padding: '0 10px',
-            }}
-          >
-            <MenuItem value="all">All Years</MenuItem>
-            <MenuItem value="2021">2021</MenuItem>
-            <MenuItem value="2020">2020</MenuItem>
-            <MenuItem value="2019">2019</MenuItem>
-          </StyledSelect>
-        </Box>
-        {/* SEARCH BOX HERE:  */}
-        <Search>
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase
-            placeholder="Search questions..."
-            inputProps={{ 'aria-label': 'search' }}
-          />
-        </Search>
-      </Toolbar>
-    </AppBarStyled>
-  </Box>
-)
+const FilterToolbar = ({
+  region,
+  subregion,
+  year,
+  onRegionChange,
+  onSubregionChange,
+  onYearChange,
+}) => {
+  const subregionOptions = region !== 'all' ? subregions[region] || [] : []
+
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBarStyled
+        position="static"
+        sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}
+      >
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <StyledSelect
+              value={region}
+              onChange={onRegionChange}
+              sx={{ height: '40px', minWidth: '150px', padding: '0 10px' }}
+            >
+              <MenuItem value="all">All Regions</MenuItem>
+              {Object.keys(subregions).map((regionKey) => (
+                <MenuItem key={regionKey} value={regionKey}>
+                  {regionKey}
+                </MenuItem>
+              ))}
+            </StyledSelect>
+            <StyledSelect
+              value={subregion}
+              onChange={onSubregionChange}
+              sx={{ height: '40px', minWidth: '150px', padding: '0 10px' }}
+            >
+              <MenuItem value="all">All Subregions</MenuItem>
+              {subregionOptions.map((subregionItem) => (
+                <MenuItem key={subregionItem} value={subregionItem}>
+                  {subregionItem}
+                </MenuItem>
+              ))}
+            </StyledSelect>
+            <StyledSelect
+              value={year}
+              onChange={onYearChange}
+              sx={{ height: '40px', minWidth: '150px', padding: '0 10px' }}
+            >
+              <MenuItem value="all">All Years</MenuItem>
+              {Array.from({ length: 2025 - 2008 + 1 }, (_, index) => {
+                const year = 2025 - index
+                return (
+                  <MenuItem key={year} value={`${year}`}>
+                    {year}
+                  </MenuItem>
+                )
+              })}
+            </StyledSelect>
+          </Box>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search questions..."
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </Search>
+        </Toolbar>
+      </AppBarStyled>
+    </Box>
+  )
+}
 
 const SkeletonProblemList = () => (
-  <Box
-    sx={{
-      bgcolor: 'background.default',
-      minHeight: '100vh',
-      py: 4, //TODO: match with problems.js page?
-    }}
-  >
+  <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 4 }}>
     <Container maxWidth="lg">
       <Typography
         variant="h2"
         component="h1"
         gutterBottom
         align="center"
-        sx={{ mb: 2 }} //TODO: match with problems.js page?
+        sx={{ mb: 2 }}
       >
         ICPC Problems
       </Typography>
-      <FilterToolbar region="all" year="all" />
-      {/* skeleton for problems */}
+      <FilterToolbar region="all" subregion="all" year="all" />
       <Grid
         container
         spacing={0}
@@ -166,12 +181,9 @@ const SkeletonProblemList = () => (
         }}
       >
         <Box sx={{ flexGrow: 1, padding: (theme) => theme.spacing(2) }}>
-          {/* skeleton for pagination */}
           <Box sx={{ display: 'flex', justifyContent: 'right' }}>
             <Skeleton variant="text" width={150} sx={{ fontSize: '2rem' }} />
           </Box>
-
-          {/* skeleton for problem cards list */}
           <Stack spacing={2}>
             {[...Array(5)].map((_, index) => (
               <Skeleton
@@ -182,8 +194,6 @@ const SkeletonProblemList = () => (
               />
             ))}
           </Stack>
-
-          {/* skeleton for pagination */}
           <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
             <Skeleton
               variant="rectangular"
@@ -202,7 +212,6 @@ function ICPC() {
   const location = useLocation()
   const problemsFromLocation = location.state?.problems
 
-  // use react query to get cached problems or fetch new problems if not cached
   const {
     data: problems = [],
     isLoading,
@@ -211,23 +220,28 @@ function ICPC() {
   } = useQuery({
     queryKey: ['problems'],
     queryFn: fetchProblems,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
     initialData: problemsFromLocation,
   })
 
   const [region, setRegion] = useState('all')
+  const [subregion, setSubregion] = useState('all')
   const [year, setYear] = useState('all')
   const [filteredProblems, setFilteredProblems] = useState(problems)
   const [currentPage, setCurrentPage] = useState(1)
   const problemsPerPage = 10
 
-  // update filter problems when problems, region, or year change
   useEffect(() => {
-    setFilteredProblems(ICPCFilter(problems, region, year))
-  }, [problems, region, year])
+    setFilteredProblems(ICPCFilter(problems, region, subregion, year))
+  }, [problems, region, subregion, year])
 
   const handleRegionChange = (event) => {
     setRegion(event.target.value)
+    setSubregion('all')
+  }
+
+  const handleSubregionChange = (event) => {
+    setSubregion(event.target.value)
   }
 
   const handleYearChange = (event) => {
@@ -250,7 +264,6 @@ function ICPC() {
     )
   }
 
-  // Calculate the problems to display on the current page
   const indexOfLastProblem = currentPage * problemsPerPage
   const indexOfFirstProblem = indexOfLastProblem - problemsPerPage
   const currentProblems = filteredProblems.slice(
@@ -259,31 +272,26 @@ function ICPC() {
   )
 
   return (
-    <Box
-      sx={{
-        bgcolor: 'background.default',
-        minHeight: '100vh',
-        py: 4, //TODO: match with problems.js page?
-      }}
-    >
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 4 }}>
       <Container maxWidth="lg">
         <Typography
           variant="h2"
           component="h1"
           gutterBottom
           align="center"
-          sx={{ mb: 2 }} //TODO: match with problems.js page?
+          sx={{ mb: 2 }}
         >
           ICPC Problems
         </Typography>
         <FilterToolbar
           region={region}
+          subregion={subregion}
           year={year}
           onRegionChange={handleRegionChange}
+          onSubregionChange={handleSubregionChange}
           onYearChange={handleYearChange}
         />
         <Grid
-          // container holding all the problem cards
           container
           spacing={0}
           sx={{

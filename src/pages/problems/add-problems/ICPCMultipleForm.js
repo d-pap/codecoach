@@ -13,6 +13,7 @@ import FormFields from '../../../components/add-problems/multiple-problems/form-
 import QuestionsSection from '../../../components/add-problems/multiple-problems/form-elements/QuestionsSection'
 import AnswersSection from '../../../components/add-problems/multiple-problems/form-elements/AnswersSection'
 import PDFParser from '../../../components/add-problems/multiple-problems/pdf-elements/PDFParser'
+import { getSubregions } from '../../../components/problems/subregions'
 import { addProblem } from '../../../api'
 import { debounce, cloneDeep } from 'lodash'
 import './ICPCMultipleForm.css'
@@ -288,55 +289,7 @@ const ICPCMultipleForm = () => {
     }))
   }
 
-  const subregions = {
-    'World Finals': ['ICPC World Finals'],
-    'Europe Contests': [
-      'European Championship',
-      'Central Europe Regional Contest (CERC)',
-      'Northern Eurasia Finals (NERC)',
-      'Northwestern Europe Regional Contest (NWERC)',
-      'Southeastern Europe Regional Contest (SEERC)',
-      'Southwestern Europe Regional Contest (SWERC)',
-      'Benelux Algorithm Programming Contest (BAPC)',
-      'CTU Open Contest (Czech Technical University)',
-      'German Collegiate Programming Contest (GCPC)',
-      'Nordic Collegiate Programming Contest (NCPC)',
-      'UK and Ireland Programming Contest (UKIPC)',
-    ],
-    'Asia Pacific Contests': [
-      'Asia Pacific Championship',
-      'Indonesia',
-      'Japan',
-      'Philippines',
-      'Singapore',
-      'South Korea',
-      'Taiwan',
-      'Vietnam',
-    ],
-    'Asia East Continent Contests': [
-      'Hangzhou',
-      'Hefei',
-      'Hongkong',
-      'Jinan',
-      'Macau',
-      'Nanjing',
-      'Shanghai',
-      'Shenyang',
-      'Yinchuan',
-    ],
-    'North America Contests': [
-      'North America Championship',
-      'Mid-Atlantic USA Regional Contest',
-      'North Central Regional Contest',
-      'Rocky Mountain Regional Contest',
-    ],
-    'Latin American Contests': [
-      'Latin America Championship',
-      'Latin American Regional Contest',
-    ],
-    'Africa and Arab Contests': ['Arab Collegiate Programming Championship'],
-  }
-
+  const subregions = getSubregions()
   return (
     <div className="container">
       <Typography variant="h4" gutterBottom>
