@@ -136,14 +136,14 @@ const ForumLayout = ({
                   >
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <Avatar sx={{ width: 24, height: 24, mr: 1 }}>
-                        {msg.username[0]}{' '}
+                        {msg.username[0]}
                         {/* Show the first letter of the username as avatar */}
                       </Avatar>
                       <Typography
                         variant="subtitle2"
                         sx={{ fontWeight: 'bold', fontSize: 14 }}
                       >
-                        {msg.username}{' '}
+                        {msg.username}
                       </Typography>
                     </Box>
                     <Typography variant="subtitle2" sx={{ fontSize: 14 }}>
@@ -160,10 +160,14 @@ const ForumLayout = ({
                   <Box
                     sx={{
                       display: 'flex',
-                      justifyContent: 'flex-end',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
                       width: '100%',
                     }}
                   >
+                    <Typography variant="caption" sx={{ fontSize: 12, ml: 1 }}>
+                      {new Date(msg.timestamp).toLocaleDateString()}
+                    </Typography>
                     <IconButton
                       edge="end"
                       onClick={() => handleLike(msg.id)}

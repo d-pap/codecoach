@@ -1,8 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import SendChat from './AIChat'
-import { Box, TextField, Button, Paper, CircularProgress } from '@mui/material'
+import {
+  Box,
+  TextField,
+  Button,
+  Paper,
+  CircularProgress,
+  IconButton,
+  Typography,
+  Collapse,
+} from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import AddIcon from '@mui/icons-material/Add'
+import RemoveIcon from '@mui/icons-material/Remove'
+import SettingsIcon from '@mui/icons-material/Settings'
 
 // Function to retrieve chat history from localStorage
 const getChatHistory = (problemId) => {
@@ -26,13 +38,14 @@ const clearChatHistory = (problemId) => {
 }
 
 // ChatBox component to display chat history and send messages
-const ChatBox = ({ problem }) => {
+const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [currentChatHistory, setCurrentChatHistory] = useState({
     conversation_id: null,
     data: [],
   })
+  const [showSettings, setShowSettings] = useState(false)
 
   // Retrieve chat history on component mount
   useEffect(() => {
@@ -49,12 +62,25 @@ const ChatBox = ({ problem }) => {
   }
 
   // Function to send a message to the AI model
-  const handleSend = async () => {
-    if (input.trim() === '') return
+  const handleSend = async (command = undefined) => {
+    if (command === 'user' && input.trim() === '') return
+
+    let message = ''
+
+    if (command === 'user') {
+      message = input
+    } else if (command === 'hint') {
+      message = 'Requesting a hint...'
+    } else if (command === 'solution') {
+      message = 'Requesting a solution...'
+    } else {
+      console.error('Invalid command:', command)
+      return
+    }
 
     const newHistory = {
       ...currentChatHistory,
-      data: [...currentChatHistory.data, { role: 'user', content: input }],
+      data: [...currentChatHistory.data, { role: 'user', content: message }],
     }
     setCurrentChatHistory(newHistory)
     saveChatHistory(problem._id, newHistory)
@@ -68,8 +94,9 @@ const ChatBox = ({ problem }) => {
       const query = await SendChat(
         problem.title,
         problem.description,
-        input,
-        conversation_id
+        message,
+        conversation_id,
+        command
       )
 
       const updatedHistory = {
@@ -80,7 +107,6 @@ const ChatBox = ({ problem }) => {
         ],
       }
 
-      // Update conversation_id if it's provided in the response
       if (query.conversation_id) {
         updatedHistory.conversation_id = query.conversation_id
       }
@@ -113,7 +139,7 @@ const ChatBox = ({ problem }) => {
   // Handle Enter key press in the input field
   const handleKeyPress = (event) => {
     if (event.key === 'Enter' && !isLoading) {
-      handleSend()
+      handleSend('user')
     }
   }
 
@@ -149,11 +175,49 @@ const ChatBox = ({ problem }) => {
     )
   }
 
+  const incrementDrawerWidth = () => {
+    setDrawerWidth((prevWidth) => Math.min(prevWidth + 5, 70))
+  }
+
+  const decrementDrawerWidth = () => {
+    setDrawerWidth((prevWidth) => Math.max(prevWidth - 5, 20))
+  }
+
   return (
     <Paper
       elevation={3}
       sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}
     >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 1,
+        }}
+      >
+        <Typography variant="h6" sx={{ flexGrow: 1, textAlign: 'center' }}>
+          Chat With AI
+        </Typography>
+        <IconButton onClick={() => setShowSettings(!showSettings)}>
+          <SettingsIcon />
+        </IconButton>
+      </Box>
+
+      <Collapse in={showSettings}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 1 }}>
+          <IconButton onClick={incrementDrawerWidth}>
+            <AddIcon />
+          </IconButton>
+          <Box sx={{ display: 'flex', alignItems: 'center', mx: 1 }}>
+            {drawerWidth}%
+          </Box>
+          <IconButton onClick={decrementDrawerWidth}>
+            <RemoveIcon />
+          </IconButton>
+        </Box>
+      </Collapse>
+
       <Box
         sx={{
           flex: 1,
@@ -165,28 +229,33 @@ const ChatBox = ({ problem }) => {
         }}
       >
         {Array.isArray(currentChatHistory.data) &&
-          currentChatHistory.data.map((chat, index) => (
-            <Box
-              key={index}
-              sx={{
-                alignSelf: chat.role === 'user' ? 'flex-end' : 'flex-start',
-                bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.300',
-                color:
-                  chat.role === 'user'
-                    ? 'primary.contrastText'
-                    : 'text.primary',
-                borderRadius: 1,
-                p: 1,
-                mb: 1,
-                maxWidth: '100%',
-                wordBreak: 'break-word',
-              }}
-            >
-              {chat.role === 'assistant'
-                ? formatChatContent(chat.content)
-                : chat.content}
-            </Box>
-          ))}
+          currentChatHistory.data.map(
+            (chat, index) => (
+              console.log(chat),
+              (
+                <Box
+                  key={index}
+                  sx={{
+                    alignSelf: chat.role === 'user' ? 'flex-end' : 'flex-start',
+                    bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.900',
+                    color:
+                      chat.role === 'user'
+                        ? 'primary.contrastText'
+                        : 'text.primary',
+                    borderRadius: 1,
+                    p: 1,
+                    mb: 1,
+                    maxWidth: '100%',
+                    wordBreak: 'break-word',
+                  }}
+                >
+                  {chat.role === 'assistant'
+                    ? formatChatContent(chat.content)
+                    : chat.content}
+                </Box>
+              )
+            )
+          )}
         {isLoading && (
           <Box
             sx={{
@@ -217,22 +286,16 @@ const ChatBox = ({ problem }) => {
         <Button
           variant="outlined"
           disabled={isLoading}
-          sx={{
-            width: '30%',
-            mx: 0.5,
-            mb: 1,
-          }}
+          sx={{ width: '30%', mx: 0.5, mb: 1 }}
+          onClick={() => handleSend('hint')}
         >
           Hint
         </Button>
         <Button
           variant="outlined"
           disabled={isLoading}
-          sx={{
-            width: '30%',
-            mx: 0.5,
-            mb: 1,
-          }}
+          sx={{ width: '30%', mx: 0.5, mb: 1 }}
+          onClick={() => handleSend('solution')}
         >
           Solution
         </Button>
@@ -269,7 +332,11 @@ const ChatBox = ({ problem }) => {
           fullWidth
           sx={{ mr: 1 }}
         />
-        <Button onClick={handleSend} disabled={isLoading} variant="contained">
+        <Button
+          onClick={() => handleSend('user')} // Use arrow function
+          disabled={isLoading}
+          variant="contained"
+        >
           Send
         </Button>
       </Box>
