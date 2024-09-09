@@ -182,10 +182,10 @@ const Header = () => {
                 </PageLinks>
                 <PageLinks
                   component={NavLink}
-                  to="/addProblems"
+                  to="/manage-problems"
                   activeClassName="active"
                 >
-                  Add Problems
+                  Manage Problems
                 </PageLinks>
               </Box>
               <Divider orientation="vertical" flexItem variant="middle" />

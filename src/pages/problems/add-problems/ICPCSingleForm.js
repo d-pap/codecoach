@@ -17,7 +17,9 @@ import {
   addTestCase,
   removeTestCase,
 } from '../../../components/add-problems/ICPCFormHandlers'
+import { getSubregions } from '../../../components/problems/subregions'
 import CustomLabel from '../../../components/add-problems/multiple-problems/custom-elements/CustomLabel'
+import { get } from 'lodash'
 
 const textFieldStyle = {
   width: '100%',
@@ -43,54 +45,7 @@ const ICPCFormPage = () => {
     hint: '',
   })
 
-  const subregions = {
-    'World Finals': ['ICPC World Finals'],
-    'Europe Contests': [
-      'European Championship',
-      'Central Europe Regional Contest (CERC)',
-      'Northern Eurasia Finals (NERC)',
-      'Northwestern Europe Regional Contest (NWERC)',
-      'Southeastern Europe Regional Contest (SEERC)',
-      'Southwestern Europe Regional Contest (SWERC)',
-      'Benelux Algorithm Programming Contest (BAPC)',
-      'CTU Open Contest (Czech Technical University)',
-      'German Collegiate Programming Contest (GCPC)',
-      'Nordic Collegiate Programming Contest (NCPC)',
-      'UK and Ireland Programming Contest (UKIPC)',
-    ],
-    'Asia Pacific Contests': [
-      'Asia Pacific Championship',
-      'Indonesia',
-      'Japan',
-      'Philippines',
-      'Singapore',
-      'South Korea',
-      'Taiwan',
-      'Vietnam',
-    ],
-    'Asia East Continent Contests': [
-      'Hangzhou',
-      'Hefei',
-      'Hongkong',
-      'Jinan',
-      'Macau',
-      'Nanjing',
-      'Shanghai',
-      'Shenyang',
-      'Yinchuan',
-    ],
-    'North America Contests': [
-      'North America Championship',
-      'Mid-Atlantic USA Regional Contest',
-      'North Central Regional Contest',
-      'Rocky Mountain Regional Contest',
-    ],
-    'Latin American Contests': [
-      'Latin America Championship',
-      'Latin American Regional Contest',
-    ],
-    'Africa and Arab Contests': ['Arab Collegiate Programming Championship'],
-  }
+  const subregions = getSubregions()
 
   const handleSubmits = async (e, formData, setFormData) => {
     e.preventDefault()
@@ -99,8 +54,6 @@ const ICPCFormPage = () => {
       setFormData({
         type: 'icpc',
         title: '',
-        timeLimit: '',
-        memoryLimit: '',
         description: '',
         exampleInputs: '',
         exampleOutputs: '',
