@@ -64,6 +64,33 @@ export async function sendChatMessage(convoId, input) {
   }
 }
 
+// Function to for AI chat
+export async function sendMessageToAi(userQuery, conversationPk = null) {
+  try {
+    // get current authenticated users session
+    const session = await Auth.currentSession()
+    const token = session.getIdToken().getJwtToken()
+
+    // payload to send to the AI
+    const payload = {
+      query: userQuery,
+      conversationPk: conversationPk,
+    }
+
+    // make post request to the AI endpoint
+    const response = await axios.post(`${API_GATEWAY_URL}/aiChat`, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error sending message to AI:', error)
+    throw new Error('Failed to send message to AI')
+  }
+}
+
 // Function to execute code using Judge0 API
 // Passes source code and language to the API
 // and returns the result
