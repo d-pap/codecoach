@@ -139,7 +139,7 @@ const Header = () => {
                 </MenuItem>
                 <MenuItem
                   component={NavLink}
-                  to="/problems"
+                  to="/problems/icpc"
                   onClick={handleClose}
                 >
                   Problems
