@@ -27,7 +27,7 @@ const SendChat = async (title, description, input, convoId, command) => {
     } else if (command === 'solution') {
       formatedInput =
         formatedInput +
-        ' Provide the user with a solution to the problem. Start the response with "Here is a solution to the problem:". Provide a short explanation afterwards. Be consise.'
+        ' Provide the user with a solution to the problem. Start the response with "Here is a solution to the problem:". Provide a short explanation afterwards. Be concise.'
     } else {
       formatedInput = formatedInput + ' User Input: ' + input
     }
