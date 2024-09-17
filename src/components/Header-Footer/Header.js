@@ -144,6 +144,13 @@ const Header = () => {
                 >
                   Problems
                 </MenuItem>
+                <MenuItem
+                  component={NavLink}
+                  to="/problems/interview"
+                  onClick={handleClose}
+                >
+                  Interview Prep
+                </MenuItem>
                 <Divider component="li" variant="middle" />
                 <MenuItem
                   component={NavLink}
@@ -175,10 +182,17 @@ const Header = () => {
                 </PageLinks>
                 <PageLinks
                   component={NavLink}
-                  to="/problems"
+                  to="/problems/icpc"
                   activeClassName="active"
                 >
                   Problems
+                </PageLinks>
+                <PageLinks
+                  component={NavLink}
+                  to="/problems/interview"
+                  activeClassName="active"
+                >
+                  Interview Prep
                 </PageLinks>
                 <PageLinks
                   component={NavLink}
