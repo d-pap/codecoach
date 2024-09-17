@@ -140,7 +140,7 @@ export const getCurrentUserId = async () => {
 // function to fetch messages from the database
 export async function fetchForumComments(problemId) {
   try {
-    const response = await axios.get(`${API_GATEWAY_URL}/messages/${problemId}`)
+    const response = await axios.get(`${API_GATEWAY_URL}/comment/${problemId}`)
     return response.data
   } catch (error) {
     console.error('Error fetching messages:', error)
@@ -151,7 +151,7 @@ export async function fetchForumComments(problemId) {
 // function to post a message to the database
 export async function postForumComment(problemId, userId, message) {
   try {
-    const response = await axios.post(`${API_GATEWAY_URL}/messages`, {
+    const response = await axios.post(`${API_GATEWAY_URL}/comment`, {
       problemId,
       userId,
       message,
@@ -167,7 +167,7 @@ export async function postForumComment(problemId, userId, message) {
 export async function likeForumComment(messageId) {
   try {
     const response = await axios.post(
-      `${API_GATEWAY_URL}/messages/${messageId}/like`
+      `${API_GATEWAY_URL}/comment/${messageId}/like`
     )
     return response.data
   } catch (error) {
