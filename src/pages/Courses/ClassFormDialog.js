@@ -59,7 +59,6 @@ const ClassFormDialog = ({ open, onClose, onCreate }) => {
                 onChange={(e) => setClassName(e.target.value)}
               />
             )}
-           
           </RadioGroup>
         </FormControl>
         <Button color="primary" variant="contained" onClick={handleSubmit}>

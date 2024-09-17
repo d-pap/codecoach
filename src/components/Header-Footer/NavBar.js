@@ -74,9 +74,6 @@ const Navbar = () => {
         <ListItem button component={RouterLink} to="/courses">
           <ListItemText primary="Courses" />
         </ListItem>
-        <ListItem button component={RouterLink} to="/AddCourses">
-          <ListItemText primary="AddCourses" />
-        </ListItem>
         <ListItem button component={RouterLink} to="/problems">
           <ListItemText primary="Problems" />
         </ListItem>
@@ -134,9 +131,6 @@ const Navbar = () => {
           </NavLink>
           <NavLink component={RouterLink} to="/courses" activeClassName="active">
             Courses
-          </NavLink>
-          <NavLink component={RouterLink} to="/AddCourses" activeClassName="active">
-            Add Courses
           </NavLink>
           <NavLink
             component={RouterLink}

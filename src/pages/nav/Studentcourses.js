@@ -9,9 +9,9 @@ import {
   Paper,
   List,
   ListItem,
-  ListItemText,
 } from "@mui/material";
 import ClassFormDialog from "../Courses/ClassFormDialog";
+import AddCourseContent from "../Courses/AddCourseContent"; // Import the AddCourseContent component
 
 // Mock user context (replace or integrate with your actual auth context)
 const AuthContext = React.createContext({
@@ -20,21 +20,16 @@ const AuthContext = React.createContext({
 });
 
 const initialCourses = [
-  { name: "ICPC beginner", students: 0 },
-  { name: "ICPC intermediate", students: 4 },
-  { name: "ICPC expertise", students: 0 },
-];
-
-const tools = [
-  { name: "Refresh My Knowledge", description: "Refresh your content knowledge in various subject areas." },
-  { name: "Lesson Plan", description: "Create structured, detailed lesson plans tailored to your curriculum and students' needs." },
-  { name: "Recommend Assignments", description: "Receive recommendations on what your students should work on next." },
+  { name: "ICPC Beginner", students: 0 },
+  { name: "ICPC Intermediate", students: 4 },
+  { name: "ICPC Expert", students: 0 },
 ];
 
 const Studentcourses = () => {
   const { isAuthenticated, role } = useContext(AuthContext);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [courses, setCourses] = useState(initialCourses);  // Maintain course list in state
+  const [courses, setCourses] = useState(initialCourses);
+  const [selectedCourse, setSelectedCourse] = useState(null); // New state for selected course
 
   const handleDialogOpen = () => {
     setDialogOpen(true);
@@ -47,54 +42,92 @@ const Studentcourses = () => {
   // Handle the creation of a new course
   const handleCreateCourse = (courseName) => {
     const newCourse = { name: courseName, students: 0 };
-    setCourses([...courses, newCourse]);  // Update course list with new course
+    setCourses((prevCourses) => [...prevCourses, newCourse]);
   };
+
+  const handleAddProblemsClick = (courseName) => {
+    setSelectedCourse(courseName); // Set the selected course
+  };
+
+  if (selectedCourse) {
+    // Conditionally render AddCourseContent if a course is selected
+    return <AddCourseContent newClassName={selectedCourse} />;
+  }
 
   return (
     <Box sx={{ flexGrow: 1, p: 3 }}>
       <Grid container spacing={3}>
+        {/* Course List Section */}
         <Grid item xs={12} md={9}>
-          {courses.map((cls, index) => (
+          {courses.map((course, index) => (
             <Card key={index} sx={{ mb: 2 }}>
               <CardContent>
-                <Typography variant="h5">{cls.name}</Typography>
-                <Typography variant="body2">Students: {cls.students} students</Typography>
-                <Button variant="outlined" sx={{ mt: 1 }}>Add students</Button>
+                <Typography variant="h5">{course.name}</Typography>
+                <Typography variant="body2">Students: {course.students}</Typography>
+                <Button
+                  variant="outlined"
+                  sx={{ mt: 0.5 }}
+                  onClick={() => handleAddProblemsClick(course.name)}
+                >
+                  Add problems
+                </Button>
+                <Button variant="outlined" sx={{ mt: 0.5 }}>
+                  Invite student
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => console.log('Delete button clicked')}
+                  sx={{
+                    backgroundColor: 'transparent',
+                    color : "#d32f2f",
+                    '&:hover': {
+                      backgroundColor: '#DB5858',
+                      color: "#ffffff",
+                    },
+                  }}
+                >
+                  Delete
+                </Button>
               </CardContent>
             </Card>
           ))}
         </Grid>
+
+        {/* Sidebar Section */}
         <Grid item xs={12} md={3}>
-          <Paper sx={{ p: 2, height: 'fit-content', display: 'flex', flexDirection: 'column' }}>
-            <List component="nav" aria-label="secondary mailbox folders">
-              {tools.map((tool, index) => (
-                <ListItem key={index}>
-                  <ListItemText primary={tool.name} secondary={tool.description} />
+          <Paper
+            sx={{
+              p: 2,
+              height: "fit-content",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <List component="nav">
+              {isAuthenticated && role === "teacher" && (
+                <ListItem>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    onClick={handleDialogOpen}
+                  >
+                    Add New Course
+                  </Button>
                 </ListItem>
-              ))}
-              {isAuthenticated && role === 'teacher' && (
-                <>
-                  <ListItem>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      fullWidth
-                      onClick={handleDialogOpen}
-                    >
-                      Add New Course
-                    </Button>
-                  </ListItem>
-                  <ClassFormDialog open={dialogOpen} onClose={handleDialogClose} onCreate={handleCreateCourse} />
-                </>
               )}
+              <ClassFormDialog
+                open={dialogOpen}
+                onClose={handleDialogClose}
+                onCreate={handleCreateCourse}
+              />
               {isAuthenticated && (
                 <ListItem>
-                  <Button variant="contained" color="primary" fullWidth>Join Course</Button>
+                  <Button variant="contained" color="secondary" fullWidth>
+                    Join Course
+                  </Button>
                 </ListItem>
               )}
-              <ListItem>
-                <Button variant="contained" color="secondary" fullWidth>View all</Button>
-              </ListItem>
             </List>
           </Paper>
         </Grid>
