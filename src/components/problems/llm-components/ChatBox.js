@@ -62,7 +62,7 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
   }
 
   // Function to send a message to the AI model
-  const handleSend = async (command = 'user') => {
+  const handleSend = async (command = undefined) => {
     if (command === 'user' && input.trim() === '') return
 
     let message = ''
@@ -78,7 +78,6 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
       return
     }
 
-    // update history with user message
     const newHistory = {
       ...currentChatHistory,
       data: [...currentChatHistory.data, { role: 'user', content: message }],
@@ -90,25 +89,39 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
     setIsLoading(true)
 
     try {
-      // send chat message (AIChat.js file)
-      const { aiResponse, conversationPk } = await SendChat(
+      const conversation_id = currentChatHistory.conversation_id
+
+      const query = await SendChat(
         problem.title,
         problem.description,
         message,
-        currentChatHistory.conversation_id,
+        conversation_id,
         command
       )
 
-      // update history with AI response
       const updatedHistory = {
         ...newHistory,
-        data: [...newHistory.data, { role: 'assistant', content: aiResponse }],
+        data: [
+          ...newHistory.data,
+          { role: 'assistant', content: query.response },
+        ],
       }
 
-      if (conversationPk) {
-        updatedHistory.conversation_id = conversationPk
+      if (query.conversation_id) {
+        updatedHistory.conversation_id = query.conversation_id
       }
 
+      setCurrentChatHistory(updatedHistory)
+      saveChatHistory(problem._id, updatedHistory)
+    } catch (error) {
+      console.error('Failed to send chat:', error)
+      const updatedHistory = {
+        ...newHistory,
+        data: [
+          ...newHistory.data,
+          { role: 'assistant', content: 'Failed to get response from model' },
+        ],
+      }
       setCurrentChatHistory(updatedHistory)
       saveChatHistory(problem._id, updatedHistory)
     } finally {
