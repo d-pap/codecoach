@@ -8,7 +8,6 @@ import axios from 'axios'
 import { Auth } from 'aws-amplify'
 
 const API_GATEWAY_URL = process.env.REACT_APP_API_URL
-const LLM_URL = 'http://localhost:3500'
 
 export const fetchProblems = async () => {
   try {
@@ -39,21 +38,10 @@ export async function addProblem(problem) {
   }
 }
 
-// // Function to create a new chat conversation
-// export async function createNewChatConvo() {
-//   try {
-//     const response = await axios.post(`${LLM_URL}/aiConvo`)
-//     return response.data
-//   } catch (error) {
-//     console.error('Error creating chat convo:', error)
-//     throw new Error('Failed to create chat convo')
-//   }
-// }
-
 // Function to create a new chat conversation
 export async function createNewChatConvo() {
   try {
-    const response = await axios.post(`${LLM_URL}/aiConvo`)
+    const response = await axios.post(`${API_GATEWAY_URL}/aiConvo`)
     return response.data
   } catch (error) {
     console.error('Error creating chat convo:', error)
@@ -62,23 +50,9 @@ export async function createNewChatConvo() {
 }
 
 // Function to send a chat message to an existing conversation
-// export async function sendChatMessage(convoId, input) {
-//   try {
-//     const response = await axios.post(`${LLM_URL}/aiMessage`, {
-//       convoId,
-//       input,
-//     })
-//     return response.data
-//   } catch (error) {
-//     console.error('Error sending chat message:', error)
-//     throw new Error('Failed to send chat message')
-//   }
-// }
-
-// Function to send a chat message to an existing conversation
 export async function sendChatMessage(convoId, input) {
   try {
-    const response = await axios.post(`${LLM_URL}/aiMessage`, {
+    const response = await axios.post(`${API_GATEWAY_URL}/aiMessage`, {
       convoId,
       input,
     })
@@ -86,29 +60,6 @@ export async function sendChatMessage(convoId, input) {
   } catch (error) {
     console.error('Error sending chat message:', error)
     throw new Error('Failed to send chat message')
-  }
-}
-
-// Function to for AI chat
-export async function sendMessageToAi(userQuery, conversationPk = null) {
-  try {
-    // payload to send to the AI
-    const payload = {
-      query: userQuery,
-      conversationPk: conversationPk,
-    }
-    console.log('payload:', payload) //! DELETE when fixed - logging payload for debugging
-
-    // make post request to the AI endpoint
-    const response = await axios.post(`${API_GATEWAY_URL}/aiChat`, payload, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    return response.data
-  } catch (error) {
-    console.error('Error sending message to AI:', error) //! DELETE when fixed - logging for debugging
-    throw new Error('Failed to send message to AI')
   }
 }
 
