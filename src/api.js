@@ -8,7 +8,6 @@ import axios from 'axios'
 import { Auth } from 'aws-amplify'
 
 const API_GATEWAY_URL = process.env.REACT_APP_API_URL
-const LLM_URL = 'http://localhost:3500'
 
 export const fetchProblems = async () => {
   try {
@@ -42,7 +41,7 @@ export async function addProblem(problem) {
 // Function to create a new chat conversation
 export async function createNewChatConvo() {
   try {
-    const response = await axios.post(`${LLM_URL}/convo`)
+    const response = await axios.post(`${API_GATEWAY_URL}/aiConvo`)
     return response.data
   } catch (error) {
     console.error('Error creating chat convo:', error)
@@ -53,7 +52,7 @@ export async function createNewChatConvo() {
 // Function to send a chat message to an existing conversation
 export async function sendChatMessage(convoId, input) {
   try {
-    const response = await axios.post(`${LLM_URL}/message`, {
+    const response = await axios.post(`${API_GATEWAY_URL}/aiMessage`, {
       convoId,
       input,
     })
@@ -140,7 +139,7 @@ export const getCurrentUserId = async () => {
 // function to fetch messages from the database
 export async function fetchForumComments(problemId) {
   try {
-    const response = await axios.get(`${API_GATEWAY_URL}/messages/${problemId}`)
+    const response = await axios.get(`${API_GATEWAY_URL}/comment/${problemId}`)
     return response.data
   } catch (error) {
     console.error('Error fetching messages:', error)
@@ -151,7 +150,7 @@ export async function fetchForumComments(problemId) {
 // function to post a message to the database
 export async function postForumComment(problemId, userId, message) {
   try {
-    const response = await axios.post(`${API_GATEWAY_URL}/messages`, {
+    const response = await axios.post(`${API_GATEWAY_URL}/comment`, {
       problemId,
       userId,
       message,
@@ -167,7 +166,7 @@ export async function postForumComment(problemId, userId, message) {
 export async function likeForumComment(messageId) {
   try {
     const response = await axios.post(
-      `${API_GATEWAY_URL}/messages/${messageId}/like`
+      `${API_GATEWAY_URL}/comment/${messageId}/like`
     )
     return response.data
   } catch (error) {

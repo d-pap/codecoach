@@ -229,33 +229,28 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
         }}
       >
         {Array.isArray(currentChatHistory.data) &&
-          currentChatHistory.data.map(
-            (chat, index) => (
-              console.log(chat),
-              (
-                <Box
-                  key={index}
-                  sx={{
-                    alignSelf: chat.role === 'user' ? 'flex-end' : 'flex-start',
-                    bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.900',
-                    color:
-                      chat.role === 'user'
-                        ? 'primary.contrastText'
-                        : 'text.primary',
-                    borderRadius: 1,
-                    p: 1,
-                    mb: 1,
-                    maxWidth: '100%',
-                    wordBreak: 'break-word',
-                  }}
-                >
-                  {chat.role === 'assistant'
-                    ? formatChatContent(chat.content)
-                    : chat.content}
-                </Box>
-              )
-            )
-          )}
+          currentChatHistory.data.map((chat, index) => (
+            <Box
+              key={index}
+              sx={{
+                alignSelf: chat.role === 'user' ? 'flex-end' : 'flex-start',
+                bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.900',
+                color:
+                  chat.role === 'user'
+                    ? 'primary.contrastText'
+                    : 'text.primary',
+                borderRadius: 1,
+                p: 1,
+                mb: 1,
+                maxWidth: '100%',
+                wordBreak: 'break-word',
+              }}
+            >
+              {chat.role === 'assistant'
+                ? formatChatContent(chat.content)
+                : chat.content}
+            </Box>
+          ))}
         {isLoading && (
           <Box
             sx={{

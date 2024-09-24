@@ -4,7 +4,7 @@
  * The language and theme dropdowns are defined in CodeEditorToolbar.js.
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import AceEditor from 'react-ace'
 import { executeCode } from '../../api'
@@ -67,6 +67,7 @@ const EditorButtons = ({
   handleRunCode,
   handleSubmitCode,
   currentThemeStyle,
+  isDisabled, //! if true, the buttons will be disabled
 }) => (
   <Box sx={{ pt: 1, pr: 1 }}>
     <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
@@ -76,6 +77,7 @@ const EditorButtons = ({
         variant="text"
         startIcon={<PlayArrow />}
         sx={{ color: currentThemeStyle.color }}
+        disabled={isDisabled} //! if true, the button will be disabled
       >
         Run
       </Button>
@@ -89,6 +91,7 @@ const EditorButtons = ({
           '&:hover': { backgroundColor: 'darkgreen' },
           borderRadius: (theme) => theme.spacing(2),
         }}
+        disabled={isDisabled} //! if true, the button will be disabled
       >
         Submit
       </Button>
@@ -125,7 +128,36 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
   const { problemId } = useParams() // get problem ID from URL
   const [feedbackOpen, setFeedbackOpen] = useState(false)
 
+  //! limit the number of runs and submissions to prevent abuse
+  const MAX_RUN_SUBMIT_COUNT = 5
+  const [runSubmitCount, setRunSubmitCount] = useState(() => {
+    const savedCount = localStorage.getItem('runSubmitCount')
+    const savedDate = localStorage.getItem('runSubmitDate')
+    const today = new Date().toDateString()
+
+    if (savedDate !== today) {
+      // new day, reset the count
+      localStorage.setItem('runSubmitDate', today)
+      return 0
+    }
+    return savedCount ? parseInt(savedCount, 10) : 0
+  })
+
+  useEffect(() => {
+    localStorage.setItem('runSubmitCount', runSubmitCount)
+    localStorage.setItem('runSubmitDate', new Date().toDateString())
+  }, [runSubmitCount])
+
+  //! if true, the buttons will be disabled
+  const isDisabled = runSubmitCount >= MAX_RUN_SUBMIT_COUNT
+
   const handleRunCode = async () => {
+    //! limit the number of runs and submissions to prevent abuse
+    if (runSubmitCount >= MAX_RUN_SUBMIT_COUNT) {
+      setOutput('You have reached the maximum number of runs for today.')
+      return
+    }
+
     try {
       const result = await executeCode(code)
       if (result.status.id === 3) {
@@ -137,12 +169,21 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
       } else {
         setOutput(`Error:\n${result.stderr}`)
       }
+
+      //! increment the run submit count
+      setRunSubmitCount((prevCount) => prevCount + 1)
     } catch (error) {
       setOutput('Error executing code: ' + error.message)
     }
   }
 
   const handleSubmitCode = async () => {
+    //! limit the number of runs and submissions to prevent abuse
+    if (runSubmitCount >= MAX_RUN_SUBMIT_COUNT) {
+      setOutput('You have reached the maximum number of submissions for today.')
+      return
+    }
+
     try {
       const result = await executeCode(code)
 
@@ -191,6 +232,9 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
         outputMessage += `\nCompilation Error: ${result.compile_output}`
       }
       setOutput(outputMessage)
+
+      //! increment the run submit count
+      setRunSubmitCount((prevCount) => prevCount + 1)
 
       // open feedback dialog after 3 seconds
       setTimeout(() => setFeedbackOpen(true), 3000)
@@ -252,6 +296,7 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
         handleRunCode={handleRunCode}
         handleSubmitCode={handleSubmitCode}
         currentThemeStyle={currentThemeStyle}
+        isDisabled={isDisabled}
       />
       <OutputWindow output={output} currentThemeStyle={currentThemeStyle} />
       <FeedbackDialog
