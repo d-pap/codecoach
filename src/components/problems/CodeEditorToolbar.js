@@ -7,6 +7,7 @@ import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
+import { Typography } from '@mui/material'
 
 // component to render language and theme dropdowns
 const EditorSelect = ({ value, onChange, options, currentThemeStyle, sx }) => {
@@ -65,6 +66,8 @@ const CodeEditorToolbar = ({
   setTheme,
   setLanguage,
   currentThemeStyle,
+  MAX_RUN_SUBMIT_COUNT,
+  runSubmitCount,
 }) => {
   const languageOptions = [
     { value: 'python', label: 'Python' },
@@ -112,6 +115,12 @@ const CodeEditorToolbar = ({
           options={themeOptions}
           currentThemeStyle={currentThemeStyle}
         />
+        <Typography
+          variant="body2"
+          sx={{ p: 1, ml: 'auto', color: currentThemeStyle.color }}
+        >
+          {`You have ${MAX_RUN_SUBMIT_COUNT - runSubmitCount} runs left for today`}
+        </Typography>
       </Toolbar>
     </AppBar>
   )

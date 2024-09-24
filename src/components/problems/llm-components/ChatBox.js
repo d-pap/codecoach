@@ -9,12 +9,16 @@ import {
   IconButton,
   Typography,
   Collapse,
+  Tooltip,
 } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import SettingsIcon from '@mui/icons-material/Settings'
+import { useTheme } from '@mui/material/styles'
 
 // Function to retrieve chat history from localStorage
 const getChatHistory = (problemId) => {
@@ -39,6 +43,7 @@ const clearChatHistory = (problemId) => {
 
 // ChatBox component to display chat history and send messages
 const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
+  const theme = useTheme()
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [currentChatHistory, setCurrentChatHistory] = useState({
@@ -46,6 +51,21 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
     data: [],
   })
   const [showSettings, setShowSettings] = useState(false)
+
+  //! limit the number of chats to prevent abuse
+  const MAX_CHAT_COUNT = 10
+
+  const [chatCount, setChatCount] = useState(() => {
+    const savedCount = localStorage.getItem('chatCount')
+    const savedDate = localStorage.getItem('chatDate')
+    const today = new Date().toDateString()
+
+    if (savedDate !== today) {
+      localStorage.setItem('chatDate', today)
+      return 0
+    }
+    return savedCount ? parseInt(savedCount, 10) : 0
+  })
 
   // Retrieve chat history on component mount
   useEffect(() => {
@@ -57,6 +77,12 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
     }
   }, [problem._id])
 
+  //! save the chat count to localStorage
+  useEffect(() => {
+    localStorage.setItem('chatCount', chatCount)
+    localStorage.setItem('chatDate', new Date().toDateString())
+  }, [chatCount])
+
   const handleInputChange = (e) => {
     setInput(e.target.value)
   }
@@ -67,12 +93,22 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
 
     let message = ''
 
-    if (command === 'user') {
+    //! limit the number of chats to prevent abuse
+    if (chatCount >= MAX_CHAT_COUNT) {
+      alert('You have reached the maximum number of messages for today.')
+      return
+    } else if (command === 'user') {
       message = input
+      // increment chat count
+      setChatCount(chatCount + 1)
     } else if (command === 'hint') {
       message = 'Requesting a hint...'
+      // increment chat count
+      setChatCount(chatCount + 1)
     } else if (command === 'solution') {
       message = 'Requesting a solution...'
+      // increment chat count
+      setChatCount(chatCount + 1)
     } else {
       console.error('Invalid command:', command)
       return
@@ -137,40 +173,108 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
   }
 
   // Handle Enter key press in the input field
-  const handleKeyPress = (event) => {
+  const handleOnPressEnter = (event) => {
     if (event.key === 'Enter' && !isLoading) {
+      if (chatCount >= MAX_CHAT_COUNT || input.trim() === '') {
+        // preven default action and give alert
+        event.preventDefault()
+        if (chatCount >= MAX_CHAT_COUNT) {
+          alert('You have reached the maximum number of messages for today.')
+        }
+        return
+      }
       handleSend('user')
     }
   }
 
   const formatChatContent = (content) => {
     return (
-      <Box
-        sx={{
-          bgcolor: 'grey.900',
-          color: 'success.contrastText',
-          p: 1,
-          whiteSpace: 'pre-wrap',
-          overflowX: 'auto',
-          borderRadius: 1,
-          fontSize: '0.80rem',
-          '& code': {
-            bgcolor: 'grey.800',
-            p: 0.5,
-            borderRadius: 1,
-          },
-          '& pre': {
-            bgcolor: 'grey.800',
-            p: 1,
-            borderRadius: 1,
-            overflowX: 'auto',
-          },
-          '& ul, & ol': {
-            pl: 4,
-          },
-        }}
-      >
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+      <Box sx={{ p: 1 }}>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            //* formatting markdown for ai messages
+            // paragraphs formatting
+            p: ({ node, ...props }) => (
+              <Typography {...props} sx={{ mb: 0.5 }} />
+            ),
+
+            // headings
+            h1: ({ node, ...props }) => (
+              <Typography variant="h4" {...props} sx={{ mb: 1 }} />
+            ),
+            h2: ({ node, ...props }) => (
+              <Typography variant="h5" {...props} sx={{ mb: 1 }} />
+            ),
+            h3: ({ node, ...props }) => (
+              <Typography variant="h6" {...props} sx={{ mb: 1 }} />
+            ),
+
+            // lists formatting
+            ul: ({ node, ...props }) => (
+              <ul
+                {...props}
+                style={{ paddingLeft: '1.5em', marginBottom: '0.5em' }}
+              />
+            ),
+            ol: ({ node, ...props }) => (
+              <ol
+                {...props}
+                style={{ paddingLeft: '1.5em', marginBottom: '0.5em' }}
+              />
+            ),
+
+            // list items formatting
+            li: ({ node, ...props }) => (
+              <li {...props} style={{ marginBottom: '0.5em' }} />
+            ),
+
+            // blockquotes formatting
+            blockquote: ({ node, ...props }) => (
+              <blockquote
+                {...props}
+                style={{
+                  borderLeft: '4px solid #ccc',
+                  paddingLeft: '1em',
+                  color: '#666',
+                  marginBottom: '0.5em',
+                }}
+              />
+            ),
+
+            // code formatting
+            code({ node, inline, className, children, ...props }) {
+              const hasLanguage = /language-(\w+)/.exec(className || '')
+
+              return !inline && hasLanguage ? (
+                <SyntaxHighlighter
+                  style={oneDark}
+                  language={hasLanguage[1]}
+                  PreTag="div"
+                  customStyle={{ borderRadius: '12px', marginBottom: '0.5em' }}
+                  {...props}
+                >
+                  {String(children).replace(/\n$/, '')}
+                </SyntaxHighlighter>
+              ) : (
+                // inline code
+                <code
+                  {...props}
+                  style={{
+                    backgroundColor: 'rgba(27,31,35,0.05)',
+                    padding: '0.2em 0.4em',
+                    borderRadius: '6px',
+                    fontFamily: 'monospace',
+                  }}
+                >
+                  {children}
+                </code>
+              )
+            },
+          }}
+        >
+          {content}
+        </ReactMarkdown>
       </Box>
     )
   }
@@ -186,7 +290,13 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
   return (
     <Paper
       elevation={3}
-      sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}
+      sx={{
+        p: 1,
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: 'none',
+      }}
     >
       <Box
         sx={{
@@ -197,7 +307,7 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
         }}
       >
         <Typography variant="h6" sx={{ flexGrow: 1, textAlign: 'center' }}>
-          Chat With AI
+          Get help from your Code Coach
         </Typography>
         <IconButton onClick={() => setShowSettings(!showSettings)}>
           <SettingsIcon />
@@ -222,10 +332,9 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
         sx={{
           flex: 1,
           overflowY: 'auto',
-          mb: 2,
-          p: 2,
-          border: '1px solid grey',
-          borderRadius: 1,
+          mb: theme.spacing(2),
+          p: theme.spacing(2),
+          border: 'none', //! removed border of chat messages box
         }}
       >
         {Array.isArray(currentChatHistory.data) &&
@@ -234,31 +343,66 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
               key={index}
               sx={{
                 alignSelf: chat.role === 'user' ? 'flex-end' : 'flex-start',
-                bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.900',
+                bgcolor:
+                  chat.role === 'user'
+                    ? theme.palette.primary.main
+                    : theme.palette.grey[200],
                 color:
                   chat.role === 'user'
-                    ? 'primary.contrastText'
-                    : 'text.primary',
-                borderRadius: 1,
-                p: 1,
-                mb: 1,
+                    ? theme.palette.text.white
+                    : theme.palette.text.primary,
+                borderRadius:
+                  chat.role === 'user'
+                    ? '15px 15px 5px 15px'
+                    : '15px 15px 15px 5px',
+                p: 2,
+
+                mb: 2,
                 maxWidth: '100%',
                 wordBreak: 'break-word',
+                position: 'relative',
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  bottom: 0,
+                  width: 0,
+                  height: 0,
+                  border: '10px solid transparent',
+                  ...(chat.role === 'user'
+                    ? {
+                        borderTopColor: theme.palette.primary.main,
+                        right: -7,
+                        transform: 'rotate(180deg)',
+                      }
+                    : {
+                        borderTopColor: theme.palette.grey[200],
+                        left: -7,
+                        transform: 'rotate(180deg)',
+                      }),
+                },
               }}
             >
-              {chat.role === 'assistant'
-                ? formatChatContent(chat.content)
-                : chat.content}
+              {chat.role === 'assistant' ? (
+                formatChatContent(chat.content)
+              ) : (
+                <Typography
+                  sx={{
+                    color: theme.palette.text.white,
+                  }}
+                >
+                  {chat.content}
+                </Typography>
+              )}
             </Box>
           ))}
         {isLoading && (
           <Box
             sx={{
               alignSelf: 'flex-start',
-              bgcolor: 'grey.300',
-              borderRadius: 1,
-              p: 1,
-              mb: 1,
+              bgcolor: theme.palette.background.paper,
+              borderRadius: theme.spacing(2),
+              p: 2,
+              mb: 2,
               maxWidth: '100%',
               display: 'flex',
               alignItems: 'center',
@@ -278,34 +422,44 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
           mb: 1,
         }}
       >
-        <Button
-          variant="outlined"
-          disabled={isLoading}
-          sx={{ width: '30%', mx: 0.5, mb: 1 }}
-          onClick={() => handleSend('hint')}
+        <Tooltip title={'Prompts the coach to give a hint'} enterDelay={500}>
+          <Button
+            variant="outlined"
+            disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
+            sx={{ width: '30%', mx: 0.5, mb: 1 }}
+            onClick={() => handleSend('hint')}
+          >
+            Get a Hint
+          </Button>
+        </Tooltip>
+        <Tooltip
+          title={'Prompts the coach to give a solution'}
+          enterDelay={500}
         >
-          Hint
-        </Button>
+          <Button
+            variant="outlined"
+            disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
+            sx={{ width: '30%', mx: 0.5, mb: 1 }}
+            onClick={() => handleSend('solution')}
+          >
+            Get a Solution
+          </Button>
+        </Tooltip>
         <Button
-          variant="outlined"
+          variant="contained"
           disabled={isLoading}
-          sx={{ width: '30%', mx: 0.5, mb: 1 }}
-          onClick={() => handleSend('solution')}
-        >
-          Solution
-        </Button>
-        <Button
-          variant="outlined"
-          disabled={isLoading}
-          color="error"
           sx={{
+            bgcolor: theme.palette.error.main,
             width: '30%',
             mx: 0.5,
             mb: 1,
+            '&:hover': {
+              bgcolor: theme.palette.error.dark,
+            },
           }}
           onClick={handleDelete}
         >
-          Delete
+          Delete Chat
         </Button>
       </Box>
 
@@ -313,27 +467,39 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          p: 2,
-          border: '1px solid grey',
-          borderRadius: 1,
+          p: theme.spacing(1),
+          border: 'none',
         }}
       >
         <TextField
           value={input}
           onChange={handleInputChange}
-          onKeyPress={handleKeyPress}
-          placeholder="Type a message..."
+          onKeyDown={handleOnPressEnter} //TODO: onKeyPress is deprecated, use onKeyDown instead
+          placeholder={`Type a message (${MAX_CHAT_COUNT - chatCount} messages left today)...`}
           variant="outlined"
           fullWidth
-          sx={{ mr: 1 }}
+          sx={{
+            mr: 1,
+            '& fieldset': { borderRadius: theme.spacing(2) },
+          }}
+          disabled={isLoading || chatCount >= MAX_CHAT_COUNT} //! disable the input field if the user has reached the maximum number of messages for the day
+          multiline
+          maxRows={4}
         />
-        <Button
-          onClick={() => handleSend('user')} // Use arrow function
-          disabled={isLoading}
-          variant="contained"
+        <Tooltip
+          title={`You have ${MAX_CHAT_COUNT - chatCount} messages left for today.`}
+          enterDelay={500}
         >
-          Send
-        </Button>
+          <Button
+            onClick={() => handleSend('user')} // Use arrow function
+            disabled={
+              isLoading || chatCount >= MAX_CHAT_COUNT || input.trim() === ''
+            }
+            variant="contained"
+          >
+            Send
+          </Button>
+        </Tooltip>
       </Box>
     </Paper>
   )

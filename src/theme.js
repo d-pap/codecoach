@@ -13,6 +13,7 @@ const theme = createTheme({
     },
     text: {
       primary: '#333333',
+      white: '#f0f0f0',
       //secondary: '#6C63FF', // search box bg, unactive tabs
     },
     divider: '#0000001f',

@@ -68,6 +68,8 @@ const EditorButtons = ({
   handleSubmitCode,
   currentThemeStyle,
   isDisabled, //! if true, the buttons will be disabled
+  MAX_RUN_SUBMIT_COUNT,
+  runSubmitCount,
 }) => (
   <Box sx={{ pt: 1, pr: 1 }}>
     <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
@@ -129,7 +131,7 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
   const [feedbackOpen, setFeedbackOpen] = useState(false)
 
   //! limit the number of runs and submissions to prevent abuse
-  const MAX_RUN_SUBMIT_COUNT = 5
+  const MAX_RUN_SUBMIT_COUNT = 10 //TODO: change this to limit number of code runs and submissions
   const [runSubmitCount, setRunSubmitCount] = useState(() => {
     const savedCount = localStorage.getItem('runSubmitCount')
     const savedDate = localStorage.getItem('runSubmitDate')
@@ -270,6 +272,8 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
         setTheme={setTheme}
         setLanguage={setLanguage}
         currentThemeStyle={currentThemeStyle}
+        MAX_RUN_SUBMIT_COUNT={MAX_RUN_SUBMIT_COUNT}
+        runSubmitCount={runSubmitCount}
       />
       <AceEditor
         mode={language}
