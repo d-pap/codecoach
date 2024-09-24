@@ -12,9 +12,9 @@ import {
   Pagination,
   Stack,
 } from '@mui/material';
-import { fetchProblems } from '../../api'; // Assuming fetchProblems is available to fetch ICPC problems
+import { fetchProblems, addProblemID } from '../../api'; // Ensure this import path is correct
 
-const AddCourseContent = ({ newClassName }) => {
+const AddCourseContent = ({ newClassName, courseId }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProblems, setSelectedProblems] = useState([]);
   const [problems, setProblems] = useState([]);
@@ -24,7 +24,6 @@ const AddCourseContent = ({ newClassName }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const problemsPerPage = 10;
 
-  // Fetch ICPC problems when the component loads
   useEffect(() => {
     async function loadProblems() {
       try {
@@ -40,7 +39,6 @@ const AddCourseContent = ({ newClassName }) => {
     loadProblems();
   }, []);
 
-  // Filter problems based on search term
   useEffect(() => {
     setFilteredProblems(
       problems.filter(problem =>
@@ -62,16 +60,30 @@ const AddCourseContent = ({ newClassName }) => {
     });
   };
 
-  const handleSubmit = () => {
-    console.log('Selected problems for', newClassName, ':', selectedProblems);
-    // Further processing like sending to the backend
+  const handleSubmit = async () => {
+    // Iterate over selected problems and add each to the course
+    const errors = [];
+    for (const problemId of selectedProblems) {
+      try {
+        const updatedCourse = await addProblemID(courseId, problemId);
+        console.log('Updated course with new problem:', updatedCourse);
+      } catch (error) {
+        console.error('Error adding problem to course:', error);
+        errors.push(`Failed to add problem ${problemId} to course: ${error.message || error}`);
+      }
+    }
+
+    if (errors.length > 0) {
+      setError('Some problems could not be added. Check console for details.');
+    } else {
+      console.log('All selected problems added successfully!');
+    }
   };
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
   };
 
-  // Calculate the problems to display on the current page
   const indexOfLastProblem = currentPage * problemsPerPage;
   const indexOfFirstProblem = indexOfLastProblem - problemsPerPage;
   const currentProblems = filteredProblems.slice(indexOfFirstProblem, indexOfLastProblem);
@@ -97,24 +109,18 @@ const AddCourseContent = ({ newClassName }) => {
         onChange={handleSearchChange}
       />
       <FormGroup>
-        {currentProblems.length > 0 ? (
-          currentProblems.map((problem) => (
-            <Paper key={problem._id} elevation={2} sx={{ mt: 2, p: 2 }}>
-              <Typography variant="subtitle1">{problem.title}</Typography>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    onChange={() => handleProblemChange(problem._id)}
-                    checked={selectedProblems.includes(problem._id)}
-                  />
-                }
-                label={problem.title}
-              />
-            </Paper>
-          ))
-        ) : (
-          <Typography variant="body1">No problems found</Typography>
-        )}
+        {currentProblems.map((problem) => (
+          <Paper key={problem._id} elevation={2} sx={{ mt: 2, p: 2 }}>
+            <Typography variant="subtitle1">{problem.title}</Typography>
+            <FormControlLabel
+              control={<Checkbox
+                onChange={() => handleProblemChange(problem._id)}
+                checked={selectedProblems.includes(problem._id)}
+              />}
+              label={problem.title}
+            />
+          </Paper>
+        ))}
       </FormGroup>
       <Stack spacing={2} sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
         <Pagination

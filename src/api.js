@@ -5,6 +5,7 @@
  * to handle API requests (e.g., get data, posting data, etc.)
  */
 import axios from 'axios'
+import { Auth } from 'aws-amplify'
 
 const API_GATEWAY_URL = process.env.REACT_APP_API_URL
 const LLM_URL = 'http://localhost:3500'
@@ -37,55 +38,6 @@ export async function addProblem(problem) {
     throw new Error('Failed to add problem')
   }
 }
-
-// // Function for LLM interaction which returns a hint
-// // Lambda function and APIGW endpoint. Currently works
-// // as long as the LLM server is running locally
-// // https://github.com/Marv2014-1/llm-server
-// export async function getHint(title, question, answer) {
-//   try {
-//     const response = await axios.post(`${LLM_URL}/hint-problem`, {
-//       title,
-//       question,
-//       answer,
-//     })
-//     return response.data.answer
-//   } catch (error) {
-//     console.error('Error fetching hint:', error)
-//     throw new Error('Failed to fetch hint')
-//   }
-// }
-
-// // Function for LLM interaction which returns a solution
-// // Lambda function and APIGW endpoint. Currently works
-// // as long as the LLM server is running locally
-// // https://github.com/Marv2014-1/llm-server
-// export async function getSolution(title, question, answer) {
-//   try {
-//     const response = await axios.post(`${LLM_URL}/solve-problem`, {
-//       title,
-//       question,
-//       answer,
-//     })
-//     return response.data.answer
-//   } catch (error) {
-//     console.error('Error fetching hint:', error)
-//     throw new Error('Failed to fetch hint')
-//   }
-// }
-
-// // Function for local LLM interaction which returns a chat response
-// export async function chatWithLLM(payload) {
-//   try {
-//     const response = await axios.post(`${LLM_URL}/chat`, {
-//       payload,
-//     })
-//     return response.data
-//   } catch (error) {
-//     console.error('Error fetching chat:', error)
-//     throw new Error('Failed to fetch chat')
-//   }
-// }
 
 // Function to create a new chat conversation
 export async function createNewChatConvo() {
@@ -156,5 +108,116 @@ export const executeCode = async (sourceCode, language = 'python') => {
   } catch (error) {
     console.error('Error:', error)
     throw error
+  }
+}
+
+// function to save a submission to the database
+export async function saveSubmission(submissionData) {
+  try {
+    const response = await axios.post(
+      `${API_GATEWAY_URL}/submissions`,
+      submissionData
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error submitting code:', error)
+    throw new Error('Failed to submit code')
+  }
+}
+
+// function to get the current user ID
+// for submit code button, discussions, etc.
+export const getCurrentUserId = async () => {
+  try {
+    const user = await Auth.currentAuthenticatedUser()
+    const userId = user.attributes.sub
+    return userId
+  } catch (error) {
+    console.error('Error getting user ID:', error)
+  }
+}
+
+// function to fetch messages from the database
+export async function fetchForumComments(problemId) {
+  try {
+    const response = await axios.get(`${API_GATEWAY_URL}/messages/${problemId}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching messages:', error)
+    throw new Error('Failed to fetch messages')
+  }
+}
+
+// function to post a message to the database
+export async function postForumComment(problemId, userId, message) {
+  try {
+    const response = await axios.post(`${API_GATEWAY_URL}/messages`, {
+      problemId,
+      userId,
+      message,
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error posting message:', error)
+    throw new Error('Failed to post message')
+  }
+}
+
+// function to like a message
+export async function likeForumComment(messageId) {
+  try {
+    const response = await axios.post(
+      `${API_GATEWAY_URL}/messages/${messageId}/like`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error liking message:', error)
+    throw new Error('Failed to like message')
+  }
+}
+// Function to add a new course
+export async function createCourse(courseId, teacherId, problemIds = []) {
+  const course = {
+    courseId,
+    teacherId,
+    problemIds
+  }
+  try {
+    const response = await axios.post(`${API_GATEWAY_URL}/courses`, course)
+    return response.data
+  } catch (error) {
+    console.error('Error creating course:', error)
+    throw new Error('Failed to create course')
+  }
+}
+
+// Function to fetch a specific course by courseId
+export async function fetchCourse(courseId) {
+  try {
+    const response = await axios.get(`${API_GATEWAY_URL}/courses/${courseId}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching course:', error)
+    throw new Error('Failed to fetch course')
+  }
+}
+// Function to add a problem ID to a course's problemIds array
+export async function addProblemID(courseId, problemId) {
+  try {
+    const response = await axios.put(`${API_GATEWAY_URL}/courses/${courseId}/problems`, { problemId })
+    return response.data
+  } catch (error) {
+    console.error('Error adding problem ID to course:', error)
+    throw new Error('Failed to add problem to course')
+  }
+}
+// Function to delete a course by courseId
+export async function deleteCourse(courseId) {
+  try {
+    const response = await axios.delete(`${API_GATEWAY_URL}/courses/${courseId}`)
+    return response.data
+  } catch (error) {
+    console.error('Error deleting course:', error)
+    throw new Error('Failed to delete course')
   }
 }
