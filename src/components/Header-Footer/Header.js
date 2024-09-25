@@ -1,18 +1,14 @@
 /**
  * Header component for the application
- *
- * TODO: change MUI imports to path imports, not named imports like we have here to reduce bundle size
- * TODO:      https://mui.com/material-ui/guides/minimizing-bundle-size/
  */
 
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { Auth } from 'aws-amplify'
-
+import logo from '../../images/logo-with-text.svg'
 import {
   AppBar,
   Toolbar,
-  Typography,
   Button,
   IconButton,
   Menu,
@@ -45,6 +41,7 @@ const PageLinks = styled(Button)(({ theme }) => ({
 
 const Header = () => {
   const theme = useTheme()
+  const navigate = useNavigate()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [accountMenuAnchorEl, setAccountMenuAnchorEl] = React.useState(null) // state for account menu
@@ -76,11 +73,7 @@ const Header = () => {
   }
 
   return (
-    <Box
-      sx={{
-        flexGrow: 1, //* makes page content responsive
-      }}
-    >
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar
         position="static"
         sx={{
@@ -91,24 +84,29 @@ const Header = () => {
         }}
       >
         <Toolbar
-          //variant="dense" //! reduces header height properly
           sx={{
             height: '100%',
             minHeight: 'unset',
+            display: 'flex',
+            justifyContent: 'space-between',
           }}
         >
-          <Typography
-            variant="h6"
-            component={NavLink}
-            to="/"
-            sx={{
-              color: (theme) => theme.palette.text.primary,
-              flexGrow: 1,
-              textDecoration: 'none',
+          <Box
+            component="img"
+            onClick={() => {
+              navigate('/home')
             }}
-          >
-            CC
-          </Typography>
+            src={logo}
+            alt="logo"
+            sx={{
+              height: '100%',
+              maxHeight: '60px',
+              width: 'auto',
+              maxWidth: '100%',
+              cursor: 'pointer',
+            }}
+          />
+
           {isMobile ? (
             <>
               <IconButton
@@ -163,7 +161,7 @@ const Header = () => {
               </Menu>
             </>
           ) : (
-            <>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Box
                 sx={{
                   display: 'flex',
@@ -202,12 +200,16 @@ const Header = () => {
                   Manage Problems
                 </PageLinks>
               </Box>
-              <Divider orientation="vertical" flexItem variant="middle" />
+              <Divider
+                orientation="vertical"
+                flexItem
+                variant="middle"
+                sx={{ mx: 1 }}
+              />
               <Box
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  pl: 1,
                 }}
               >
                 <IconButton
@@ -253,7 +255,7 @@ const Header = () => {
                   </MenuItem>
                 </Menu>
               </Box>
-            </>
+            </Box>
           )}
         </Toolbar>
       </AppBar>
