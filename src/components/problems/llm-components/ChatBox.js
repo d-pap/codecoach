@@ -18,6 +18,7 @@ import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import SettingsIcon from '@mui/icons-material/Settings'
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
 import { useTheme } from '@mui/material/styles'
 
 // Function to retrieve chat history from localStorage
@@ -306,11 +307,14 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
           mb: 1,
         }}
       >
+        <Tooltip title="During development, the number of AI messages is limited per day. Each hint, solution, and user message costs 1 run. You can see how many runs you have left in the input field placeholder text.">
+          <InfoRoundedIcon sx={{ color: theme.palette.text.secondary }} />
+        </Tooltip>
         <Typography variant="h6" sx={{ flexGrow: 1, textAlign: 'center' }}>
           Get help from your Code Coach
         </Typography>
         <IconButton onClick={() => setShowSettings(!showSettings)}>
-          <SettingsIcon />
+          <SettingsIcon sx={{ color: theme.palette.text.secondary }} />
         </IconButton>
       </Box>
 
@@ -334,7 +338,7 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
           overflowY: 'auto',
           mb: theme.spacing(2),
           p: theme.spacing(2),
-          border: 'none', //! removed border of chat messages box
+          border: 'none',
         }}
       >
         {Array.isArray(currentChatHistory.data) &&

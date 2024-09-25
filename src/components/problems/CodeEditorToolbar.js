@@ -8,6 +8,8 @@ import Toolbar from '@mui/material/Toolbar'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import { Typography } from '@mui/material'
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
+import Tooltip from '@mui/material/Tooltip'
 
 // component to render language and theme dropdowns
 const EditorSelect = ({ value, onChange, options, currentThemeStyle, sx }) => {
@@ -121,6 +123,9 @@ const CodeEditorToolbar = ({
         >
           {`You have ${MAX_RUN_SUBMIT_COUNT - runSubmitCount} runs left for today`}
         </Typography>
+        <Tooltip title="In the development version, you have a limited number of runs and submissions per day. Each run or submission costs 1 run.">
+          <InfoRoundedIcon sx={{ color: currentThemeStyle.color, ml: 1 }} />
+        </Tooltip>
       </Toolbar>
     </AppBar>
   )

@@ -14,7 +14,7 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom'
-import { ThemeProvider, Box } from '@mui/material'
+import { ThemeProvider, Box, LinearProgress } from '@mui/material'
 import LandingPage from './pages/LandingPage'
 import Header from './components/Header-Footer/Header'
 import Footer from './components/Header-Footer/Footer'
@@ -70,7 +70,7 @@ function App() {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <LinearProgress />
   }
 
   return (
