@@ -221,3 +221,39 @@ export async function deleteCourse(courseId) {
     throw new Error('Failed to delete course')
   }
 }
+
+// Function to get course id from user account
+export async function getCoursesByUser(userId) {
+  try {
+    const response = await axios.get(`${API_GATEWAY_URL}/users/${userId}/courses`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching courses for user:', error);
+    throw new Error('Failed to fetch courses for user');
+  }
+}
+
+// Function to add course to user account
+
+export async function addCourseToUser(userId, courseId) {
+  try {
+    const response = await axios.put(`${API_GATEWAY_URL}/users/${userId}/courses`, { courseId });
+    return response.data;
+  } catch (error) {
+    console.error('Error adding course to user:', error);
+    throw new Error('Failed to add course to user');
+  }
+}
+
+// Function to delete course from user account
+
+export async function deleteCourseFromUser(userId, courseId) {
+  try {
+    const response = await axios.delete(`${API_GATEWAY_URL}/users/${userId}/courses/${courseId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting course from user:', error);
+    throw new Error('Failed to delete course from user');
+  }
+}
+
