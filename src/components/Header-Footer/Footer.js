@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import { Box, Container, Grid, Typography, Link } from '@mui/material'
 import { styled, alpha } from '@mui/material/styles'
-import LinkedInIcon from '@mui/icons-material/LinkedIn'
-import YouTubeIcon from '@mui/icons-material/YouTube'
-import InstagramIcon from '@mui/icons-material/Instagram'
 
+// Dynamic Imports for Social Icons to enable code splitting
+const LinkedInIcon = lazy(() => import('@mui/icons-material/LinkedIn'))
+const YouTubeIcon = lazy(() => import('@mui/icons-material/YouTube'))
+const InstagramIcon = lazy(() => import('@mui/icons-material/Instagram'))
+
+// Styled components
 const FooterContainer = styled(Box)(({ theme }) => ({
   backgroundColor: 'transparent',
-  padding: theme.spacing(2, 0), // padding top and bottom=32px (4*8px=32), no padding on the sides
+  padding: theme.spacing(2, 0), // Padding top and bottom
   marginTop: 'auto',
   borderTop: '2px solid #e0e0e0',
   [theme.breakpoints.down('sm')]: {
@@ -16,7 +19,6 @@ const FooterContainer = styled(Box)(({ theme }) => ({
 }))
 
 const EmailLink = styled(Link)({
-  //color: '#9cdba6',
   color: 'inherit',
   textDecoration: 'none',
   '&:hover': {
@@ -35,11 +37,18 @@ const SocialIcon = styled(Box)(({ theme }) => ({
   },
 }))
 
+/**
+ * Footer component displaying contact information and social media links.
+ * Implements dynamic imports for social icons to optimize performance.
+ *
+ * @returns {JSX.Element} The rendered Footer component.
+ */
 const Footer = () => {
   return (
     <FooterContainer>
       <Container maxWidth="lg">
         <Grid container spacing={2} justifyContent="center">
+          {/* Contact Us Section */}
           <Grid item xs={12} sm={6} md={4}>
             <Typography
               variant="h6"
@@ -68,6 +77,8 @@ const Footer = () => {
               </EmailLink>
             </Typography>
           </Grid>
+
+          {/* Social Media Section */}
           <Grid item xs={12} sm={6} md={4}>
             <Typography
               variant="h6"
@@ -78,35 +89,46 @@ const Footer = () => {
               Social
             </Typography>
             <Box display="flex" alignItems="center">
+              {/* LinkedIn Icon */}
               <SocialIcon>
-                <Link
-                  href="https://www.linkedin.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  color="inherit"
-                >
-                  <LinkedInIcon />
-                </Link>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Link
+                    href="https://www.linkedin.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    color="inherit"
+                  >
+                    <LinkedInIcon />
+                  </Link>
+                </Suspense>
               </SocialIcon>
+
+              {/* YouTube Icon */}
               <SocialIcon>
-                <Link
-                  href="https://www.youtube.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  color="inherit"
-                >
-                  <YouTubeIcon />
-                </Link>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Link
+                    href="https://www.youtube.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    color="inherit"
+                  >
+                    <YouTubeIcon />
+                  </Link>
+                </Suspense>
               </SocialIcon>
+
+              {/* Instagram Icon */}
               <SocialIcon>
-                <Link
-                  href="https://www.instagram.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  color="inherit"
-                >
-                  <InstagramIcon />
-                </Link>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Link
+                    href="https://www.instagram.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    color="inherit"
+                  >
+                    <InstagramIcon />
+                  </Link>
+                </Suspense>
               </SocialIcon>
             </Box>
           </Grid>

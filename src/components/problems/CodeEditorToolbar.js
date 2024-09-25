@@ -1,64 +1,10 @@
-/**
- * This component is used to render the top toolbar of the code editor
- * that has language and theme dropdowns.
- */
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
 import { Typography } from '@mui/material'
 
-// component to render language and theme dropdowns
-const EditorSelect = ({ value, onChange, options, currentThemeStyle, sx }) => {
-  return (
-    <Select
-      size="small"
-      value={value}
-      onChange={onChange}
-      sx={{
-        fontSize: (theme) => theme.typography.button.fontSize,
-        color: currentThemeStyle.color,
-        backgroundColor: currentThemeStyle.marginColor,
-        minWidth: '100px',
-        marginLeft: '20px',
-        borderRadius: (theme) => theme.spacing(2),
-        '& .MuiOutlinedInput-notchedOutline': {
-          borderColor: currentThemeStyle.color,
-        },
-        '&:hover .MuiOutlinedInput-notchedOutline': {
-          borderColor: currentThemeStyle.color,
-        },
-        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-          borderColor: currentThemeStyle.color,
-        },
-        '& .MuiSvgIcon-root': {
-          color: currentThemeStyle.color,
-        },
-        height: '30px', // height of select box
-        ...sx, //* to allow additional styles to be passed in
-      }}
-      MenuProps={{
-        PaperProps: {
-          sx: {
-            borderRadius: (theme) => theme.spacing(2),
-            backgroundColor: currentThemeStyle.marginColor,
-            '& .MuiMenuItem-root': {
-              fontSize: (theme) => theme.typography.button.fontSize,
-              color: currentThemeStyle.color,
-            },
-          },
-        },
-      }}
-    >
-      {options.map((option) => (
-        <MenuItem key={option.value} value={option.value}>
-          {option.label}
-        </MenuItem>
-      ))}
-    </Select>
-  )
-}
+// Dynamically import the EditorSelect component
+const EditorSelect = lazy(() => import('./EditorSelect'))
 
 const CodeEditorToolbar = ({
   theme,
@@ -69,11 +15,13 @@ const CodeEditorToolbar = ({
   MAX_RUN_SUBMIT_COUNT,
   runSubmitCount,
 }) => {
+  // Options for language selection
   const languageOptions = [
     { value: 'python', label: 'Python' },
-    // add more languages here
+    // Add more languages here
   ]
 
+  // Options for theme selection
   const themeOptions = [
     { value: 'monokai', label: 'Monokai' },
     { value: 'dracula', label: 'Dracula' },
@@ -103,18 +51,22 @@ const CodeEditorToolbar = ({
           pl: 2,
         }}
       >
-        <EditorSelect
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-          options={languageOptions}
-          currentThemeStyle={currentThemeStyle}
-        />
-        <EditorSelect
-          value={theme}
-          onChange={(e) => setTheme(e.target.value)}
-          options={themeOptions}
-          currentThemeStyle={currentThemeStyle}
-        />
+        {/* Suspense handles the loading state of dynamically imported EditorSelect */}
+        <Suspense fallback={<div>Loading Select...</div>}>
+          <EditorSelect
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            options={languageOptions}
+            currentThemeStyle={currentThemeStyle}
+          />
+          <EditorSelect
+            value={theme}
+            onChange={(e) => setTheme(e.target.value)}
+            options={themeOptions}
+            currentThemeStyle={currentThemeStyle}
+          />
+        </Suspense>
+        {/* Display remaining runs for the day */}
         <Typography
           variant="body2"
           sx={{ p: 1, ml: 'auto', color: currentThemeStyle.color }}

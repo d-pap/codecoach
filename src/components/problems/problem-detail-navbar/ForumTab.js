@@ -3,7 +3,6 @@ import {
   getCurrentUserId,
   postForumComment,
   likeForumComment,
-  fetchForumComments,
 } from '../../../api'
 import ForumLayout from './forum-elements/ForumLayout'
 import { FILTER_OPTIONS } from './forum-elements/ForumFilter'
