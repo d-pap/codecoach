@@ -21,6 +21,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute'
 import theme from './theme'
 import AuthModal from './components/auth/AuthModal'
 import CenteredLoader from './components/utility/CenteredLoader'
+import ICPC from './pages/problems/problem-types/ICPC'
 
 // Dynamic Imports
 const LandingPage = lazy(() => import('./pages/LandingPage'))
@@ -34,7 +35,6 @@ const ICPCMultipleForm = lazy(() => import('./pages/problems/add-problems/ICPCMu
 const InterviewForm = lazy(() => import('./pages/problems/add-problems/InterviewForm'))
 const EditICPCProblem = lazy(() => import('./pages/problems/edit-problems/editICPCProblem'))
 const EditInterviewProblem = lazy(() => import('./pages/problems/edit-problems/editInterviewProblem'))
-const ICPC = lazy(() => import('./pages/problems/problem-types/ICPC'))
 const Interview = lazy(() => import('./pages/problems/problem-types/Interview'))
 
 Amplify.configure(awsExports)
