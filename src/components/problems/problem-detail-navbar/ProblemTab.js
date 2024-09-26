@@ -17,17 +17,25 @@ const NavbarStack = lazy(() => import('./NavbarStack'))
  */
 const ProblemTab = ({ problem }) => {
   return (
-    // Suspense handles the loading state of NavbarStack
     <Suspense fallback={<CenteredCircleLoader />}>
-      <NavbarStack>
+      <NavbarStack >
         <h3>Description</h3>
         <p>{problem.description}</p>
         <h3>Input</h3>
-        <pre>{JSON.stringify(problem.exampleInputs, null, 2)}</pre>
+        <p>{problem.exampleInputs}</p>
         <h3>Output</h3>
-        <pre>{JSON.stringify(problem.exampleOutputs, null, 2)}</pre>
+        <p>{problem.exampleOutputs}</p>
         <h3>Examples</h3>
-        <pre>{JSON.stringify(problem.testCases, null, 2)}</pre>
+        <pre
+          style={{
+            whiteSpace: 'pre-wrap',
+            wordWrap: 'break-word',
+            overflowWrap: 'break-word',
+            maxWidth: '100%',
+          }}
+        >
+          {JSON.stringify(problem.testCases, null, 2)}
+        </pre>
       </NavbarStack>
     </Suspense>
   )
