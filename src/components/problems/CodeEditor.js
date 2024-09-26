@@ -173,7 +173,7 @@ const CodeEditor = ({
     const intervalId = setInterval(checkAndResetCount, 60000)
 
     return () => clearInterval(intervalId)
-  }, [])
+  }, [RESET_INTERVAL])
 
   useEffect(() => {
     localStorage.setItem('runSubmitCount', runSubmitCount.toString())
