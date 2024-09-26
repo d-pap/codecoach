@@ -15,7 +15,16 @@ const ProblemTab = ({ problem }) => {
       <h3>Output</h3>
       <p>{problem.exampleOutputs}</p>
       <h3>Examples</h3>
-      <pre>{JSON.stringify(problem.testCases, null, 2)}</pre>
+      <pre
+        style={{
+          whiteSpace: 'pre-wrap',
+          wordWrap: 'break-word',
+          overflowWrap: 'break-word',
+          maxWidth: '100%',
+        }}
+      >
+        {JSON.stringify(problem.testCases, null, 2)}
+      </pre>
     </NavbarStack>
   )
 }
