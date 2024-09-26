@@ -5,7 +5,7 @@
  * from the problems list on the Problems page
  */
 
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { fetchProblemById } from '../../api'
