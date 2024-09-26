@@ -27,8 +27,16 @@ const mockCourses = [
     courseId: "COURSE-1001",
     teacherId: ["6f26821a4e0eb6cdef357ca"],
     problemIds: [
-      "6679d04631f3f47ad3599bd",
-      "669a752a15376a2aa39f46"
+      "667d8711ce0f91e40bd80686",
+      "667d904d6341ff374dd599bd",
+      "669a752a1537a66a2aa39f46",
+      "669a75851537a66a2aa39f47",
+      "66b90c716e6381bf6d9822f6",
+      "66b90ee2c21001500512f4f9",
+      "66b90eeac21001500512f4fa",
+      "66b90ef0c21001500512f4fb",
+      "66b90ef4c21001500512f4fc",
+      "66b90f08c21001500512f4fd"
     ],
     courseName: "ICPC Beginner"
   },
@@ -37,12 +45,21 @@ const mockCourses = [
     courseId: "COURSE-2002",
     teacherId: ["6f26821a4e0eb6cdef357ca"],
     problemIds: [
-      "6679d04631f3f47ad3599bd",
-      "669a752a15376a2aa39f46"
+      "667d8711ce0f91e40bd80686",
+      "667d904d6341ff374dd599bd",
+      "669a752a1537a66a2aa39f46",
+      "669a75851537a66a2aa39f47",
+      "66b90c716e6381bf6d9822f6",
+      "66b90ee2c21001500512f4f9",
+      "66b90eeac21001500512f4fa",
+      "66b90ef0c21001500512f4fb",
+      "66b90ef4c21001500512f4fc",
+      "66b90f08c21001500512f4fd"
     ],
     courseName: "ICPC Intermediate"
   }
 ];
+
 
 // StudentCourses use with API
 // const StudentCourses = () => {
@@ -71,7 +88,7 @@ const StudentCourses = () => {
     };
     loadCourses();
   }, []);
-  
+
   // Handle dialog open and close
   const handleDialogOpen = () => setDialogOpen(true);
   const handleDialogClose = () => setDialogOpen(false);
