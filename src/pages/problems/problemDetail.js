@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { fetchProblemById } from '../../api'
 import ProblemDetailLayout from '../../components/problems/ProblemDetailLayout'
 import ProblemDetails from '../../components/problems/ProblemDetails'
@@ -16,32 +17,32 @@ function ProblemDetail() {
   const location = useLocation()
   const problemFromLocation = location.state?.problem
   const { problemId } = useParams() // extract problem ID from URL
+  const queryClient = useQueryClient() // get query client instance
 
-  const [problem, setProblem] = useState(problemFromLocation || null)
-  const [isLoading, setIsLoading] = useState(!problemFromLocation)
-  const [isError, setIsError] = useState(false)
-  const [error, setError] = useState(null)
+  // set problem data in the cache if passed from location
+  if (problemFromLocation) {
+    queryClient.setQueryData(['problem', problemId], problemFromLocation)
+  }
 
-  useEffect(() => {
-    if (!problemFromLocation) {
-      setIsLoading(true)
-      fetchProblemById(problemId)
-        .then((data) => {
-          // Remove _id from testCases attribute
-          const cleanedData = {
-            ...data,
-            testCases: data.testCases.map(({ _id, ...rest }) => rest),
-          }
-          setProblem(cleanedData)
-          setIsLoading(false)
-        })
-        .catch((err) => {
-          setError(err)
-          setIsError(true)
-          setIsLoading(false)
-        })
-    }
-  }, [problemId, problemFromLocation])
+  // use react query to get cached problem or fetch new problem if not cached
+  const {
+    data: problem,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['problem', problemId],
+    queryFn: () => fetchProblemById(problemId),
+    staleTime: 1000 * 60 * 5,
+    initialData: problemFromLocation,
+    select: (data) => {
+      // remove _id from testCases attribute
+      return {
+        ...data,
+        testCases: data.testCases.map(({ _id, ...rest }) => rest),
+      }
+    },
+  })
 
   if (isLoading) {
     return <LinearProgress /> // You can replace this with a skeleton loader if preferred
