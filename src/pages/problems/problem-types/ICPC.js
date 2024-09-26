@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
 import { ICPCFilter } from '../../../components/problems/problem-filters/ICPCFilter'
 import { getSubregions } from '../../../components/problems/subregions'
@@ -211,10 +212,18 @@ function ICPC() {
   const location = useLocation()
   const problemsFromLocation = location.state?.problems
 
-  const [problems, setProblems] = useState(problemsFromLocation || [])
-  const [isLoading, setIsLoading] = useState(!problemsFromLocation)
-  const [isError, setIsError] = useState(false)
-  const [error, setError] = useState(null)
+  const {
+    data: problems = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['problems'],
+    queryFn: fetchProblems,
+    staleTime: 1000 * 60 * 5,
+    initialData: problemsFromLocation,
+  })
+
   const [region, setRegion] = useState('all')
   const [subregion, setSubregion] = useState('all')
   const [year, setYear] = useState('all')
@@ -223,23 +232,8 @@ function ICPC() {
   const problemsPerPage = 10
 
   useEffect(() => {
-    if (!problemsFromLocation) {
-      setIsLoading(true)
-      fetchProblems()
-        .then((data) => {
-          setProblems(data)
-          setFilteredProblems(ICPCFilter(data, region, subregion, year))
-          setIsLoading(false)
-        })
-        .catch((err) => {
-          setError(err)
-          setIsError(true)
-          setIsLoading(false)
-        })
-    } else {
-      setFilteredProblems(ICPCFilter(problemsFromLocation, region, subregion, year))
-    }
-  }, [problemsFromLocation, region, subregion, year])
+    setFilteredProblems(ICPCFilter(problems, region, subregion, year))
+  }, [problems, region, subregion, year])
 
   const handleRegionChange = (event) => {
     setRegion(event.target.value)
