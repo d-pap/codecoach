@@ -122,13 +122,7 @@ const OutputWindow = ({ output, currentThemeStyle }) => (
   </Box>
 )
 
-const CodeEditor = ({
-  code,
-  setCode,
-  setOutput,
-  output,
-  enableFeedback = false,
-}) => {
+const CodeEditor = ({ code, setCode, setOutput, output }) => {
   const [theme, setTheme] = useState('monokai')
   const [language, setLanguage] = useState('python')
   const { problemId } = useParams() // get problem ID from URL
@@ -267,20 +261,18 @@ const CodeEditor = ({
 
       setRunSubmitCount((prevCount) => prevCount + 1)
 
-      // open feedback dialog after 3 seconds, only if enableFeedback is true
-      if (enableFeedback) {
-        setTimeout(() => setFeedbackOpen(true), 3000)
-      }
+      // open feedback dialog after 3 seconds
+      setTimeout(() => setFeedbackOpen(true), 3000)
     } catch (error) {
       setOutput('Error submitting code: ' + error.message)
     }
   }
 
-  // feedback function
-  const handleFeedbackSubmit = (feedback) => {
-    //TODO: implement feedback submission to backend here
-    console.log(feedback)
-  }
+  // // feedback function
+  // const handleFeedbackSubmit = (feedback) => {
+  //   //TODO: implement feedback submission to backend here
+  //   console.log(feedback)
+  // }
 
   const currentThemeStyle = themeStyles[theme]
 
@@ -334,13 +326,11 @@ const CodeEditor = ({
         isDisabled={isDisabled}
       />
       <OutputWindow output={output} currentThemeStyle={currentThemeStyle} />
-      {enableFeedback && (
-        <FeedbackDialog
-          open={feedbackOpen}
-          onClose={() => setFeedbackOpen(false)}
-          onSubmit={handleFeedbackSubmit}
-        />
-      )}
+      {/* <FeedbackDialog
+        open={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+        onSubmit={handleFeedbackSubmit}
+      /> */}
     </Box>
   )
 }
