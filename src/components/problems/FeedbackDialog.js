@@ -1,4 +1,5 @@
 import React, { useState, Suspense, lazy } from 'react'
+import CenteredCircleLoader from '../utility/CenteredLoader'
 
 // Dynamically import MUI components to optimize bundle size
 const Dialog = lazy(() => import('@mui/material/Dialog'))
@@ -53,7 +54,7 @@ function FeedbackDialog({ open, onClose, onSubmit }) {
 
   return (
     // Suspense wraps dynamically imported components
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<CenteredCircleLoader />}>
       <Dialog open={open} onClose={onClose}>
         <DialogTitle>Tell us what you think!</DialogTitle>
         <DialogContent>

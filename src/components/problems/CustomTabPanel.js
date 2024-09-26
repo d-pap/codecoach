@@ -5,6 +5,7 @@
  */
 
 import React from 'react'
+import CenteredCircleLoader from '../utility/CenteredLoader'
 
 // Dynamically import MUI's Box component to improve performance
 const Box = React.lazy(() => import('@mui/material/Box'))
@@ -24,7 +25,7 @@ function CustomTabPanel(props) {
     >
       {/* Render the children inside the Box component when the tab is active */}
       {value === index && (
-        <React.Suspense fallback={<div>Loading...</div>}>
+        <React.Suspense fallback={<CenteredCircleLoader />}>
           <Box sx={{ p: 3 }}>{children}</Box>
         </React.Suspense>
       )}

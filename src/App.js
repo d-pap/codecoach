@@ -14,12 +14,13 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom'
-import { ThemeProvider, Box, LinearProgress } from '@mui/material'
+import { ThemeProvider, Box, LinearProgress, } from '@mui/material'
 import Header from './components/Header-Footer/Header'
 import Footer from './components/Header-Footer/Footer'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import theme from './theme'
 import AuthModal from './components/auth/AuthModal'
+import CenteredLoader from './components/utility/CenteredLoader'
 
 // Dynamic Imports
 const LandingPage = lazy(() => import('./pages/LandingPage'))
@@ -94,7 +95,7 @@ function App() {
               flexDirection: 'column',
             }}
           >
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<CenteredLoader />}>
               <Routes>
                 <Route
                   path="/"

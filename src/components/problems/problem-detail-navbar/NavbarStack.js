@@ -1,6 +1,7 @@
 // the stack structure for the navbar
 
 import React, { Suspense, lazy } from 'react'
+import CenteredCircleLoader from '../../utility/CenteredLoader'
 
 // Dynamically import the Stack component from MUI to enable code splitting
 const Stack = lazy(() =>
@@ -20,7 +21,7 @@ const Stack = lazy(() =>
 const NavbarStack = ({ children }) => {
   return (
     // Suspense handles the loading state of the dynamically imported Stack component
-    <Suspense fallback={<div>Loading Navbar...</div>}>
+    <Suspense fallback={<CenteredCircleLoader />}>
       <Stack direction="column" spacing={2}>
         {children}
       </Stack>

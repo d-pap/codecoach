@@ -3,6 +3,7 @@
  */
 
 import React, { Suspense, lazy } from 'react'
+import CenteredCircleLoader from '../../utility/CenteredLoader'
 
 // Dynamically import NavbarStack to optimize bundle size
 const NavbarStack = lazy(() => import('./NavbarStack'))
@@ -17,7 +18,7 @@ const NavbarStack = lazy(() => import('./NavbarStack'))
 const ProblemTab = ({ problem }) => {
   return (
     // Suspense handles the loading state of NavbarStack
-    <Suspense fallback={<div>Loading Problem Details...</div>}>
+    <Suspense fallback={<CenteredCircleLoader />}>
       <NavbarStack>
         <h3>Description</h3>
         <p>{problem.description}</p>

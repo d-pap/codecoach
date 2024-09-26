@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import { Typography } from '@mui/material'
+import CenteredCircleLoader from '../utility/CenteredLoader'
 
 // Dynamically import the EditorSelect component
 const EditorSelect = lazy(() => import('./EditorSelect'))
@@ -52,7 +53,7 @@ const CodeEditorToolbar = ({
         }}
       >
         {/* Suspense handles the loading state of dynamically imported EditorSelect */}
-        <Suspense fallback={<div>Loading Select...</div>}>
+        <Suspense fallback={<CenteredCircleLoader />}>
           <EditorSelect
             value={language}
             onChange={(e) => setLanguage(e.target.value)}

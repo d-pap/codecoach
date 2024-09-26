@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react'
 import styled from '@mui/material/styles/styled'
 import { useNavigate } from 'react-router-dom'
+import CenteredCircleLoader from '../utility/CenteredLoader'
 
 // Dynamically import MUI components to optimize bundle size
 const Card = lazy(() => import('@mui/material/Card'))
@@ -55,7 +56,7 @@ const ProblemCardLayout = ({ problem }) => {
 
   return (
     // Suspense wraps dynamically imported components
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<CenteredCircleLoader />}>
       <div
         //* Container for each problem card
         style={{

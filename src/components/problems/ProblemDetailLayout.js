@@ -4,6 +4,7 @@ import ChatIcon from '@mui/icons-material/Chat'
 import CodeEditor from './CodeEditor'
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels'
 import styled from 'styled-components';
+import CenteredCircleLoader from '../utility/CenteredLoader'
 
 // Dynamically import MUI components to optimize bundle size
 const Box = lazy(() => import('@mui/material/Box'))
@@ -53,7 +54,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
 
   return (
     // Suspense wraps dynamically imported components
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<CenteredCircleLoader />}>
       <Container maxWidth={false}>
         <Box
           sx={{

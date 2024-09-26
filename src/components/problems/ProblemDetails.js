@@ -1,6 +1,7 @@
 import React, { useState, Suspense, lazy } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import CenteredCircleLoader from '../utility/CenteredLoader'
 
 // Dynamically import MUI and custom components to optimize bundle size
 const Tabs = lazy(() => import('@mui/material/Tabs'))
@@ -63,7 +64,7 @@ function ProblemDetails({ problem }) {
 
   // Render layout based on problem data
   const getLayout = () => {
-    if (!problem) return <div>Loading problem details...</div>
+    if (!problem) return <CenteredCircleLoader />
 
     return (
       <div>
@@ -81,7 +82,7 @@ function ProblemDetails({ problem }) {
         <DetailContainer>
           <ScrollableTabsContainer>
             {/* Suspense for Tabs */}
-            <Suspense fallback={<div>Loading Tabs...</div>}>
+            <Suspense fallback={<CenteredCircleLoader />}>
               <Tabs
                 value={value}
                 onChange={handleChange}
@@ -97,7 +98,7 @@ function ProblemDetails({ problem }) {
           </ScrollableTabsContainer>
           
           {/* Suspense for Tab Panels */}
-          <Suspense fallback={<div>Loading Content...</div>}>
+          <Suspense fallback={<CenteredCircleLoader />}>
             <CustomTabPanel value={value} index={0}>
               <div>
                 <ProblemTab problem={problem} />
