@@ -128,33 +128,58 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
   const { problemId } = useParams() // get problem ID from URL
   const [feedbackOpen, setFeedbackOpen] = useState(false)
 
-  //! limit the number of runs and submissions to prevent abuse
+  //! limit number of judge0 runs and reset limit after 12 hours
   const MAX_RUN_SUBMIT_COUNT = 5
+  const RESET_INTERVAL = 12 * 60 * 60 * 1000 // 12 hours in milliseconds
+
   const [runSubmitCount, setRunSubmitCount] = useState(() => {
     const savedCount = localStorage.getItem('runSubmitCount')
-    const savedDate = localStorage.getItem('runSubmitDate')
-    const today = new Date().toDateString()
+    const lastResetTime = localStorage.getItem('lastResetTime')
+    const currentTime = Date.now()
 
-    if (savedDate !== today) {
-      // new day, reset the count
-      localStorage.setItem('runSubmitDate', today)
+    if (
+      !lastResetTime ||
+      currentTime - parseInt(lastResetTime, 10) >= RESET_INTERVAL
+    ) {
+      // if it's been more than 12 hours since the last reset, reset the count
+      localStorage.setItem('lastResetTime', currentTime.toString())
+      localStorage.setItem('runSubmitCount', '0')
       return 0
     }
+
     return savedCount ? parseInt(savedCount, 10) : 0
   })
 
   useEffect(() => {
-    localStorage.setItem('runSubmitCount', runSubmitCount)
-    localStorage.setItem('runSubmitDate', new Date().toDateString())
+    const checkAndResetCount = () => {
+      const lastResetTime = localStorage.getItem('lastResetTime')
+      const currentTime = Date.now()
+
+      if (currentTime - parseInt(lastResetTime, 10) >= RESET_INTERVAL) {
+        setRunSubmitCount(0)
+        localStorage.setItem('lastResetTime', currentTime.toString())
+        localStorage.setItem('runSubmitCount', '0')
+      }
+    }
+
+    // check and reset count on component mount and every minute
+    checkAndResetCount()
+    const intervalId = setInterval(checkAndResetCount, 60000)
+
+    return () => clearInterval(intervalId)
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('runSubmitCount', runSubmitCount.toString())
   }, [runSubmitCount])
 
-  //! if true, the buttons will be disabled
   const isDisabled = runSubmitCount >= MAX_RUN_SUBMIT_COUNT
 
   const handleRunCode = async () => {
-    //! limit the number of runs and submissions to prevent abuse
-    if (runSubmitCount >= MAX_RUN_SUBMIT_COUNT) {
-      setOutput('You have reached the maximum number of runs for today.')
+    if (isDisabled) {
+      setOutput(
+        'You have reached the maximum number of runs. Please wait for the limit to reset.'
+      )
       return
     }
 
@@ -178,9 +203,10 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
   }
 
   const handleSubmitCode = async () => {
-    //! limit the number of runs and submissions to prevent abuse
-    if (runSubmitCount >= MAX_RUN_SUBMIT_COUNT) {
-      setOutput('You have reached the maximum number of submissions for today.')
+    if (isDisabled) {
+      setOutput(
+        'You have reached the maximum number of submissions. Please wait for the limit to reset.'
+      )
       return
     }
 
@@ -233,7 +259,6 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
       }
       setOutput(outputMessage)
 
-      //! increment the run submit count
       setRunSubmitCount((prevCount) => prevCount + 1)
 
       // open feedback dialog after 3 seconds

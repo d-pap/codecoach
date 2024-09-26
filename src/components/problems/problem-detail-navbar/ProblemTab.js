@@ -11,9 +11,9 @@ const ProblemTab = ({ problem }) => {
       <h3>Description</h3>
       <p>{problem.description}</p>
       <h3>Input</h3>
-      <p>{JSON.stringify(problem.exampleInputs, null, 2)}</p>
+      <p>{problem.exampleInputs}</p>
       <h3>Output</h3>
-      <p>{JSON.stringify(problem.exampleOutputs, null, 2)}</p>
+      <p>{problem.exampleOutputs}</p>
       <h3>Examples</h3>
       <pre>{JSON.stringify(problem.testCases, null, 2)}</pre>
     </NavbarStack>
