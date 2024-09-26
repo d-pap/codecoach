@@ -192,6 +192,7 @@ const Header = () => {
                 >
                   Interview Prep
                 </PageLinks>
+                {/*
                 <PageLinks
                   component={NavLink}
                   to="/manage-problems"
@@ -199,6 +200,7 @@ const Header = () => {
                 >
                   Manage Problems
                 </PageLinks>
+                */}
               </Box>
               <Divider
                 orientation="vertical"
