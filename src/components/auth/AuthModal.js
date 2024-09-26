@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import { Box, Modal } from '@mui/material'
-import { Authenticator } from '@aws-amplify/ui-react'
-import { ThemeProvider as AmplifyThemeProvider } from '@aws-amplify/ui-react'
+
+// Dynamic import for Authenticator to enable code splitting
+const Authenticator = lazy(() => import('@aws-amplify/ui-react').then(module => ({ default: module.Authenticator })))
+const AmplifyThemeProvider = lazy(() => import('@aws-amplify/ui-react').then(module => ({ default: module.ThemeProvider })))
 
 const amplifyTheme = {
   name: 'MyCustomTheme',
@@ -89,17 +91,20 @@ const AuthModal = ({ open, onClose, initialState, onAuthenticated }) => {
           borderRadius: (theme) => theme.spacing(2),
         }}
       >
-        <AmplifyThemeProvider theme={amplifyTheme}>
-          <Authenticator
-            initialState={initialState}
-            className="custom-authenticator"
-          >
-            {() => {
-              onAuthenticated()
-              return null
-            }}
-          </Authenticator>
-        </AmplifyThemeProvider>
+        {/* Suspense to handle lazy-loaded components */}
+        <Suspense fallback={<div>Loading Authentication...</div>}>
+          <AmplifyThemeProvider theme={amplifyTheme}>
+            <Authenticator
+              initialState={initialState}
+              className="custom-authenticator"
+            >
+              {() => {
+                onAuthenticated()
+                return null
+              }}
+            </Authenticator>
+          </AmplifyThemeProvider>
+        </Suspense>
       </Box>
     </Modal>
   )

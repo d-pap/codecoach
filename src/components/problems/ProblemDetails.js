@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useState, Suspense, lazy } from 'react'
 import styled from 'styled-components'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import CustomTabPanel from './CustomTabPanel'
 import PropTypes from 'prop-types'
-import ProblemTab from './problem-detail-navbar/ProblemTab'
-//import ChatAITab from './problem-detail-navbar/ChatAITab';
-import HintByDatabaseTab from './problem-detail-navbar/HintByDatabase'
-import ForumTab from './problem-detail-navbar/ForumTab'
-import { Typography } from '@mui/material'
 
+// Dynamically import MUI and custom components to optimize bundle size
+const Tabs = lazy(() => import('@mui/material/Tabs'))
+const Tab = lazy(() => import('@mui/material/Tab'))
+const Typography = lazy(() => import('@mui/material/Typography'))
+const CustomTabPanel = lazy(() => import('./CustomTabPanel'))
+const ProblemTab = lazy(() => import('./problem-detail-navbar/ProblemTab'))
+const HintByDatabaseTab = lazy(() => import('./problem-detail-navbar/HintByDatabase'))
+const ForumTab = lazy(() => import('./problem-detail-navbar/ForumTab'))
+
+// Styled container for problem details
 const DetailContainer = styled.div`
   h1 {
     color: #333;
@@ -30,18 +32,19 @@ const DetailContainer = styled.div`
   }
 `
 
+// Styled container for scrollable tabs
 const ScrollableTabsContainer = styled.div`
   overflow-x: auto;
 `
 
-// The items to be displayed in the tabs
+// PropTypes for CustomTabPanel to ensure correct usage
 CustomTabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
 }
 
-// The tab layout
+// Accessibility props for tabs
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -49,18 +52,22 @@ function a11yProps(index) {
   }
 }
 
+// Main ProblemDetails component
 function ProblemDetails({ problem }) {
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = useState(0) // State to manage active tab
 
+  // Handle tab change
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
 
+  // Render layout based on problem data
   const getLayout = () => {
     if (!problem) return <div>Loading problem details...</div>
 
     return (
       <div>
+        {/* Problem Title */}
         <Typography
           variant="h5"
           component="h2"
@@ -73,37 +80,46 @@ function ProblemDetails({ problem }) {
         </Typography>
         <DetailContainer>
           <ScrollableTabsContainer>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="basic tabs example"
-              variant="scrollable"
-              scrollButtons="auto"
-            >
-              <Tab label="Problem" {...a11yProps(0)} />
-              <Tab label="Hint/Video" {...a11yProps(1)} />
-              <Tab label="Discussions" {...a11yProps(2)} />
-            </Tabs>
+            {/* Suspense for Tabs */}
+            <Suspense fallback={<div>Loading Tabs...</div>}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="basic tabs example"
+                variant="scrollable"
+                scrollButtons="auto"
+              >
+                <Tab label="Problem" {...a11yProps(0)} />
+                <Tab label="Hint/Video" {...a11yProps(1)} />
+                <Tab label="Discussions" {...a11yProps(2)} />
+              </Tabs>
+            </Suspense>
           </ScrollableTabsContainer>
-          <CustomTabPanel value={value} index={0}>
-            <div>
-              <ProblemTab problem={problem} />
-            </div>
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={1}>
-            <div>
-              <HintByDatabaseTab problem={problem} />
-            </div>
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={2}>
-            <div>
-              <ForumTab problem={problem} />
-            </div>
-          </CustomTabPanel>
+          
+          {/* Suspense for Tab Panels */}
+          <Suspense fallback={<div>Loading Content...</div>}>
+            <CustomTabPanel value={value} index={0}>
+              <div>
+                <ProblemTab problem={problem} />
+              </div>
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={1}>
+              <div>
+                <HintByDatabaseTab problem={problem} />
+              </div>
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={2}>
+              <div>
+                <ForumTab problem={problem} />
+              </div>
+            </CustomTabPanel>
+          </Suspense>
         </DetailContainer>
       </div>
     )
   }
+
   return getLayout()
 }
+
 export default ProblemDetails

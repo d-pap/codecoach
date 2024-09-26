@@ -1,23 +1,25 @@
 /**
  * Allows the user to maintain a conversation with the AI
  */
-import { createNewChatConvo, sendChatMessage } from '../../../api'
 
-// Format the input and send it to the AI model
 const SendChat = async (title, description, input, convoId, command) => {
   let id = convoId
   let formattedInput = ''
 
   try {
+    // Dynamically import API functions to optimize bundle size
+    const { createNewChatConvo, sendChatMessage } = await import('../../../api')
+
     // If no conversation ID exists, create a new one
     if (id == null) {
       const newChatId = await createNewChatConvo()
       id = newChatId.convoId
     }
 
+    // Format the input based on the provided title and description
     formattedInput = `Problem title: ${title} Problem Description: ${description}`
 
-    // Modify the input based on the command
+    // Modify the input based on the command type
     if (command === 'hint') {
       formattedInput +=
         ' Provide the user with a breakdown of the problem. Start the response with "Here is a breakdown of the problem:". Do not provide a solution and do not provide code.'

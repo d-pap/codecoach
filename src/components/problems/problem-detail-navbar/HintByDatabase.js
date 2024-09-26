@@ -12,7 +12,7 @@ const HintByDatabaseTab = ({ problem }) => {
   return (
     <NavbarStack>
       <h3>Hint By Database</h3>
-      <p>Hint by Database will be added soon</p>
+      <p>{problem.hint}</p>
     </NavbarStack>
   )
 }
