@@ -1,5 +1,14 @@
+// Exported utility functions for handling form data
+/**
+ * Handles changes in form inputs and updates the form data state.
+ * @param {Object} e - The event object from the input change.
+ * @param {Object} formData - The current state of the form data.
+ * @param {Function} setFormData - Function to update the form data state.
+ */
 export const handleChange = (e, formData, setFormData) => {
   const { name, value } = e.target
+
+  // Update form data with the new value
   setFormData({
     ...formData,
     [name]: value,
@@ -8,6 +17,7 @@ export const handleChange = (e, formData, setFormData) => {
   // The user can only input a year between 2000 and 2030
   if (name === 'contestYear') {
     if (value >= 2000 && value <= 2030) {
+      
       setFormData({
         ...formData,
         [name]: value,
@@ -30,6 +40,13 @@ export const handleChange = (e, formData, setFormData) => {
   }
 }
 
+/**
+ * Handles changes in test case inputs and updates the form data state.
+ * @param {number} index - The index of the test case being updated.
+ * @param {Object} e - The event object from the input change.
+ * @param {Object} formData - The current state of the form data.
+ * @param {Function} setFormData - Function to update the form data state.
+ */
 export const handleTestCaseChange = (index, e, formData, setFormData) => {
   const { name, value } = e.target
   const testCases = [...formData.testCases]
@@ -40,6 +57,11 @@ export const handleTestCaseChange = (index, e, formData, setFormData) => {
   })
 }
 
+/**
+ * Adds a new test case to the form data state.
+ * @param {Object} formData - The current state of the form data.
+ * @param {Function} setFormData - Function to update the form data state.
+ */
 export const addTestCase = (formData, setFormData) => {
   setFormData({
     ...formData,
@@ -47,6 +69,12 @@ export const addTestCase = (formData, setFormData) => {
   })
 }
 
+/**
+ * Removes a test case from the form data state based on the provided index.
+ * @param {number} index - The index of the test case to remove.
+ * @param {Object} formData - The current state of the form data.
+ * @param {Function} setFormData - Function to update the form data state.
+ */
 export const removeTestCase = (index, formData, setFormData) => {
   const testCases = formData.testCases.filter((_, idx) => idx !== index)
   setFormData({
@@ -55,6 +83,13 @@ export const removeTestCase = (index, formData, setFormData) => {
   })
 }
 
+/**
+ * Handles the form submission by preparing the payload and performing necessary actions.
+ * Implements dynamic import for adding the problem to the database.
+ * @param {Object} e - The event object from the form submission.
+ * @param {Object} formData - The current state of the form data.
+ * @param {Function} setFormData - Function to update the form data state.
+ */
 export const handleSubmit = (e, formData, setFormData) => {
   e.preventDefault()
   const payload = { ...formData }
@@ -65,7 +100,7 @@ export const handleSubmit = (e, formData, setFormData) => {
 
   alert('Input submitted!')
 
-  // Clear the form
+  // Clear the form by resetting the form data state
   setFormData({
     title: '',
     timeLimit: '',
@@ -77,6 +112,6 @@ export const handleSubmit = (e, formData, setFormData) => {
     testCases: [{ input: '', output: '' }],
   })
 
-  // Reload the page
+  // Reload the page to reflect the changes
   window.location.reload()
 }

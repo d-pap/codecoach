@@ -19,7 +19,6 @@ import {
 } from '../../../components/add-problems/ICPCFormHandlers'
 import { getSubregions } from '../../../components/problems/subregions'
 import CustomLabel from '../../../components/add-problems/multiple-problems/custom-elements/CustomLabel'
-import { get } from 'lodash'
 
 const textFieldStyle = {
   width: '100%',

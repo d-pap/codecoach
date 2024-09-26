@@ -12,6 +12,19 @@ import {
 } from '@mui/material'
 import { Delete as DeleteIcon, Add as AddIcon } from '@mui/icons-material'
 
+/**
+ * QuestionCard Component
+ * Renders a card for an individual question with fields to edit its content and manage test cases.
+ *
+ * @param {Object} props - Component properties
+ * @param {Object} props.question - The question data
+ * @param {number} props.index - The index of the question
+ * @param {Function} props.handleQuestionChange - Function to handle changes in question fields
+ * @param {Function} props.handleDeleteQuestion - Function to delete the question
+ * @param {Function} props.handleTestCaseChange - Function to handle changes in test cases
+ * @param {Function} props.addTestCase - Function to add a new test case
+ * @param {Function} props.removeTestCase - Function to remove a test case
+ */
 const QuestionCard = ({
   question,
   index,

@@ -1,0 +1,11 @@
+.linear-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1300; /* Ensures the progress bar is above other elements */
+  }
+  
+  .linear-progress-hidden {
+    display: none;
+  }
