@@ -10,6 +10,7 @@ import {
 } from '@mui/material'
 import { styled } from '@mui/system'
 import Trophy from '../images/icpc-trophy.png'
+import logo from '../images/logo-with-text.svg'
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 
 const HeaderSection = styled(AppBar)(({ theme }) => ({
@@ -122,16 +123,27 @@ const LandingPage = ({ onGetStarted }) => {
   return (
     <Box>
       <HeaderSection position="static">
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            CodeCoach
-          </Typography>
-          <Button color="inherit" onClick={() => onGetStarted('signIn')}>
-            Login
-          </Button>
-          <Button variant="contained" onClick={() => onGetStarted('signUp')}>
-            Register
-          </Button>
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
+          <Box
+            component="img"
+            src={logo}
+            alt="CodeCoach Logo"
+            sx={{
+              height: '100%',
+              maxHeight: '60px',
+              width: 'auto',
+              maxWidth: '100%',
+              cursor: 'pointer',
+            }}
+          />
+          <Box>
+            <Button color="inherit" onClick={() => onGetStarted('signIn')}>
+              Login
+            </Button>
+            <Button variant="contained" onClick={() => onGetStarted('signUp')}>
+              Register
+            </Button>
+          </Box>
         </Toolbar>
       </HeaderSection>
       <Box sx={{ bgcolor: 'background.default', py: 6 }}>
