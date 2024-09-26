@@ -42,31 +42,13 @@ const FormFields = ({ formData, handleChange, subregions }) => (
 
     <Grid item xs={12} sm={6}>
       <Stack spacing={2}>
-        <FormControl fullWidth required>
-          <InputLabel id="answer-parse-method-label">
-            Answer Parsing Method
-          </InputLabel>
-          <Select
-            labelId="answer-parse-method-label"
-            name="answerParsingMethod"
-            value={formData.answerParsingMethod}
-            onChange={handleChange}
-            label="Answer Parsing Method"
-          >
-            <MenuItem value="regex">Regex Parsing</MenuItem>
-            <MenuItem value="page">Page by Page Parsing</MenuItem>
-          </Select>
-        </FormControl>
-
-        {formData.answerParsingMethod === 'regex' && (
-          <TextField
-            name="answerKeywordRegex"
-            value={formData.answerKeywordRegex}
-            onChange={handleChange}
-            label="Answer Keyword Regex"
-            variant="outlined"
-          />
-        )}
+        <TextField
+          name="answerKeywordRegex"
+          value={formData.answerKeywordRegex}
+          onChange={handleChange}
+          label="Answer Keyword Regex"
+          variant="outlined"
+        />
       </Stack>
     </Grid>
 

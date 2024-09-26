@@ -6,7 +6,7 @@
 import React, { useEffect, useState } from 'react'
 import './App.css'
 import { Amplify, Auth } from 'aws-amplify'
-import '@aws-amplify/ui-react/styles.css' // amplify ui styles
+import '@aws-amplify/ui-react/styles.css'
 import awsExports from './aws-exports'
 import {
   BrowserRouter as Router,
@@ -25,12 +25,14 @@ import Courses from './pages/nav/Studentcourses'
 
 import Problems from './pages/nav/problems'
 import ProblemDetail from './pages/problems/problemDetail'
-import AddProblems from './pages/nav/addProblems'
-import ICPCSingleForum from './pages/problems/add-problems/ICPCSingleForm'
-import ICPCMultipleForum from './pages/problems/add-problems/ICPCMultipleForum'
+import ManageProblemsPage from './pages/nav/manageProblems'
+import SingleFormLayout from './pages/problems/add-problems/ICPCSingleForm'
+import ICPCMultipleForm from './pages/problems/add-problems/ICPCMultipleForm'
+import InterviewForm from './pages/problems/add-problems/InterviewForm'
+import EditICPCProblem from './pages/problems/edit-problems/editICPCProblem'
+import EditInterviewProblem from './pages/problems/edit-problems/editInterviewProblem'
 import ICPC from './pages/problems/problem-types/ICPC'
 import Interview from './pages/problems/problem-types/Interview'
-import Programming from './pages/problems/problem-types/Programming'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import theme from './theme'
 import AuthModal from './components/auth/AuthModal'
@@ -139,7 +141,7 @@ function App() {
                 }
               />
               <Route
-                path="/problems/:id"
+                path="/problems/:problemId"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <ProblemDetail />
@@ -147,26 +149,50 @@ function App() {
                 }
               />
               <Route
-                path="/addProblems"
+                path="/manage-problems"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
-                    <AddProblems />
+                    <ManageProblemsPage />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="/addProblems/singleICPC"
+                path="/manage-problems/add-single-icpc"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
-                    <ICPCSingleForum />
+                    <SingleFormLayout />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="/addProblems/multipleICPC"
+                path="/manage-problems/add-multiple-icpc"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
-                    <ICPCMultipleForum />
+                    <ICPCMultipleForm />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/edit-icpc"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <EditICPCProblem />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/add-interview"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <InterviewForm />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/edit-interview"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <EditInterviewProblem />
                   </ProtectedRoute>
                 }
               />
@@ -183,14 +209,6 @@ function App() {
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <Interview />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/problems/programming"
-                element={
-                  <ProtectedRoute isAuthenticated={isAuthenticated}>
-                    <Programming />
                   </ProtectedRoute>
                 }
               />

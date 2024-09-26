@@ -10,11 +10,11 @@ const ProblemTab = ({ problem }) => {
     <NavbarStack>
       <h3>Description</h3>
       <p>{problem.description}</p>
-      <h3>Example Inputs</h3>
-      <pre>{JSON.stringify(problem.exampleInputs, null, 2)}</pre>
-      <h3>Example Outputs</h3>
-      <pre>{JSON.stringify(problem.exampleOutputs, null, 2)}</pre>
-      <h3>Test Cases</h3>
+      <h3>Input</h3>
+      <p>{JSON.stringify(problem.exampleInputs, null, 2)}</p>
+      <h3>Output</h3>
+      <p>{JSON.stringify(problem.exampleOutputs, null, 2)}</p>
+      <h3>Examples</h3>
       <pre>{JSON.stringify(problem.testCases, null, 2)}</pre>
     </NavbarStack>
   )

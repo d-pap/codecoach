@@ -8,7 +8,6 @@ class PDFParser {
   async parsePdf(
     file,
     type,
-    parsingMethod = 'regex',
     keywordRegex = 'Problem ',
     descriptionStartRegex = null,
     descriptionEndRegex = 'Input',
@@ -38,11 +37,7 @@ class PDFParser {
           descriptionEndRegex
         )
       } else if (type === 'answer') {
-        if (parsingMethod === 'page') {
-          return this.parseAnswersByPage(pdf)
-        } else {
-          return this.parseAnswersByRegex(textContent, answerKeywordRegex)
-        }
+        return this.parseAnswersByRegex(textContent, answerKeywordRegex)
       }
     } catch (err) {
       console.error('Error parsing PDF:', err)
@@ -134,7 +129,7 @@ class PDFParser {
             description,
             exampleInputs,
             exampleOutputs,
-            testCases: this.parseTestCases(exampleInputs),
+            testCases: [{ input: '', output: '' }],
           }
         }
 
@@ -144,22 +139,6 @@ class PDFParser {
       .filter((question) => question !== null)
   }
 
-  async parseAnswersByPage(pdf) {
-    const pageAnswers = []
-
-    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-      const page = await pdf.getPage(pageNum)
-      const text = await page.getTextContent()
-      const pageText = this.processTextContent(text.items)
-      pageAnswers.push({
-        pageIndex: pageNum,
-        pageContent: pageText.trim(),
-      })
-    }
-
-    return pageAnswers
-  }
-
   parseAnswersByRegex(text, answerKeywordRegex) {
     const regex = new RegExp(answerKeywordRegex, 'g')
     const answers = text.split(regex).slice(1)
@@ -167,11 +146,6 @@ class PDFParser {
       answerContent: answer.trim(),
       questionIndex: index,
     }))
-  }
-
-  parseTestCases(text) {
-    // Implement test case parsing based on your requirements
-    return [{ input: '', output: '' }]
   }
 }
 
