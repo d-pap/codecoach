@@ -268,11 +268,11 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
     }
   }
 
-  // feedback function
-  const handleFeedbackSubmit = (feedback) => {
-    //TODO: implement feedback submission to backend here
-    console.log(feedback)
-  }
+  // // feedback function
+  // const handleFeedbackSubmit = (feedback) => {
+  //   //TODO: implement feedback submission to backend here
+  //   console.log(feedback)
+  // }
 
   const currentThemeStyle = themeStyles[theme]
 
@@ -326,11 +326,11 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
         isDisabled={isDisabled}
       />
       <OutputWindow output={output} currentThemeStyle={currentThemeStyle} />
-      <FeedbackDialog
+      {/* <FeedbackDialog
         open={feedbackOpen}
         onClose={() => setFeedbackOpen(false)}
         onSubmit={handleFeedbackSubmit}
-      />
+      /> */}
     </Box>
   )
 }
