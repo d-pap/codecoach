@@ -22,13 +22,15 @@ import theme from './theme'
 import AuthModal from './components/auth/AuthModal'
 import CenteredLoader from './components/utility/CenteredLoader'
 import ICPC from './pages/problems/problem-types/ICPC'
+import Problems from './pages/nav/problems'
+import ProblemDetail from './pages/problems/problemDetail'
 
 // Dynamic Imports
 const LandingPage = lazy(() => import('./pages/LandingPage'))
 const Home = lazy(() => import('./pages'))
 const About = lazy(() => import('./pages/nav/about'))
-const Problems = lazy(() => import('./pages/nav/problems'))
-const ProblemDetail = lazy(() => import('./pages/problems/problemDetail'))
+//const Problems = lazy(() => import('./pages/nav/problems'))
+//const ProblemDetail = lazy(() => import('./pages/problems/problemDetail'))
 const ManageProblemsPage = lazy(() => import('./pages/nav/manageProblems'))
 const SingleFormLayout = lazy(
   () => import('./pages/problems/add-problems/ICPCSingleForm')
@@ -105,124 +107,142 @@ function App() {
               flexDirection: 'column',
             }}
           >
-            <Suspense fallback={<CenteredLoader />}>
-              <Routes>
-                <Route
-                  path="/"
-                  element={
-                    isAuthenticated ? (
-                      <Navigate to="/home" replace />
-                    ) : (
-                      <>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  isAuthenticated ? (
+                    <Navigate to="/home" replace />
+                  ) : (
+                    <>
+                      <Suspense fallback={<CenteredLoader />}>
                         <LandingPage onGetStarted={handleShowAuth} />
-                        <AuthModal
-                          open={showAuth}
-                          onClose={handleCloseAuth}
-                          initialState={authScreen}
-                          onAuthenticated={handleAuthenticated}
-                        />
-                      </>
-                    )
-                  }
-                />
-                <Route
-                  path="/home"
-                  element={
-                    <ProtectedRoute isAuthenticated={isAuthenticated}>
+                      </Suspense>
+                      <AuthModal
+                        open={showAuth}
+                        onClose={handleCloseAuth}
+                        initialState={authScreen}
+                        onAuthenticated={handleAuthenticated}
+                      />
+                    </>
+                  )
+                }
+              />
+              <Route
+                path="/home"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
                       <Home />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/about"
-                  element={
-                    <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/about"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
                       <About />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/problems"
-                  element={
-                    <ProtectedRoute isAuthenticated={isAuthenticated}>
-                      <Problems />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/problems/:problemId"
-                  element={
-                    <ProtectedRoute isAuthenticated={isAuthenticated}>
-                      <ProblemDetail />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/manage-problems"
-                  element={
-                    <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/problems"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Problems />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/problems/:problemId"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <ProblemDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
                       <ManageProblemsPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/manage-problems/add-single-icpc"
-                  element={
-                    <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/add-single-icpc"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
                       <SingleFormLayout />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/manage-problems/add-multiple-icpc"
-                  element={
-                    <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/add-multiple-icpc"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
                       <ICPCMultipleForm />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/manage-problems/edit-icpc"
-                  element={
-                    <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/edit-icpc"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
                       <EditICPCProblem />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/manage-problems/add-interview"
-                  element={
-                    <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/add-interview"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
                       <InterviewForm />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/manage-problems/edit-interview"
-                  element={
-                    <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/edit-interview"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
                       <EditInterviewProblem />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/problems/icpc"
-                  element={
-                    <ProtectedRoute isAuthenticated={isAuthenticated}>
-                      <ICPC />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/problems/interview"
-                  element={
-                    <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/problems/icpc"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <ICPC />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/problems/interview"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
                       <Interview />
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
-            </Suspense>
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
           </Box>
           <Footer />
         </Box>

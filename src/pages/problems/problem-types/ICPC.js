@@ -227,12 +227,14 @@ function ICPC() {
   const [region, setRegion] = useState('all')
   const [subregion, setSubregion] = useState('all')
   const [year, setYear] = useState('all')
-  const [filteredProblems, setFilteredProblems] = useState(problems)
+  const [filteredProblems, setFilteredProblems] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const problemsPerPage = 10
 
   useEffect(() => {
-    setFilteredProblems(ICPCFilter(problems, region, subregion, year))
+    if (problems.length > 0) {
+      setFilteredProblems(ICPCFilter(problems, region, subregion, year))
+    }
   }, [problems, region, subregion, year])
 
   const handleRegionChange = (event) => {
@@ -325,14 +327,18 @@ function ICPC() {
                 size="small"
               />
             </Box>
-            {currentProblems.length > 0 ? (
-              <Stack spacing={2}>
-                {currentProblems.map((problem) => (
-                  <ProblemCardLayout key={problem._id} problem={problem} />
-                ))}
-              </Stack>
+            {problems.length > 0 ? (
+              currentProblems.length > 0 ? (
+                <Stack spacing={2}>
+                  {currentProblems.map((problem) => (
+                    <ProblemCardLayout key={problem._id} problem={problem} />
+                  ))}
+                </Stack>
+              ) : (
+                <Typography variant="body1">No problems found</Typography>
+              )
             ) : (
-              <Typography variant="body1">No problems found</Typography>
+              <SkeletonProblemList />
             )}
             <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
               <Pagination
