@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
@@ -227,27 +227,27 @@ function ICPC() {
   const [region, setRegion] = useState('all')
   const [subregion, setSubregion] = useState('all')
   const [year, setYear] = useState('all')
-  const [filteredProblems, setFilteredProblems] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const problemsPerPage = 10
 
-  useEffect(() => {
-    if (problems.length > 0) {
-      setFilteredProblems(ICPCFilter(problems, region, subregion, year))
-    }
+  const filteredProblems = useMemo(() => {
+    return ICPCFilter(problems, region, subregion, year)
   }, [problems, region, subregion, year])
 
   const handleRegionChange = (event) => {
     setRegion(event.target.value)
     setSubregion('all')
+    setCurrentPage(1)
   }
 
   const handleSubregionChange = (event) => {
     setSubregion(event.target.value)
+    setCurrentPage(1)
   }
 
   const handleYearChange = (event) => {
     setYear(event.target.value)
+    setCurrentPage(1)
   }
 
   const handlePageChange = (event, page) => {
@@ -327,18 +327,14 @@ function ICPC() {
                 size="small"
               />
             </Box>
-            {problems.length > 0 ? (
-              currentProblems.length > 0 ? (
-                <Stack spacing={2}>
-                  {currentProblems.map((problem) => (
-                    <ProblemCardLayout key={problem._id} problem={problem} />
-                  ))}
-                </Stack>
-              ) : (
-                <Typography variant="body1">No problems found</Typography>
-              )
+            {filteredProblems.length > 0 ? (
+              <Stack spacing={2}>
+                {filteredProblems.map((problem) => (
+                  <ProblemCardLayout key={problem._id} problem={problem} />
+                ))}
+              </Stack>
             ) : (
-              <SkeletonProblemList />
+              <Typography variant="body1">No problems found</Typography>
             )}
             <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
               <Pagination
