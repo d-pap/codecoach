@@ -152,7 +152,7 @@ const CodeEditor = ({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
   //! limit number of judge0 runs and reset limit after 12 hours
-  const MAX_RUN_SUBMIT_COUNT = 15
+  const MAX_RUN_SUBMIT_COUNT = 10
   const RESET_INTERVAL = 12 * 60 * 60 * 1000 // 12 hours in milliseconds
 
   const [runSubmitCount, setRunSubmitCount] = useState(() => {
