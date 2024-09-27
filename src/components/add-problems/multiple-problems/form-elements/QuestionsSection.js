@@ -1,9 +1,10 @@
 import React, { Suspense, lazy } from 'react'
-
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
 // Dynamically import MUI components to optimize bundle size
-const Button = lazy(() => import('@mui/material/Button'))
+//const Button = lazy(() => import('@mui/material/Button'))
 const Box = lazy(() => import('@mui/material/Box'))
-const Typography = lazy(() => import('@mui/material/Typography'))
+//const Typography = lazy(() => import('@mui/material/Typography'))
 
 // Dynamically import the QuestionCard component
 const QuestionCard = lazy(() => import('./QuestionCard'))
@@ -35,7 +36,7 @@ const QuestionsSection = ({
     <Box mt={2}>
       {/* Section Title */}
       <Typography variant="h6">Questions:</Typography>
-      
+
       {/* Render each QuestionCard */}
       {questions.map((question, index) => (
         <QuestionCard
@@ -49,7 +50,7 @@ const QuestionsSection = ({
           removeTestCase={removeTestCase}
         />
       ))}
-      
+
       {/* Add Question Button */}
       <Button
         variant="contained"

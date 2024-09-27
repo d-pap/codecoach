@@ -14,7 +14,9 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom'
-import { ThemeProvider, Box, LinearProgress } from '@mui/material'
+import { ThemeProvider } from '@mui/material'
+import Box from '@mui/material/Box'
+import LinearProgress from '@mui/material/LinearProgress'
 import Header from './components/Header-Footer/Header'
 import Footer from './components/Header-Footer/Footer'
 import ProtectedRoute from './components/auth/ProtectedRoute'

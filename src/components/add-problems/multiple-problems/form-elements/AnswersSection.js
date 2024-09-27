@@ -1,9 +1,11 @@
 import React, { Suspense, lazy } from 'react'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
 
 // Dynamically import MUI components to optimize bundle size
-const Button = lazy(() => import('@mui/material/Button'))
+//const Button = lazy(() => import('@mui/material/Button'))
 const Box = lazy(() => import('@mui/material/Box'))
-const Typography = lazy(() => import('@mui/material/Typography'))
+//const Typography = lazy(() => import('@mui/material/Typography'))
 
 // Dynamically import the AnswerCard component
 const AnswerCard = lazy(() => import('./AnswerCard'))
@@ -33,7 +35,7 @@ const AnswersSection = ({
       <Typography variant="h6" mt={4}>
         Answers:
       </Typography>
-      
+
       {/* Render each AnswerCard */}
       {answers.map((answer, index) => (
         <AnswerCard
@@ -45,7 +47,7 @@ const AnswersSection = ({
           handleDeleteAnswer={() => handleDeleteAnswer(index)}
         />
       ))}
-      
+
       {/* Add Answer Button */}
       <Button
         variant="contained"

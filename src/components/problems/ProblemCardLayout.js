@@ -1,27 +1,14 @@
-import React, { Suspense, lazy } from 'react'
+import React, { Suspense } from 'react'
 import styled from '@mui/material/styles/styled'
 import { useNavigate } from 'react-router-dom'
-
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Container,
-  Grid,
-  Stack,
-  Skeleton,
-} from '@mui/material'
-
-/* // Dynamically import MUI components to optimize bundle size
-const Card = lazy(() => import('@mui/material/Card'))
-const CardContent = lazy(() => import('@mui/material/CardContent'))
-const Typography = lazy(() => import('@mui/material/Typography'))
-const Box = lazy(() => import('@mui/material/Box'))
-const Container = lazy(() => import('@mui/material/Container'))
-const Grid = lazy(() => import('@mui/material/Grid'))
-const Stack = lazy(() => import('@mui/material/Stack'))
-const Skeleton = lazy(() => import('@mui/material/Skeleton')) */
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import Stack from '@mui/material/Stack'
+import Skeleton from '@mui/material/Skeleton'
 
 // Styled components using MUI's styled utility
 const StyledCard = styled(Card)(({ theme }) => ({

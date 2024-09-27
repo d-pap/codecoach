@@ -1,24 +1,22 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
 import { ICPCFilter } from '../../../components/problems/problem-filters/ICPCFilter'
 import { getSubregions } from '../../../components/problems/subregions'
 import { styled, alpha } from '@mui/material/styles'
-import {
-  Stack,
-  Pagination,
-  Toolbar,
-  Select,
-  Skeleton,
-  MenuItem,
-  Box,
-  Container,
-  Grid,
-  Typography,
-  InputBase,
-  AppBar,
-} from '@mui/material'
+import Stack from '@mui/material/Stack'
+import Pagination from '@mui/material/Pagination'
+import Toolbar from '@mui/material/Toolbar'
+import Select from '@mui/material/Select'
+import Skeleton from '@mui/material/Skeleton'
+import MenuItem from '@mui/material/MenuItem'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
+import InputBase from '@mui/material/InputBase'
+import AppBar from '@mui/material/AppBar'
 import { fetchProblems } from '../../../api'
 import SearchIcon from '@mui/icons-material/Search'
 
@@ -327,9 +325,9 @@ function ICPC() {
                 size="small"
               />
             </Box>
-            {filteredProblems.length > 0 ? (
+            {currentProblems.length > 0 ? (
               <Stack spacing={2}>
-                {filteredProblems.map((problem) => (
+                {currentProblems.map((problem) => (
                   <ProblemCardLayout key={problem._id} problem={problem} />
                 ))}
               </Stack>

@@ -1,9 +1,9 @@
 import React, { Suspense, lazy } from 'react'
 import { useDropzone } from 'react-dropzone'
-
+import Typography from '@mui/material/Typography'
 // Dynamically import MUI components to optimize bundle size
 const Grid = lazy(() => import('@mui/material/Grid'))
-const Typography = lazy(() => import('@mui/material/Typography'))
+//const Typography = lazy(() => import('@mui/material/Typography'))
 // Dynamically import the PDFUploader component
 const PDFUploader = lazy(() => import('./PDFUploader'))
 
@@ -42,33 +42,33 @@ const PDFUploaderPanel = ({
   })
 
   return (
-     // Suspense wraps dynamically imported components to handle loading states
-     <Suspense fallback={<div>Loading Uploaders...</div>}>
-     <Grid container spacing={2}>
-       {/* Question PDF Uploader */}
-       <Grid item xs={12} sm={6}>
-         <PDFUploader
-           {...questionOtherProps}
-           getRootProps={questionDropzone.getRootProps}
-           getInputProps={questionDropzone.getInputProps}
-           uploading={uploading}
-         />
-       </Grid>
-       {/* Answer PDF Uploader */}
-       <Grid item xs={12} sm={6}>
-         <PDFUploader
-           {...answerOtherProps}
-           getRootProps={answerDropzone.getRootProps}
-           getInputProps={answerDropzone.getInputProps}
-           uploading={uploading}
-         />
-       </Grid>
-       {/* Display error message if any */}
-       {error && (
-         <Grid item xs={12}>
-           <Typography color="error">{error}</Typography>
-         </Grid>
-       )}
+    // Suspense wraps dynamically imported components to handle loading states
+    <Suspense fallback={<div>Loading Uploaders...</div>}>
+      <Grid container spacing={2}>
+        {/* Question PDF Uploader */}
+        <Grid item xs={12} sm={6}>
+          <PDFUploader
+            {...questionOtherProps}
+            getRootProps={questionDropzone.getRootProps}
+            getInputProps={questionDropzone.getInputProps}
+            uploading={uploading}
+          />
+        </Grid>
+        {/* Answer PDF Uploader */}
+        <Grid item xs={12} sm={6}>
+          <PDFUploader
+            {...answerOtherProps}
+            getRootProps={answerDropzone.getRootProps}
+            getInputProps={answerDropzone.getInputProps}
+            uploading={uploading}
+          />
+        </Grid>
+        {/* Display error message if any */}
+        {error && (
+          <Grid item xs={12}>
+            <Typography color="error">{error}</Typography>
+          </Grid>
+        )}
       </Grid>
     </Suspense>
   )

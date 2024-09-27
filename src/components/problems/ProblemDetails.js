@@ -1,14 +1,15 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import styled from 'styled-components'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
+import Typography from '@mui/material/Typography'
 import CustomTabPanel from './CustomTabPanel'
 import PropTypes from 'prop-types'
 import ProblemTab from './problem-detail-navbar/ProblemTab'
-//import ChatAITab from './problem-detail-navbar/ChatAITab';
-import HintByDatabaseTab from './problem-detail-navbar/HintByDatabase'
-import ForumTab from './problem-detail-navbar/ForumTab'
-import { Typography } from '@mui/material'
+const HintByDatabaseTab = lazy(
+  () => import('./problem-detail-navbar/HintByDatabase')
+)
+const ForumTab = lazy(() => import('./problem-detail-navbar/ForumTab'))
 
 const DetailContainer = styled.div`
   h1 {

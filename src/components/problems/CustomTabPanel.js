@@ -1,14 +1,12 @@
 /**
  * This function outlines the custom tab panel for the problem detail page.
- * 
+ *
  * The dynamic import is used to load the Box component only when needed, optimizing bundle size.
  */
 
 import React from 'react'
+import Box from '@mui/material/Box'
 import CenteredCircleLoader from '../utility/CenteredLoader'
-
-// Dynamically import MUI's Box component to improve performance
-const Box = React.lazy(() => import('@mui/material/Box'))
 
 function CustomTabPanel(props) {
   // Destructure the properties passed to the component

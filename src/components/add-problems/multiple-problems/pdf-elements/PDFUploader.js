@@ -1,9 +1,11 @@
 import React, { Suspense, lazy } from 'react'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
 
 // Dynamically import MUI components to optimize bundle size
 const Box = lazy(() => import('@mui/material/Box'))
-const Typography = lazy(() => import('@mui/material/Typography'))
-const Button = lazy(() => import('@mui/material/Button'))
+//const Typography = lazy(() => import('@mui/material/Typography'))
+//const Button = lazy(() => import('@mui/material/Button'))
 
 /**
  * PDFUploader Component
@@ -35,19 +37,20 @@ const PDFUploader = ({
           Upload {fileType === 'question' ? 'Question' : 'Answer'} PDF
         </Typography>
 
-      {/* Dropzone Area */}
-      <Box {...getRootProps({ className: 'dropzone' })} className="dropzone">
+        {/* Dropzone Area */}
+        <Box {...getRootProps({ className: 'dropzone' })} className="dropzone">
           <input {...getInputProps()} />
           <Typography variant="body1" className="dropzone-text">
-            Drag 'n' drop a {fileType === 'question' ? 'question' : 'answer'} PDF
-            file here, or click to select one
+            Drag 'n' drop a {fileType === 'question' ? 'question' : 'answer'}{' '}
+            PDF file here, or click to select one
           </Typography>
         </Box>
 
         {/* Display Selected File Name */}
         {fileName && (
           <Typography variant="body1" className="file-name">
-            Selected {fileType === 'question' ? 'question' : 'answer'} file: {fileName}
+            Selected {fileType === 'question' ? 'question' : 'answer'} file:{' '}
+            {fileName}
           </Typography>
         )}
 
@@ -60,7 +63,7 @@ const PDFUploader = ({
         >
           Upload {fileType === 'question' ? 'Question' : 'Answer'} PDF
         </Button>
-        
+
         {/* Hidden File Input */}
         <input
           id={`${fileType}-upload`}
