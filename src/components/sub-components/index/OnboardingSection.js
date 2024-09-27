@@ -11,12 +11,10 @@ const OnboardingSection = ({ navigate }) => {
   return (
     <OnboardingCard elevation={3}>
       <Typography variant="h6">Not sure where to start?</Typography>
-      <Typography variant="body1">
-        You have not completed onboarding
-      </Typography>
+      <Typography variant="body1">You have not completed onboarding</Typography>
       <Button
         variant="contained"
-        onClick={() => navigate('/problems')} // redirect to problems page
+        onClick={() => navigate('/problems/icpc')}
         sx={{
           marginTop: 2, // Adjust margin as needed
         }}

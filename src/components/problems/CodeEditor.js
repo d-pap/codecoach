@@ -23,6 +23,7 @@ import PlayArrow from '@mui/icons-material/PlayArrow'
 import CodeEditorToolbar from './CodeEditorToolbar'
 import { getCurrentUserId, saveSubmission } from '../../api'
 import FeedbackDialog from '../problems/FeedbackDialog'
+import CircularProgress from '@mui/material/CircularProgress'
 
 const themeStyles = {
   monokai: {
@@ -67,7 +68,9 @@ const EditorButtons = ({
   handleRunCode,
   handleSubmitCode,
   currentThemeStyle,
-  isDisabled, //! if true, the buttons will be disabled
+  isDisabled,
+  isSubmitting,
+  isRunning,
 }) => (
   <Box sx={{ pt: 1, pr: 1 }}>
     <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
@@ -75,25 +78,38 @@ const EditorButtons = ({
         size="small"
         onClick={handleRunCode}
         variant="text"
-        startIcon={<PlayArrow />}
+        startIcon={
+          isRunning ? (
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            <PlayArrow />
+          )
+        }
         sx={{ color: currentThemeStyle.color }}
-        disabled={isDisabled} //! if true, the button will be disabled
+        disabled={isDisabled || isRunning}
       >
-        Run
+        {isRunning ? '' : 'Run'}
       </Button>
       <Button
         size="small"
         onClick={handleSubmitCode}
         variant="contained"
-        endIcon={<SendIcon />}
+        endIcon={
+          isSubmitting ? (
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            <SendIcon />
+          )
+        }
         sx={{
           backgroundColor: 'green',
           '&:hover': { backgroundColor: 'darkgreen' },
           borderRadius: (theme) => theme.spacing(2),
+          minWidth: '100px',
         }}
-        disabled={isDisabled} //! if true, the button will be disabled
+        disabled={isDisabled || isSubmitting}
       >
-        Submit
+        {isSubmitting ? '' : 'Submit'}
       </Button>
     </Stack>
   </Box>
@@ -133,9 +149,10 @@ const CodeEditor = ({
   const [language, setLanguage] = useState('python')
   const { problemId } = useParams() // get problem ID from URL
   const [feedbackOpen, setFeedbackOpen] = useState(false)
-
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isRunning, setIsRunning] = useState(false)
   //! limit number of judge0 runs and reset limit after 12 hours
-  const MAX_RUN_SUBMIT_COUNT = 5
+  const MAX_RUN_SUBMIT_COUNT = 15
   const RESET_INTERVAL = 12 * 60 * 60 * 1000 // 12 hours in milliseconds
 
   const [runSubmitCount, setRunSubmitCount] = useState(() => {
@@ -189,6 +206,7 @@ const CodeEditor = ({
       return
     }
 
+    setIsRunning(true)
     try {
       const result = await executeCode(code)
       if (result.status.id === 3) {
@@ -205,6 +223,8 @@ const CodeEditor = ({
       setRunSubmitCount((prevCount) => prevCount + 1)
     } catch (error) {
       setOutput('Error executing code: ' + error.message)
+    } finally {
+      setIsRunning(false)
     }
   }
 
@@ -216,6 +236,7 @@ const CodeEditor = ({
       return
     }
 
+    setIsSubmitting(true)
     try {
       const result = await executeCode(code)
 
@@ -273,6 +294,8 @@ const CodeEditor = ({
       }
     } catch (error) {
       setOutput('Error submitting code: ' + error.message)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -332,6 +355,8 @@ const CodeEditor = ({
         handleSubmitCode={handleSubmitCode}
         currentThemeStyle={currentThemeStyle}
         isDisabled={isDisabled}
+        isRunning={isRunning}
+        isSubmitting={isSubmitting}
       />
       <OutputWindow output={output} currentThemeStyle={currentThemeStyle} />
       {enableFeedback && (

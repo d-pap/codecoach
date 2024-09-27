@@ -14,7 +14,7 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom'
-import { ThemeProvider, Box, LinearProgress, } from '@mui/material'
+import { ThemeProvider, Box, LinearProgress } from '@mui/material'
 import Header from './components/Header-Footer/Header'
 import Footer from './components/Header-Footer/Footer'
 import ProtectedRoute from './components/auth/ProtectedRoute'
@@ -30,11 +30,21 @@ const About = lazy(() => import('./pages/nav/about'))
 const Problems = lazy(() => import('./pages/nav/problems'))
 const ProblemDetail = lazy(() => import('./pages/problems/problemDetail'))
 const ManageProblemsPage = lazy(() => import('./pages/nav/manageProblems'))
-const SingleFormLayout = lazy(() => import('./pages/problems/add-problems/ICPCSingleForm'))
-const ICPCMultipleForm = lazy(() => import('./pages/problems/add-problems/ICPCMultipleForm'))
-const InterviewForm = lazy(() => import('./pages/problems/add-problems/InterviewForm'))
-const EditICPCProblem = lazy(() => import('./pages/problems/edit-problems/editICPCProblem'))
-const EditInterviewProblem = lazy(() => import('./pages/problems/edit-problems/editInterviewProblem'))
+const SingleFormLayout = lazy(
+  () => import('./pages/problems/add-problems/ICPCSingleForm')
+)
+const ICPCMultipleForm = lazy(
+  () => import('./pages/problems/add-problems/ICPCMultipleForm')
+)
+const InterviewForm = lazy(
+  () => import('./pages/problems/add-problems/InterviewForm')
+)
+const EditICPCProblem = lazy(
+  () => import('./pages/problems/edit-problems/editICPCProblem')
+)
+const EditInterviewProblem = lazy(
+  () => import('./pages/problems/edit-problems/editInterviewProblem')
+)
 const Interview = lazy(() => import('./pages/problems/problem-types/Interview'))
 
 Amplify.configure(awsExports)

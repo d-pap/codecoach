@@ -272,7 +272,7 @@ function ICPC() {
   )
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 4 }}>
+    <Box sx={{ minHeight: '100vh', py: 4 }}>
       <Container maxWidth="lg">
         <Typography
           variant="h2"
@@ -302,8 +302,22 @@ function ICPC() {
             borderRadius: (theme) => theme.spacing(2),
           }}
         >
-          <Box sx={{ flexGrow: 1, padding: (theme) => theme.spacing(2) }}>
-            <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              padding: (theme) => theme.spacing(2),
+              bgcolor: (theme) => theme.palette.background.default,
+              borderRadius: (theme) => theme.spacing(2),
+              boxShadow: 'none',
+            }}
+          >
+            <Box
+              sx={{
+                p: 1,
+                display: 'flex',
+                justifyContent: 'right',
+              }}
+            >
               <Pagination
                 count={Math.ceil(filteredProblems.length / problemsPerPage)}
                 page={currentPage}

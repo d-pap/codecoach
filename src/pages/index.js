@@ -1,21 +1,25 @@
 import React, { Suspense, lazy } from 'react'
-import {
-  Box,
-  Container,
-  Typography,
-  Button,
-  Grid,
-} from '@mui/material'
+import { Box, Container, Typography, Button, Grid } from '@mui/material'
 import { styled } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
 import CenteredCircleLoader from '../components/utility/CenteredLoader'
 
 // Lazy-loaded components
-const OnboardingSection = lazy(() => import('../components/sub-components/index/OnboardingSection'))
-const StreakSection = lazy(() => import('../components/sub-components/index/StreakSection'))
-const RoadmapsSection = lazy(() => import('../components/sub-components/index/RoadmapsSection'))
-const ManageBookmarksSection = lazy(() => import('../components/sub-components/index/ManageBookmarksSection'))
-const ExploreBlogsSection = lazy(() => import('../components/sub-components/index/ExploreBlogsSection'))
+const OnboardingSection = lazy(
+  () => import('../components/sub-components/index/OnboardingSection')
+)
+const StreakSection = lazy(
+  () => import('../components/sub-components/index/StreakSection')
+)
+const RoadmapsSection = lazy(
+  () => import('../components/sub-components/index/RoadmapsSection')
+)
+const ManageBookmarksSection = lazy(
+  () => import('../components/sub-components/index/ManageBookmarksSection')
+)
+const ExploreBlogsSection = lazy(
+  () => import('../components/sub-components/index/ExploreBlogsSection')
+)
 
 // Styled components
 const SectionHeader = styled(Typography)(({ theme }) => ({
@@ -54,7 +58,7 @@ const Home = () => {
             <Grid item xs={12} md={6}>
               <Button
                 variant="outlined"
-                onClick={() => navigate('/problems')} // Redirect to problems page
+                onClick={() => navigate('/problems/icpc')} // Redirect to problems page
               >
                 All Roadmaps
               </Button>
