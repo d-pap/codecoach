@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
@@ -85,11 +85,21 @@ const FilterToolbar = ({
   region,
   subregion,
   year,
+  searchQuery,
   onRegionChange,
   onSubregionChange,
   onYearChange,
+  onSearchChange,
 }) => {
   const subregionOptions = region !== 'all' ? subregions[region] || [] : []
+
+  const menuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: 300, // height of menu dropdowns of filters
+      },
+    },
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -102,7 +112,13 @@ const FilterToolbar = ({
             <StyledSelect
               value={region}
               onChange={onRegionChange}
-              sx={{ height: '40px', minWidth: '150px', padding: '0 10px' }}
+              sx={{
+                height: '40px',
+                minWidth: '150px',
+                padding: '0 10px',
+                // make the left side of drop down align with left side of filter
+              }}
+              MenuProps={menuProps}
             >
               <MenuItem value="all">All Regions</MenuItem>
               {Object.keys(subregions).map((regionKey) => (
@@ -115,6 +131,7 @@ const FilterToolbar = ({
               value={subregion}
               onChange={onSubregionChange}
               sx={{ height: '40px', minWidth: '150px', padding: '0 10px' }}
+              MenuProps={menuProps}
             >
               <MenuItem value="all">All Subregions</MenuItem>
               {subregionOptions.map((subregionItem) => (
@@ -127,6 +144,7 @@ const FilterToolbar = ({
               value={year}
               onChange={onYearChange}
               sx={{ height: '40px', minWidth: '150px', padding: '0 10px' }}
+              MenuProps={menuProps}
             >
               <MenuItem value="all">All Years</MenuItem>
               {Array.from({ length: 2025 - 2008 + 1 }, (_, index) => {
@@ -146,6 +164,8 @@ const FilterToolbar = ({
             <StyledInputBase
               placeholder="Search questions..."
               inputProps={{ 'aria-label': 'search' }}
+              value={searchQuery}
+              onChange={onSearchChange}
             />
           </Search>
         </Toolbar>
@@ -226,11 +246,23 @@ function ICPC() {
   const [subregion, setSubregion] = useState('all')
   const [year, setYear] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
+  const [searchQuery, setSearchQuery] = useState('')
   const problemsPerPage = 10
 
   const filteredProblems = useMemo(() => {
-    return ICPCFilter(problems, region, subregion, year)
-  }, [problems, region, subregion, year])
+    return ICPCFilter(problems, region, subregion, year).filter(
+      (problem) =>
+        problem.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        problem.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        problem.contestYear.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        problem.contestRegion
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        problem.contestSubRegion
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
+    )
+  }, [problems, region, subregion, year, searchQuery])
 
   const handleRegionChange = (event) => {
     setRegion(event.target.value)
@@ -247,6 +279,11 @@ function ICPC() {
     setYear(event.target.value)
     setCurrentPage(1)
   }
+
+  const handleSearchChange = useCallback((event) => {
+    setSearchQuery(event.target.value)
+    setCurrentPage(1)
+  }, [])
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page)
@@ -287,9 +324,11 @@ function ICPC() {
           region={region}
           subregion={subregion}
           year={year}
+          searchQuery={searchQuery}
           onRegionChange={handleRegionChange}
           onSubregionChange={handleSubregionChange}
           onYearChange={handleYearChange}
+          onSearchChange={handleSearchChange}
         />
         <Grid
           container
