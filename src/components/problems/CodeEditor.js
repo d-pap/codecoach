@@ -7,7 +7,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import AceEditor from 'react-ace'
-import { executeCode, getCurrentUserId, saveSubmission } from '../../api'
 import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/mode-python'
 import 'ace-builds/src-noconflict/ext-language_tools'
@@ -16,10 +15,11 @@ import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
 import SendIcon from '@mui/icons-material/Send'
 import PlayArrow from '@mui/icons-material/PlayArrow'
-import CodeEditorToolbar from './CodeEditorToolbar'
-import FeedbackDialog from '../problems/FeedbackDialog'
 import CircularProgress from '@mui/material/CircularProgress'
+import FeedbackDialog from '../problems/FeedbackDialog'
+import { executeCode, getCurrentUserId, saveSubmission } from '../../api'
 import { loadTheme, loadMode } from '../utility/aceImports'
+import CodeEditorToolbar from './CodeEditorToolbar'
 
 const themeStyles = {
   monokai: {

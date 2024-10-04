@@ -9,9 +9,9 @@ import {
   Typography,
 } from '@mui/material'
 import { styled } from '@mui/system'
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 import Trophy from '../images/icpc-trophy.png'
 import logo from '../images/logo-with-text.svg'
-import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 
 const HeaderSection = styled(AppBar)(({ theme }) => ({
   background: 'transparent',

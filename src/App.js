@@ -7,7 +7,6 @@ import React, { useEffect, useState, Suspense, lazy } from 'react'
 import './App.css'
 import { Amplify, Auth } from 'aws-amplify'
 import '@aws-amplify/ui-react/styles.css'
-import awsExports from './aws-exports'
 import {
   BrowserRouter as Router,
   Routes,
@@ -17,6 +16,7 @@ import {
 import { ThemeProvider } from '@mui/material'
 import Box from '@mui/material/Box'
 import LinearProgress from '@mui/material/LinearProgress'
+import awsExports from './aws-exports'
 import Header from './components/Header-Footer/Header'
 import Footer from './components/Header-Footer/Footer'
 import ProtectedRoute from './components/auth/ProtectedRoute'

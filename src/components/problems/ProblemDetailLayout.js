@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Box, Container, Drawer, IconButton } from '@mui/material'
-import ChatBox from './llm-components/ChatBox'
 import ChatIcon from '@mui/icons-material/Chat'
-import CodeEditor from './CodeEditor'
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels'
 import styled from 'styled-components'
+import CodeEditor from './CodeEditor'
+import ChatBox from './llm-components/ChatBox'
 
 const StyledPanelResizeHandle = styled(PanelResizeHandle)`
   background-color: #ccc;

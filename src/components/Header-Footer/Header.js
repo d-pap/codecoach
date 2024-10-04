@@ -5,7 +5,6 @@
 import React from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { Auth } from 'aws-amplify'
-import logo from '../../images/logo-with-text.svg'
 import {
   AppBar,
   Toolbar,
@@ -25,6 +24,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import Settings from '@mui/icons-material/Settings'
 import Logout from '@mui/icons-material/Logout'
+import logo from '../../images/logo-with-text.svg'
 
 const PageLinks = styled(Button)(({ theme }) => ({
   color: theme.palette.text.primary,

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import SendChat from './AIChat'
 import {
   Box,
   TextField,
@@ -20,6 +19,7 @@ import RemoveIcon from '@mui/icons-material/Remove'
 import SettingsIcon from '@mui/icons-material/Settings'
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
 import { useTheme } from '@mui/material/styles'
+import SendChat from './AIChat'
 
 // Function to retrieve chat history from localStorage
 const getChatHistory = (problemId) => {

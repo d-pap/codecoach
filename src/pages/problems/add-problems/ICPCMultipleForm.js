@@ -6,6 +6,8 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
+import debounce from 'lodash/debounce'
+import cloneDeep from 'lodash/cloneDeep'
 import PDFUploaderPanel from '../../../components/add-problems/multiple-problems/pdf-elements/PDFUploaderPanel'
 import FormFields from '../../../components/add-problems/multiple-problems/form-elements/FormFields'
 import QuestionsSection from '../../../components/add-problems/multiple-problems/form-elements/QuestionsSection'
@@ -13,8 +15,6 @@ import AnswersSection from '../../../components/add-problems/multiple-problems/f
 import PDFParser from '../../../components/add-problems/multiple-problems/pdf-elements/PDFParser'
 import { getSubregions } from '../../../components/problems/subregions'
 import { addProblem } from '../../../api'
-import debounce from 'lodash/debounce'
-import cloneDeep from 'lodash/cloneDeep'
 import './ICPCMultipleForm.css'
 
 const parser = new PDFParser()

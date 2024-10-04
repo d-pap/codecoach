@@ -1,9 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
-import { ICPCFilter } from '../../../components/problems/problem-filters/ICPCFilter'
-import { getSubregions } from '../../../components/problems/subregions'
 import { styled, alpha } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import Pagination from '@mui/material/Pagination'
@@ -17,8 +14,11 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import InputBase from '@mui/material/InputBase'
 import AppBar from '@mui/material/AppBar'
-import { fetchProblems } from '../../../api'
 import SearchIcon from '@mui/icons-material/Search'
+import { fetchProblems } from '../../../api'
+import { getSubregions } from '../../../components/problems/subregions'
+import { ICPCFilter } from '../../../components/problems/problem-filters/ICPCFilter'
+import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
 
 const subregions = getSubregions()
 

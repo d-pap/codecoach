@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
-import CustomTabPanel from './CustomTabPanel'
 import PropTypes from 'prop-types'
+import CustomTabPanel from './CustomTabPanel'
 import ProblemTab from './problem-detail-navbar/ProblemTab'
 const HintByDatabaseTab = lazy(
   () => import('./problem-detail-navbar/HintByDatabase')
