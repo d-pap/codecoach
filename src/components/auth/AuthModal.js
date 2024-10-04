@@ -1,7 +1,10 @@
 import React from 'react'
-import { Box, Modal } from '@mui/material'
-import { Authenticator } from '@aws-amplify/ui-react'
-import { ThemeProvider as AmplifyThemeProvider } from '@aws-amplify/ui-react'
+import Box from '@mui/material/Box'
+import Modal from '@mui/material/Modal'
+import {
+  ThemeProvider as AmplifyThemeProvider,
+  Authenticator,
+} from '@aws-amplify/ui-react'
 
 const amplifyTheme = {
   name: 'MyCustomTheme',

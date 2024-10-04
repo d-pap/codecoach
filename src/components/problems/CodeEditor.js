@@ -4,26 +4,22 @@
  * The language and theme dropdowns are defined in CodeEditorToolbar.js.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import AceEditor from 'react-ace'
-import { executeCode } from '../../api'
+import { executeCode, getCurrentUserId, saveSubmission } from '../../api'
 import 'ace-builds/src-noconflict/theme-monokai'
-import 'ace-builds/src-noconflict/theme-github'
-import 'ace-builds/src-noconflict/theme-solarized_dark'
-import 'ace-builds/src-noconflict/theme-dracula'
-import 'ace-builds/src-noconflict/theme-one_dark'
-import 'ace-builds/src-noconflict/theme-terminal'
-import 'ace-builds/src-noconflict/theme-xcode'
 import 'ace-builds/src-noconflict/mode-python'
 import 'ace-builds/src-noconflict/ext-language_tools'
-import { Button, Stack, Box } from '@mui/material'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import Box from '@mui/material/Box'
 import SendIcon from '@mui/icons-material/Send'
 import PlayArrow from '@mui/icons-material/PlayArrow'
 import CodeEditorToolbar from './CodeEditorToolbar'
-import { getCurrentUserId, saveSubmission } from '../../api'
 import FeedbackDialog from '../problems/FeedbackDialog'
 import CircularProgress from '@mui/material/CircularProgress'
+import { loadTheme, loadMode } from '../utility/aceImports'
 
 const themeStyles = {
   monokai: {
@@ -307,6 +303,36 @@ const CodeEditor = ({
 
   const currentThemeStyle = themeStyles[theme]
 
+  // Function to handle theme changes
+  const handleThemeChange = useCallback(
+    async (newTheme) => {
+      if (newTheme === theme) return // No change needed
+
+      // Load the new theme if it's not already loaded
+      if (newTheme !== 'monokai') {
+        await loadTheme(newTheme)
+      }
+
+      setTheme(newTheme)
+    },
+    [theme]
+  )
+
+  // Function to handle language changes (if you decide to support more modes)
+  const handleLanguageChange = useCallback(
+    async (newLanguage) => {
+      if (newLanguage === language) return // No change needed
+
+      // Load the new mode if it's not already loaded
+      if (newLanguage !== 'python') {
+        await loadMode(newLanguage)
+      }
+
+      setLanguage(newLanguage)
+    },
+    [language]
+  )
+
   return (
     <Box
       sx={{
@@ -323,8 +349,8 @@ const CodeEditor = ({
       <CodeEditorToolbar
         theme={theme}
         language={language}
-        setTheme={setTheme}
-        setLanguage={setLanguage}
+        setTheme={handleThemeChange}
+        setLanguage={handleLanguageChange}
         currentThemeStyle={currentThemeStyle}
         MAX_RUN_SUBMIT_COUNT={MAX_RUN_SUBMIT_COUNT}
         runSubmitCount={runSubmitCount}
