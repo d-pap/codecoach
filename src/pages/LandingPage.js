@@ -110,35 +110,35 @@ const LanguageLogos = () => (
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      flexWrap: 'nowrap', // Prevent wrapping
-      overflow: 'hidden', // Ensure icons don't overflow
+      flexWrap: 'nowrap',
+      overflow: 'hidden',
     }}
   >
     <LanguageLogo
       src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg"
       alt="Python"
-      size={{ xs: 50, sm: 80, md: 100 }} // Responsive size
+      size={{ xs: 50, sm: 80, md: 100 }}
     />
     <LanguageLogo
       src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg"
       alt="Java"
-      size={{ xs: 50, sm: 80, md: 100 }} // Responsive size
+      size={{ xs: 50, sm: 80, md: 100 }}
     />
 
     <LanguageLogo
       src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg"
       alt="C++"
-      size={{ xs: 50, sm: 80, md: 100 }} // Responsive size
+      size={{ xs: 50, sm: 80, md: 100 }}
     />
     <LanguageLogo
       src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg"
       alt="C"
-      size={{ xs: 50, sm: 80, md: 100 }} // Responsive size
+      size={{ xs: 50, sm: 80, md: 100 }}
     />
     <LanguageLogo
       src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kotlin/kotlin-original.svg"
       alt="Kotlin"
-      size={{ xs: 50, sm: 80, md: 100 }} // Responsive size
+      size={{ xs: 50, sm: 80, md: 100 }}
     />
   </Container>
 )
