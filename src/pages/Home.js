@@ -4,14 +4,11 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
-import Paper from '@mui/material/Paper'
-import Link from '@mui/material/Link'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
 import { styled } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
-import { alpha } from '@mui/material/styles'
 import { CardMedia } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import programmingCategory from '../images/programming-category.png'
@@ -21,44 +18,7 @@ import grad15 from '../images/Grad_15.png'
 import grad14 from '../images/Grad_14.png'
 import grad16 from '../images/Grad_16.png'
 import grad9 from '../images/Grad_09.png'
-
-// Styled components
-const SectionHeader = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-  fontWeight: 800,
-  position: 'relative',
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    bottom: '-10px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    width: '60px',
-    height: '4px',
-    backgroundColor: theme.palette.secondary.main,
-  },
-}))
-
-const StatCard = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
-  textAlign: 'center',
-  color: theme.palette.text.primary,
-  backgroundColor: theme.palette.background.paper,
-  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
-  '&:hover': {
-    transform: 'translateY(-5px)',
-    boxShadow: theme.shadows[10],
-  },
-}))
-
-const ResourceCard = styled(Card)(({ theme }) => ({
-  maxWidth: 345,
-  margin: 'auto',
-  transition: 'transform 0.3s ease-in-out',
-  '&:hover': {
-    transform: 'scale(1.05)',
-  },
-}))
+import { Link } from 'react-router-dom'
 
 const FeaturedCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -69,14 +29,6 @@ const FeaturedCard = styled(Card)(({ theme }) => ({
     transform: 'translateY(-5px)',
     boxShadow: theme.shadows[10],
   },
-}))
-
-const CommunityCard = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(4),
-  backgroundColor: alpha(theme.palette.primary.main, 0.05),
-  color: theme.palette.text.primary,
-  textAlign: 'center',
-  borderRadius: theme.shape.borderRadius * 2,
 }))
 
 export const Home = () => {
@@ -135,16 +87,14 @@ export const Home = () => {
   return (
     <>
       <Box
-        // hero section box
         position="relative"
         display="flex"
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
-        height="80vh"
+        height={{ xs: '60vh', sm: '70vh', md: '80vh' }}
         overflow="hidden"
       >
-        {/* background box for top of page */}
         <Box
           position="relative"
           display="flex"
@@ -161,16 +111,17 @@ export const Home = () => {
             backgroundRepeat: 'no-repeat',
           }}
         >
-          {/* text in box */}
           <Typography
             variant="h1"
             component="h1"
-            fontWeight="bold" // TODO: change font ?
+            fontWeight="bold"
             fontFamily="Helvetica, Arial, sans-serif"
             color="text.primary"
             sx={{
               position: 'relative',
               zIndex: 2,
+              fontSize: { xs: '3rem', sm: '4rem', md: '5rem' },
+              textAlign: 'center',
             }}
           >
             codecoach
@@ -180,9 +131,11 @@ export const Home = () => {
             color="text.secondary"
             sx={{
               position: 'relative',
-              zIndex: 2, //TODO: change text of this
+              zIndex: 2,
+              fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
+              textAlign: 'center',
             }}
-          >
+          > {/* //TODO: change this text */}
             Your AI-Powered Coding Coach
           </Typography>
           <Typography
@@ -190,21 +143,23 @@ export const Home = () => {
             color="text.secondary"
             sx={{
               position: 'relative',
-              zIndex: 2, //TODO: change text of this
+              zIndex: 2,
+              fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
+              textAlign: 'center',
             }}
-          >
-            SECOND LINE TEXT HERE
+          > {/* //TODO: change this text */}
+            SECOND LINE TEXT HERE 
           </Typography>
           <Button
             variant="contained"
-            color="secondary" //TODO: change color of this
+            color="secondary"
             size="large"
             onClick={() => navigate('/problems/icpc')}
             sx={{
               mt: 4,
               py: 1.5,
               px: 4,
-              fontSize: '1.1rem',
+              fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' },
               fontWeight: 'bold',
               position: 'relative',
               zIndex: 2,
@@ -214,16 +169,15 @@ export const Home = () => {
           </Button>
         </Box>
       </Box>
-      <Container
-        maxWidth="lg" //TODO: change top margin to fix spacing between hero section and first section
-      >
-        {/* upcoming competitions section */}
-        <Box sx={{ mb: 8, mt: 8 }}>
+      <Container maxWidth="lg">
+        {/* Upcoming competitions section */}
+        <Box sx={{ mb: { xs: 4, sm: 6, md: 8 }, mt: { xs: 4, sm: 6, md: 8 } }}>
           <Typography
             variant="h4"
             sx={{
               mb: 2,
-              fontWeight: 'bold', // TODO: change font and colors
+              fontWeight: 'bold',
+              fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
             }}
           >
             Upcoming Competitions
@@ -238,16 +192,16 @@ export const Home = () => {
             Check out upcoming competitions and start preparing today
           </Typography>
           <Link
-            href="/home" // TODO: change link type, link page, colors and arrow style - link to UMD ACM club page???
-            sx={{
+            to="/home" // TODO: change link type, link page, colors and arrow style - link to UMD ACM club page???
+            style={{
               display: 'flex',
               alignItems: 'center',
-              mb: 4,
-              color: 'secondary.main',
+              marginBottom: '1rem',
+              color: 'your-secondary-color',
               textDecoration: 'none',
             }}
           >
-            Explore upcoming competitions <ArrowForwardIcon sx={{ ml: 1 }} />
+            Explore upcoming competitions <ArrowForwardIcon style={{ marginLeft: '0.25rem' }} />
           </Link>
 
           {/* Full-width card for main ICPC competition */}
@@ -345,13 +299,14 @@ export const Home = () => {
           </Grid>
         </Box>
 
-        {/* featured problems section */}
-        <Box sx={{ mb: 8, mt: 8 }}>
+        {/* Featured problems section */}
+        <Box sx={{ mb: { xs: 4, sm: 6, md: 8 }, mt: { xs: 4, sm: 6, md: 8 } }}>
           <Typography
             variant="h4"
             sx={{
               mb: 2,
-              fontWeight: 'bold', // TODO: change font and colors
+              fontWeight: 'bold',
+              fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
             }}
           >
             Featured Problems
@@ -366,16 +321,16 @@ export const Home = () => {
             Check out our featured problems and start preparing today
           </Typography>
           <Link
-            href="/problems" // TODO: change link type, link page, colors and arrow style
-            sx={{
+            to="/problems" // TODO: change link type, link page, colors and arrow style
+            style={{
               display: 'flex',
               alignItems: 'center',
-              mb: 4,
-              color: 'secondary.main',
+              marginBottom: '1rem',
+              color: 'your-secondary-color',
               textDecoration: 'none',
             }}
           >
-            Explore problems <ArrowForwardIcon sx={{ ml: 1 }} />
+            Explore problems <ArrowForwardIcon style={{ marginLeft: '0.25rem' }} />
           </Link>
 
           {/* full width card for problems */}
@@ -439,13 +394,14 @@ export const Home = () => {
           </Grid>
         </Box>
 
-        {/* interview prep section */}
-        <Box sx={{ mb: 8, mt: 8 }}>
+        {/* Interview prep section */}
+        <Box sx={{ mb: { xs: 4, sm: 6, md: 8 }, mt: { xs: 4, sm: 6, md: 8 } }}>
           <Typography
             variant="h4"
             sx={{
               mb: 2,
-              fontWeight: 'bold', // TODO: change font and colors
+              fontWeight: 'bold',
+              fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
             }}
           >
             Interview Prep
@@ -460,16 +416,16 @@ export const Home = () => {
             Check out our interview prep section and start preparing today
           </Typography>
           <Link
-            href="/problems/interview" // TODO: change link type, link page, colors and arrow style
-            sx={{
+            to="/interviews" // TODO: change link type, link page, colors and arrow style
+            style={{
               display: 'flex',
               alignItems: 'center',
-              mb: 4,
-              color: 'secondary.main',
+              marginBottom: '1rem',
+              color: 'your-secondary-color',
               textDecoration: 'none',
             }}
           >
-            Explore Interview Prep <ArrowForwardIcon sx={{ ml: 1 }} />
+            Explore Interview Prep <ArrowForwardIcon style={{ marginLeft: '0.25rem' }} />
           </Link>
 
           {/* Full-width card */}
@@ -565,13 +521,13 @@ export const Home = () => {
           </Grid>
         </Box>
 
-        {/* join community section */}
-        <Box sx={{ mb: 8 }}>
+        {/* Join community section */}
+        <Box sx={{ mb: { xs: 4, sm: 6, md: 8 } }}>
           <Box
             sx={{
-              mt: 8, // TODO: change this styling to be simpler if it is only a grey background
+              mt: { xs: 4, sm: 6, md: 8 },
               bgcolor: 'grey.100',
-              p: 6,
+              p: { xs: 3, sm: 4, md: 6 },
               borderRadius: 4,
               textAlign: 'center',
               position: 'relative',
@@ -593,17 +549,14 @@ export const Home = () => {
             <Typography variant="h5" gutterBottom>
               Join the Community
             </Typography>
-            <Typography
-              variant="body1" // TODO: change this text
-              gutterBottom
-            >
+            <Typography variant="body1" gutterBottom>
               Connect with fellow ACM enthusiasts, share knowledge, and
               collaborate on challenging problems. Our community is dedicated to
               fostering a supportive environment where you can grow your skills
               and achieve your competitive programming goals.
             </Typography>
             <Button
-              variant="contained" // TODO: change button color and link it to UMD ACM website
+              variant="contained"
               color="secondary"
               onClick={() => navigate('/home')}
               sx={{ mt: 2 }}

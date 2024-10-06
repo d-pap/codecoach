@@ -9,9 +9,9 @@ import React from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import LinearProgress from '@mui/material/LinearProgress'
-import { fetchProblemById } from '../../api'
-import ProblemDetailLayout from '../../components/problems/ProblemDetailLayout'
-import ProblemDetails from '../../components/problems/ProblemDetails'
+import { fetchProblemById } from '../api'
+import ProblemDetailLayout from '../components/problems/ProblemDetailLayout'
+import ProblemDetails from '../components/problems/ProblemDetails'
 
 function ProblemDetail() {
   const location = useLocation()

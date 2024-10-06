@@ -7,7 +7,7 @@ import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import { Typography } from '@mui/material'
+import Typography from '@mui/material/Typography'
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
 import Tooltip from '@mui/material/Tooltip'
 
