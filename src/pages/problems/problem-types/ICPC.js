@@ -17,7 +17,6 @@ import AppBar from '@mui/material/AppBar'
 import SearchIcon from '@mui/icons-material/Search'
 import { fetchProblems } from '../../../api'
 import { getSubregions } from '../../../components/problems/subregions'
-import { ICPCFilter } from '../../../components/problems/problem-filters/ICPCFilter'
 import { ICPCFilter } from '../../../components/problems/problem-components/ICPCFilter'
 import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
 
