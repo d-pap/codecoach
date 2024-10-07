@@ -43,7 +43,7 @@ const InterviewForm = () => {
     companies: [],
     topics: [],
     difficulty: '',
-    hint: '', // Added hint field
+    hint: '',
   })
 
   // State variables for the lists
@@ -88,7 +88,7 @@ const InterviewForm = () => {
         companies: [],
         topics: [],
         difficulty: '',
-        hint: '', // Reset hint field
+        hint: '',
       })
       alert('Problem added successfully!')
     } catch (error) {
