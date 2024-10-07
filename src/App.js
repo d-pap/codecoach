@@ -43,12 +43,6 @@ const ICPCMultipleForm = lazy(
 const InterviewForm = lazy(
   () => import('./pages/problems/add-problems/InterviewForm')
 )
-const EditICPCProblem = lazy(
-  () => import('./pages/problems/edit-problems/editICPCProblem')
-)
-const EditInterviewProblem = lazy(
-  () => import('./pages/problems/edit-problems/editInterviewProblem')
-)
 const Interview = lazy(() => import('./pages/problems/problem-types/Interview'))
 
 Amplify.configure(awsExports)
@@ -197,31 +191,11 @@ function App() {
                 }
               />
               <Route
-                path="/manage-problems/edit-icpc"
-                element={
-                  <ProtectedRoute isAuthenticated={isAuthenticated}>
-                    <Suspense fallback={<CenteredLoader />}>
-                      <EditICPCProblem />
-                    </Suspense>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
                 path="/manage-problems/add-interview"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <Suspense fallback={<CenteredLoader />}>
                       <InterviewForm />
-                    </Suspense>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/manage-problems/edit-interview"
-                element={
-                  <ProtectedRoute isAuthenticated={isAuthenticated}>
-                    <Suspense fallback={<CenteredLoader />}>
-                      <EditInterviewProblem />
                     </Suspense>
                   </ProtectedRoute>
                 }

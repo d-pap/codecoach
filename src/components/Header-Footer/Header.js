@@ -1,7 +1,3 @@
-/**
- * Header component for the application
- */
-
 import React from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { Auth } from 'aws-amplify'
@@ -192,7 +188,7 @@ const Header = () => {
                 >
                   Interview Prep
                 </PageLinks>
-                {/*
+
                 <PageLinks
                   component={NavLink}
                   to="/manage-problems"
@@ -200,7 +196,6 @@ const Header = () => {
                 >
                   Manage Problems
                 </PageLinks>
-                */}
               </Box>
               <Divider
                 orientation="vertical"

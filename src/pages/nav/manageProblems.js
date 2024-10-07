@@ -16,8 +16,6 @@ import styled from '@emotion/styled'
 import icpcImage from '../../images/icpc_logo.png'
 import multipleICPCImage from '../../images/pdf-parser.png'
 import interviewImage from '../../images/interview-icon.jpg'
-import editICPCImage from '../../images/edit-icpc.jpg'
-import editInterviewImage from '../../images/edit-interview.jpg'
 
 const CardStyled = styled(Card)(({ theme }) => ({
   height: '100%',
@@ -60,10 +58,6 @@ function CategoryCard({ image, onClick, buttonText, title, description }) {
 const ManageProblemsPage = () => {
   const navigate = useNavigate()
 
-  const handleNavigateToSingleICPCForm = () => {
-    navigate('/manage-problems/add-single-icpc')
-  }
-
   const handleNavigateToMultipleICPCForm = () => {
     navigate('/manage-problems/add-multiple-icpc')
   }
@@ -72,75 +66,39 @@ const ManageProblemsPage = () => {
     navigate('/manage-problems/add-interview')
   }
 
-  const handleNavigateToEditICPCForm = () => {
-    navigate('/manage-problems/edit-icpc')
-  }
-
-  const handleNavigateToEditInterviewForm = () => {
-    navigate('/manage-problems/edit-interview')
-  }
-
   return (
     <Box sx={{ bgcolor: 'background.default', py: 6 }}>
       <Container maxWidth="md">
-        {/* ICPC Section */}
-        <Typography variant="h4" align="center" gutterBottom>
-          Manage ICPC Questions
+        {/* Title Section */}
+        <Typography
+          variant="h2"
+          component="h1"
+          gutterBottom
+          align="center"
+          sx={{ mb: 4 }}
+        >
+          Add Questions
         </Typography>
-        <Grid container spacing={4}>
-          <Grid item xs={12} sm={6}>
-            <CategoryCard
-              image={icpcImage}
-              onClick={handleNavigateToSingleICPCForm}
-              buttonText="Add Single ICPC Question"
-              title="Add Single ICPC Question"
-              description="Add a single ICPC question with fields like region, year, title, description, input, output, and sample test cases."
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
+
+        {/* Cards Section */}
+        <Grid container spacing={4} justifyContent="center">
+          <Grid item xs={12} sm={6} md={5}>
             <CategoryCard
               image={multipleICPCImage}
               onClick={handleNavigateToMultipleICPCForm}
               buttonText="Add Multiple ICPC Questions"
-              title="Add Multiple ICPC Questions"
+              title="Add ICPC Questions"
               description="Bulk add ICPC questions. Supports PDF upload and RegEx parsing for quicker input."
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <CategoryCard
-              image={editICPCImage}
-              onClick={handleNavigateToEditICPCForm}
-              buttonText="Edit ICPC Questions"
-              title="Edit ICPC Questions"
-              description="Modify existing ICPC questions by changing title, description, input/output, and test cases."
-            />
-          </Grid>
-        </Grid>
 
-        {/* Divider between sections */}
-        <Divider sx={{ my: 6 }} />
-
-        {/* Interview Section */}
-        <Typography variant="h4" align="center" gutterBottom>
-          Manage Interview Questions
-        </Typography>
-        <Grid container spacing={4}>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={5}>
             <CategoryCard
               image={interviewImage}
               onClick={handleNavigateToInterviewForm}
               buttonText="Add Interview Questions"
               title="Add Interview Questions"
               description="Add interview questions to the database. To Be Implemented."
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <CategoryCard
-              image={editInterviewImage}
-              onClick={handleNavigateToEditInterviewForm}
-              buttonText="Edit Interview Questions"
-              title="Edit Interview Questions"
-              description="Modify existing interview questions with updated input/output examples and descriptions."
             />
           </Grid>
         </Grid>

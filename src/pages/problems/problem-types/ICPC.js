@@ -18,6 +18,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import { fetchProblems } from '../../../api'
 import { getSubregions } from '../../../components/problems/subregions'
 import { ICPCFilter } from '../../../components/problems/problem-filters/ICPCFilter'
+import { ICPCFilter } from '../../../components/problems/problem-components/ICPCFilter'
 import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
 
 const subregions = getSubregions()
@@ -116,7 +117,6 @@ const FilterToolbar = ({
                 height: '40px',
                 minWidth: '150px',
                 padding: '0 10px',
-                // make the left side of drop down align with left side of filter
               }}
               MenuProps={menuProps}
             >
@@ -236,7 +236,7 @@ function ICPC() {
     isError,
     error,
   } = useQuery({
-    queryKey: ['problems'],
+    queryKey: ['problems'], // Keeping the same query key
     queryFn: fetchProblems,
     staleTime: 1000 * 60 * 5,
     initialData: problemsFromLocation,
@@ -249,19 +249,40 @@ function ICPC() {
   const [searchQuery, setSearchQuery] = useState('')
   const problemsPerPage = 10
 
+  // Filter problems by type 'icpc' first, then apply other filters
   const filteredProblems = useMemo(() => {
-    return ICPCFilter(problems, region, subregion, year).filter(
-      (problem) =>
-        problem.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        problem.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        problem.contestYear.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        problem.contestRegion
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        problem.contestSubRegion
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase())
+    // Step 1: Filter by type 'icpc'
+    const icpcProblems = problems.filter(
+      (problem) => problem.type && problem.type.toLowerCase() === 'icpc'
     )
+
+    // Step 2: Apply additional filters (region, subregion, year)
+    const regionFiltered = ICPCFilter(icpcProblems, region, subregion, year)
+
+    // Step 3: Apply search query
+    const searchFiltered = regionFiltered.filter(
+      (problem) =>
+        (problem.title &&
+          problem.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (problem.description &&
+          problem.description
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())) ||
+        (problem.contestYear &&
+          problem.contestYear
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())) ||
+        (problem.contestRegion &&
+          problem.contestRegion
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())) ||
+        (problem.contestSubRegion &&
+          problem.contestSubRegion
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()))
+    )
+
+    return searchFiltered
   }, [problems, region, subregion, year, searchQuery])
 
   const handleRegionChange = (event) => {
