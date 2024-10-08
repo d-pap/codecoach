@@ -17,7 +17,6 @@ import icpcImage from '../images/icpc-category.png'
 import grad15 from '../images/Grad_15.png'
 import grad14 from '../images/Grad_14.png'
 import grad16 from '../images/Grad_16.png'
-import grad9 from '../images/Grad_09.png'
 import { Link } from 'react-router-dom'
 
 const FeaturedCard = styled(Card)(({ theme }) => ({
@@ -135,7 +134,9 @@ export const Home = () => {
               fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
               textAlign: 'center',
             }}
-          > {/* //TODO: change this text */}
+          >
+            {' '}
+            {/* //TODO: change this text */}
             Your AI-Powered Coding Coach
           </Typography>
           <Typography
@@ -147,8 +148,10 @@ export const Home = () => {
               fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
               textAlign: 'center',
             }}
-          > {/* //TODO: change this text */}
-            SECOND LINE TEXT HERE 
+          >
+            {' '}
+            {/* //TODO: change this text */}
+            SECOND LINE TEXT HERE
           </Typography>
           <Button
             variant="contained"
@@ -201,7 +204,8 @@ export const Home = () => {
               textDecoration: 'none',
             }}
           >
-            Explore upcoming competitions <ArrowForwardIcon style={{ marginLeft: '0.25rem' }} />
+            Explore upcoming competitions{' '}
+            <ArrowForwardIcon style={{ marginLeft: '0.25rem' }} />
           </Link>
 
           {/* Full-width card for main ICPC competition */}
@@ -330,7 +334,8 @@ export const Home = () => {
               textDecoration: 'none',
             }}
           >
-            Explore problems <ArrowForwardIcon style={{ marginLeft: '0.25rem' }} />
+            Explore problems{' '}
+            <ArrowForwardIcon style={{ marginLeft: '0.25rem' }} />
           </Link>
 
           {/* full width card for problems */}
@@ -425,7 +430,8 @@ export const Home = () => {
               textDecoration: 'none',
             }}
           >
-            Explore Interview Prep <ArrowForwardIcon style={{ marginLeft: '0.25rem' }} />
+            Explore Interview Prep{' '}
+            <ArrowForwardIcon style={{ marginLeft: '0.25rem' }} />
           </Link>
 
           {/* Full-width card */}

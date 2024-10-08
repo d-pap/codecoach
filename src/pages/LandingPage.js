@@ -1,3 +1,18 @@
+/**
+ * TODO:
+ * - //! connect sign up and login buttons to backend? doesnt work on netlify (bc of ProtectedRoute?)
+ * - //! update the execution time for the compiler!!!!!
+ * - // remove borders and box shadows around images on this and home pages??
+ * - //! make container size responsive and have whitespace on left and right sides e.g., <Container maxWidth="lg">
+ * - make the text in the hero section responsive (use vh? or other relative units?)
+ * - make the text in the feature section responsive
+ * - //! make image sizes and language logos responsive
+ * - //! make boxes responsive
+
+ * - fix spacing between text in sections (vertical spacing)
+ * - make the text thinner in sections body text
+ * - change images in feature sections
+ */
 import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -8,9 +23,13 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/system'
 import logo from '../images/logo-with-text.svg'
-import grad15 from '../images/Grad_15.png'
-import grad16 from '../images/Grad_16.png'
-const HeaderSection = styled(AppBar)(({ theme }) => ({
+import grad12 from '../images/Grad_12.png'
+import pcImage from '../images/programming-category.png' //TODO: replace with better images --------------------------
+
+/********************************************************************************
+ * styling for header nav bar
+ ********************************************************************************/
+const HeaderNavBar = styled(AppBar)(({ theme }) => ({
   background: 'transparent',
   display: 'flex',
   justifyContent: 'space-between',
@@ -18,45 +37,63 @@ const HeaderSection = styled(AppBar)(({ theme }) => ({
   color: theme.palette.text.primary,
 }))
 
-const FeatureCard = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(3),
-  textAlign: 'center',
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  backgroundColor: theme.palette.background.paper,
-  borderRadius: theme.spacing(2),
-  boxShadow: theme.shadows[3],
-}))
+/********************************************************************************
+ * components for sections
+ ********************************************************************************/
+// styling for header text in sections
+const sectionHeaderStyles = {
+  fontSize: '15vh',
+  position: 'relative',
+  zIndex: 2,
+  fontWeight: 'bold',
+  fontFamily: 'Helvetica, Arial, sans-serif',
+}
 
+// styling for the text in sections
+const sectionTextStyles = {
+  fontWeight: 'bold',
+  fontSize: { xs: '0.6rem', sm: '0.8rem', md: '1rem' },
+  mb: 4,
+}
+
+// component for section header text
+const SectionHeaderText = ({ children }) => (
+  <Typography variant="h1" component="h1" sx={sectionHeaderStyles}>
+    {children}
+  </Typography>
+)
+
+// component for section body text
+const SectionBodyText = ({ children }) => (
+  <Typography variant="h6" component="h3" gutterBottom sx={sectionTextStyles}>
+    {children}
+  </Typography>
+)
+
+// component for section image container
 const SectionImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
-  paddingTop: '75%', //TODO: 4:3 aspect ratio (adjust if needed, e.g., 56.25% for 16:9)
+  paddingTop: '56.25%', //TODO: 16:9 (adjust if needed (56.25% for 16:9 or 66.6% for 4:3)) -----------------------------
   borderRadius: theme.spacing(2),
   overflow: 'hidden',
-  boxShadow: theme.shadows[3],
+  boxShadow: 'none',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   [theme.breakpoints.down('md')]: {
-    minHeight: '200px', // resize container on smaller screens
+    minHeight: '200px', //TODO: resize container on smaller screens ------------------------------------------------
   },
 }))
 
+// component for section text and image
 function SectionText({ title, description, image, imageAlt }) {
   return (
     <Container maxWidth="lg">
       <Typography
-        variant="h3"
+        variant="h4"
         component="h2"
-        sx={{
-          textAlign: 'center',
-          mb: 5,
-          mt: -5,
-          fontWeight: 'bold',
-        }}
+        sx={{ textAlign: 'center', mb: 5, mt: -5, fontWeight: 'bold' }}
       >
         {title}
       </Typography>
@@ -86,9 +123,10 @@ function SectionText({ title, description, image, imageAlt }) {
   )
 }
 
-/**
- * language logo components for logos in compiler section
- */
+/********************************************************************************
+ * components for language logos in compiler section
+ ********************************************************************************/
+// component for sizing a single language logo
 const LanguageLogo = ({ src, alt, size }) => (
   <Box
     sx={{
@@ -101,6 +139,7 @@ const LanguageLogo = ({ src, alt, size }) => (
   </Box>
 )
 
+// component for all language logos
 const LanguageLogos = () => (
   <Container
     maxWidth="lg"
@@ -114,99 +153,105 @@ const LanguageLogos = () => (
       overflow: 'hidden',
     }}
   >
-    <LanguageLogo
-      src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg"
-      alt="Python"
-      size={{ xs: 50, sm: 80, md: 100 }}
-    />
-    <LanguageLogo
-      src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg"
-      alt="Java"
-      size={{ xs: 50, sm: 80, md: 100 }}
-    />
-
-    <LanguageLogo
-      src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg"
-      alt="C++"
-      size={{ xs: 50, sm: 80, md: 100 }}
-    />
-    <LanguageLogo
-      src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg"
-      alt="C"
-      size={{ xs: 50, sm: 80, md: 100 }}
-    />
-    <LanguageLogo
-      src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kotlin/kotlin-original.svg"
-      alt="Kotlin"
-      size={{ xs: 50, sm: 80, md: 100 }}
-    />
+    {[
+      {
+        src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg',
+        alt: 'Python',
+      },
+      {
+        src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg',
+        alt: 'Java',
+      },
+      {
+        src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg',
+        alt: 'C++',
+      },
+      {
+        src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg',
+        alt: 'C',
+      },
+      {
+        src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kotlin/kotlin-original.svg',
+        alt: 'Kotlin',
+      },
+    ].map((logo, index) => (
+      <LanguageLogo
+        key={index}
+        src={logo.src}
+        alt={logo.alt}
+        size={{ xs: 50, sm: 80, md: 100 }}
+      />
+    ))}
   </Container>
 )
 
-/**
+/********************************************************************************
  * timeline component for the landing page sections
- */
+ ********************************************************************************/
 const Timeline = ({ number, title }) => {
   return (
-    <TimelineSection>
-      <TimelineLineComponent>
-        <TimelineLine />
-        <TimelineCircle>{number}</TimelineCircle>
-      </TimelineLineComponent>
-      <TimelineTitle>{title}</TimelineTitle>
-    </TimelineSection>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        margin: '50px 0',
+      }}
+    >
+      <Box
+        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      >
+        {/* vertical line */}
+        <Box
+          sx={{
+            width: '2px',
+            height: '100px',
+            backgroundColor: '#d3d3d3',
+          }}
+        />
+        {/* circle with number */}
+        <Box
+          sx={{
+            width: '40px',
+            height: '40px',
+            background: 'linear-gradient(45deg, #0070f3, #ff4081)', //TODO: change color of this? -----------------------
+            color: 'white',
+            borderRadius: '50%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: '18px',
+            fontWeight: 'bold',
+          }}
+        >
+          {number}
+        </Box>
+      </Box>
+      {/* title in timeline */}
+      <Typography
+        variant="h6"
+        sx={{
+          fontSize: '24px',
+          background: 'linear-gradient(90deg, #0070f3, #ff4081)', //TODO: change color of this? -----------------------
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          textFillColor: 'transparent',
+          marginTop: '10px',
+          textAlign: 'center',
+        }}
+      >
+        {title}
+      </Typography>
+    </Box>
   )
 }
-
-// styling for the timeline component
-const TimelineSection = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  margin: '50px 0', // gap between section botton and top of line
-})
-
-const TimelineLineComponent = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-})
-
-const TimelineCircle = styled('div')({
-  width: '40px',
-  height: '40px',
-  background: 'linear-gradient(45deg, #0070f3, #ff4081)',
-  color: 'white',
-  borderRadius: '50%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  fontSize: '18px',
-  fontWeight: 'bold',
-})
-
-const TimelineLine = styled('div')({
-  width: '2px',
-  height: '100px',
-  backgroundColor: '#d3d3d3',
-})
-
-const TimelineTitle = styled('h2')({
-  fontSize: '24px',
-  background: 'linear-gradient(90deg, #0070f3, #ff4081)', // define the gradient
-  WebkitBackgroundClip: 'text', // clip the background to the text
-  WebkitTextFillColor: 'transparent', // make sure the text itself is transparent
-  backgroundClip: 'text', // ensure compatibility for non-Webkit browsers
-  textFillColor: 'transparent', // ensure compatibility for non-Webkit browsers
-  marginTop: '20px',
-  textAlign: 'center',
-})
 
 const LandingPage = ({ onGetStarted }) => {
   return (
     <>
-      {/* landing page header */}
-      <HeaderSection position="static">
+      {/* landing page navbar */}
+      <HeaderNavBar position="static">
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           <Box
             component="img"
@@ -221,6 +266,7 @@ const LandingPage = ({ onGetStarted }) => {
             }}
           />
           <Box>
+            {/* //TODO: connect buttons to backend? doesnt work on netlify (bc of ProtectedRoute?) ------------------*/}
             <Button color="inherit" onClick={() => onGetStarted('signIn')}>
               Login
             </Button>
@@ -229,7 +275,7 @@ const LandingPage = ({ onGetStarted }) => {
             </Button>
           </Box>
         </Toolbar>
-      </HeaderSection>
+      </HeaderNavBar>
 
       {/* hero section */}
       <Box
@@ -242,8 +288,8 @@ const LandingPage = ({ onGetStarted }) => {
         height="80vh"
         overflow="hidden"
       >
-        {/* background box for top of page */}
         <Box
+          // background for hero section
           position="relative"
           display="flex"
           flexDirection="column"
@@ -253,55 +299,19 @@ const LandingPage = ({ onGetStarted }) => {
           height="100%"
           overflow="hidden"
           sx={{
-            backgroundImage: `url(${grad15})`,
+            backgroundImage: `url(${grad12})`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'bottom 30% left 10%',
           }}
         >
-          {/* text in box */}
-          <Typography
-            variant="h1"
-            component="h1"
-            fontWeight="bold" // TODO: change font ?
-            fontFamily="Helvetica, Arial, sans-serif"
-            color="text.primary"
-            sx={{
-              position: 'relative',
-              zIndex: 2,
-            }}
-          >
-            Learn.
-          </Typography>
-          <Typography
-            variant="h1"
-            component="h1"
-            fontWeight="bold" // TODO: change font ?
-            fontFamily="Helvetica, Arial, sans-serif"
-            color="text.primary"
-            sx={{
-              position: 'relative',
-              zIndex: 2,
-            }}
-          >
-            Prepare.
-          </Typography>
-          <Typography
-            variant="h1"
-            component="h1"
-            fontWeight="bold" // TODO: change font ?
-            fontFamily="Helvetica, Arial, sans-serif"
-            color="text.primary"
-            sx={{
-              position: 'relative',
-              zIndex: 2,
-            }}
-          >
-            Win.
-          </Typography>
+          {/* text in hero section */}
+          <SectionHeaderText>Learn.</SectionHeaderText>
+          <SectionHeaderText>Prepare.</SectionHeaderText>
+          <SectionHeaderText>Win.</SectionHeaderText>
           <Button
             variant="contained"
-            color="secondary" //TODO: change color of this
+            color="secondary" //TODO: change color of this-------------------------------------------------------------
             size="large"
             onClick={() => onGetStarted('signUp')}
             sx={{
@@ -326,75 +336,42 @@ const LandingPage = ({ onGetStarted }) => {
               zIndex: 2,
             }}
           >
-            CodeCoach is a platform for competitive programming.
+            {/* //TODO: change this text? ---------------------------------------------------------------------------*/}
+            Your path to coding excellence begins here.
           </Typography>
         </Box>
       </Box>
 
       {/* features section */}
+      {/* //TODO: make container size responsive and have whitespace on left and right sides -----------------------*/}
       <Box>
-        <Box sx={{ bgcolor: 'background.default', py: 6 }}>
+        <Box
+          sx={{
+            bgcolor: 'background.default',
+            py: 0, //TODO: was 6 but change so it's visible on the landing page on all screen sizes -------------------
+          }}
+        >
           <Timeline number={1} title="Develop" />
           <SectionText
             title="Real-time Compiler"
             description={
               <>
-                <Typography
-                  variant="h6"
-                  component="h3"
-                  gutterBottom
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  Instant Feedback
-                </Typography>
-                <Typography
-                  variant="body1"
-                  component="p"
-                  gutterBottom
-                  sx={{ mb: 4 }}
-                >
+                <SectionBodyText>Instant Feedback</SectionBodyText>
+                <Typography variant="body1" sx={{ mb: 4 }}>
                   Get real-time results as soon as you run your code. No delays,
-                  no waiting—see the output of your work immediately.
+                  no waiting.
                 </Typography>
-                <Typography
-                  variant="h6"
-                  component="h3"
-                  gutterBottom
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  Optimized for Performance
+                <SectionBodyText>Optimized for Performance</SectionBodyText>
+                <Typography variant="body1" sx={{ mb: 4 }}>
+                  Experience lightning-fast code execution.
                 </Typography>
-                <Typography
-                  variant="body1"
-                  component="p"
-                  gutterBottom
-                  sx={{ mb: 4 }}
-                >
-                  Experience lightning-fast code execution, powered by a highly
-                  efficient backend, ensuring that your code runs smoothly
-                  without hiccups.
-                </Typography>
-                <Typography
-                  variant="h6"
-                  component="h3"
-                  gutterBottom
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  Cloud-Based Execution
-                </Typography>
-                <Typography
-                  variant="body1"
-                  component="p"
-                  gutterBottom
-                  sx={{ mb: 4 }}
-                >
-                  Your code runs in the cloud, meaning no local setup or
-                  configuration. Access your projects from anywhere and keep
-                  coding on the go.
+                <SectionBodyText>Cloud-Based Execution</SectionBodyText>
+                <Typography variant="body1" sx={{ mb: 4 }}>
+                  Your code runs in the cloud, meaning no local setup is needed.
                 </Typography>
               </>
             }
-            image={grad16}
+            image={pcImage}
             imageAlt="Real-time Compiler"
           />
           <LanguageLogos />
@@ -403,46 +380,18 @@ const LandingPage = ({ onGetStarted }) => {
             title="AI Assistant"
             description={
               <>
-                <Typography
-                  variant="h6"
-                  component="h3"
-                  gutterBottom
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  Smart Problem Breakdown
-                </Typography>
-                <Typography
-                  variant="body1"
-                  component="p"
-                  gutterBottom
-                  sx={{ mb: 4 }}
-                >
+                <SectionBodyText>Smart Problem Breakdown</SectionBodyText>
+                <Typography variant="body1" sx={{ mb: 4 }}>
                   Get intelligent insights that dissect complex coding
-                  challenges into manageable steps. No more struggling in
-                  silence—our assistant helps you tackle each problem with
-                  clarity.
+                  challenges.
                 </Typography>
-                <Typography
-                  variant="h6"
-                  component="h3"
-                  gutterBottom
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  Real-Time Code Review
-                </Typography>
-                <Typography
-                  variant="body1"
-                  component="p"
-                  gutterBottom
-                  sx={{ mb: 4 }}
-                >
-                  Write code, and receive instant feedback on best practices and
-                  potential improvements. Get suggestions as you go, helping you
-                  sharpen your skills with every keystroke.
+                <SectionBodyText>Real-Time Code Review</SectionBodyText>
+                <Typography variant="body1" sx={{ mb: 4 }}>
+                  Write code and receive instant feedback.
                 </Typography>
               </>
             }
-            image={grad16}
+            image={pcImage}
             imageAlt="AI Tutor"
           />
           <Timeline number={3} title="Connect" />
@@ -450,85 +399,48 @@ const LandingPage = ({ onGetStarted }) => {
             title="Community"
             description={
               <>
-                <Typography
-                  variant="h6"
-                  component="h3"
-                  gutterBottom
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  Collaborate with ACM Members
+                <SectionBodyText>Collaborate with ACM Members</SectionBodyText>
+                <Typography variant="body1" sx={{ mb: 4 }}>
+                  Share your solutions and learn from peers.
                 </Typography>
-                <Typography
-                  variant="body1"
-                  component="p"
-                  gutterBottom
-                  sx={{ mb: 4 }}
-                >
-                  Share your solutions and learn from your peers in a supportive
-                  environment.
-                </Typography>
-                <Typography
-                  variant="h6"
-                  component="h3"
-                  gutterBottom
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  Exclusive ACM Resources
-                </Typography>
-                <Typography
-                  variant="body1"
-                  component="p"
-                  gutterBottom
-                  sx={{ mb: 4 }}
-                >
-                  Gain access to a wealth of resources, from study groups to
-                  coding workshops, designed to help you stay ahead in the
-                  ever-evolving tech world.
+                <SectionBodyText>Exclusive ACM Resources</SectionBodyText>
+                <Typography variant="body1" sx={{ mb: 4 }}>
+                  Gain access to coding workshops and study groups.
                 </Typography>
               </>
             }
-            image={grad16}
+            image={pcImage}
             imageAlt="Community"
           />
 
-          {/* feature section */}
-          <Container sx={{ mt: 8, mb: 8 }}>
-            <Grid container spacing={4}>
-              <Grid item xs={12} md={4}>
-                <FeatureCard>
-                  <Typography variant="h5" component="h3" gutterBottom>
-                    Diverse Problem Set
-                  </Typography>
-                  <Typography>
-                    Access a wide range of coding challenges across various
-                    difficulty levels and topics.
-                  </Typography>
-                </FeatureCard>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <FeatureCard>
-                  <Typography variant="h5" component="h3" gutterBottom>
-                    Real-time Compiler
-                  </Typography>
-                  <Typography>
-                    Write, run, and test your code directly in the browser with
-                    our powerful compiler.
-                  </Typography>
-                </FeatureCard>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <FeatureCard>
-                  <Typography variant="h5" component="h3" gutterBottom>
-                    Track Your Progress
-                  </Typography>
-                  <Typography>
-                    Monitor your improvement and compare your solutions with
-                    others in the community.
-                  </Typography>
-                </FeatureCard>
-              </Grid>
-            </Grid>
-          </Container>
+          {/* final call to action */}
+          <Box
+            sx={{
+              backgroundColor: 'primary.main',
+              color: 'white',
+              py: 8,
+              textAlign: 'center',
+            }}
+          >
+            <Container>
+              <Typography variant="h4" component="h2" gutterBottom>
+                Ready to Improve Your Coding Skills?
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 4 }}>
+                Join CodeCoach today and get access to real-time feedback,
+                AI-driven problem solving, and a supportive community.
+              </Typography>
+              <Button
+                variant="contained"
+                color="secondary"
+                size="large"
+                onClick={() => onGetStarted('signUp')}
+                sx={{ fontSize: '1.2rem', px: 5, py: 2 }}
+              >
+                Get Started
+              </Button>
+            </Container>
+          </Box>
         </Box>
       </Box>
     </>
