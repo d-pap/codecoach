@@ -28,66 +28,63 @@ const theme = createTheme({
   },
   spacing: 8, // default spacing unit
   typography: {
-    fontFamily: 'Roboto, Helvetica, Arial, sans-serif', //TODO: update these fonts here and in index.css!
+    fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
     fontSize: 14, // default font size
-    fontWeightLight: 300,
-    fontWeightRegular: 400,
-    fontWeightMedium: 500,
-    fontWeightBold: 700,
+    lineHeight: 1.6,
+    letterSpacing: 0,
     h1: {
-      fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 700,
-      fontSize: '6rem',
-      lineHeight: 1.167, // default h1 line height
-      letterSpacing: '-0.01562em', // default h1 letter spacing
-      color: '#333333', //TODO: update color
+      fontSize: '2.027rem',
+      color: '#1A1A1A',
     },
     h2: {
-      fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-      fontWeight: 300,
-      fontSize: '3.75rem',
-      letterSpacing: '-0.00833em', // default h2 letter spacing
+      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
+      fontWeight: 500,
+      fontSize: '1.802rem',
+      color: '#333333',
     },
     h3: {
-      fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
-      fontSize: '3rem',
+      fontSize: '1.602rem',
+      color: '#333333',
     },
     h4: {
-      fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
-      fontSize: '2.125rem',
+      fontSize: '1.424rem',
+      color: '#333333',
     },
     h5: {
-      fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
-      fontSize: '1.5rem',
+      fontSize: '1.266rem',
+      color: '#333333',
     },
     h6: {
-      fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 500,
-      fontSize: '1.25rem',
+      fontSize: '1.125rem',
+      color: '#333333',
     },
     subtitle1: {
-      fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       fontSize: '1rem',
+      color: '#333333',
     },
     body1: {
-      fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       fontSize: '1rem',
-      lineHeight: 1.5, // default body text line height
-      letterSpacing: '0.00938em', // default body text letter spacing
-      color: '#333333',
+      color: '#333333 ',
     },
     body2: {
-      fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
-      fontSize: '0.875rem',
-      lineHeight: 1.43, // default body text line height
-      letterSpacing: '0.01071em', // default body text letter spacing
-      color: '#333333',
+      fontSize: '0.889rem',
+      color: '#888888 ',
     },
     code: {
       // for code output window Box
@@ -95,13 +92,12 @@ const theme = createTheme({
       fontSize: '14', // match ace editor font size
     },
     button: {
-      //TODO: update this
-      fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 500,
-      fontSize: '0.875rem',
-      lineHeight: 1.75, // default button text line height
-      letterSpacing: '0.02857em', // default button text letter spacing
-      textTransform: 'none', //! dont capitalize button text?
+      fontSize: '0.889rem',
+      lineHeight: 1.75,
+      letterSpacing: '0.02857em',
+      textTransform: 'none',
     },
   },
   components: {
@@ -125,7 +121,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 16, // select border radius
-          fontSize: '0.875rem',
+          fontSize: '0.889rem',
         },
       },
     },
@@ -140,7 +136,7 @@ const theme = createTheme({
       // search box on icpc page
       styleOverrides: {
         root: {
-          fontSize: '0.875rem',
+          fontSize: '0.889rem',
         },
       },
     },
@@ -156,7 +152,7 @@ const theme = createTheme({
         root: {
           color: '#333333',
           '& .MuiTypography-root': {
-            fontSize: '0.875rem',
+            fontSize: '0.889rem',
           },
         },
       },
@@ -164,7 +160,7 @@ const theme = createTheme({
     MuiMenuItem: {
       styleOverrides: {
         root: {
-          fontSize: '0.875rem',
+          fontSize: '0.889rem',
         },
       },
     },

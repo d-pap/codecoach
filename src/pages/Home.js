@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
@@ -7,17 +8,20 @@ import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
+import DoubleArrowRoundedIcon from '@mui/icons-material/DoubleArrowRounded'
 import { styled } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
 import { CardMedia } from '@mui/material'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import programmingCategory from '../images/programming-category.png'
 import interviewImage from '../images/interview-category.png'
 import icpcImage from '../images/icpc-category.png'
 import grad15 from '../images/Grad_15.png'
 import grad14 from '../images/Grad_14.png'
 import grad16 from '../images/Grad_16.png'
-import { Link } from 'react-router-dom'
+import competitionImage from '../images/competitions2.svg'
+import interviewsImage from '../images/interviewsbw.svg'
+import problemsImage from '../images/problemsbw.svg'
 
 const FeaturedCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -33,7 +37,6 @@ const FeaturedCard = styled(Card)(({ theme }) => ({
 export const Home = () => {
   const navigate = useNavigate()
 
-  // Dummy data for Featured Problems
   const featuredProblems = [
     {
       id: 1,
@@ -55,31 +58,6 @@ export const Home = () => {
       description:
         'Write a program to determine the total number of distinct frequency distributions that could produce a given Huffman encoding.',
       link: '/problems/66f6bfda282aa11c12a882af',
-    },
-  ]
-
-  // Dummy data for Recommended Resources
-  const recommendedResources = [
-    {
-      id: 1,
-      title: 'LeetCode',
-      description:
-        'Practice coding problems and prepare for technical interviews.',
-      link: 'https://leetcode.com/',
-    },
-    {
-      id: 2,
-      title: 'HackerRank',
-      description:
-        'Enhance your coding skills through challenges and competitions.',
-      link: 'https://www.hackerrank.com/',
-    },
-    {
-      id: 3,
-      title: 'Codeforces',
-      description:
-        'Participate in programming contests and improve your problem-solving skills.',
-      link: 'https://codeforces.com/',
     },
   ]
 
@@ -131,13 +109,11 @@ export const Home = () => {
             sx={{
               position: 'relative',
               zIndex: 2,
-              fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
+              fontSize: { xs: '1.2rem', sm: '1.5rem', md: '1.8rem' },
               textAlign: 'center',
             }}
           >
-            {' '}
-            {/* //TODO: change this text */}
-            Your AI-Powered Coding Coach
+            Level up your coding skills
           </Typography>
           <Typography
             variant="h4"
@@ -145,30 +121,28 @@ export const Home = () => {
             sx={{
               position: 'relative',
               zIndex: 2,
-              fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
+              fontSize: { xs: '1.2rem', sm: '1.5rem', md: '1.8rem' },
               textAlign: 'center',
             }}
           >
-            {' '}
-            {/* //TODO: change this text */}
-            SECOND LINE TEXT HERE
+            with AI-driven feedback
           </Typography>
           <Button
             variant="contained"
-            color="secondary"
+            color="primary"
             size="large"
-            onClick={() => navigate('/problems/icpc')}
+            onClick={() => navigate('/problems')}
             sx={{
-              mt: 4,
+              mt: 6,
               py: 1.5,
               px: 4,
-              fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' },
               fontWeight: 'bold',
+              fontSize: { xs: '0.8rem', sm: '1rem', md: '1.1rem' },
               position: 'relative',
               zIndex: 2,
             }}
           >
-            Get Started
+            Explore Problems <DoubleArrowRoundedIcon sx={{ ml: 0.5 }} />
           </Button>
         </Box>
       </Box>
@@ -189,23 +163,23 @@ export const Home = () => {
             variant="subtitle"
             sx={{
               mb: 2,
-              color: 'text.secondary', // TODO: change font and colors
+              color: 'text.secondary',
             }}
           >
             Check out upcoming competitions and start preparing today
           </Typography>
           <Link
-            to="/home" // TODO: change link type, link page, colors and arrow style - link to UMD ACM club page???
+            to="https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations" // TODO: link to UMD ACM club page???
             style={{
               display: 'flex',
               alignItems: 'center',
               marginBottom: '1rem',
-              color: 'your-secondary-color',
               textDecoration: 'none',
+              color: '', // TODO: change colors---------------------------------------------------------------
             }}
           >
-            Explore upcoming competitions{' '}
-            <ArrowForwardIcon style={{ marginLeft: '0.25rem' }} />
+            Explore upcoming competitions
+            <ArrowForwardRoundedIcon sx={{ ml: 0.5, fontSize: '1.25rem' }} />
           </Link>
 
           {/* Full-width card for main ICPC competition */}
@@ -218,9 +192,9 @@ export const Home = () => {
             }}
           >
             <CardMedia
-              component="img" // TODO: change to image of competition
+              component="img"
               sx={{ width: '60%', objectFit: 'contain' }}
-              image={grad15}
+              image={competitionImage}
               alt="Competition illustration"
             />
             <CardContent
@@ -233,19 +207,19 @@ export const Home = () => {
             >
               <Typography
                 variant="h6"
-                gutterBottom // TODO: change competition dates and names, add links?
+                gutterBottom // TODO: change competition dates and names, add links?-------------------------------
               >
                 ICPC Competition: July 5, 2025
               </Typography>
               <Typography
                 variant="h6"
-                gutterBottom // TODO: change competition dates and names, add links?
+                gutterBottom // TODO: change competition dates and names, add links?-------------------------------
               >
                 Google Code Jam: August 15, 2025
               </Typography>
               <Typography
                 variant="h6"
-                gutterBottom // TODO: change competition dates and names, add links?
+                gutterBottom // TODO: change competition dates and names, add links?-------------------------------
               >
                 Facebook Hacker Cup: September 1, 2025
               </Typography>
@@ -335,7 +309,7 @@ export const Home = () => {
             }}
           >
             Explore problems{' '}
-            <ArrowForwardIcon style={{ marginLeft: '0.25rem' }} />
+            <ArrowForwardRoundedIcon sx={{ ml: 0.5, fontSize: '1.25rem' }} />
           </Link>
 
           {/* full width card for problems */}
@@ -349,7 +323,7 @@ export const Home = () => {
             <CardMedia
               component="img" // TODO: change to image of an AI assistant?
               sx={{ width: '60%', objectFit: 'contain' }}
-              image={grad16}
+              image={problemsImage}
               alt="Problem illustration"
             />
             <CardContent
@@ -430,8 +404,8 @@ export const Home = () => {
               textDecoration: 'none',
             }}
           >
-            Explore Interview Prep{' '}
-            <ArrowForwardIcon style={{ marginLeft: '0.25rem' }} />
+            Explore interview prep{' '}
+            <ArrowForwardRoundedIcon sx={{ ml: 0.5, fontSize: '1.25rem' }} />
           </Link>
 
           {/* Full-width card */}
@@ -445,7 +419,7 @@ export const Home = () => {
             <CardMedia
               component="img" // TODO: change to image of interview prep
               sx={{ width: '60%', objectFit: 'contain' }}
-              image={grad14}
+              image={interviewsImage}
               alt="Interview illustration"
             />
             <CardContent
@@ -563,8 +537,12 @@ export const Home = () => {
             </Typography>
             <Button
               variant="contained"
-              color="secondary"
-              onClick={() => navigate('/home')}
+              color="primary"
+              onClick={() =>
+                navigate(
+                  'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations'
+                )
+              }
               sx={{ mt: 2 }}
             >
               Explore UMD ACM

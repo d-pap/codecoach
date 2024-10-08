@@ -21,6 +21,7 @@ import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
+import DoubleArrowRoundedIcon from '@mui/icons-material/DoubleArrowRounded'
 import { styled } from '@mui/system'
 import logo from '../images/logo-with-text.svg'
 import grad12 from '../images/Grad_12.png'
@@ -42,11 +43,11 @@ const HeaderNavBar = styled(AppBar)(({ theme }) => ({
  ********************************************************************************/
 // styling for header text in sections
 const sectionHeaderStyles = {
-  fontSize: '15vh',
   position: 'relative',
   zIndex: 2,
   fontWeight: 'bold',
   fontFamily: 'Helvetica, Arial, sans-serif',
+  fontSize: { xs: '10vh', sm: '12vh', md: '15vh' },
 }
 
 // styling for the text in sections
@@ -179,7 +180,7 @@ const LanguageLogos = () => (
         key={index}
         src={logo.src}
         alt={logo.alt}
-        size={{ xs: 50, sm: 80, md: 100 }}
+        size={{ xs: 30, sm: 30, md: 40 }}
       />
     ))}
   </Container>
@@ -231,7 +232,7 @@ const Timeline = ({ number, title }) => {
       <Typography
         variant="h6"
         sx={{
-          fontSize: '24px',
+          fontWeight: 'bold',
           background: 'linear-gradient(90deg, #0070f3, #ff4081)', //TODO: change color of this? -----------------------
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
@@ -311,11 +312,12 @@ const LandingPage = ({ onGetStarted }) => {
           <SectionHeaderText>Win.</SectionHeaderText>
           <Button
             variant="contained"
-            color="secondary" //TODO: change color of this-------------------------------------------------------------
+            color="primary"
             size="large"
             onClick={() => onGetStarted('signUp')}
             sx={{
               mt: 4,
+              mb: 2,
               py: 1.5,
               px: 4,
               fontSize: '1.1rem',
@@ -324,7 +326,7 @@ const LandingPage = ({ onGetStarted }) => {
               zIndex: 2,
             }}
           >
-            Get Started
+            Get Started <DoubleArrowRoundedIcon sx={{ ml: 1 }} />
           </Button>
           <Typography
             variant="h6"
@@ -414,33 +416,38 @@ const LandingPage = ({ onGetStarted }) => {
           />
 
           {/* final call to action */}
-          <Box
-            sx={{
-              backgroundColor: 'primary.main',
-              color: 'white',
-              py: 8,
-              textAlign: 'center',
-            }}
-          >
-            <Container>
-              <Typography variant="h4" component="h2" gutterBottom>
-                Ready to Improve Your Coding Skills?
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 4 }}>
-                Join CodeCoach today and get access to real-time feedback,
-                AI-driven problem solving, and a supportive community.
-              </Typography>
-              <Button
-                variant="contained"
-                color="secondary"
-                size="large"
-                onClick={() => onGetStarted('signUp')}
-                sx={{ fontSize: '1.2rem', px: 5, py: 2 }}
+          <Container>
+            <Box sx={{ mb: { xs: 4, sm: 6, md: 8 } }}>
+              <Box
+                sx={{
+                  mt: { xs: 4, sm: 6, md: 8 },
+                  bgcolor: 'grey.100',
+                  p: { xs: 3, sm: 4, md: 6 },
+                  borderRadius: 4,
+                  textAlign: 'center',
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
               >
-                Get Started
-              </Button>
-            </Container>
-          </Box>
+                <Typography variant="h5" gutterBottom>
+                  Ready to Improve Your Coding Skills?
+                </Typography>
+                <Typography variant="body1" gutterBottom sx={{ mb: 4 }}>
+                  Join CodeCoach today and get access to real-time feedback,
+                  AI-driven problem solving, and a supportive community.
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  onClick={() => onGetStarted('signUp')}
+                  sx={{ px: 5, py: 2 }}
+                >
+                  Get Started <DoubleArrowRoundedIcon sx={{ ml: 1 }} />
+                </Button>
+              </Box>
+            </Box>
+          </Container>
         </Box>
       </Box>
     </>
