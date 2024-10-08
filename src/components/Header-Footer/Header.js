@@ -134,7 +134,7 @@ const Header = () => {
                 <MenuItem component={NavLink} to="/" onClick={handleClose}>
                   Home
                 </MenuItem>
-                <MenuItem component={NavLink} to="/about" onClick={handleClose}>
+                <MenuItem component={NavLink} to="/Courses" onClick={handleClose}>
                   Courses
                 </MenuItem>
                 <MenuItem
@@ -175,7 +175,7 @@ const Header = () => {
                 </PageLinks>
                 <PageLinks
                   component={NavLink}
-                  to="/about"
+                  to="/Courses"
                   activeClassName="active"
                 >
                   Courses

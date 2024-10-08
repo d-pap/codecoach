@@ -13,80 +13,34 @@ import {
 import { useNavigate } from "react-router-dom";
 import ClassFormDialog from "../Courses/ClassFormDialog";
 import AddCourseContent from "../Courses/AddCourseContent"; // Import the AddCourseContent component
-import { createCourse, fetchCourse, deleteCourse } from "../../api";
+import { createCourse, fetchCourse, deleteCourse, getCoursesByUser } from "../../api copy"; // Use the actual functions from api copy.js
+import ICPC from "../problems/problem-types/ICPC";
 // Mock user context (replace or integrate with your actual auth context)
 const AuthContext = React.createContext({
   isAuthenticated: true,
   role: "teacher",
 });
 
-// Mock courses data
-const mockCourses = [
-  {
-    _id: "ObjectId('6f268421e0eb6cdef357c5')",
-    courseId: "COURSE-1001",
-    teacherId: ["6f26821a4e0eb6cdef357ca"],
-    problemIds: [
-      "667d8711ce0f91e40bd80686",
-      "667d904d6341ff374dd599bd",
-      "669a752a1537a66a2aa39f46",
-      "669a75851537a66a2aa39f47",
-      "66b90c716e6381bf6d9822f6",
-      "66b90ee2c21001500512f4f9",
-      "66b90eeac21001500512f4fa",
-      "66b90ef0c21001500512f4fb",
-      "66b90ef4c21001500512f4fc",
-      "66b90f08c21001500512f4fd"
-    ],
-    courseName: "ICPC Beginner"
-  },
-  {
-    _id: "ObjectId('6f268d8e1e0eb6cdef357c7')",
-    courseId: "COURSE-2002",
-    teacherId: ["6f26821a4e0eb6cdef357ca"],
-    problemIds: [
-      "667d8711ce0f91e40bd80686",
-      "667d904d6341ff374dd599bd",
-      "669a752a1537a66a2aa39f46",
-      "669a75851537a66a2aa39f47",
-      "66b90c716e6381bf6d9822f6",
-      "66b90ee2c21001500512f4f9",
-      "66b90eeac21001500512f4fa",
-      "66b90ef0c21001500512f4fb",
-      "66b90ef4c21001500512f4fc",
-      "66b90f08c21001500512f4fd"
-    ],
-    courseName: "ICPC Intermediate"
-  }
-];
-
-
-// StudentCourses use with API
-// const StudentCourses = () => {
-//   const { isAuthenticated, role } = useContext(AuthContext);
-//   const [dialogOpen, setDialogOpen] = useState(false);
-//   const [courses, setCourses] = useState([]);
-//   const [selectedCourse, setSelectedCourse] = useState(null);
-
-// mock student courses
+// StudentCourses using API
 const StudentCourses = () => {
   const { isAuthenticated, role } = useContext(AuthContext);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [courses, setCourses] = useState(mockCourses); // Initialize with mock courses
+  const [courses, setCourses] = useState([]); // Initialize with an empty array, real courses will be fetched
   const [selectedCourse, setSelectedCourse] = useState(null);
   const navigate = useNavigate(); // Use navigate hook to redirect to ICPC problems page
 
-  /// Fetch courses on component mount
+  /// Fetch user courses on component mount
   useEffect(() => {
-    const loadCourses = async () => {
+    const loadUserCourses = async () => {
       try {
-        const fetchedCourses = await fetchCourse(); // Fetch all courses (replace with real API call)
-        setCourses(fetchedCourses);
+        const userId = '667d848bce9f1e40bd80862'; // Replace with actual logged-in user's ID
+        const userCourses = await getCoursesByUser(userId); // Fetch courses for this user
+        setCourses(userCourses); // Set the fetched courses to state
       } catch (error) {
-        console.error("Error fetching courses:", error);
+        console.error("Error fetching user courses:", error);
       }
     };
-    loadCourses();
+    loadUserCourses();
   }, []);
 
   // Handle dialog open and close
@@ -94,47 +48,24 @@ const StudentCourses = () => {
   const handleDialogClose = () => setDialogOpen(false);
 
   // Handle course creation
-  // const handleCreateCourse = async (courseName) => {
-  //   const teacherId = ["66f28e141e0eb6cd6ef357ca"]; // Replace with actual teacher ID
-  //   try {
-  //     const newCourse = await createCourse(courseName, teacherId);
-  //     setCourses((prevCourses) => [...prevCourses, newCourse]); // Update the courses list with the new course
-  //   } catch (error) {
-  //     console.error("Error creating course:", error);
-  //   }
-  //   setDialogOpen(false); // Close dialog after creating course
-  // };
-
-  // Mock createCourse function
-  const mockCreateCourse = (courseName) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const newCourse = {
-          courseId: `COURSE-${Math.floor(Math.random() * 10000)}`, // Random course ID for the mock
-          name: courseName,
-        };
-        resolve(newCourse);
-      }, 1000); // Simulate network latency
-    });
-  };
-
-  // // Handle course creation (mocking the addition of a new course)
-  // const handleCreateCourse = async (courseName) => {
-  //   const newCourseId = `COURSE-${courses.length + 1001}`; // Generate a new courseId
-  //   const newCourse = {
-  //     courseId: newCourseId,
-  //     name: courseName,
-  //   };
-
-  // Handle course creation (using mockCreateCourse for this example)
   const handleCreateCourse = async (courseName) => {
     try {
-      const newCourse = await mockCreateCourse(courseName); // Simulate course creation
-      setCourses((prevCourses) => [...prevCourses, newCourse]); // Add new course to the list
+      const teacherId = '66f28e41e0ebc6def357ca'; // Replace with actual teacher ID
+      const newCourse = await createCourse(`COURSE-${Date.now()}`, teacherId, []); // Create new course
+      setCourses((prevCourses) => [...prevCourses, newCourse]); // Update the courses list with the new course
     } catch (error) {
       console.error("Error creating course:", error);
     }
     setDialogOpen(false); // Close dialog after creating course
+  };
+
+  const handleViewProblemsClick = (courseId) => {
+    const course = courses.find(c => c.courseId === courseId);
+    if (course && course.problemIds.length > 0) {
+      navigate('/icpc', { state: { problemIds: course.problemIds } }); // Pass problemIds to ICPC page
+    } else {
+      console.error("No problems found for this course.");
+    }
   };
 
   // Handle adding problems (navigate to AddCourseContent)
@@ -143,36 +74,29 @@ const StudentCourses = () => {
     setSelectedCourse(course); // Assuming course object contains all needed details
   };
 
-  // When rendering AddCourseContent, pass the selectedCourse as props
-  if (selectedCourse) {
-    return <AddCourseContent newClassName={selectedCourse.courseName} courseId={selectedCourse.courseId} />;
-  }
+  // Handle course updates
   const handleCourseUpdated = (updatedCourse) => {
     const updatedCourses = courses.map(course =>
       course.courseId === updatedCourse.courseId ? updatedCourse : course
     );
     setCourses(updatedCourses);
+    setSelectedCourse(null); // After update, return to the course list
   };
-
-  if (selectedCourse) {
-    return <AddCourseContent
-      newClassName={selectedCourse.courseName}
-      courseId={selectedCourse.courseId}
-      onCourseUpdated={handleCourseUpdated}
-    />;
-  }
 
   // Handle course deletion
-  const handleDeleteCourse = (courseId) => {
-    console.log(`Deleting course with ID: ${courseId}`); // Debug: check which course is being deleted
-    const updatedCourses = courses.filter((course) => course.courseId !== courseId);
-    console.log('Updated courses list:', updatedCourses); // Debug: check the updated course list
-    setCourses(updatedCourses); // Update the state with the new courses list
+  const handleDeleteCourse = async (courseId) => {
+    try {
+      await deleteCourse(courseId); // Call the API to delete the course
+      const updatedCourses = courses.filter((course) => course.courseId !== courseId);
+      setCourses(updatedCourses); // Update the state with the new courses list
+    } catch (error) {
+      console.error("Error deleting course:", error);
+    }
   };
 
+  // Render AddCourseContent component if a course is selected
   if (selectedCourse) {
-    // Conditionally render AddCourseContent if a course is selected
-    return <AddCourseContent newClassName={selectedCourse} />;
+    return <AddCourseContent newClassName={selectedCourse.courseName} courseId={selectedCourse.courseId} onCourseUpdated={handleCourseUpdated} />;
   }
 
   return (
@@ -183,7 +107,7 @@ const StudentCourses = () => {
           {courses.map((course, index) => (
             <Card key={index} sx={{ mb: 2 }}>
               <CardContent>
-                <Typography variant="h5">{course.name || course.courseId}</Typography>
+                <Typography variant="h5">{course.courseName || course.courseId}</Typography>
                 <Typography variant="body2">Students: {course.students || 0}</Typography>
                 <Button
                   variant="outlined"
@@ -191,6 +115,13 @@ const StudentCourses = () => {
                   onClick={() => handleAddProblemsClick(course.courseId)}
                 >
                   Add problems
+                </Button>
+                <Button
+                  variant="outlined"
+                  sx={{ mt: 0.5 }}
+                  onClick={() => handleViewProblemsClick(course.courseId)} // Add this button to view problems
+                >
+                  View problems
                 </Button>
                 <Button variant="outlined" sx={{ mt: 0.5 }}>
                   Invite student

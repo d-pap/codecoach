@@ -12,7 +12,7 @@ import {
   Pagination,
   Stack,
 } from '@mui/material';
-import { addProblemID, fetchCourse } from '../../api copy'; // Updated imports to include fetchCourse and fetchProblemById
+import { addProblemID, fetchCourse } from '../../api copy'; // Updated imports to include fetchCourse
 import { fetchProblems, fetchProblemById } from '../../api'; 
 import { useNavigate } from 'react-router-dom'; 
 
@@ -29,7 +29,7 @@ const AddCourseContent = ({ newClassName, courseId }) => {
 
   const navigate = useNavigate(); 
 
-  // Load problems using the actual API
+  // Load problems and course problems using the actual API
   useEffect(() => {
     async function loadProblems() {
       try {
@@ -38,12 +38,25 @@ const AddCourseContent = ({ newClassName, courseId }) => {
         setFilteredProblems(data);
       } catch (err) {
         setError('Error fetching problems');
-      } finally {
-        setLoading(false);
       }
     }
+
+    async function loadCourseProblems() {
+      try {
+        const course = await fetchCourse(courseId); // Fetch the course with problem IDs
+        const problemDetails = await Promise.all(
+          course.problemIds.map(id => fetchProblemById(id)) // Fetch problem details by ID
+        );
+        setCourseProblems(problemDetails); // Store the fetched problem details
+        setSelectedProblems(course.problemIds); // Set selected problems from course
+      } catch (err) {
+        setError('Error fetching course problems');
+      }
+    }
+
     loadProblems();
-  }, []);
+    loadCourseProblems();
+  }, [courseId]); // Load course problems when courseId changes
 
   // Filter the problems based on the search term
   useEffect(() => {
@@ -70,7 +83,7 @@ const AddCourseContent = ({ newClassName, courseId }) => {
     for (const problemId of selectedProblems) {
       try {
         console.log(`Attempting to add problem ${problemId} to course ${courseId}`);
-        await addProblemID(courseId, problemId); // Add problem using mock API
+        await addProblemID(courseId, problemId); // Add problem using API
       } catch (error) {
         console.error(`Error adding problem ${problemId}:`, error.message);
         errors.push(`Problem ${problemId} failed to add: ${error.message}`);
@@ -82,7 +95,7 @@ const AddCourseContent = ({ newClassName, courseId }) => {
     } else {
       console.log('All selected problems added successfully!');
       // Fetch the updated course after adding problems
-      await fetchCourseProblems();
+      await fetchCourseProblems(); // Fetch and reload course problems
     }
   };
 
@@ -157,7 +170,7 @@ const AddCourseContent = ({ newClassName, courseId }) => {
         Submit Selections
       </Button>
 
-      {/* Display the list of added problems after submission */}
+      {/* Display the list of added problems */}
       {courseProblems.length > 0 && (
         <Box sx={{ mt: 4 }}>
           <Typography variant="h6">Added Problems for {newClassName}:</Typography>
