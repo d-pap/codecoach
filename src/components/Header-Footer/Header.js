@@ -1,20 +1,17 @@
 import React from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { Auth } from 'aws-amplify'
-import {
-  AppBar,
-  Toolbar,
-  Button,
-  IconButton,
-  Menu,
-  MenuItem,
-  useMediaQuery,
-  useTheme,
-  Box,
-  Divider,
-  ListItemText,
-  ListItemIcon,
-} from '@mui/material'
+import { useMediaQuery, useTheme } from '@mui/material'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemIcon from '@mui/material/ListItemIcon'
 import { styled, alpha } from '@mui/material/styles'
 import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircle from '@mui/icons-material/AccountCircle'
@@ -128,19 +125,23 @@ const Header = () => {
                 <MenuItem component={NavLink} to="/" onClick={handleClose}>
                   Home
                 </MenuItem>
-                <MenuItem component={NavLink} to="/about" onClick={handleClose}>
+                <MenuItem
+                  component={NavLink}
+                  to="/courses"
+                  onClick={handleClose}
+                >
                   Courses
                 </MenuItem>
                 <MenuItem
                   component={NavLink}
-                  to="/problems/icpc"
+                  to="/problems"
                   onClick={handleClose}
                 >
                   Problems
                 </MenuItem>
                 <MenuItem
                   component={NavLink}
-                  to="/problems/interview"
+                  to="/interviews"
                   onClick={handleClose}
                 >
                   Interview Prep
@@ -164,26 +165,26 @@ const Header = () => {
                   alignItems: 'center',
                 }}
               >
-                <PageLinks component={NavLink} to="/" activeClassName="active">
+                <PageLinks component={NavLink} to="/home" activeClassName="active">
                   Home
                 </PageLinks>
                 <PageLinks
                   component={NavLink}
-                  to="/about"
+                  to="/courses"
                   activeClassName="active"
                 >
                   Courses
                 </PageLinks>
                 <PageLinks
                   component={NavLink}
-                  to="/problems/icpc"
+                  to="/problems"
                   activeClassName="active"
                 >
                   Problems
                 </PageLinks>
                 <PageLinks
                   component={NavLink}
-                  to="/problems/interview"
+                  to="/interviews"
                   activeClassName="active"
                 >
                   Interview Prep

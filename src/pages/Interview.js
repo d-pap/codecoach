@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { styled, alpha } from '@mui/material/styles'
@@ -16,11 +16,13 @@ import InputBase from '@mui/material/InputBase'
 import AppBar from '@mui/material/AppBar'
 import SearchIcon from '@mui/icons-material/Search'
 import { fetchProblems } from '../../../api'
-import { getSubregions } from '../../../components/problems/subregions'
-import { ICPCFilter } from '../../../components/problems/problem-components/ICPCFilter'
 import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
-
-const subregions = getSubregions()
+import InterviewFilter from '../../../components/problems/problem-components/InterviewFilter'
+import {
+  getCompanies,
+  getTopics,
+  getDifficulties,
+} from '../../../components/problems/InterviewOptions'
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
   backgroundColor: 'transparent',
@@ -82,17 +84,18 @@ const StyledSelect = styled(Select)(({ theme }) => ({
 }))
 
 const FilterToolbar = ({
-  region,
-  subregion,
-  year,
+  difficulty,
+  company,
+  topic,
   searchQuery,
-  onRegionChange,
-  onSubregionChange,
-  onYearChange,
+  onDifficultyChange,
+  onCompanyChange,
+  onTopicChange,
   onSearchChange,
+  difficulties,
+  companies,
+  topics,
 }) => {
-  const subregionOptions = region !== 'all' ? subregions[region] || [] : []
-
   const menuProps = {
     PaperProps: {
       style: {
@@ -110,8 +113,8 @@ const FilterToolbar = ({
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <StyledSelect
-              value={region}
-              onChange={onRegionChange}
+              value={difficulty}
+              onChange={onDifficultyChange}
               sx={{
                 height: '40px',
                 minWidth: '150px',
@@ -119,41 +122,38 @@ const FilterToolbar = ({
               }}
               MenuProps={menuProps}
             >
-              <MenuItem value="all">All Regions</MenuItem>
-              {Object.keys(subregions).map((regionKey) => (
-                <MenuItem key={regionKey} value={regionKey}>
-                  {regionKey}
+              <MenuItem value="all">All Difficulties</MenuItem>
+              {difficulties.map((difficultyOption) => (
+                <MenuItem key={difficultyOption} value={difficultyOption}>
+                  {difficultyOption}
                 </MenuItem>
               ))}
             </StyledSelect>
             <StyledSelect
-              value={subregion}
-              onChange={onSubregionChange}
+              value={company}
+              onChange={onCompanyChange}
               sx={{ height: '40px', minWidth: '150px', padding: '0 10px' }}
               MenuProps={menuProps}
             >
-              <MenuItem value="all">All Subregions</MenuItem>
-              {subregionOptions.map((subregionItem) => (
-                <MenuItem key={subregionItem} value={subregionItem}>
-                  {subregionItem}
+              <MenuItem value="all">All Companies</MenuItem>
+              {companies.map((companyOption) => (
+                <MenuItem key={companyOption} value={companyOption}>
+                  {companyOption}
                 </MenuItem>
               ))}
             </StyledSelect>
             <StyledSelect
-              value={year}
-              onChange={onYearChange}
+              value={topic}
+              onChange={onTopicChange}
               sx={{ height: '40px', minWidth: '150px', padding: '0 10px' }}
               MenuProps={menuProps}
             >
-              <MenuItem value="all">All Years</MenuItem>
-              {Array.from({ length: 2025 - 2008 + 1 }, (_, index) => {
-                const year = 2025 - index
-                return (
-                  <MenuItem key={year} value={`${year}`}>
-                    {year}
-                  </MenuItem>
-                )
-              })}
+              <MenuItem value="all">All Topics</MenuItem>
+              {topics.map((topicOption) => (
+                <MenuItem key={topicOption} value={topicOption}>
+                  {topicOption}
+                </MenuItem>
+              ))}
             </StyledSelect>
           </Box>
           <Search>
@@ -183,9 +183,17 @@ const SkeletonProblemList = () => (
         align="center"
         sx={{ mb: 2 }}
       >
-        ICPC Problems
+        Interview Questions
       </Typography>
-      <FilterToolbar region="all" subregion="all" year="all" />
+      <FilterToolbar
+        difficulty="all"
+        company="all"
+        topic="all"
+        searchQuery=""
+        difficulties={[]}
+        companies={[]}
+        topics={[]}
+      />
       <Grid
         container
         spacing={0}
@@ -225,7 +233,7 @@ const SkeletonProblemList = () => (
   </Box>
 )
 
-function ICPC() {
+function Interview() {
   const location = useLocation()
   const problemsFromLocation = location.state?.problems
 
@@ -235,68 +243,84 @@ function ICPC() {
     isError,
     error,
   } = useQuery({
-    queryKey: ['problems'], // Keeping the same query key
+    queryKey: ['problems', 'interview'],
     queryFn: fetchProblems,
     staleTime: 1000 * 60 * 5,
     initialData: problemsFromLocation,
   })
 
-  const [region, setRegion] = useState('all')
-  const [subregion, setSubregion] = useState('all')
-  const [year, setYear] = useState('all')
+  const [difficulty, setDifficulty] = useState('all')
+  const [company, setCompany] = useState('all')
+  const [topic, setTopic] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
+  const [difficulties, setDifficulties] = useState([])
+  const [companies, setCompanies] = useState([])
+  const [topics, setTopics] = useState([])
   const problemsPerPage = 10
 
-  // Filter problems by type 'icpc' first, then apply other filters
+  // Fetch the predefined lists for difficulties, companies, and topics
+  useEffect(() => {
+    const fetchFilterOptions = async () => {
+      const [difficultiesList, companiesList, topicsList] = await Promise.all([
+        getDifficulties(),
+        getCompanies(),
+        getTopics(),
+      ])
+      setDifficulties(difficultiesList)
+      setCompanies(companiesList)
+      setTopics(topicsList)
+    }
+
+    fetchFilterOptions()
+  }, [])
+
+  // Ensure only problems of type 'interview' are considered
+  const interviewProblems = useMemo(() => {
+    return problems.filter(
+      (problem) => problem.type && problem.type.toLowerCase() === 'interview'
+    )
+  }, [problems])
+
+  // Filter problems using InterviewFilter
   const filteredProblems = useMemo(() => {
-    // Step 1: Filter by type 'icpc'
-    const icpcProblems = problems.filter(
-      (problem) => problem.type && problem.type.toLowerCase() === 'icpc'
+    let filtered = InterviewFilter(
+      interviewProblems,
+      difficulty,
+      company,
+      topic
     )
 
-    // Step 2: Apply additional filters (region, subregion, year)
-    const regionFiltered = ICPCFilter(icpcProblems, region, subregion, year)
+    // Apply search query
+    if (searchQuery.trim() !== '') {
+      const query = searchQuery.toLowerCase()
+      filtered = filtered.filter((problem) => {
+        return (
+          (problem.title && problem.title.toLowerCase().includes(query)) ||
+          (problem.description &&
+            problem.description.toLowerCase().includes(query)) ||
+          (problem.hint && problem.hint.toLowerCase().includes(query)) ||
+          (problem.company && problem.company.toLowerCase().includes(query)) ||
+          (problem.topic && problem.topic.toLowerCase().includes(query))
+        )
+      })
+    }
 
-    // Step 3: Apply search query
-    const searchFiltered = regionFiltered.filter(
-      (problem) =>
-        (problem.title &&
-          problem.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (problem.description &&
-          problem.description
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase())) ||
-        (problem.contestYear &&
-          problem.contestYear
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase())) ||
-        (problem.contestRegion &&
-          problem.contestRegion
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase())) ||
-        (problem.contestSubRegion &&
-          problem.contestSubRegion
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()))
-    )
+    return filtered
+  }, [interviewProblems, difficulty, company, topic, searchQuery])
 
-    return searchFiltered
-  }, [problems, region, subregion, year, searchQuery])
-
-  const handleRegionChange = (event) => {
-    setRegion(event.target.value)
-    setSubregion('all')
+  const handleDifficultyChange = (event) => {
+    setDifficulty(event.target.value)
     setCurrentPage(1)
   }
 
-  const handleSubregionChange = (event) => {
-    setSubregion(event.target.value)
+  const handleCompanyChange = (event) => {
+    setCompany(event.target.value)
     setCurrentPage(1)
   }
 
-  const handleYearChange = (event) => {
-    setYear(event.target.value)
+  const handleTopicChange = (event) => {
+    setTopic(event.target.value)
     setCurrentPage(1)
   }
 
@@ -338,17 +362,20 @@ function ICPC() {
           align="center"
           sx={{ mb: 2 }}
         >
-          ICPC Problems
+          Interview Questions
         </Typography>
         <FilterToolbar
-          region={region}
-          subregion={subregion}
-          year={year}
+          difficulty={difficulty}
+          company={company}
+          topic={topic}
           searchQuery={searchQuery}
-          onRegionChange={handleRegionChange}
-          onSubregionChange={handleSubregionChange}
-          onYearChange={handleYearChange}
+          onDifficultyChange={handleDifficultyChange}
+          onCompanyChange={handleCompanyChange}
+          onTopicChange={handleTopicChange}
           onSearchChange={handleSearchChange}
+          difficulties={difficulties}
+          companies={companies}
+          topics={topics}
         />
         <Grid
           container
@@ -391,7 +418,7 @@ function ICPC() {
                 ))}
               </Stack>
             ) : (
-              <Typography variant="body1">No problems found</Typography>
+              <Typography variant="body1">No questions found</Typography>
             )}
             <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
               <Pagination
@@ -408,4 +435,4 @@ function ICPC() {
   )
 }
 
-export default ICPC
+export default Interview

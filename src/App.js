@@ -4,7 +4,6 @@
  * tie everything together like layout, routes, etc.
  */
 import React, { useEffect, useState, Suspense, lazy } from 'react'
-import './App.css'
 import { Amplify, Auth } from 'aws-amplify'
 import '@aws-amplify/ui-react/styles.css'
 import {
@@ -23,17 +22,16 @@ import ProtectedRoute from './components/auth/ProtectedRoute'
 import theme from './theme'
 import AuthModal from './components/auth/AuthModal'
 import CenteredLoader from './components/utility/CenteredLoader'
-import ICPC from './pages/problems/problem-types/ICPC'
-import Problems from './pages/nav/problems'
-import ProblemDetail from './pages/problems/problemDetail'
+import ICPC from './pages/Problems'
+import ProblemDetail from './pages/ProblemSolving'
+import './App.css'
+import NotFound from './pages/NotFound' // Add this import
 
 // Dynamic Imports
 const LandingPage = lazy(() => import('./pages/LandingPage'))
-const Home = lazy(() => import('./pages'))
-const About = lazy(() => import('./pages/nav/about'))
-//const Problems = lazy(() => import('./pages/nav/problems'))
-//const ProblemDetail = lazy(() => import('./pages/problems/problemDetail'))
-const ManageProblemsPage = lazy(() => import('./pages/nav/manageProblems'))
+const Home = lazy(() => import('./pages/Home'))
+const Courses = lazy(() => import('./pages/Courses'))
+const ManageProblemsPage = lazy(() => import('./pages/problems/ManageProblems'))
 const SingleFormLayout = lazy(
   () => import('./pages/problems/add-problems/ICPCSingleForm')
 )
@@ -43,7 +41,8 @@ const ICPCMultipleForm = lazy(
 const InterviewForm = lazy(
   () => import('./pages/problems/add-problems/InterviewForm')
 )
-const Interview = lazy(() => import('./pages/problems/problem-types/Interview'))
+
+const Interview = lazy(() => import('./pages/Interview'))
 
 Amplify.configure(awsExports)
 
@@ -135,20 +134,12 @@ function App() {
                 }
               />
               <Route
-                path="/about"
+                path="/courses"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <Suspense fallback={<CenteredLoader />}>
-                      <About />
+                      <Courses />
                     </Suspense>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/problems"
-                element={
-                  <ProtectedRoute isAuthenticated={isAuthenticated}>
-                    <Problems />
                   </ProtectedRoute>
                 }
               />
@@ -201,7 +192,7 @@ function App() {
                 }
               />
               <Route
-                path="/problems/icpc"
+                path="/problems"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <ICPC />
@@ -209,7 +200,7 @@ function App() {
                 }
               />
               <Route
-                path="/problems/interview"
+                path="/interviews"
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <Suspense fallback={<CenteredLoader />}>
@@ -218,6 +209,8 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              {/* Add this catch-all route at the end */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </Box>
           <Footer />
