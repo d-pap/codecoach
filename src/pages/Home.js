@@ -157,7 +157,7 @@ export const Home = () => {
             variant="contained"
             color="secondary"
             size="large"
-            onClick={() => navigate('/problems/icpc')}
+            onClick={() => navigate('/problems')}
             sx={{
               mt: 4,
               py: 1.5,

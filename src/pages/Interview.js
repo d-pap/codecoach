@@ -15,14 +15,14 @@ import Typography from '@mui/material/Typography'
 import InputBase from '@mui/material/InputBase'
 import AppBar from '@mui/material/AppBar'
 import SearchIcon from '@mui/icons-material/Search'
-import { fetchProblems } from '../../../api'
-import ProblemCardLayout from '../../../components/problems/ProblemCardLayout'
-import InterviewFilter from '../../../components/problems/problem-components/InterviewFilter'
+import { fetchProblems } from '../api'
+import InterviewCardLayout from '../components/problems/InterviewCardLayout'
+import InterviewFilter from '../components/problems/problem-components/InterviewFilter'
 import {
   getCompanies,
   getTopics,
   getDifficulties,
-} from '../../../components/problems/InterviewOptions'
+} from '../components/problems/InterviewOptions'
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
   backgroundColor: 'transparent',
@@ -243,7 +243,7 @@ function Interview() {
     isError,
     error,
   } = useQuery({
-    queryKey: ['problems', 'interview'],
+    queryKey: ['problems'],
     queryFn: fetchProblems,
     staleTime: 1000 * 60 * 5,
     initialData: problemsFromLocation,
@@ -414,7 +414,7 @@ function Interview() {
             {currentProblems.length > 0 ? (
               <Stack spacing={2}>
                 {currentProblems.map((problem) => (
-                  <ProblemCardLayout key={problem._id} problem={problem} />
+                  <InterviewCardLayout key={problem._id} interview={problem} />
                 ))}
               </Stack>
             ) : (
