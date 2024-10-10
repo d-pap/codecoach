@@ -331,7 +331,7 @@ export const Home = () => {
           title: 'Behavioral Questions',
           description:
             'This is some example text content for the first card. You can add more details about competitions or related information here.',
-          link: 'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations',
+          link: 'https://umdearborn.edu/career-services/job-and-internship-prep/interviewing',
         },
         {
           image: '/path-to-image2.jpg',
@@ -339,7 +339,7 @@ export const Home = () => {
           title: 'Resume Resources',
           description:
             'This is some example text content for the second card. You can add more details about competitions or related information here.',
-          link: 'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations',
+          link: 'https://umdearborn.edu/career-services/job-and-internship-prep/resumes-and-cover-letters',
         },
       ],
     },
