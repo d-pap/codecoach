@@ -5,6 +5,7 @@
  */
 import React, { useEffect, useState, Suspense, lazy } from 'react'
 import { Amplify, Auth } from 'aws-amplify'
+// eslint-disable-next-line
 import '@aws-amplify/ui-react/styles.css'
 import {
   BrowserRouter as Router,
@@ -14,7 +15,6 @@ import {
 } from 'react-router-dom'
 import { ThemeProvider } from '@mui/material'
 import Box from '@mui/material/Box'
-import LinearProgress from '@mui/material/LinearProgress'
 import awsExports from './aws-exports'
 import Header from './components/Header-Footer/Header'
 import Footer from './components/Header-Footer/Footer'
@@ -85,7 +85,7 @@ function App() {
   }
 
   if (isLoading) {
-    return <LinearProgress />
+    return <CenteredLoader />
   }
 
   return (

@@ -12,16 +12,10 @@ const theme = createTheme({
       paper: '#fffffe', // card background, etc.
     },
     text: {
-      //primary: '#333333',
       primary: '#0f172a',
       white: '#f0f0f0',
     },
     divider: '#0000001f',
-    caution: {
-      // yellow card on home page
-      main: '#856404', // font color
-      bg: '#FFF3CD',
-    },
   },
   shape: {
     borderRadius: 8, // border radius
@@ -167,5 +161,4 @@ const theme = createTheme({
   },
 })
 
-// export theme:
 export default theme

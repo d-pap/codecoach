@@ -8,7 +8,10 @@
  */
 
 import React from 'react'
+import { useMediaQuery } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 import { Link } from 'react-router-dom'
+import { Link as MuiLink } from '@mui/material'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
@@ -22,11 +25,6 @@ import { styled } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
 import { CardMedia } from '@mui/material'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
-import programmingCategory from '../images/programming-category.png'
-import interviewImage from '../images/interview-category.png'
-import icpcImage from '../images/icpc-category.png'
-import grad15 from '../images/Grad_15.png'
-import grad14 from '../images/Grad_14.png'
 import grad16 from '../images/Grad_16.png'
 import competitionImage from '../images/competitions2.svg'
 import interviewsImage from '../images/interviewsbw.svg'
@@ -89,24 +87,82 @@ const FullWidthCard = ({ image, alt, content }) => (
   </Card>
 )
 
-const TwoColumnCards = ({ cards }) => (
+/**
+ * two column cards component
+ */
+const TwoColumnCards = ({ cards }) => {
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+
+  return (
+    <Grid container spacing={4}>
+      {cards.map((card, index) => (
+        <Grid item xs={12} sm={6} key={index}>
+          <MuiLink
+            href={card.link}
+            underline="none"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Card
+              sx={{
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                transition:
+                  'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+                '&:hover': { transform: 'translateY(-5px)', boxShadow: 6 },
+              }}
+            >
+              {!isSmallScreen && (
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={card.image}
+                  alt={card.alt}
+                />
+              )}
+              <CardContent sx={{ flexGrow: 1 }}>
+                <Typography variant="h6" gutterBottom>
+                  {card.title}
+                </Typography>
+                <Typography variant="body2">{card.description}</Typography>
+              </CardContent>
+            </Card>
+          </MuiLink>
+        </Grid>
+      ))}
+    </Grid>
+  )
+}
+
+/**
+ * featured problems grid component
+ */
+const FeaturedProblemsGrid = ({ problems }) => (
   <Grid container spacing={4}>
-    {cards.map((card, index) => (
-      <Grid item xs={12} sm={6} key={index}>
-        <Card>
-          <CardMedia
-            component="img"
-            height="200"
-            image={card.image}
-            alt={card.alt}
-          />
-          <CardContent>
+    {problems.map((problem) => (
+      <Grid item xs={12} sm={6} md={4} key={problem.id}>
+        <FeaturedCard elevation={3}>
+          <CardContent sx={{ flexGrow: 1 }}>
             <Typography variant="h6" gutterBottom>
-              {card.title}
+              {problem.title}
             </Typography>
-            <Typography variant="body2">{card.description}</Typography>
+            <Typography variant="body2" color="text.secondary">
+              {problem.description}
+            </Typography>
           </CardContent>
-        </Card>
+          <CardActions>
+            <Button
+              variant="contained"
+              size="small"
+              color="primary"
+              href={problem.link}
+            >
+              Solve Now
+            </Button>
+          </CardActions>
+        </FeaturedCard>
       </Grid>
     ))}
   </Grid>
@@ -122,6 +178,7 @@ const Section = ({
   linkText,
   fullWidthCard,
   twoColumnCards,
+  featuredProblems,
 }) => (
   <Box sx={{ mb: { xs: 4, sm: 6, md: 8 }, mt: { xs: 4, sm: 6, md: 8 } }}>
     <SectionTitle
@@ -132,6 +189,7 @@ const Section = ({
     />
     {fullWidthCard && <FullWidthCard {...fullWidthCard} />}
     {twoColumnCards && <TwoColumnCards cards={twoColumnCards} />}
+    {featuredProblems && <FeaturedProblemsGrid problems={featuredProblems} />}
   </Box>
 )
 
@@ -189,6 +247,7 @@ export const Home = () => {
           title: 'How to Sign Up',
           description:
             'This is some example text content for the first card. You can add more details about competitions or related information here.',
+          link: 'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations',
         },
         {
           image: '/path-to-image2.jpg',
@@ -196,6 +255,7 @@ export const Home = () => {
           title: 'How to Prepare',
           description:
             'This is some example text content for the second card. You can add more details about competitions or related information here.',
+          link: 'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations',
         },
       ],
     },
@@ -219,6 +279,29 @@ export const Home = () => {
           </>
         ),
       },
+      featuredProblems: [
+        {
+          id: 1,
+          title: 'Password Suspects',
+          description:
+            'Write a program to determine the number of possible passwords based on known substrings and print them if there are at most 42.',
+          link: '/problems/66f6bfda52d0bd7693b47090',
+        },
+        {
+          id: 2,
+          title: 'Net Loss',
+          description:
+            'Help Rose find the optimal coefficients for a polygonal approximation of polynomials given memory constraints.',
+          link: '/problems/66f6bfdad8ac88fa6f3f31b0',
+        },
+        {
+          id: 3,
+          title: 'Huffman Codes',
+          description:
+            'Write a program to determine the total number of distinct frequency distributions that could produce a given Huffman encoding.',
+          link: '/problems/66f6bfda282aa11c12a882af',
+        },
+      ],
     },
     {
       title: 'Interview Prep',
@@ -248,6 +331,7 @@ export const Home = () => {
           title: 'Behavioral Questions',
           description:
             'This is some example text content for the first card. You can add more details about competitions or related information here.',
+          link: 'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations',
         },
         {
           image: '/path-to-image2.jpg',
@@ -255,35 +339,9 @@ export const Home = () => {
           title: 'Resume Resources',
           description:
             'This is some example text content for the second card. You can add more details about competitions or related information here.',
+          link: 'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations',
         },
       ],
-    },
-  ]
-
-  /**
-   * featured problems
-   */
-  const featuredProblems = [
-    {
-      id: 1,
-      title: 'Password Suspects',
-      description:
-        'Write a program to determine the number of possible passwords based on known substrings and print them if there are at most 42.',
-      link: '/problems/66f6bfda52d0bd7693b47090',
-    },
-    {
-      id: 2,
-      title: 'Net Loss',
-      description:
-        'Help Rose find the optimal coefficients for a polygonal approximation of polynomials given memory constraints.',
-      link: '/problems/66f6bfdad8ac88fa6f3f31b0',
-    },
-    {
-      id: 3,
-      title: 'Huffman Codes',
-      description:
-        'Write a program to determine the total number of distinct frequency distributions that could produce a given Huffman encoding.',
-      link: '/problems/66f6bfda282aa11c12a882af',
     },
   ]
 
@@ -372,34 +430,6 @@ export const Home = () => {
         {sections.map((section, index) => (
           <Section key={index} {...section} />
         ))}
-
-        {/* featured problems grid */}
-        <Grid container spacing={4}>
-          {featuredProblems.map((problem) => (
-            <Grid item xs={12} sm={6} md={4} key={problem.id}>
-              <FeaturedCard elevation={3}>
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="h6" gutterBottom>
-                    {problem.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {problem.description}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color="primary"
-                    href={problem.link}
-                  >
-                    Solve Now
-                  </Button>
-                </CardActions>
-              </FeaturedCard>
-            </Grid>
-          ))}
-        </Grid>
 
         {/* join community section */}
         <Box sx={{ mb: { xs: 4, sm: 6, md: 8 } }}>

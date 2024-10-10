@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import LinearProgress from '@mui/material/LinearProgress'
+import CenteredLoader from '../components/utility/CenteredLoader'
 import { fetchProblemById } from '../api'
 import ProblemDetailLayout from '../components/problems/ProblemDetailLayout'
 import ProblemDetails from '../components/problems/ProblemDetails'
@@ -39,13 +39,14 @@ function ProblemDetail() {
       // remove _id from testCases attribute
       return {
         ...data,
+        // eslint-disable-next-line no-unused-vars
         testCases: data.testCases.map(({ _id, ...rest }) => rest),
       }
     },
   })
 
   if (isLoading) {
-    return <LinearProgress /> // You can replace this with a skeleton loader if preferred
+    return <CenteredLoader />
   }
 
   if (isError) {
