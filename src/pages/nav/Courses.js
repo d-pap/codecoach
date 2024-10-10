@@ -11,8 +11,8 @@ import {
   ListItem,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import ClassFormDialog from "../Courses/ClassFormDialog";
-import AddCourseContent from "../Courses/AddCourseContent"; // Import the AddCourseContent component
+import ClassFormDialog from "../courses/ClassFormDialog";
+import AddCourseContent from "../courses/CourseAddProblem"; // Import the AddCourseContent component
 import { createCourse, fetchCourse, deleteCourse, getCoursesByUser } from "../../api copy"; // Use the actual functions from api copy.js
 import ICPC from "../problems/problem-types/ICPC";
 // Mock user context (replace or integrate with your actual auth context)
@@ -69,9 +69,12 @@ const StudentCourses = () => {
   };
 
   // Handle adding problems (navigate to AddCourseContent)
+  // const handleAddProblemsClick = (courseId) => {
+  //   const course = courses.find(c => c.courseId === courseId);
+  //   setSelectedCourse(course); // Assuming course object contains all needed details
+  // };
   const handleAddProblemsClick = (courseId) => {
-    const course = courses.find(c => c.courseId === courseId);
-    setSelectedCourse(course); // Assuming course object contains all needed details
+    navigate(`/courses/${courseId}/add-content`);
   };
 
   // Handle course updates

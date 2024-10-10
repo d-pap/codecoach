@@ -20,7 +20,8 @@ import Header from './components/Header-Footer/Header'
 import Footer from './components/Header-Footer/Footer'
 import Home from './pages'
 // import Courses '
-import Courses from './pages/nav/Studentcourses'
+import Courses from './pages/nav/Courses'
+import AddCourseContent from './pages/courses/CourseAddProblem'
 
 
 import Problems from './pages/nav/problems'
@@ -132,6 +133,15 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/courses/:courseId/add-content"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <AddCourseContent />
+                  </ProtectedRoute>
+                }
+              />
+
               <Route
                 path="/problems"
                 element={

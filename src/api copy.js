@@ -66,6 +66,7 @@ export function createCourse(courseId, teacherId, problemIds = []) {
   };
   db.courses.push(newCourse);
   return newCourse;
+
 }
 
 // Function to fetch a specific course by courseId
@@ -79,25 +80,24 @@ export function fetchCourse(courseId) {
   const problems = course.problemIds.map(problemId =>
     db.problems.find(problem => problem._id === problemId)
   );
-
   return { ...course, problems }; // Return course with problem details
 }
 
 // Function to add a problem ID to a course's problemIds array
 export function addProblemID(courseId, problemId) {
   const course = db.courses.find(course => course.courseId === courseId);
-  if (course) {
-    // Check if the problem ID is already in the course's problemIds array
-    if (!course.problemIds.includes(problemId)) {
-      course.problemIds.push(problemId);
-      console.log(`Problem ID ${problemId} added to course ${courseId}. Current list of problem IDs:`, course.problemIds);
-    } else {
-      console.log(`Problem ID ${problemId} already exists in course ${courseId}.`);
-    }
-    return course;
-  } else {
-    throw new Error('Course not found');
+  if (!course) {
+    throw new Error('Course not found'); // This is where the error is thrown
   }
+  
+  if (!course.problemIds.includes(problemId)) {
+    course.problemIds.push(problemId);
+    console.log(`Problem ID ${problemId} added to course ${courseId}`);
+  } else {
+    console.log(`Problem ID ${problemId} already exists in course ${courseId}.`);
+  }
+
+  return course;
 }
 
 // Function to delete a course by courseId

@@ -203,6 +203,7 @@ export async function fetchCourse(courseId) {
 }
 // Function to add a problem ID to a course's problemIds array
 export async function addProblemID(courseId, problemId) {
+  console.log(`Adding problems to course with ID: ${courseId}`);
   try {
     const response = await axios.put(`${API_GATEWAY_URL}/courses/${courseId}/problems`, { problemId })
     return response.data

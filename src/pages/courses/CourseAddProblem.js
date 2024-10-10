@@ -13,21 +13,24 @@ import {
   Stack,
 } from '@mui/material';
 import { addProblemID, fetchCourse } from '../../api copy'; // Updated imports to include fetchCourse and fetchProblemById
-import { fetchProblems, fetchProblemById } from '../../api'; 
-import { useNavigate } from 'react-router-dom'; 
+import { fetchProblems, fetchProblemById } from '../../api';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const AddCourseContent = ({ newClassName, courseId }) => {
+// const AddCourseContent = ({ newClassName, courseId }) => {
+const AddCourseContent = ({ newClassName }) => {
+  const { courseId } = useParams(); // Get the courseId from the URL
+  console.log(`Course ID from URL: ${courseId}`);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProblems, setSelectedProblems] = useState([]);
   const [problems, setProblems] = useState([]);
   const [filteredProblems, setFilteredProblems] = useState([]);
-  const [courseProblems, setCourseProblems] = useState([]); // State to store the course's problem details
+  const [courseProblems, setCourseProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const problemsPerPage = 10;
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   // Load problems using the actual API
   useEffect(() => {
@@ -43,6 +46,7 @@ const AddCourseContent = ({ newClassName, courseId }) => {
       }
     }
     loadProblems();
+    fetchCourseProblems();
   }, []);
 
   // Filter the problems based on the search term
@@ -69,8 +73,7 @@ const AddCourseContent = ({ newClassName, courseId }) => {
     const errors = [];
     for (const problemId of selectedProblems) {
       try {
-        console.log(`Attempting to add problem ${problemId} to course ${courseId}`);
-        await addProblemID(courseId, problemId); // Add problem using mock API
+        await addProblemID(courseId, problemId); // Add problem to course via the API
       } catch (error) {
         console.error(`Error adding problem ${problemId}:`, error.message);
         errors.push(`Problem ${problemId} failed to add: ${error.message}`);
@@ -81,21 +84,21 @@ const AddCourseContent = ({ newClassName, courseId }) => {
       setError(`Failed to add some problems: \n${errors.join('\n')}`);
     } else {
       console.log('All selected problems added successfully!');
-      // Fetch the updated course after adding problems
-      await fetchCourseProblems();
+      await fetchCourseProblems(); // Fetch updated course problems after submission
     }
   };
 
   // Fetch the updated course and its problem details
   const fetchCourseProblems = async () => {
     try {
-      const course = await fetchCourse(courseId); // Fetch the course with problem IDs
+      const course = await fetchCourse(courseId);  // Fetch course details including problem IDs
       const problemDetails = await Promise.all(
-        course.problemIds.map(id => fetchProblemById(id)) // Fetch problem details by ID
+        course.problemIds.map(id => fetchProblemById(id))  // Fetch each problem detail by ID
       );
-      setCourseProblems(problemDetails); // Store the fetched problem details
+      setCourseProblems(problemDetails);  // Set course problems to state
+      setSelectedProblems(problemDetails.map(problem => problem._id)); 
     } catch (error) {
-      setError('Error fetching course problems');
+      setError('Error fetching course problems: ' + error.message);
     }
   };
 
@@ -138,7 +141,7 @@ const AddCourseContent = ({ newClassName, courseId }) => {
             <FormControlLabel
               control={<Checkbox
                 onChange={() => handleProblemChange(problem._id)}
-                checked={selectedProblems.includes(problem._id)}
+                checked={selectedProblems.includes(problem._id)} // Mark as checked if already selected
               />}
               label={problem.title}
             />
@@ -171,10 +174,10 @@ const AddCourseContent = ({ newClassName, courseId }) => {
       )}
 
       {/* Button to navigate back to Courses */}
-      <Button 
-        color="secondary" 
-        variant="outlined" 
-        onClick={() => navigate('/Courses')} // Navigate to Courses
+      <Button
+        color="secondary"
+        variant="outlined"
+        onClick={() => navigate('/Courses')} // Navigate back to Courses
         sx={{ mt: 4 }}
       >
         Back to Courses
