@@ -5,16 +5,16 @@ const theme = createTheme({
     mode: 'light',
     primary: {
       // for buttons, active links/tabs
-      main: '#6C63FF',
+      main: '#0f172a',
     },
     background: {
       default: '#fffffe',
       paper: '#fffffe', // card background, etc.
     },
     text: {
-      primary: '#333333',
+      //primary: '#333333',
+      primary: '#0f172a',
       white: '#f0f0f0',
-      //secondary: '#6C63FF', // search box bg, unactive tabs
     },
     divider: '#0000001f',
     caution: {
@@ -36,55 +36,55 @@ const theme = createTheme({
       fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 700,
       fontSize: '2.027rem',
-      color: '#1A1A1A',
+      color: '#0f172a',
     },
     h2: {
       fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 500,
       fontSize: '1.802rem',
-      color: '#333333',
+      color: '#0f172a',
     },
     h3: {
       fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       fontSize: '1.602rem',
-      color: '#333333',
+      color: '#0f172a',
     },
     h4: {
       fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       fontSize: '1.424rem',
-      color: '#333333',
+      color: '#0f172a',
     },
     h5: {
       fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       fontSize: '1.266rem',
-      color: '#333333',
+      color: '#0f172a',
     },
     h6: {
       fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 500,
       fontSize: '1.125rem',
-      color: '#333333',
+      color: '#0f172a',
     },
     subtitle1: {
       fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       fontSize: '1rem',
-      color: '#333333',
+      color: '#0f172a',
     },
     body1: {
       fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       fontSize: '1rem',
-      color: '#333333 ',
+      color: '#0f172a',
     },
     body2: {
       fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       fontSize: '0.889rem',
-      color: '#888888 ',
+      color: '#64748b ',
     },
     code: {
       // for code output window Box
@@ -150,7 +150,7 @@ const theme = createTheme({
     MuiListItemText: {
       styleOverrides: {
         root: {
-          color: '#333333',
+          color: '#0f172a',
           '& .MuiTypography-root': {
             fontSize: '0.889rem',
           },

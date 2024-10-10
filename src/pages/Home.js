@@ -1,3 +1,12 @@
+/**
+ * TODO:
+ * - insert images into the remaining cards
+ * - have the cards link to pages
+ * - //! make hero responsive (text, image, etc.) just like landing pg
+ * - make code reusable just like landing pg
+ * - //! fill in competition dates, names, and links
+ */
+
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Box from '@mui/material/Box'
@@ -23,6 +32,109 @@ import competitionImage from '../images/competitions2.svg'
 import interviewsImage from '../images/interviewsbw.svg'
 import problemsImage from '../images/problemsbw.svg'
 
+/**
+ * section title component
+ */
+const SectionTitle = ({ title, subtitle, link, linkText }) => (
+  <>
+    <Typography
+      variant="h4"
+      sx={{
+        mb: 2,
+        fontWeight: 'bold',
+        fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
+      }}
+    >
+      {title}
+    </Typography>
+    <Typography variant="subtitle" sx={{ mb: 2, color: 'text.secondary' }}>
+      {subtitle}
+    </Typography>
+    <Link
+      to={link}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '1rem',
+        textDecoration: 'none',
+      }}
+    >
+      {linkText}{' '}
+      <ArrowForwardRoundedIcon sx={{ ml: 0.5, fontSize: '1.25rem' }} />
+    </Link>
+  </>
+)
+
+/**
+ * section cards components
+ */
+const FullWidthCard = ({ image, alt, content }) => (
+  <Card sx={{ display: 'flex', mb: 4, maxHeight: '400px' }}>
+    <CardMedia
+      component="img"
+      sx={{ width: '60%', objectFit: 'contain' }}
+      image={image}
+      alt={alt}
+    />
+    <CardContent
+      sx={{
+        width: '40%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }}
+    >
+      {content}
+    </CardContent>
+  </Card>
+)
+
+const TwoColumnCards = ({ cards }) => (
+  <Grid container spacing={4}>
+    {cards.map((card, index) => (
+      <Grid item xs={12} sm={6} key={index}>
+        <Card>
+          <CardMedia
+            component="img"
+            height="200"
+            image={card.image}
+            alt={card.alt}
+          />
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              {card.title}
+            </Typography>
+            <Typography variant="body2">{card.description}</Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+    ))}
+  </Grid>
+)
+
+/**
+ * section component
+ */
+const Section = ({
+  title,
+  subtitle,
+  link,
+  linkText,
+  fullWidthCard,
+  twoColumnCards,
+}) => (
+  <Box sx={{ mb: { xs: 4, sm: 6, md: 8 }, mt: { xs: 4, sm: 6, md: 8 } }}>
+    <SectionTitle
+      title={title}
+      subtitle={subtitle}
+      link={link}
+      linkText={linkText}
+    />
+    {fullWidthCard && <FullWidthCard {...fullWidthCard} />}
+    {twoColumnCards && <TwoColumnCards cards={twoColumnCards} />}
+  </Box>
+)
+
 const FeaturedCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -37,6 +149,120 @@ const FeaturedCard = styled(Card)(({ theme }) => ({
 export const Home = () => {
   const navigate = useNavigate()
 
+  const heroContent = {
+    title: 'codecoach',
+    subtitles: ['Level up your coding skills', 'with AI-driven feedback'],
+    buttonText: 'Explore Problems',
+    buttonLink: '/problems',
+  }
+
+  /**
+   * section content definitions
+   */
+  const sections = [
+    {
+      title: 'Upcoming Competitions',
+      subtitle: 'Check out upcoming competitions and start preparing today',
+      link: 'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations',
+      linkText: 'Explore upcoming competitions',
+      fullWidthCard: {
+        image: competitionImage,
+        alt: 'Competition illustration',
+        content: (
+          <>
+            <Typography variant="h6" gutterBottom>
+              ICPC Competition: July 5, 2025
+            </Typography>
+            <Typography variant="h6" gutterBottom>
+              Google Code Jam: August 15, 2025
+            </Typography>
+            <Typography variant="h6" gutterBottom>
+              Facebook Hacker Cup: September 1, 2025
+            </Typography>
+          </>
+        ),
+      },
+      twoColumnCards: [
+        {
+          image: '/path-to-image1.jpg',
+          alt: 'How to Sign Up',
+          title: 'How to Sign Up',
+          description:
+            'This is some example text content for the first card. You can add more details about competitions or related information here.',
+        },
+        {
+          image: '/path-to-image2.jpg',
+          alt: 'How to Prepare',
+          title: 'How to Prepare',
+          description:
+            'This is some example text content for the second card. You can add more details about competitions or related information here.',
+        },
+      ],
+    },
+    {
+      title: 'Featured Problems',
+      subtitle: 'Check out our featured problems and start preparing today',
+      link: '/problems',
+      linkText: 'Explore problems',
+      fullWidthCard: {
+        image: problemsImage,
+        alt: 'Problem illustration',
+        content: (
+          <>
+            <Typography variant="h6" gutterBottom>
+              Explore Problems
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Prepare for your next competition by solving problems from
+              previous competitions
+            </Typography>
+          </>
+        ),
+      },
+    },
+    {
+      title: 'Interview Prep',
+      subtitle:
+        'Explore common technical interview questions from FAANG companies',
+      link: '/interviews',
+      linkText: 'Explore interview prep',
+      fullWidthCard: {
+        image: interviewsImage,
+        alt: 'Interview illustration',
+        content: (
+          <>
+            <Typography variant="h6" gutterBottom>
+              FAANG Interview Prep
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Prepare by reviewing common interview questions from FAANG
+              companies
+            </Typography>
+          </>
+        ),
+      },
+      twoColumnCards: [
+        {
+          image: '/path-to-image1.jpg',
+          alt: 'Behavioral Questions',
+          title: 'Behavioral Questions',
+          description:
+            'This is some example text content for the first card. You can add more details about competitions or related information here.',
+        },
+        {
+          image: '/path-to-image2.jpg',
+          alt: 'Resume Resources',
+          title: 'Resume Resources',
+          description:
+            'This is some example text content for the second card. You can add more details about competitions or related information here.',
+        },
+      ],
+    },
+  ]
+
+  /**
+   * featured problems
+   */
   const featuredProblems = [
     {
       id: 1,
@@ -63,6 +289,7 @@ export const Home = () => {
 
   return (
     <>
+      {/* hero section */}
       <Box
         position="relative"
         display="flex"
@@ -71,437 +298,110 @@ export const Home = () => {
         alignItems="center"
         height={{ xs: '60vh', sm: '70vh', md: '80vh' }}
         overflow="hidden"
+        sx={{
+          backgroundImage: `url(${grad16})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
       >
-        <Box
-          position="relative"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          width="100%"
-          height="100%"
-          overflow="hidden"
+        <Typography
+          variant="h1"
+          component="h1"
+          fontWeight="bold"
+          fontFamily="Helvetica, Arial, sans-serif"
+          color="text.primary"
           sx={{
-            backgroundImage: `url(${grad16})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
+            position: 'relative',
+            zIndex: 2,
+            fontSize: {
+              xs: '10vh',
+              sm: '10vh',
+              md: '12vh',
+              lg: '12vh',
+              xl: '12vh',
+            },
+            textAlign: 'center',
           }}
         >
+          {heroContent.title}
+        </Typography>
+        {heroContent.subtitles.map((subtitle, index) => (
           <Typography
-            variant="h1"
-            component="h1"
-            fontWeight="bold"
-            fontFamily="Helvetica, Arial, sans-serif"
-            color="text.primary"
-            sx={{
-              position: 'relative',
-              zIndex: 2,
-              fontSize: { xs: '3rem', sm: '4rem', md: '5rem' },
-              textAlign: 'center',
-            }}
-          >
-            codecoach
-          </Typography>
-          <Typography
+            key={index}
             variant="h4"
             color="text.secondary"
             sx={{
               position: 'relative',
               zIndex: 2,
-              fontSize: { xs: '1.2rem', sm: '1.5rem', md: '1.8rem' },
+              mt: index === 0 ? 2 : 0,
+              fontSize: {
+                xs: '1rem',
+                sm: '1.226rem',
+                md: '1.5rem',
+                lg: '1.8rem',
+                xl: '2rem',
+              },
               textAlign: 'center',
             }}
           >
-            Level up your coding skills
+            {subtitle}
           </Typography>
-          <Typography
-            variant="h4"
-            color="text.secondary"
-            sx={{
-              position: 'relative',
-              zIndex: 2,
-              fontSize: { xs: '1.2rem', sm: '1.5rem', md: '1.8rem' },
-              textAlign: 'center',
-            }}
-          >
-            with AI-driven feedback
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={() => navigate('/problems')}
-            sx={{
-              mt: 6,
-              py: 1.5,
-              px: 4,
-              fontWeight: 'bold',
-              fontSize: { xs: '0.8rem', sm: '1rem', md: '1.1rem' },
-              position: 'relative',
-              zIndex: 2,
-            }}
-          >
-            Explore Problems <DoubleArrowRoundedIcon sx={{ ml: 0.5 }} />
-          </Button>
-        </Box>
+        ))}
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={() => navigate(heroContent.buttonLink)}
+          sx={{
+            mt: 6,
+            py: 1.5,
+            px: 4,
+            fontWeight: 'bold',
+            fontSize: { xs: '0.8rem', sm: '1rem', md: '1.1rem' },
+            position: 'relative',
+            zIndex: 2,
+          }}
+        >
+          {heroContent.buttonText} <DoubleArrowRoundedIcon sx={{ ml: 0.5 }} />
+        </Button>
       </Box>
+
+      {/* sections */}
       <Container maxWidth="lg">
-        {/* Upcoming competitions section */}
-        <Box sx={{ mb: { xs: 4, sm: 6, md: 8 }, mt: { xs: 4, sm: 6, md: 8 } }}>
-          <Typography
-            variant="h4"
-            sx={{
-              mb: 2,
-              fontWeight: 'bold',
-              fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
-            }}
-          >
-            Upcoming Competitions
-          </Typography>
-          <Typography
-            variant="subtitle"
-            sx={{
-              mb: 2,
-              color: 'text.secondary',
-            }}
-          >
-            Check out upcoming competitions and start preparing today
-          </Typography>
-          <Link
-            to="https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations" // TODO: link to UMD ACM club page???
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginBottom: '1rem',
-              textDecoration: 'none',
-              color: '', // TODO: change colors---------------------------------------------------------------
-            }}
-          >
-            Explore upcoming competitions
-            <ArrowForwardRoundedIcon sx={{ ml: 0.5, fontSize: '1.25rem' }} />
-          </Link>
+        {sections.map((section, index) => (
+          <Section key={index} {...section} />
+        ))}
 
-          {/* Full-width card for main ICPC competition */}
-          <Card
-            sx={{
-              display: 'flex', // TODO: change height of card
-              mb: 4,
-              height: '400px',
-              maxHeight: '400px',
-            }}
-          >
-            <CardMedia
-              component="img"
-              sx={{ width: '60%', objectFit: 'contain' }}
-              image={competitionImage}
-              alt="Competition illustration"
-            />
-            <CardContent
-              sx={{
-                width: '40%',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-              }}
-            >
-              <Typography
-                variant="h6"
-                gutterBottom // TODO: change competition dates and names, add links?-------------------------------
-              >
-                ICPC Competition: July 5, 2025
-              </Typography>
-              <Typography
-                variant="h6"
-                gutterBottom // TODO: change competition dates and names, add links?-------------------------------
-              >
-                Google Code Jam: August 15, 2025
-              </Typography>
-              <Typography
-                variant="h6"
-                gutterBottom // TODO: change competition dates and names, add links?-------------------------------
-              >
-                Facebook Hacker Cup: September 1, 2025
-              </Typography>
-            </CardContent>
-          </Card>
-
-          {/* two cards for other, smaller competitions coming up OR make them for "how to sign up" and "how to prepare"? */}
-          <Grid container spacing={4}>
-            <Grid item xs={12} sm={6}>
-              <Card>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image="/path-to-image1.jpg"
-                  alt="Card image 1"
-                />
-                <CardContent>
-                  <Typography
-                    variant="h6" // TODO: change this section ? make it link to ACM club how to sign up page?
-                    gutterBottom
-                  >
-                    How to Sign Up
+        {/* featured problems grid */}
+        <Grid container spacing={4}>
+          {featuredProblems.map((problem) => (
+            <Grid item xs={12} sm={6} md={4} key={problem.id}>
+              <FeaturedCard elevation={3}>
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography variant="h6" gutterBottom>
+                    {problem.title}
                   </Typography>
-                  <Typography variant="body2">
-                    This is some example text content for the first card. You
-                    can add more details about competitions or related
-                    information here.
+                  <Typography variant="body2" color="text.secondary">
+                    {problem.description}
                   </Typography>
                 </CardContent>
-              </Card>
+                <CardActions>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color="primary"
+                    href={problem.link}
+                  >
+                    Solve Now
+                  </Button>
+                </CardActions>
+              </FeaturedCard>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <Card>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image="/path-to-image2.jpg"
-                  alt="Card image 2"
-                />
-                <CardContent>
-                  <Typography
-                    variant="h6" // TODO: change this section ? make it link to ACM club how to prepare page?
-                    gutterBottom
-                  >
-                    How to Prepare
-                  </Typography>
-                  <Typography variant="body2">
-                    This is some example text content for the second card. You
-                    can add more details about competitions or related
-                    information here.
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        </Box>
+          ))}
+        </Grid>
 
-        {/* Featured problems section */}
-        <Box sx={{ mb: { xs: 4, sm: 6, md: 8 }, mt: { xs: 4, sm: 6, md: 8 } }}>
-          <Typography
-            variant="h4"
-            sx={{
-              mb: 2,
-              fontWeight: 'bold',
-              fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
-            }}
-          >
-            Featured Problems
-          </Typography>
-          <Typography
-            variant="subtitle"
-            sx={{
-              mb: 2,
-              color: 'text.secondary', // TODO: change font and colors
-            }}
-          >
-            Check out our featured problems and start preparing today
-          </Typography>
-          <Link
-            to="/problems" // TODO: change link type, link page, colors and arrow style
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginBottom: '1rem',
-              color: 'your-secondary-color',
-              textDecoration: 'none',
-            }}
-          >
-            Explore problems{' '}
-            <ArrowForwardRoundedIcon sx={{ ml: 0.5, fontSize: '1.25rem' }} />
-          </Link>
-
-          {/* full width card for problems */}
-          <Card
-            sx={{
-              display: 'flex',
-              mb: 4,
-              maxHeight: '400px',
-            }}
-          >
-            <CardMedia
-              component="img" // TODO: change to image of an AI assistant?
-              sx={{ width: '60%', objectFit: 'contain' }}
-              image={problemsImage}
-              alt="Problem illustration"
-            />
-            <CardContent
-              sx={{
-                width: '40%',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-              }}
-            >
-              <Typography
-                variant="h6"
-                gutterBottom // TODO: change competition dates and names, add links?
-              >
-                Explore Problems
-              </Typography>
-              <Typography
-                variant="body1"
-                gutterBottom // TODO: talk about AI assistant here
-              >
-                Prepare for your next competition by solving problems from
-                previous competitions
-              </Typography>
-            </CardContent>
-          </Card>
-
-          <Grid container spacing={4}>
-            {featuredProblems.map((problem) => (
-              <Grid item xs={12} sm={6} md={4} key={problem.id}>
-                <FeaturedCard elevation={3}>
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6" gutterBottom>
-                      {problem.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {problem.description}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small" color="primary" href={problem.link}>
-                      Solve Now
-                    </Button>
-                  </CardActions>
-                </FeaturedCard>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-
-        {/* Interview prep section */}
-        <Box sx={{ mb: { xs: 4, sm: 6, md: 8 }, mt: { xs: 4, sm: 6, md: 8 } }}>
-          <Typography
-            variant="h4"
-            sx={{
-              mb: 2,
-              fontWeight: 'bold',
-              fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
-            }}
-          >
-            Interview Prep
-          </Typography>
-          <Typography
-            variant="subtitle"
-            sx={{
-              mb: 2,
-              color: 'text.secondary', // TODO: change font and colors
-            }}
-          >
-            Check out our interview prep section and start preparing today
-          </Typography>
-          <Link
-            to="/interviews" // TODO: change link type, link page, colors and arrow style
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginBottom: '1rem',
-              color: 'your-secondary-color',
-              textDecoration: 'none',
-            }}
-          >
-            Explore interview prep{' '}
-            <ArrowForwardRoundedIcon sx={{ ml: 0.5, fontSize: '1.25rem' }} />
-          </Link>
-
-          {/* Full-width card */}
-          <Card
-            sx={{
-              display: 'flex', // TODO: change height of card
-              mb: 4,
-              maxHeight: '400px',
-            }}
-          >
-            <CardMedia
-              component="img" // TODO: change to image of interview prep
-              sx={{ width: '60%', objectFit: 'contain' }}
-              image={interviewsImage}
-              alt="Interview illustration"
-            />
-            <CardContent
-              sx={{
-                width: '40%',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-              }}
-            >
-              <Typography
-                variant="h6"
-                gutterBottom // TODO: change interview section, add links?
-              >
-                FAANG Interview Prep
-              </Typography>
-              <Typography
-                variant="body1"
-                gutterBottom // TODO: change competition dates and names, add links?
-              >
-                Prepare by reviewing common interview questions from FAANG
-                companies
-              </Typography>
-            </CardContent>
-          </Card>
-
-          {/* Two cards in a row */}
-          <Grid container spacing={4}>
-            <Grid item xs={12} sm={6}>
-              <Card>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image="/path-to-image1.jpg"
-                  alt="Card image 1"
-                />
-                <CardContent>
-                  <Typography
-                    variant="h6" // TODO: change this section ?
-                    gutterBottom
-                  >
-                    Behavioral Questions
-                  </Typography>
-                  <Typography
-                    variant="body2" // TODO: change this text
-                  >
-                    This is some example text content for the first card. You
-                    can add more details about competitions or related
-                    information here.
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Card>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image="/path-to-image2.jpg"
-                  alt="Card image 2"
-                />
-                <CardContent>
-                  <Typography
-                    variant="h6" // TODO: change this section? maybe link it to UMD resume resources page?
-                    gutterBottom
-                  >
-                    Resume Resources
-                  </Typography>
-                  <Typography
-                    variant="body2" // TODO: change this text
-                  >
-                    This is some example text content for the second card. You
-                    can add more details about competitions or related
-                    information here.
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        </Box>
-
-        {/* Join community section */}
+        {/* join community section */}
         <Box sx={{ mb: { xs: 4, sm: 6, md: 8 } }}>
           <Box
             sx={{
