@@ -29,6 +29,10 @@ import grad16 from '../images/Grad_16.png'
 import competitionImage from '../images/competitions2.svg'
 import interviewsImage from '../images/interviewsbw.svg'
 import problemsImage from '../images/problemsbw.svg'
+import signUpImage from '../images/howtosignup.svg'
+import prepareImage from '../images/howtoprepare.svg'
+import behaviorImage from '../images/behavioral.svg'
+import resumeResourcesImage from '../images/resumeresources.svg'
 
 /**
  * section title component
@@ -115,12 +119,18 @@ const TwoColumnCards = ({ cards }) => {
               }}
             >
               {!isSmallScreen && (
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={card.image}
-                  alt={card.alt}
-                />
+                <Box sx={{ height: '200px', overflow: 'hidden' }}>
+                  <CardMedia
+                    component="img"
+                    sx={{
+                      height: '100%',
+                      objectFit: 'contain',
+                      objectPosition: 'center',
+                    }}
+                    image={card.image}
+                    alt={card.alt}
+                  />
+                </Box>
               )}
               <CardContent sx={{ flexGrow: 1 }}>
                 <Typography variant="h6" gutterBottom>
@@ -229,20 +239,20 @@ export const Home = () => {
         content: (
           <>
             <Typography variant="h6" gutterBottom>
-              ICPC Competition: July 5, 2025
+              ICPC NA Qualifier: Oct. 5, 2024
             </Typography>
             <Typography variant="h6" gutterBottom>
-              Google Code Jam: August 15, 2025
+              ICPC East Central NA Regionals: Nov. 9, 2024
             </Typography>
             <Typography variant="h6" gutterBottom>
-              Facebook Hacker Cup: September 1, 2025
+              ICPC World Finals: TBD
             </Typography>
           </>
         ),
       },
       twoColumnCards: [
         {
-          image: '/path-to-image1.jpg',
+          image: signUpImage,
           alt: 'How to Sign Up',
           title: 'How to Sign Up',
           description:
@@ -250,7 +260,7 @@ export const Home = () => {
           link: 'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations',
         },
         {
-          image: '/path-to-image2.jpg',
+          image: prepareImage,
           alt: 'How to Prepare',
           title: 'How to Prepare',
           description:
@@ -326,7 +336,7 @@ export const Home = () => {
       },
       twoColumnCards: [
         {
-          image: '/path-to-image1.jpg',
+          image: behaviorImage,
           alt: 'Behavioral Questions',
           title: 'Behavioral Questions',
           description:
@@ -334,7 +344,7 @@ export const Home = () => {
           link: 'https://umdearborn.edu/career-services/job-and-internship-prep/interviewing',
         },
         {
-          image: '/path-to-image2.jpg',
+          image: resumeResourcesImage,
           alt: 'Resume Resources',
           title: 'Resume Resources',
           description:

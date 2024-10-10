@@ -16,7 +16,7 @@ import DoubleArrowRoundedIcon from '@mui/icons-material/DoubleArrowRounded'
 import { styled } from '@mui/system'
 import logo from '../images/logo-with-text.svg'
 import grad12 from '../images/Grad_12.png'
-import pcImage from '../images/programming-category.png'
+import rocket from '../images/rocket.svg'
 
 /********************************************************************************
  * styling for header nav bar
@@ -376,7 +376,7 @@ const LandingPage = ({ onGetStarted }) => {
                 </SectionContentBodyText>
               </>
             }
-            image={pcImage}
+            image={rocket}
             imageAlt="Real-time Compiler"
           />
           <LanguageLogos />
@@ -400,7 +400,7 @@ const LandingPage = ({ onGetStarted }) => {
                 </SectionContentBodyText>
               </>
             }
-            image={pcImage}
+            image={rocket}
             imageAlt="AI Tutor"
           />
           <Timeline number={3} title="Connect" />
@@ -422,7 +422,7 @@ const LandingPage = ({ onGetStarted }) => {
                 </SectionContentBodyText>
               </>
             }
-            image={pcImage}
+            image={rocket}
             imageAlt="Community"
           />
 
