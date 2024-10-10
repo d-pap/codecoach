@@ -1,12 +1,3 @@
-/**
- * TODO:
- * - insert images into the remaining cards
- * - have the cards link to pages
- * - //! make hero responsive (text, image, etc.) just like landing pg
- * - make code reusable just like landing pg
- * - //! fill in competition dates, names, and links
- */
-
 import React from 'react'
 import { useMediaQuery } from '@mui/material'
 import { useTheme } from '@mui/material/styles'

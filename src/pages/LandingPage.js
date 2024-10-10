@@ -1,7 +1,6 @@
 /**
  * TODO:
  * - //! update the execution time for the compiler!!!!!
- * - //! make container size responsive and have whitespace on left and right sides e.g., <Container maxWidth="lg">
  * - change images in feature sections
  */
 import React from 'react'
