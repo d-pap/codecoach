@@ -480,4 +480,5 @@ const StudentCourses = () => {
   )
 }
 
+export { AddCourseContent }
 export default StudentCourses

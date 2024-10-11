@@ -26,6 +26,7 @@ import ICPC from './pages/Problems'
 import ProblemDetail from './pages/ProblemSolving'
 import './App.css'
 import NotFound from './pages/NotFound' // Add this import
+import { AddCourseContent } from './pages/Courses'
 
 // Dynamic Imports
 const LandingPage = lazy(() => import('./pages/LandingPage'))
@@ -145,6 +146,14 @@ function App() {
                     <Suspense fallback={<CenteredLoader />}>
                       <Courses />
                     </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/courses/:courseId/add-content"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <AddCourseContent />
                   </ProtectedRoute>
                 }
               />
