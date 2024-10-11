@@ -162,15 +162,16 @@ export async function postForumComment(problemId, userId, message) {
   }
 }
 
-// function to like a message
-export async function likeForumComment(messageId) {
+// Function to like a message
+export async function likeForumComment(messageId, userId) {
   try {
     const response = await axios.post(
-      `${API_GATEWAY_URL}/comment/${messageId}/like`
+      `${API_GATEWAY_URL}/comment/${messageId}/like`,
+      { userId } // Send userId in the request body
     )
     return response.data
   } catch (error) {
     console.error('Error liking message:', error)
-    throw new Error('Failed to like message')
+    throw error.response?.data?.error || new Error('Failed to like message')
   }
 }

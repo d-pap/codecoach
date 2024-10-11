@@ -74,8 +74,26 @@ const InterviewForm = () => {
   const handleSubmits = async (e) => {
     e.preventDefault()
     try {
-      console.log('Submitting formData:', JSON.stringify(formData, null, 2)) // Enhanced debugging
-      const response = await addProblem(formData)
+      // Remove test cases with empty input or output
+      const filteredTestCases = formData.testCases.filter(
+        (tc) => tc.input.trim() !== '' && tc.output.trim() !== ''
+      )
+
+      // Check if there are any valid test cases
+      if (filteredTestCases.length === 0) {
+        alert('Please provide at least one test case with input and output.')
+        return
+      }
+
+      // Prepare the submission data
+      const submissionData = { ...formData, testCases: filteredTestCases }
+
+      console.log(
+        'Submitting formData:',
+        JSON.stringify(submissionData, null, 2)
+      )
+      const response = await addProblem(submissionData)
+      // Reset the form after successful submission
       setFormData({
         type: 'interview',
         title: '',
@@ -96,7 +114,7 @@ const InterviewForm = () => {
       if (error.response) {
         console.error('Response data:', error.response.data)
         alert(
-          `Failed to add problem: ${error.response.data.message || 'Please try again.'}`
+          `Failed to add problem: ${error.response.data.error || 'Please try again.'}`
         )
       } else {
         alert('Failed to add problem. Please try again.')
@@ -138,7 +156,6 @@ const InterviewForm = () => {
             multiline
           />
 
-          <CustomLabel>Example Inputs: </CustomLabel>
           <TextField
             name="exampleInputs"
             value={formData.exampleInputs}
@@ -147,6 +164,7 @@ const InterviewForm = () => {
             variant="outlined"
             style={textFieldStyle}
             multiline
+            required
           />
 
           <CustomLabel>Example Outputs: </CustomLabel>
@@ -158,6 +176,7 @@ const InterviewForm = () => {
             variant="outlined"
             style={textFieldStyle}
             multiline
+            required
           />
 
           <CustomLabel>Video Link: </CustomLabel>
