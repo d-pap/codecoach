@@ -16,7 +16,7 @@ import { styled } from '@mui/system'
 import logo from '../images/logo-with-text.svg'
 import grad12 from '../images/Grad_12.png'
 import rocket from '../images/rocket.svg'
-
+import compilerImg from '../images/compiler3.png'
 /********************************************************************************
  * styling for header nav bar
  ********************************************************************************/
@@ -115,11 +115,12 @@ function SectionText({ title, description, image, imageAlt }) {
               alt={imageAlt}
               sx={{
                 position: 'absolute',
-                top: 0,
-                left: 0,
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
                 width: '100%',
                 height: '100%',
-                objectFit: { xs: 'contain', sm: 'cover', md: 'cover' },
+                objectFit: 'contain',
               }}
             />
           </SectionImageContainer>
@@ -375,7 +376,7 @@ const LandingPage = ({ onGetStarted }) => {
                 </SectionContentBodyText>
               </>
             }
-            image={rocket}
+            image={compilerImg}
             imageAlt="Real-time Compiler"
           />
           <LanguageLogos />

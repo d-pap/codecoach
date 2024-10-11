@@ -247,7 +247,7 @@ export const Home = () => {
           alt: 'How to Sign Up',
           title: 'How to Sign Up',
           description:
-            'This is some example text content for the first card. You can add more details about competitions or related information here.',
+            'Ready to test your skills? Join our ACM club and take part in challenges that push your coding limits.',
           link: 'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations',
         },
         {
@@ -255,7 +255,7 @@ export const Home = () => {
           alt: 'How to Prepare',
           title: 'How to Prepare',
           description:
-            'This is some example text content for the second card. You can add more details about competitions or related information here.',
+            'Gear up for success! Find additional resources and tips to help you prepare for upcoming competitions.',
           link: 'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations',
         },
       ],
@@ -331,7 +331,7 @@ export const Home = () => {
           alt: 'Behavioral Questions',
           title: 'Behavioral Questions',
           description:
-            'This is some example text content for the first card. You can add more details about competitions or related information here.',
+            'Ace your next interview by mastering common behavioral questions. Learn what to expect and how to give answers that impress.',
           link: 'https://umdearborn.edu/career-services/job-and-internship-prep/interviewing',
         },
         {
@@ -339,7 +339,7 @@ export const Home = () => {
           alt: 'Resume Resources',
           title: 'Resume Resources',
           description:
-            'This is some example text content for the second card. You can add more details about competitions or related information here.',
+            'Craft a standout resume with resources tailored to your career path. Learn how to showcase your skills and experience effectively.',
           link: 'https://umdearborn.edu/career-services/job-and-internship-prep/resumes-and-cover-letters',
         },
       ],
