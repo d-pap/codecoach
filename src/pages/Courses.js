@@ -17,6 +17,7 @@ import ListItem from '@mui/material/ListItem'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
 import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
 import RadioGroup from '@mui/material/RadioGroup'
@@ -24,12 +25,10 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
-import LinearProgress from '@mui/material/LinearProgress'
+import CenteredLoader from '../components/utility/CenteredLoader.js'
 import Pagination from '@mui/material/Pagination'
 import Stack from '@mui/material/Stack'
 import FormGroup from '@mui/material/FormGroup'
-import DialogActions from '@mui/material/DialogActions'
-import ListItemText from '@mui/material/ListItemText'
 import {
   createCourse,
   fetchCourse,
@@ -208,7 +207,7 @@ const AddCourseContent = ({ newClassName }) => {
   )
 
   if (loading) {
-    return <LinearProgress />
+    return <CenteredLoader />
   }
 
   if (error) {
@@ -300,11 +299,12 @@ const AuthContext = React.createContext({
 const StudentCourses = () => {
   const { isAuthenticated, role } = useContext(AuthContext)
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [courses, setCourses] = useState([]) // Initialize with an empty array, real courses will be fetched
+  const [courses, setCourses] = useState([])
   const [selectedCourse, setSelectedCourse] = useState(null)
-  const navigate = useNavigate() // Use navigate hook to redirect to ICPC problems page
-  const [viewProblemsDialogOpen, setViewProblemsDialogOpen] = useState(false)
-  const [selectedCourseProblems, setSelectedCourseProblems] = useState([])
+  const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
+  const [selectedCourseName, setSelectedCourseName] = useState('')
+  const [selectedCourseId, setSelectedCourseId] = useState('')
+  const navigate = useNavigate()
 
   /// Fetch user courses on component mount
   useEffect(() => {
@@ -329,6 +329,7 @@ const StudentCourses = () => {
     try {
       const teacherId = '66f28e41e0ebc6def357ca' // Replace with actual teacher ID
       const newCourse = await createCourse(
+        courseName,
         `COURSE-${Date.now()}`,
         teacherId,
         []
@@ -340,21 +341,20 @@ const StudentCourses = () => {
     setDialogOpen(false) // Close dialog after creating course
   }
 
-  const handleViewProblemsClick = async (courseId) => {
-    try {
-      const course = await fetchCourse(courseId) // Fetch the latest course data
-      const problemDetails = await Promise.all(
-        course.problemIds.map((id) => fetchProblemById(id))
-      )
-      setSelectedCourseProblems(problemDetails)
-      setViewProblemsDialogOpen(true)
-    } catch (error) {
-      console.error('Error fetching course problems:', error)
-    }
+  const handleInviteStudentClick = (courseId, courseName) => {
+    console.log('Invite Student Clicked:', courseId, courseName)
+    setSelectedCourseId(courseId)
+    setSelectedCourseName(courseName)
+    setInviteDialogOpen(true)
   }
 
-  const handleCloseViewProblemsDialog = () => {
-    setViewProblemsDialogOpen(false)
+  const handleViewProblemsClick = (courseId) => {
+    const course = courses.find((c) => c.courseId === courseId)
+    if (course && course.problemIds.length > 0) {
+      navigate('/problems', { state: { problemIds: course.problemIds } }) // Pass problemIds to ICPC page
+    } else {
+      console.error('No problems found for this course.')
+    }
   }
 
   // Handle adding problems (navigate to AddCourseContent)
@@ -400,122 +400,128 @@ const StudentCourses = () => {
   }
 
   return (
-    <Box sx={{ flexGrow: 1, p: 3 }}>
-      <Grid container spacing={3}>
-        {/* Course List Section */}
-        <Grid item xs={12} md={9}>
-          {courses.map((course, index) => (
-            <Card key={index} sx={{ mb: 2 }}>
-              <CardContent>
-                <Typography variant="h5">
-                  {course.courseName || course.courseId}
-                </Typography>
-                <Typography variant="body2">
-                  Students: {course.students || 0}
-                </Typography>
-                <Button
-                  variant="outlined"
-                  sx={{ mt: 0.5 }}
-                  onClick={() => handleAddProblemsClick(course.courseId)}
-                >
-                  Add problems
-                </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ mt: 0.5 }}
-                  onClick={() => handleViewProblemsClick(course.courseId)} // Add this button to view problems
-                >
-                  View problems
-                </Button>
-                <Button variant="outlined" sx={{ mt: 0.5 }}>
-                  Invite student
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => handleDeleteCourse(course.courseId)} // Bind delete function to button
-                  sx={{
-                    backgroundColor: 'transparent',
-                    color: '#d32f2f',
-                    '&:hover': {
-                      backgroundColor: '#DB5858',
-                      color: '#ffffff',
-                    },
-                  }}
-                >
-                  Delete
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </Grid>
-
-        {/* Sidebar Section */}
-        <Grid item xs={12} md={3}>
-          <Paper
-            sx={{
-              p: 2,
-              height: 'fit-content',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <List component="nav">
-              {isAuthenticated && role === 'teacher' && (
-                <ListItem>
+    <div>
+      <Box sx={{ flexGrow: 1, p: 3 }}>
+        <Grid container spacing={3}>
+          {/* Course List Section */}
+          <Grid item xs={12} md={9}>
+            {courses.map((course, index) => (
+              <Card key={index} sx={{ mb: 2 }}>
+                <CardContent>
+                  <Typography variant="h5">
+                    {course.courseName || course.courseId}
+                  </Typography>
+                  <Typography variant="body2">
+                    Students: {course.students || 0}
+                  </Typography>
+                  <Button
+                    variant="outlined"
+                    sx={{ mt: 0.5 }}
+                    onClick={() => handleAddProblemsClick(course.courseId)}
+                  >
+                    Add problems
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    sx={{ mt: 0.5 }}
+                    onClick={() => handleViewProblemsClick(course.courseId)}
+                  >
+                    View problems
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    sx={{ mt: 0.5 }}
+                    onClick={() =>
+                      handleInviteStudentClick(
+                        course.courseId,
+                        course.courseName
+                      )
+                    }
+                  >
+                    Invite student
+                  </Button>
                   <Button
                     variant="contained"
-                    color="primary"
-                    fullWidth
-                    onClick={handleDialogOpen}
+                    onClick={() => handleDeleteCourse(course.courseId)}
+                    sx={{
+                      backgroundColor: 'transparent',
+                      color: '#d32f2f',
+                      '&:hover': {
+                        backgroundColor: '#DB5858',
+                        color: '#ffffff',
+                      },
+                    }}
                   >
-                    Add New Course
+                    Delete
                   </Button>
-                </ListItem>
-              )}
-              <ClassFormDialog
-                open={dialogOpen}
-                onClose={handleDialogClose}
-                onCreate={handleCreateCourse} // Handle creating a course
-              />
-              {isAuthenticated && (
-                <ListItem>
-                  <Button variant="contained" color="secondary" fullWidth>
-                    Join Course
-                  </Button>
-                </ListItem>
-              )}
-            </List>
-          </Paper>
-        </Grid>
-      </Grid>
-
-      {/* View Problems Dialog */}
-      <Dialog
-        open={viewProblemsDialogOpen}
-        onClose={handleCloseViewProblemsDialog}
-        aria-labelledby="view-problems-dialog-title"
-        aria-describedby="view-problems-dialog-description"
-      >
-        <DialogTitle id="view-problems-dialog-title">
-          Course Problems
-        </DialogTitle>
-        <DialogContent>
-          <List>
-            {selectedCourseProblems.map((problem) => (
-              <ListItem key={problem._id}>
-                <ListItemText
-                  primary={problem.title}
-                  secondary={problem.description}
-                />
-              </ListItem>
+                </CardContent>
+              </Card>
             ))}
-          </List>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseViewProblemsDialog}>Close</Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+          </Grid>
+
+          {/* Sidebar Section */}
+          <Grid item xs={12} md={3}>
+            <Paper
+              sx={{
+                p: 2,
+                height: 'fit-content',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <List component="nav">
+                {isAuthenticated && role === 'teacher' && (
+                  <ListItem>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      onClick={handleDialogOpen}
+                    >
+                      Add New Course
+                    </Button>
+                  </ListItem>
+                )}
+                <ClassFormDialog
+                  open={dialogOpen}
+                  onClose={handleDialogClose}
+                  onCreate={handleCreateCourse}
+                />
+                {isAuthenticated && (
+                  <ListItem>
+                    <Button variant="contained" color="secondary" fullWidth>
+                      Join Course
+                    </Button>
+                  </ListItem>
+                )}
+              </List>
+            </Paper>
+          </Grid>
+        </Grid>
+      </Box>
+      <InviteStudentDialog
+        open={inviteDialogOpen}
+        onClose={() => setInviteDialogOpen(false)}
+        courseName={selectedCourseName}
+        courseId={selectedCourseId}
+      />
+    </div>
+  )
+}
+
+const InviteStudentDialog = ({ open, onClose, courseName, courseId }) => {
+  console.log('InviteStudentDialog open:', open)
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>Invite Student</DialogTitle>
+      <DialogContent>
+        <Typography variant="body1">Course Name: {courseName}</Typography>
+        <Typography variant="body1">Course ID: {courseId}</Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Close</Button>
+      </DialogActions>
+    </Dialog>
   )
 }
 
