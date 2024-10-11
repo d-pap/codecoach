@@ -28,6 +28,8 @@ import LinearProgress from '@mui/material/LinearProgress'
 import Pagination from '@mui/material/Pagination'
 import Stack from '@mui/material/Stack'
 import FormGroup from '@mui/material/FormGroup'
+import DialogActions from '@mui/material/DialogActions'
+import ListItemText from '@mui/material/ListItemText'
 import {
   createCourse,
   fetchCourse,
@@ -301,6 +303,8 @@ const StudentCourses = () => {
   const [courses, setCourses] = useState([]) // Initialize with an empty array, real courses will be fetched
   const [selectedCourse, setSelectedCourse] = useState(null)
   const navigate = useNavigate() // Use navigate hook to redirect to ICPC problems page
+  const [viewProblemsDialogOpen, setViewProblemsDialogOpen] = useState(false)
+  const [selectedCourseProblems, setSelectedCourseProblems] = useState([])
 
   /// Fetch user courses on component mount
   useEffect(() => {
@@ -336,13 +340,21 @@ const StudentCourses = () => {
     setDialogOpen(false) // Close dialog after creating course
   }
 
-  const handleViewProblemsClick = (courseId) => {
-    const course = courses.find((c) => c.courseId === courseId)
-    if (course && course.problemIds.length > 0) {
-      navigate('/problems', { state: { problemIds: course.problemIds } }) // Pass problemIds to ICPC page
-    } else {
-      console.error('No problems found for this course.')
+  const handleViewProblemsClick = async (courseId) => {
+    try {
+      const course = await fetchCourse(courseId) // Fetch the latest course data
+      const problemDetails = await Promise.all(
+        course.problemIds.map((id) => fetchProblemById(id))
+      )
+      setSelectedCourseProblems(problemDetails)
+      setViewProblemsDialogOpen(true)
+    } catch (error) {
+      console.error('Error fetching course problems:', error)
     }
+  }
+
+  const handleCloseViewProblemsDialog = () => {
+    setViewProblemsDialogOpen(false)
   }
 
   // Handle adding problems (navigate to AddCourseContent)
@@ -476,6 +488,33 @@ const StudentCourses = () => {
           </Paper>
         </Grid>
       </Grid>
+
+      {/* View Problems Dialog */}
+      <Dialog
+        open={viewProblemsDialogOpen}
+        onClose={handleCloseViewProblemsDialog}
+        aria-labelledby="view-problems-dialog-title"
+        aria-describedby="view-problems-dialog-description"
+      >
+        <DialogTitle id="view-problems-dialog-title">
+          Course Problems
+        </DialogTitle>
+        <DialogContent>
+          <List>
+            {selectedCourseProblems.map((problem) => (
+              <ListItem key={problem._id}>
+                <ListItemText
+                  primary={problem.title}
+                  secondary={problem.description}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseViewProblemsDialog}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }
