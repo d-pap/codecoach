@@ -178,6 +178,85 @@ export async function likeForumComment(messageId) {
 /**
  * COURSES PAGE CODE
  */
+
+// function to create a course in the database
+export const createCourseInDatabase = async (courseData, userId) => {
+  try {
+    const response = await axios.post(`${API_GATEWAY_URL}/courses`, {
+      courseData,
+      userId,
+    })
+
+    if (response.status !== 200) {
+      throw new Error('Failed to create course')
+    }
+
+    return response.data.course
+  } catch (error) {
+    console.error('Error creating course:', error)
+    throw error
+  }
+}
+
+// function to fetch a course by courseId
+export const getCourseById = async (courseId) => {
+  try {
+    const response = await axios.get(`${API_GATEWAY_URL}/courses/${courseId}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching course:', error)
+    throw error
+  }
+}
+
+// function to fetch all courses
+export const getAllCourses = async () => {
+  try {
+    const response = await axios.get(`${API_GATEWAY_URL}/courses`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching courses:', error)
+    throw error
+  }
+}
+
+// function to add problem IDs to a course
+export const addProblemsToCourse = async (courseId, problemIds) => {
+  //console.log('Sending problem IDs to API:', { courseId, problemIds }) // log data being sent
+  try {
+    const response = await axios.patch(
+      `${API_GATEWAY_URL}/courses/${courseId}`,
+      {
+        problemIds,
+      }
+    )
+    //console.log('API response:', response) // log response from api
+    return response.data
+  } catch (error) {
+    // log error details
+    console.error(
+      'Error adding problems to course:',
+      error.response || error.message
+    )
+    throw error
+  }
+}
+
+// get all problems for a specific course
+export const getCourseByIdProblems = async (courseId) => {
+  console.log('Fetching course problems for course ID:', courseId) // Add this log
+  try {
+    const course = await getCourseById(courseId) // Fetch course details
+    const problemDetails = await Promise.all(
+      course.problemIds.map((id) => fetchProblemById(id)) // Fetch each problem detail by ID
+    )
+    return problemDetails
+  } catch (error) {
+    console.error('Error fetching course problems:', error)
+    throw error
+  }
+}
+
 // Fake database
 const db = {
   courses: [
@@ -248,20 +327,6 @@ export function createCourse(courseId, teacherId, problemIds = []) {
   }
   db.courses.push(newCourse)
   return newCourse
-}
-
-// Function to fetch a specific course by courseId
-export function fetchCourse(courseId) {
-  const course = db.courses.find((course) => course.courseId === courseId)
-  if (!course) {
-    throw new Error('Course not found')
-  }
-
-  // Fetch problems for the course by their IDs
-  const problems = course.problemIds.map((problemId) =>
-    db.problems.find((problem) => problem._id === problemId)
-  )
-  return { ...course, problems } // Return course with problem details
 }
 
 // Function to add a problem ID to a course's problemIds array

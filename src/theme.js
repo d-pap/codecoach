@@ -6,6 +6,7 @@ const theme = createTheme({
     primary: {
       // for buttons, active links/tabs
       main: '#0f172a',
+      highlighted: '#f1f5f9',
     },
     background: {
       default: '#fffffe',
