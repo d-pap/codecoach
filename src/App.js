@@ -26,6 +26,7 @@ import ICPC from './pages/Problems'
 import ProblemDetail from './pages/ProblemSolving'
 import './App.css'
 import NotFound from './pages/NotFound' // Add this import
+import ScrollToTop from './components/utility/ScrollToTop'
 
 // Dynamic Imports
 const LandingPage = lazy(() => import('./pages/LandingPage'))
@@ -102,6 +103,7 @@ function App() {
               flexDirection: 'column',
             }}
           >
+            <ScrollToTop />
             <Routes>
               <Route
                 path="/"

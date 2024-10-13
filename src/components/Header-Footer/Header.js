@@ -49,6 +49,7 @@ const Header = () => {
       window.location.reload()
     } catch (error) {
       console.error('Error signing out: ', error)
+      alert('Error signing out. Please try again.')
       setLoading(false) // Stop loading if there's an error
     }
   }
@@ -72,20 +73,7 @@ const Header = () => {
   if (loading) {
     // Render the loader when loading is true
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh', // Full viewport height
-          width: '100vw', // Full viewport width
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent background
-          zIndex: 1300, // Ensure it's on top
-        }}
-      >
+      <Box>
         <CenteredCircleLoader />
       </Box>
     )
