@@ -12,22 +12,8 @@ const HintByDatabaseTab = lazy(
 const ForumTab = lazy(() => import('./problem-detail-navbar/ForumTab'))
 
 const DetailContainer = styled.div`
-  h1 {
-    color: #333;
-  }
-  h2 {
-    color: #666;
-    margin-top: 20px;
-  }
-  h3 {
-    color: #666;
-    margin-top: 20px;
-  }
-  pre,
   p {
-    background-color: #f5f5f5;
     padding: 10px;
-    border-radius: 10px;
   }
 `
 

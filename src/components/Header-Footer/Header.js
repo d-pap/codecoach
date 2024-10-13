@@ -18,6 +18,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle'
 import Settings from '@mui/icons-material/Settings'
 import Logout from '@mui/icons-material/Logout'
 import logo from '../../images/logo-with-text.svg'
+import CenteredCircleLoader from '../utility/CenteredLoader'
 
 const PageLinks = styled(Button)(({ theme }) => ({
   color: theme.palette.text.primary,
@@ -25,7 +26,7 @@ const PageLinks = styled(Button)(({ theme }) => ({
   borderRadius: theme.spacing(2),
   whiteSpace: 'nowrap',
   margin: theme.spacing(0, 1),
-  p: theme.spacing(0.5, 1), //TODO: adjust padding for header height???? added this line to fix smaller header issues
+  padding: theme.spacing(0.5, 1),
   '&:hover': {
     background: alpha(theme.palette.text.primary, 0.1),
     transition: 'background-color 0.2s ease',
@@ -37,15 +38,18 @@ const Header = () => {
   const navigate = useNavigate()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const [anchorEl, setAnchorEl] = React.useState(null)
-  const [accountMenuAnchorEl, setAccountMenuAnchorEl] = React.useState(null) // state for account menu
+  const [accountMenuAnchorEl, setAccountMenuAnchorEl] = React.useState(null)
+  const [loading, setLoading] = React.useState(false) // Loading state
 
   const handleLogout = async () => {
+    setLoading(true) // Start loading
     try {
       await Auth.signOut()
       localStorage.clear()
       window.location.reload()
     } catch (error) {
       console.error('Error signing out: ', error)
+      setLoading(false) // Stop loading if there's an error
     }
   }
 
@@ -58,11 +62,33 @@ const Header = () => {
   }
 
   const handleAccountMenu = (event) => {
-    setAccountMenuAnchorEl(event.currentTarget) // open account menu
+    setAccountMenuAnchorEl(event.currentTarget)
   }
 
   const handleAccountMenuClose = () => {
-    setAccountMenuAnchorEl(null) // close account menu
+    setAccountMenuAnchorEl(null)
+  }
+
+  if (loading) {
+    // Render the loader when loading is true
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh', // Full viewport height
+          width: '100vw', // Full viewport width
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent background
+          zIndex: 1300, // Ensure it's on top
+        }}
+      >
+        <CenteredCircleLoader />
+      </Box>
+    )
   }
 
   return (
@@ -154,7 +180,14 @@ const Header = () => {
                 >
                   Settings
                 </MenuItem>
-                <MenuItem onClick={handleAccountMenuClose}>Logout</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleClose()
+                    handleLogout()
+                  }}
+                >
+                  Logout
+                </MenuItem>
               </Menu>
             </>
           ) : (
@@ -165,7 +198,11 @@ const Header = () => {
                   alignItems: 'center',
                 }}
               >
-                <PageLinks component={NavLink} to="/home" activeClassName="active">
+                <PageLinks
+                  component={NavLink}
+                  to="/home"
+                  activeClassName="active"
+                >
                   Home
                 </PageLinks>
                 <PageLinks

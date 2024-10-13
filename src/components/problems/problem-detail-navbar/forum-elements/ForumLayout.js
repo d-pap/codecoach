@@ -140,19 +140,19 @@ const ForumLayout = ({
                         {/* Show the first letter of the username as avatar */}
                       </Avatar>
                       <Typography
-                        variant="subtitle2"
+                        variant="body1"
                         sx={{ fontWeight: 'bold', fontSize: 14 }}
                       >
                         {msg.username}
                       </Typography>
                     </Box>
-                    <Typography variant="subtitle2" sx={{ fontSize: 14 }}>
+                    <Typography variant="body1" sx={{ fontSize: 14 }}>
                       Likes: {msg.likes}
                     </Typography>
                   </Box>
 
                   <Box sx={{ mt: 1, mb: 1 }}>
-                    <Typography variant="body2" sx={{ fontSize: 16 }}>
+                    <Typography variant="body1" sx={{ fontSize: 16 }}>
                       {msg.message}
                     </Typography>
                   </Box>

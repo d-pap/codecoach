@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import LinearProgress from '@mui/material/LinearProgress'
+import CenteredCircleLoader from '../components/utility/CenteredLoader'
 import { fetchProblemById } from '../api'
 import ProblemDetailLayout from '../components/problems/ProblemDetailLayout'
 import ProblemDetails from '../components/problems/ProblemDetails'
@@ -45,7 +45,7 @@ function ProblemDetail() {
   })
 
   if (isLoading) {
-    return <LinearProgress /> // You can replace this with a skeleton loader if preferred
+    return <CenteredCircleLoader /> // You can replace this with a skeleton loader if preferred
   }
 
   if (isError) {

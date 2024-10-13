@@ -7,12 +7,13 @@
 
 import React from 'react'
 import NavbarStack from './NavbarStack'
+import { Typography } from '@mui/material'
 
 const HintByDatabaseTab = ({ problem }) => {
   return (
     <NavbarStack>
-      <h3>Hint By Database</h3>
-      <p>{problem.hint}</p>
+      <Typography variant="h6">Hint By Database</Typography>
+      <Typography variant="body1">{problem.hint}</Typography>
     </NavbarStack>
   )
 }

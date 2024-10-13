@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import {
   Box,
   TextField,
@@ -21,68 +21,52 @@ import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
 import { useTheme } from '@mui/material/styles'
 import SendChat from './AIChat'
 
-// Function to retrieve chat history from localStorage
-const getChatHistory = (problemId) => {
-  try {
-    const history = localStorage.getItem(`chatHistory-${problemId}`)
-    return history ? JSON.parse(history) : { conversation_id: null, data: [] }
-  } catch (error) {
-    console.error('Failed to parse chat history:', error)
-    return { conversation_id: null, data: [] }
-  }
-}
-
-// Function to save chat history to localStorage
-const saveChatHistory = (problemId, history) => {
-  localStorage.setItem(`chatHistory-${problemId}`, JSON.stringify(history))
-}
-
 // Function to clear chat history from localStorage
 const clearChatHistory = (problemId) => {
   localStorage.removeItem(`chatHistory-${problemId}`)
 }
 
 // ChatBox component to display chat history and send messages
-const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
+const ChatBox = ({
+  problem,
+  drawerWidth,
+  setDrawerWidth,
+  chatHistory,
+  setChatHistory,
+  isLoading,
+  setIsLoading,
+  chatCount,
+  setChatCount,
+  showSettings,
+  setShowSettings,
+  // **New Props for Scroll Handling**
+  initialScrollPosition,
+  onScrollPositionChange,
+}) => {
   const theme = useTheme()
-  const [input, setInput] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [currentChatHistory, setCurrentChatHistory] = useState({
-    conversation_id: null,
-    data: [],
-  })
-  const [showSettings, setShowSettings] = useState(false)
+  const [input, setInput] = React.useState('')
 
   //! limit the number of chats to prevent abuse
   const MAX_CHAT_COUNT = 10
 
-  const [chatCount, setChatCount] = useState(() => {
-    const savedCount = localStorage.getItem('chatCount')
-    const savedDate = localStorage.getItem('chatDate')
-    const today = new Date().toDateString()
+  // **Ref for Scrollable Container**
+  const scrollContainerRef = useRef(null)
 
-    if (savedDate !== today) {
-      localStorage.setItem('chatDate', today)
-      return 0
-    }
-    return savedCount ? parseInt(savedCount, 10) : 0
-  })
-
-  // Retrieve chat history on component mount
   useEffect(() => {
-    const history = getChatHistory(problem._id)
-    if (Array.isArray(history.data)) {
-      setCurrentChatHistory(history)
-    } else {
-      setCurrentChatHistory({ conversation_id: null, data: [] })
+    // **Restore Scroll Position on Mount**
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = initialScrollPosition
     }
-  }, [problem._id])
+  }, [initialScrollPosition])
 
-  //! save the chat count to localStorage
   useEffect(() => {
-    localStorage.setItem('chatCount', chatCount)
-    localStorage.setItem('chatDate', new Date().toDateString())
-  }, [chatCount])
+    // **Capture Scroll Position before Unmounting**
+    return () => {
+      if (scrollContainerRef.current) {
+        onScrollPositionChange(scrollContainerRef.current.scrollTop)
+      }
+    }
+  }, [onScrollPositionChange])
 
   const handleInputChange = (e) => {
     setInput(e.target.value)
@@ -101,32 +85,31 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
     } else if (command === 'user') {
       message = input
       // increment chat count
-      setChatCount(chatCount + 1)
+      setChatCount((prevCount) => prevCount + 1)
     } else if (command === 'hint') {
       message = 'Requesting a hint...'
       // increment chat count
-      setChatCount(chatCount + 1)
+      setChatCount((prevCount) => prevCount + 1)
     } else if (command === 'solution') {
       message = 'Requesting a solution...'
       // increment chat count
-      setChatCount(chatCount + 1)
+      setChatCount((prevCount) => prevCount + 1)
     } else {
       console.error('Invalid command:', command)
       return
     }
 
     const newHistory = {
-      ...currentChatHistory,
-      data: [...currentChatHistory.data, { role: 'user', content: message }],
+      ...chatHistory,
+      data: [...chatHistory.data, { role: 'user', content: message }],
     }
-    setCurrentChatHistory(newHistory)
-    saveChatHistory(problem._id, newHistory)
+    setChatHistory(newHistory)
 
     setInput('')
     setIsLoading(true)
 
     try {
-      const conversation_id = currentChatHistory.conversation_id
+      const conversation_id = chatHistory.conversation_id
 
       const query = await SendChat(
         problem.title,
@@ -148,8 +131,7 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
         updatedHistory.conversation_id = query.conversation_id
       }
 
-      setCurrentChatHistory(updatedHistory)
-      saveChatHistory(problem._id, updatedHistory)
+      setChatHistory(updatedHistory)
     } catch (error) {
       console.error('Failed to send chat:', error)
       const updatedHistory = {
@@ -159,8 +141,7 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
           { role: 'assistant', content: 'Failed to get response from model' },
         ],
       }
-      setCurrentChatHistory(updatedHistory)
-      saveChatHistory(problem._id, updatedHistory)
+      setChatHistory(updatedHistory)
     } finally {
       setIsLoading(false)
     }
@@ -169,7 +150,7 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
   // Function to delete chat history
   const handleDelete = () => {
     clearChatHistory(problem._id)
-    setCurrentChatHistory({ conversation_id: null, data: [] })
+    setChatHistory({ conversation_id: null, data: [] })
     setInput('')
   }
 
@@ -177,7 +158,7 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
   const handleOnPressEnter = (event) => {
     if (event.key === 'Enter' && !isLoading) {
       if (chatCount >= MAX_CHAT_COUNT || input.trim() === '') {
-        // preven default action and give alert
+        // prevent default action and give alert
         event.preventDefault()
         if (chatCount >= MAX_CHAT_COUNT) {
           alert('You have reached the maximum number of messages for today.')
@@ -333,6 +314,7 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
       </Collapse>
 
       <Box
+        ref={scrollContainerRef}
         sx={{
           flex: 1,
           overflowY: 'auto',
@@ -341,8 +323,8 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
           border: 'none',
         }}
       >
-        {Array.isArray(currentChatHistory.data) &&
-          currentChatHistory.data.map((chat, index) => (
+        {Array.isArray(chatHistory.data) &&
+          chatHistory.data.map((chat, index) => (
             <Box
               key={index}
               sx={{
@@ -478,7 +460,7 @@ const ChatBox = ({ problem, drawerWidth, setDrawerWidth }) => {
         <TextField
           value={input}
           onChange={handleInputChange}
-          onKeyDown={handleOnPressEnter} //TODO: onKeyPress is deprecated, use onKeyDown instead
+          onKeyDown={handleOnPressEnter} // Updated to onKeyDown
           placeholder={`Type a message (${MAX_CHAT_COUNT - chatCount} messages left today)...`}
           variant="outlined"
           fullWidth
