@@ -3,8 +3,8 @@
  * This can be temporary if we want to use it for something else
  * or delete it completely. Was initially only made to construct navbar
  */
-import React, { useContext, useState, useEffect, useMemo } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
@@ -26,12 +26,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
-import Pagination from '@mui/material/Pagination'
-import Stack from '@mui/material/Stack'
-import FormGroup from '@mui/material/FormGroup'
 import DialogActions from '@mui/material/DialogActions'
-import { Snackbar, CircularProgress } from '@mui/material'
-import MuiAlert from '@mui/material/Alert'
 import { styled } from '@mui/material/styles'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -49,29 +44,17 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { alpha } from '@mui/material/styles'
 import AddIcon from '@mui/icons-material/Add'
 import JoinIcon from '@mui/icons-material/PersonAdd'
+import GroupAddIcon from '@mui/icons-material/GroupAdd'
+import MenuBookIcon from '@mui/icons-material/MenuBook'
+import theme from '../theme'
 import CenteredCircleLoader from '../components/utility/CenteredLoader'
 import {
   getCurrentUserId,
   createCourseInDatabase,
-  getCourseById,
   deleteCourse,
-  getCoursesByUser,
-  fetchProblems,
-  fetchProblemById,
   getAllCourses,
-  addProblemsToCourse,
   getCourseByIdProblems,
 } from '../api'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import { Description } from '@mui/icons-material'
-import { InputAdornment } from '@mui/material'
-import SearchIcon from '@mui/icons-material/Search'
-import GroupAddIcon from '@mui/icons-material/GroupAdd'
-import MenuBookIcon from '@mui/icons-material/MenuBook'
-import theme from '../theme'
-import DialogContentText from '@mui/material/DialogContentText'
-
 /********************************************************************************************************************
  * CLASSFORMDIALOG CODE
  ********************************************************************************************************************/
@@ -135,426 +118,6 @@ const ClassFormDialog = ({ open, onClose, onCreate }) => {
  * END CLASSFORMDIALOG CODE
  ********************************************************************************************************************/
 
-/********************************************************************************************************************
- * COURSEADDPROBLEM CODE
- ********************************************************************************************************************/
-const AddCourseContent = () => {
-  const { courseId } = useParams()
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedProblems, setSelectedProblems] = useState([])
-  const [courseProblems, setCourseProblems] = useState([])
-  const [courseName, setCourseName] = useState('')
-  const [error, setError] = useState(null)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false)
-  const problemsPerPage = 10
-  const navigate = useNavigate()
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [orderBy, setOrderBy] = useState('region')
-  const [order, setOrder] = useState('asc')
-  const [expandedProblem, setExpandedProblem] = useState(null)
-
-  // fetch problems using react query
-  const {
-    data: problems,
-    isLoading,
-    error: problemsError,
-  } = useQuery({
-    queryKey: ['problems'],
-    queryFn: fetchProblems,
-  })
-
-  // load course details
-  useEffect(() => {
-    async function loadCourseDetails() {
-      try {
-        const courseData = await getCourseById(courseId)
-        if (!courseData) {
-          throw new Error(`Course with ID ${courseId} not found`)
-        }
-        setCourseName(courseData.courseName || 'Unnamed Course')
-        setCourseProblems(courseData.problemIds || [])
-        setSelectedProblems(courseData.problemIds || [])
-      } catch (error) {
-        setError(`Error fetching course details: ${error.message}`)
-      }
-    }
-    loadCourseDetails()
-  }, [courseId])
-
-  const sortedAndFilteredProblems = useMemo(() => {
-    if (!problems) return [] // Return an empty array if problems is not available yet
-
-    return problems
-      .filter(
-        (problem) =>
-          problem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          problem.description
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          `${problem.contestYear} ${problem.contestRegion}`
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
-      )
-      .sort((a, b) => {
-        if (orderBy === 'region') {
-          const regionA = `${a.contestYear} ${a.contestRegion}`
-          const regionB = `${b.contestYear} ${b.contestRegion}`
-          return order === 'asc'
-            ? regionA.localeCompare(regionB)
-            : regionB.localeCompare(regionA)
-        }
-        return 0
-      })
-  }, [problems, orderBy, order, searchTerm])
-
-  if (isLoading) {
-    return <CenteredCircleLoader />
-  }
-  if (problemsError) {
-    return <Typography color="error">{problemsError.message}</Typography>
-  }
-
-  // handle problem selection
-  const handleProblemChange = (problemId) => {
-    setSelectedProblems((prev) => {
-      if (prev.includes(problemId)) {
-        return prev.filter((id) => id !== problemId) // deselect prob
-      }
-      return [...prev, problemId] // add selected prob
-    })
-  }
-
-  // handle selected problems
-  const handleSubmit = async () => {
-    setIsSubmitting(true)
-    try {
-      await addProblemsToCourse(courseId, selectedProblems)
-      const updatedProblems = await getCourseByIdProblems(courseId)
-      setCourseProblems(updatedProblems)
-      setShowSuccessMessage(true)
-    } catch (error) {
-      setError(`Error adding problems: ${error.message}`)
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  const indexOfLastProblem = currentPage * problemsPerPage
-  const indexOfFirstProblem = indexOfLastProblem - problemsPerPage
-  const currentProblems = sortedAndFilteredProblems.slice(
-    indexOfFirstProblem,
-    indexOfLastProblem
-  )
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
-
-  const handleRequestSort = (property) => {
-    const isAsc = orderBy === property && order === 'asc'
-    setOrder(isAsc ? 'desc' : 'asc')
-    setOrderBy(property)
-  }
-
-  return (
-    <Box sx={{ minHeight: '100vh', py: 4 }}>
-      <Container maxWidth="lg">
-        <Box sx={{ mb: 4, textAlign: 'center' }}>
-          <Typography
-            variant="h2"
-            component="h1"
-            gutterBottom
-            align="center"
-            sx={{ mb: 4, fontWeight: 'bold' }}
-          >
-            Course Content for {courseName}
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              maxWidth: '800px',
-              mx: 'auto',
-              color: '#475569',
-              lineHeight: 1.6,
-              mb: 2,
-              textAlign: 'left',
-            }}
-          >
-            Select the problems you want your students to work on for this
-            course. You can search for specific problems or browse through the
-            list below. Check the box next to each problem you want to include.
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              maxWidth: '800px',
-              mx: 'auto',
-              color: '#334155',
-              lineHeight: 1.6,
-              mb: 2,
-              textAlign: 'left',
-              fontWeight: 'bold',
-            }}
-          >
-            Click the 'Submit Selections' button when you're done to add the
-            problems to your course.
-          </Typography>
-        </Box>
-        <Box sx={{ maxWidth: '800px', mx: 'auto', mb: 4 }}>
-          <TextField
-            fullWidth
-            placeholder="Search for a problem"
-            variant="outlined"
-            value={searchTerm}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: (theme) => theme.palette.primary.main,
-                  borderRadius: (theme) => theme.spacing(2),
-                },
-              },
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon
-                    sx={{ color: (theme) => theme.palette.primary.main }}
-                  />
-                </InputAdornment>
-              ),
-            }}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </Box>
-
-        <TableContainer
-          component={Paper}
-          sx={{
-            mt: 2,
-            boxShadow:
-              '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-            border: (theme) => `1px solid ${theme.palette.divider}`,
-            borderRadius: (theme) => theme.spacing(2),
-          }}
-        >
-          <Table
-            stickyHeader
-            aria-label="course problems table"
-            style={{ tableLayout: 'fixed' }}
-          >
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    indeterminate={
-                      selectedProblems.length > 0 &&
-                      selectedProblems.length < sortedAndFilteredProblems.length
-                    }
-                    checked={
-                      sortedAndFilteredProblems.length > 0 &&
-                      selectedProblems.length ===
-                        sortedAndFilteredProblems.length
-                    }
-                    onChange={(event) => {
-                      if (event.target.checked) {
-                        setSelectedProblems(
-                          sortedAndFilteredProblems.map((p) => p._id)
-                        )
-                      } else {
-                        setSelectedProblems([])
-                      }
-                    }}
-                  />
-                </TableCell>
-                <TableCell
-                  style={{
-                    fontWeight: 'bold',
-                    fontSize: '1rem',
-                    width: '20%', //! added this to fix layout shift when collapsing rows-------------------------------
-                  }}
-                >
-                  Problem Title
-                </TableCell>
-                <TableCell
-                  style={{
-                    fontWeight: 'bold',
-                    fontSize: '1rem',
-                    width: '20%', //! added this to fix layout shift when collapsing rows-------------------------------
-                  }}
-                >
-                  <TableSortLabel
-                    active={orderBy === 'region'}
-                    direction={orderBy === 'region' ? order : 'asc'}
-                    onClick={() => handleRequestSort('region')}
-                  />
-                  Region
-                </TableCell>
-                <TableCell
-                  style={{
-                    fontWeight: 'bold',
-                    fontSize: '1rem',
-                  }}
-                >
-                  Description
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {sortedAndFilteredProblems
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((problem) => (
-                  <React.Fragment key={problem._id}>
-                    <TableRow
-                      sx={{
-                        backgroundColor: selectedProblems.includes(problem._id)
-                          ? '#f8fafc'
-                          : 'inherit',
-                      }}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={selectedProblems.includes(problem._id)}
-                          onChange={() => handleProblemChange(problem._id)}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">{problem.title}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">
-                          {`${problem.contestYear} ${problem.contestRegion}`}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          <IconButton
-                            aria-label="expand row"
-                            size="small"
-                            onClick={() =>
-                              setExpandedProblem(
-                                expandedProblem === problem._id
-                                  ? null
-                                  : problem._id
-                              )
-                            }
-                          >
-                            {expandedProblem === problem._id ? (
-                              <KeyboardArrowUpIcon />
-                            ) : (
-                              <KeyboardArrowDownIcon />
-                            )}
-                          </IconButton>
-                          <Typography variant="body1" sx={{ ml: 1 }}>
-                            {problem.description.slice(0, 100)}...
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell
-                        style={{ paddingBottom: 0, paddingTop: 0 }}
-                        colSpan={4}
-                      >
-                        <Collapse
-                          in={expandedProblem === problem._id}
-                          timeout="auto"
-                          unmountOnExit
-                        >
-                          <Box
-                            sx={{
-                              margin: 1,
-                              mx: 8,
-                              //maxWidth: '80%',
-                            }}
-                          >
-                            <Typography
-                              variant="body2"
-                              gutterBottom
-                              component="div"
-                              sx={{
-                                fontWeight: 'bold',
-                                fontSize: '1rem',
-                                color: '#475569',
-                                mt: 2,
-                              }}
-                            >
-                              Full Problem Description
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              sx={{
-                                my: 1,
-                                fontSize: '0.875rem',
-                                color: '#475569',
-                                whiteSpace: 'pre-wrap',
-                                letterSpacing: '0.00938em',
-                              }}
-                            >
-                              {problem.description}
-                            </Typography>
-                          </Box>
-                        </Collapse>
-                      </TableCell>
-                    </TableRow>
-                  </React.Fragment>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0 }}>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            startIcon={isSubmitting ? <CircularProgress size={20} /> : null}
-            sx={{ mt: 2 }}
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Selections'}
-          </Button>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={sortedAndFilteredProblems.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Box>
-
-        <Snackbar
-          open={showSuccessMessage}
-          autoHideDuration={6000}
-          onClose={() => setShowSuccessMessage(false)}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        >
-          <MuiAlert
-            elevation={6}
-            variant="filled"
-            severity="success"
-            onClose={() => setShowSuccessMessage(false)}
-          >
-            Problems successfully added to the course!
-          </MuiAlert>
-        </Snackbar>
-      </Container>
-    </Box>
-  )
-}
-
-/********************************************************************************************************************
- * END COURSEADDPROBLEM CODE
- ********************************************************************************************************************/
-
 //! Mock user context (replace or integrate with your actual auth context)
 const AuthContext = React.createContext({
   isAuthenticated: true,
@@ -582,37 +145,6 @@ const StyledTableContainer = styled(TableContainer)({
   flexGrow: 1,
   overflow: 'auto',
 })
-
-// Styled components
-const StyledCard = styled(Card)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-  transition: 'box-shadow 0.3s',
-  '&:hover': {
-    boxShadow: theme.shadows[4],
-  },
-}))
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  marginRight: theme.spacing(1),
-  marginTop: theme.spacing(1),
-}))
-
-const DeleteButton = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(1),
-  color: theme.palette.error.main,
-  borderColor: theme.palette.error.main,
-  '&:hover': {
-    backgroundColor: theme.palette.error.light,
-    color: theme.palette.error.contrastText,
-  },
-}))
-
-const HeaderBox = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.main,
-  color: theme.palette.primary.contrastText,
-  padding: theme.spacing(4),
-  marginBottom: theme.spacing(4),
-}))
 
 const CourseList = () => {
   const { isAuthenticated, role } = useContext(AuthContext)
@@ -806,13 +338,13 @@ const CourseList = () => {
   return (
     <Box sx={{ minHeight: '100vh', py: 4 }}>
       <Container maxWidth="lg">
-        <Box sx={{ mb: 4, textAlign: 'center' }}>
+        <Box sx={{ mb: 8, textAlign: 'center' }}>
           <Typography
             variant="h2"
             component="h1"
             gutterBottom
             align="center"
-            sx={{ mb: 2, fontWeight: 'bold' }}
+            sx={{ mb: 4, fontWeight: 'bold' }}
           >
             Courses
           </Typography>
@@ -833,7 +365,7 @@ const CourseList = () => {
           </Typography>
         </Box>
         <Grid container spacing={3}>
-          {/* Course List Section */}
+          {/* course list section */}
           <Grid item xs={12} md={9}>
             {courses.length === 0 ? (
               <Typography>No courses available.</Typography>
@@ -877,11 +409,21 @@ const CourseList = () => {
                         Invite student
                       </Button>
                       <Button
-                        variant="contained"
-                        color="error"
+                        variant="text"
+                        sx={{
+                          marginLeft: 'auto',
+                          color: theme.palette.error.light,
+                          '&:hover': {
+                            color: theme.palette.error.main,
+                          },
+                          // make the button a perfect circle
+                          borderRadius: '50%',
+                          minWidth: '40px',
+                          padding: '4px',
+                        }}
                         onClick={() => handleDeleteClick(course._id)}
                       >
-                        Delete
+                        <DeleteIcon />
                       </Button>
                     </Box>
                   </CardContent>
@@ -890,7 +432,7 @@ const CourseList = () => {
             )}
           </Grid>
 
-          {/* Sidebar Section */}
+          {/* sidebar section */}
           <Grid item xs={12} md={3}>
             <Paper
               sx={{
@@ -1150,7 +692,7 @@ const CourseList = () => {
               color="error"
               sx={{ mt: 2, fontWeight: 'bold', textAlign: 'center' }}
             >
-              This action cannot be undone!
+              This action cannot be undone.
             </Typography>
           </DialogContent>
           <DialogActions>
@@ -1166,7 +708,7 @@ const CourseList = () => {
               onClick={handleDeleteConfirm}
               autoFocus
               sx={{
-                backgroundColor: alpha(theme.palette.error.main, 0.7),
+                backgroundColor: theme.palette.error.light,
                 '&:hover': {
                   backgroundColor: theme.palette.error.main,
                 },
@@ -1181,5 +723,4 @@ const CourseList = () => {
   )
 }
 
-export { AddCourseContent }
 export default CourseList

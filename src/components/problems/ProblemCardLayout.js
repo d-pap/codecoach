@@ -115,15 +115,15 @@ const ProblemCardLayout = ({ problem }) => {
         >
           <StyledCardContent>
             {/* Contest Information */}
-            <Typography variant="overline" color="textSecondary">
+            <Typography variant="overline" color="primary.light500">
               {problem.contestYear} {problem.contestRegion}
             </Typography>
             {/* Problem Title */}
-            <CardTitle variant="h5" gutterBottom>
+            <CardTitle variant="body1" gutterBottom>
               {problem.title}
             </CardTitle>
             {/* Problem Description */}
-            <CardBody variant="body1">{problem.description}</CardBody>
+            <CardBody variant="small">{problem.description}</CardBody>
           </StyledCardContent>
         </StyledCard>
       </div>

@@ -12,7 +12,7 @@ function Interview() {
     <Box sx={{ bgcolor: 'background.default', py: 6 }}>
       <Container maxWidth="lg">
         <Typography
-          variant="h2"
+          variant="h1"
           component="h1"
           gutterBottom
           align="center"

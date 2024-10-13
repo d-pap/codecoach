@@ -3,10 +3,18 @@
  */
 
 import React, { Suspense, lazy } from 'react'
+import Typography from '@mui/material/Typography'
+import { styled } from '@mui/material/styles'
+import Box from '@mui/material/Box'
 import CenteredCircleLoader from '../../utility/CenteredLoader'
-
+import theme from '../../../theme'
 // Dynamically import NavbarStack to optimize bundle size
 const NavbarStack = lazy(() => import('./NavbarStack'))
+
+const ProblemDetailsHeaders = styled(Typography)(({ theme }) => ({
+  marginBottom: theme.spacing(1),
+  marginTop: theme.spacing(1),
+}))
 
 /**
  * ProblemTab component to display problem details.
@@ -18,24 +26,67 @@ const NavbarStack = lazy(() => import('./NavbarStack'))
 const ProblemTab = ({ problem }) => {
   return (
     <Suspense fallback={<CenteredCircleLoader />}>
-      <NavbarStack >
-        <h3>Description</h3>
-        <p>{problem.description}</p>
-        <h3>Input</h3>
-        <p>{problem.exampleInputs}</p>
-        <h3>Output</h3>
-        <p>{problem.exampleOutputs}</p>
-        <h3>Examples</h3>
-        <pre
-          style={{
-            whiteSpace: 'pre-wrap',
-            wordWrap: 'break-word',
-            overflowWrap: 'break-word',
-            maxWidth: '100%',
-          }}
-        >
-          {JSON.stringify(problem.testCases, null, 2)}
-        </pre>
+      <NavbarStack>
+        <Box>
+          <ProblemDetailsHeaders variant="h6" sx={{ fontWeight: 'bold' }}>
+            {' '}
+            Description
+          </ProblemDetailsHeaders>
+          <Typography
+            variant="small"
+            sx={{
+              lineHeight: '1.75rem',
+            }}
+          >
+            {problem.description}
+          </Typography>
+
+          <ProblemDetailsHeaders variant="h6" sx={{ fontWeight: 'bold' }}>
+            Input
+          </ProblemDetailsHeaders>
+          <Typography
+            variant="small"
+            sx={{
+              lineHeight: '1.75rem',
+            }}
+          >
+            {problem.exampleInputs}
+          </Typography>
+
+          <ProblemDetailsHeaders variant="h6" sx={{ fontWeight: 'bold' }}>
+            Output
+          </ProblemDetailsHeaders>
+          <Typography
+            variant="small"
+            sx={{
+              lineHeight: '1.75rem',
+            }}
+          >
+            {problem.exampleOutputs}
+          </Typography>
+
+          <ProblemDetailsHeaders variant="h6" sx={{ fontWeight: 'bold' }}>
+            Examples
+          </ProblemDetailsHeaders>
+          <pre
+            style={{
+              whiteSpace: 'pre-wrap',
+              wordWrap: 'break-word',
+              overflowWrap: 'break-word',
+              maxWidth: '100%',
+              fontFamily:
+                'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+              fontSize: '0.875rem',
+              backgroundColor: theme.palette.grey[100],
+              borderRadius: theme.spacing(2),
+              margin: '1rem 0',
+              padding: theme.spacing(2),
+              paddingLeft: theme.spacing(3),
+            }}
+          >
+            {JSON.stringify(problem.testCases, null, 2)}
+          </pre>
+        </Box>
       </NavbarStack>
     </Suspense>
   )

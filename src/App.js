@@ -25,8 +25,7 @@ import CenteredLoader from './components/utility/CenteredLoader'
 import ICPC from './pages/Problems'
 import ProblemDetail from './pages/ProblemSolving'
 import './App.css'
-import NotFound from './pages/NotFound' // Add this import
-import { AddCourseContent } from './pages/Courses'
+import AddCourseContent from './pages/AddCourseContent'
 
 // Dynamic Imports
 const LandingPage = lazy(() => import('./pages/LandingPage'))
@@ -49,6 +48,7 @@ const EditInterviewProblem = lazy(
   () => import('./pages/problems/edit-problems/editInterviewProblem')
 )
 const Interview = lazy(() => import('./pages/Interview'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 
 Amplify.configure(awsExports)
 

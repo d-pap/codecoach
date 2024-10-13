@@ -40,7 +40,7 @@ const SectionTitle = ({ title, subtitle, link, linkText }) => (
     >
       {title}
     </Typography>
-    <Typography variant="subtitle" sx={{ mb: 2, color: 'text.secondary' }}>
+    <Typography variant="subtitle1" sx={{ mb: 2 }}>
       {subtitle}
     </Typography>
     <Link
@@ -124,10 +124,12 @@ const TwoColumnCards = ({ cards }) => {
                 </Box>
               )}
               <CardContent sx={{ flexGrow: 1 }}>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h7" gutterBottom>
                   {card.title}
                 </Typography>
-                <Typography variant="body2">{card.description}</Typography>
+                <Typography variant="body2" gutterBottom>
+                  {card.description}
+                </Typography>
               </CardContent>
             </Card>
           </MuiLink>
@@ -146,12 +148,10 @@ const FeaturedProblemsGrid = ({ problems }) => (
       <Grid item xs={12} sm={6} md={4} key={problem.id}>
         <FeaturedCard elevation={3}>
           <CardContent sx={{ flexGrow: 1 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h7" gutterBottom>
               {problem.title}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {problem.description}
-            </Typography>
+            <Typography variant="body2">{problem.description}</Typography>
           </CardContent>
           <CardActions>
             <Button
@@ -229,14 +229,23 @@ export const Home = () => {
         alt: 'Competition illustration',
         content: (
           <>
-            <Typography variant="h6" gutterBottom>
-              ICPC NA Qualifier: Oct. 5, 2024
+            <Typography variant="h3" gutterBottom sx={{ mt: 'auto' }}>
+              ICPC NA Qualifier
             </Typography>
-            <Typography variant="h6" gutterBottom>
-              ICPC East Central NA Regionals: Nov. 9, 2024
+            <Typography variant="subtitle2" gutterBottom>
+              Date: Oct. 5, 2024 <br /> Registration Deadline: TBD
             </Typography>
-            <Typography variant="h6" gutterBottom>
-              ICPC World Finals: TBD
+            <Typography variant="h3" gutterBottom sx={{ mt: 'auto' }}>
+              ICPC East Central NA Regionals
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              Date: Nov. 9, 2024 <br /> Registration Deadline: TBD
+            </Typography>
+            <Typography variant="h3" gutterBottom sx={{ mt: 'auto' }}>
+              ICPC World Finals
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom sx={{ mb: 'auto' }}>
+              Date: TBD <br /> Registration Deadline: TBD
             </Typography>
           </>
         ),
@@ -270,11 +279,11 @@ export const Home = () => {
         alt: 'Problem illustration',
         content: (
           <>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h3" gutterBottom>
               Explore Problems
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              Prepare for your next competition by solving problems from
+            <Typography variant="subtitle2" gutterBottom>
+              Prepare for your next competition by solving problems <br /> from
               previous competitions
             </Typography>
           </>
@@ -315,10 +324,10 @@ export const Home = () => {
         alt: 'Interview illustration',
         content: (
           <>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h3" gutterBottom>
               FAANG Interview Prep
             </Typography>
-            <Typography variant="body1" gutterBottom>
+            <Typography variant="subtitle2" gutterBottom>
               Prepare by reviewing common interview questions from FAANG
               companies
             </Typography>
@@ -373,6 +382,7 @@ export const Home = () => {
           sx={{
             position: 'relative',
             zIndex: 2,
+            mb: 4,
             fontSize: {
               xs: '10vh',
               sm: '10vh',
@@ -389,7 +399,7 @@ export const Home = () => {
           <Typography
             key={index}
             variant="h4"
-            color="text.secondary"
+            color="primary.light600"
             sx={{
               position: 'relative',
               zIndex: 2,
@@ -437,27 +447,15 @@ export const Home = () => {
           <Box
             sx={{
               mt: { xs: 4, sm: 6, md: 8 },
-              bgcolor: 'grey.100',
+              bgcolor: 'primary.light100',
               p: { xs: 3, sm: 4, md: 6 },
               borderRadius: 4,
               textAlign: 'center',
               position: 'relative',
               overflow: 'hidden',
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundImage:
-                  'radial-gradient(circle, rgba(0,0,0,0.05) 1px, transparent 1px)',
-                backgroundSize: '20px 20px',
-                opacity: 0.5,
-              },
             }}
           >
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h3" gutterBottom>
               Join the Community
             </Typography>
             <Typography variant="body1" gutterBottom>
