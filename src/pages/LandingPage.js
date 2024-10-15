@@ -38,6 +38,7 @@ const heroTextStyles = {
   fontWeight: 'bold',
   fontFamily: 'Helvetica, Arial, sans-serif',
   fontSize: { xs: '10vh', sm: '10vh', md: '12vh', lg: '12vh', xl: '15vh' },
+  lineHeight: { xs: '10vh', sm: '10vh', md: '12vh', lg: '12vh', xl: '15vh' },
 }
 
 // component for hero text
