@@ -17,6 +17,7 @@ import logo from '../images/logo-with-text.svg'
 import grad12 from '../images/Grad_12.png'
 import rocket from '../images/rocket.svg'
 import compilerImg from '../images/compiler3.png'
+import communityImg from '../images/resumeresources.svg'
 /********************************************************************************
  * styling for header nav bar
  ********************************************************************************/
@@ -51,12 +52,12 @@ const HeroText = ({ children }) => (
 // component for section body text
 const SectionContentHeaderText = ({ children }) => (
   <Typography
-    variant="h6"
+    variant="body1"
     component="h3"
     gutterBottom
     sx={{
       fontWeight: 'bold',
-      fontSize: { xs: '0.889rem', sm: '1rem', md: '1rem' },
+      fontSize: { xs: '0.889rem', sm: '0.889rem', md: '1rem' },
       letterSpacing: { xs: '0.01em', sm: '0.01em', md: '0.02em' },
     }}
   >
@@ -66,11 +67,11 @@ const SectionContentHeaderText = ({ children }) => (
 
 const SectionContentBodyText = ({ children }) => (
   <Typography
-    variant="body1"
+    variant="body2"
     component="p"
     sx={{
-      fontSize: { xs: '0.79rem', sm: '0.79rem', md: '0.889rem' },
-      mb: { xs: 2, sm: 2, md: 4 },
+      fontSize: { xs: '0.79rem', sm: '0.79rem', md: '0.875rem' },
+      mb: { xs: 2, sm: 2, md: 2 },
     }}
   >
     {children}
@@ -98,9 +99,15 @@ function SectionText({ title, description, image, imageAlt }) {
   return (
     <Container maxWidth="lg">
       <Typography
-        variant="h3"
+        variant="h4"
         component="h2"
-        sx={{ textAlign: 'center', mb: 5, fontWeight: 'bold' }}
+        sx={{
+          my: 2,
+          fontWeight: 'bold',
+          fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
+          textAlign: 'center',
+        }}
+        //sx={{ textAlign: 'center', mb: 5, fontWeight: 'bold' }}
       >
         {title}
       </Typography>
@@ -329,7 +336,7 @@ const LandingPage = ({ onGetStarted }) => {
           Get Started <DoubleArrowRoundedIcon sx={{ ml: 1 }} />
         </Button>
         <Typography
-          variant="h6"
+          variant="body2"
           component="h2"
           color="text.primary"
           sx={{
@@ -423,7 +430,7 @@ const LandingPage = ({ onGetStarted }) => {
                 </SectionContentBodyText>
               </>
             }
-            image={rocket}
+            image={communityImg}
             imageAlt="Community"
           />
 
@@ -433,7 +440,7 @@ const LandingPage = ({ onGetStarted }) => {
               <Box
                 sx={{
                   mt: { xs: 4, sm: 6, md: 8 },
-                  bgcolor: 'grey.100',
+                  bgcolor: 'primary.light100',
                   p: { xs: 3, sm: 4, md: 6 },
                   borderRadius: 4,
                   textAlign: 'center',
@@ -442,7 +449,7 @@ const LandingPage = ({ onGetStarted }) => {
                 }}
               >
                 <Typography
-                  variant="h5"
+                  variant="h3"
                   gutterBottom
                   sx={{
                     fontWeight: 'bold',
