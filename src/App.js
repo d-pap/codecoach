@@ -5,6 +5,7 @@
  */
 import React, { useEffect, useState, Suspense, lazy } from 'react'
 import { Amplify, Auth } from 'aws-amplify'
+// eslint-disable-next-line
 import '@aws-amplify/ui-react/styles.css'
 import {
   BrowserRouter as Router,
@@ -25,8 +26,8 @@ import CenteredLoader from './components/utility/CenteredLoader'
 import ICPC from './pages/Problems'
 import ProblemDetail from './pages/ProblemSolving'
 import './App.css'
-import NotFound from './pages/NotFound' // Add this import
 import ScrollToTop from './components/utility/ScrollToTop'
+import AddCourseContent from './pages/AddCourseContent'
 
 // Dynamic Imports
 const LandingPage = lazy(() => import('./pages/LandingPage'))
@@ -44,6 +45,7 @@ const InterviewForm = lazy(
 )
 
 const Interview = lazy(() => import('./pages/Interview'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 
 Amplify.configure(awsExports)
 
@@ -142,6 +144,14 @@ function App() {
                     <Suspense fallback={<CenteredLoader />}>
                       <Courses />
                     </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/courses/:courseId/add-content"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <AddCourseContent />
                   </ProtectedRoute>
                 }
               />

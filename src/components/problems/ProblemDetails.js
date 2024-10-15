@@ -1,8 +1,11 @@
 import React, { lazy } from 'react'
-import styled from 'styled-components'
+import styled2 from 'styled-components'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import { styled } from '@mui/material/styles'
+
 import PropTypes from 'prop-types'
 import CustomTabPanel from './CustomTabPanel'
 import ProblemTab from './problem-detail-navbar/ProblemTab'
@@ -11,13 +14,31 @@ const HintByDatabaseTab = lazy(
 )
 const ForumTab = lazy(() => import('./problem-detail-navbar/ForumTab'))
 
-const DetailContainer = styled.div`
-  p {
-    padding: 10px;
-  }
-`
+const DetailContainer = styled(Box)(({ theme }) => ({
+  h1: {
+    color: theme.palette.primary.main,
+  },
+  h2: {
+    color: theme.palette.primary.main,
+    marginTop: '20px',
+  },
+  h3: {
+    color: theme.palette.primary.main,
+    marginTop: '20px',
+  },
+  pre: {
+    backgroundColor: theme.palette.background.paper,
+    padding: '10px',
+    borderRadius: '10px',
+  },
+  p: {
+    backgroundColor: theme.palette.background.paper,
+    padding: '10px',
+    borderRadius: '10px',
+  },
+}))
 
-const ScrollableTabsContainer = styled.div`
+const ScrollableTabsContainer = styled2.div`
   overflow-x: auto;
 `
 
@@ -49,8 +70,8 @@ function ProblemDetails({ problem }) {
     return (
       <div>
         <Typography
-          variant="h5"
-          component="h2"
+          variant="h3"
+          component="h1"
           gutterBottom
           sx={{
             fontWeight: 'bold',

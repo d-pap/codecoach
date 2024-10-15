@@ -24,7 +24,7 @@ function CustomTabPanel(props) {
       {/* Render the children inside the Box component when the tab is active */}
       {value === index && (
         <React.Suspense fallback={<CenteredCircleLoader />}>
-          <Box sx={{ p: 3 }}>{children}</Box>
+          <Box sx={{ p: 2 }}>{children}</Box>
         </React.Suspense>
       )}
     </div>

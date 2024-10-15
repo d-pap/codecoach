@@ -356,7 +356,7 @@ function Interview() {
     <Box sx={{ minHeight: '100vh', py: 4 }}>
       <Container maxWidth="lg">
         <Typography
-          variant="h2"
+          variant="h1"
           component="h1"
           gutterBottom
           align="center"

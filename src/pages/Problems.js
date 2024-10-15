@@ -338,7 +338,7 @@ function ICPC() {
           align="center"
           sx={{ mb: 2 }}
         >
-          ICPC Problems
+          Problems
         </Typography>
         <FilterToolbar
           region={region}

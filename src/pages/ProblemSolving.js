@@ -39,6 +39,7 @@ function ProblemDetail() {
       // remove _id from testCases attribute
       return {
         ...data,
+        // eslint-disable-next-line no-unused-vars
         testCases: data.testCases.map(({ _id, ...rest }) => rest),
       }
     },
