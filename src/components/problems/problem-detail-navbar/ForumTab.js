@@ -3,7 +3,6 @@ import {
   getCurrentUserId,
   postForumComment,
   likeForumComment,
-  fetchForumComments,
 } from '../../../api'
 import ForumLayout from './forum-elements/ForumLayout'
 import { FILTER_OPTIONS } from './forum-elements/ForumFilter'
@@ -89,24 +88,42 @@ const ForumTab = () => {
 
   const handleLike = async (messageId) => {
     try {
+      // Optimistically update the frontend state
       setMessages((prevMessages) =>
         prevMessages.map((msg) => {
-          if (msg.id === messageId) {
-            const hasLiked = msg.likedBy.includes(userId)
-            const updatedLikes = hasLiked ? msg.likes - 1 : msg.likes + 1
-            const updatedLikedBy = hasLiked
-              ? msg.likedBy.filter((id) => id !== userId)
-              : [...msg.likedBy, userId]
-
-            return { ...msg, likes: updatedLikes, likedBy: updatedLikedBy }
+          if (msg.id === messageId || msg._id === messageId) {
+            if (msg.likedBy.includes(userId)) {
+              // User has already liked the message; do not allow unliking
+              return msg
+            }
+            return {
+              ...msg,
+              likes: msg.likes + 1,
+              likedBy: [...msg.likedBy, userId],
+            }
           }
           return msg
         })
       )
 
-      await likeForumComment(messageId)
+      // Call the API to like the comment
+      await likeForumComment(messageId, userId)
     } catch (error) {
       console.error('Error liking message:', error)
+      // Optionally, revert the optimistic update if API call fails
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) => {
+          if (msg.id === messageId || msg._id === messageId) {
+            return {
+              ...msg,
+              likes: msg.likes - 1,
+              likedBy: msg.likedBy.filter((id) => id !== userId),
+            }
+          }
+          return msg
+        })
+      )
+      alert(error) // Show error message to the user
     }
   }
 

@@ -1,36 +1,44 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { lazy } from 'react'
+import styled2 from 'styled-components'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import CustomTabPanel from './CustomTabPanel'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import { styled } from '@mui/material/styles'
+
 import PropTypes from 'prop-types'
+import CustomTabPanel from './CustomTabPanel'
 import ProblemTab from './problem-detail-navbar/ProblemTab'
-//import ChatAITab from './problem-detail-navbar/ChatAITab';
-import HintByDatabaseTab from './problem-detail-navbar/HintByDatabase'
-import ForumTab from './problem-detail-navbar/ForumTab'
-import { Typography } from '@mui/material'
+const HintByDatabaseTab = lazy(
+  () => import('./problem-detail-navbar/HintByDatabase')
+)
+const ForumTab = lazy(() => import('./problem-detail-navbar/ForumTab'))
 
-const DetailContainer = styled.div`
-  h1 {
-    color: #333;
-  }
-  h2 {
-    color: #666;
-    margin-top: 20px;
-  }
-  h3 {
-    color: #666;
-    margin-top: 20px;
-  }
-  pre,
-  p {
-    background-color: #f5f5f5;
-    padding: 10px;
-    border-radius: 10px;
-  }
-`
+const DetailContainer = styled(Box)(({ theme }) => ({
+  h1: {
+    color: theme.palette.primary.main,
+  },
+  h2: {
+    color: theme.palette.primary.main,
+    marginTop: '20px',
+  },
+  h3: {
+    color: theme.palette.primary.main,
+    marginTop: '20px',
+  },
+  pre: {
+    backgroundColor: theme.palette.background.paper,
+    padding: '10px',
+    borderRadius: '10px',
+  },
+  p: {
+    backgroundColor: theme.palette.background.paper,
+    padding: '10px',
+    borderRadius: '10px',
+  },
+}))
 
-const ScrollableTabsContainer = styled.div`
+const ScrollableTabsContainer = styled2.div`
   overflow-x: auto;
 `
 
@@ -62,8 +70,8 @@ function ProblemDetails({ problem }) {
     return (
       <div>
         <Typography
-          variant="h5"
-          component="h2"
+          variant="h3"
+          component="h1"
           gutterBottom
           sx={{
             fontWeight: 'bold',

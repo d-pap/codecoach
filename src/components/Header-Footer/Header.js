@@ -1,34 +1,24 @@
-/**
- * Header component for the application
- *
- * TODO: change MUI imports to path imports, not named imports like we have here to reduce bundle size
- * TODO:      https://mui.com/material-ui/guides/minimizing-bundle-size/
- */
-
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { Auth } from 'aws-amplify'
-
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  IconButton,
-  Menu,
-  MenuItem,
-  useMediaQuery,
-  useTheme,
-  Box,
-  Divider,
-  ListItemText,
-  ListItemIcon,
-} from '@mui/material'
+import { useMediaQuery, useTheme } from '@mui/material'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemIcon from '@mui/material/ListItemIcon'
 import { styled, alpha } from '@mui/material/styles'
 import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import Settings from '@mui/icons-material/Settings'
 import Logout from '@mui/icons-material/Logout'
+import logo from '../../images/logo-with-text.svg'
+import CenteredCircleLoader from '../utility/CenteredLoader'
 
 const PageLinks = styled(Button)(({ theme }) => ({
   color: theme.palette.text.primary,
@@ -36,7 +26,7 @@ const PageLinks = styled(Button)(({ theme }) => ({
   borderRadius: theme.spacing(2),
   whiteSpace: 'nowrap',
   margin: theme.spacing(0, 1),
-  p: theme.spacing(0.5, 1), //TODO: adjust padding for header height???? added this line to fix smaller header issues
+  padding: theme.spacing(0.5, 1),
   '&:hover': {
     background: alpha(theme.palette.text.primary, 0.1),
     transition: 'background-color 0.2s ease',
@@ -45,17 +35,22 @@ const PageLinks = styled(Button)(({ theme }) => ({
 
 const Header = () => {
   const theme = useTheme()
+  const navigate = useNavigate()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const [anchorEl, setAnchorEl] = React.useState(null)
-  const [accountMenuAnchorEl, setAccountMenuAnchorEl] = React.useState(null) // state for account menu
+  const [accountMenuAnchorEl, setAccountMenuAnchorEl] = React.useState(null)
+  const [loading, setLoading] = React.useState(false) // Loading state
 
   const handleLogout = async () => {
+    setLoading(true) // Start loading
     try {
       await Auth.signOut()
       localStorage.clear()
       window.location.reload()
     } catch (error) {
       console.error('Error signing out: ', error)
+      alert('Error signing out. Please try again.')
+      setLoading(false) // Stop loading if there's an error
     }
   }
 
@@ -68,19 +63,24 @@ const Header = () => {
   }
 
   const handleAccountMenu = (event) => {
-    setAccountMenuAnchorEl(event.currentTarget) // open account menu
+    setAccountMenuAnchorEl(event.currentTarget)
   }
 
   const handleAccountMenuClose = () => {
-    setAccountMenuAnchorEl(null) // close account menu
+    setAccountMenuAnchorEl(null)
+  }
+
+  if (loading) {
+    // Render the loader when loading is true
+    return (
+      <Box>
+        <CenteredCircleLoader />
+      </Box>
+    )
   }
 
   return (
-    <Box
-      sx={{
-        flexGrow: 1, //* makes page content responsive
-      }}
-    >
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar
         position="static"
         sx={{
@@ -91,24 +91,29 @@ const Header = () => {
         }}
       >
         <Toolbar
-          //variant="dense" //! reduces header height properly
           sx={{
             height: '100%',
             minHeight: 'unset',
+            display: 'flex',
+            justifyContent: 'space-between',
           }}
         >
-          <Typography
-            variant="h6"
-            component={NavLink}
-            to="/"
-            sx={{
-              color: (theme) => theme.palette.text.primary,
-              flexGrow: 1,
-              textDecoration: 'none',
+          <Box
+            component="img"
+            onClick={() => {
+              navigate('/home')
             }}
-          >
-            CC
-          </Typography>
+            src={logo}
+            alt="logo"
+            sx={{
+              height: '100%',
+              maxHeight: '60px',
+              width: 'auto',
+              maxWidth: '100%',
+              cursor: 'pointer',
+            }}
+          />
+
           {isMobile ? (
             <>
               <IconButton
@@ -134,19 +139,23 @@ const Header = () => {
                 <MenuItem component={NavLink} to="/" onClick={handleClose}>
                   Home
                 </MenuItem>
-                <MenuItem component={NavLink} to="/about" onClick={handleClose}>
+                <MenuItem
+                  component={NavLink}
+                  to="/courses"
+                  onClick={handleClose}
+                >
                   Courses
                 </MenuItem>
                 <MenuItem
                   component={NavLink}
-                  to="/problems/icpc"
+                  to="/problems"
                   onClick={handleClose}
                 >
                   Problems
                 </MenuItem>
                 <MenuItem
                   component={NavLink}
-                  to="/problems/interview"
+                  to="/interviews"
                   onClick={handleClose}
                 >
                   Interview Prep
@@ -159,55 +168,71 @@ const Header = () => {
                 >
                   Settings
                 </MenuItem>
-                <MenuItem onClick={handleAccountMenuClose}>Logout</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleClose()
+                    handleLogout()
+                  }}
+                >
+                  Logout
+                </MenuItem>
               </Menu>
             </>
           ) : (
-            <>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Box
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
                 }}
               >
-                <PageLinks component={NavLink} to="/" activeClassName="active">
+                <PageLinks
+                  component={NavLink}
+                  to="/home"
+                  activeClassName="active"
+                >
                   Home
                 </PageLinks>
                 <PageLinks
                   component={NavLink}
-                  to="/about"
+                  to="/courses"
                   activeClassName="active"
                 >
                   Courses
                 </PageLinks>
                 <PageLinks
                   component={NavLink}
-                  to="/problems/icpc"
+                  to="/problems"
                   activeClassName="active"
                 >
                   Problems
                 </PageLinks>
                 <PageLinks
                   component={NavLink}
-                  to="/problems/interview"
+                  to="/interviews"
                   activeClassName="active"
                 >
                   Interview Prep
                 </PageLinks>
-                <PageLinks
+
+                {/* <PageLinks
                   component={NavLink}
                   to="/manage-problems"
                   activeClassName="active"
                 >
                   Manage Problems
-                </PageLinks>
+                </PageLinks> */}
               </Box>
-              <Divider orientation="vertical" flexItem variant="middle" />
+              <Divider
+                orientation="vertical"
+                flexItem
+                variant="middle"
+                sx={{ mx: 1 }}
+              />
               <Box
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  pl: 1,
                 }}
               >
                 <IconButton
@@ -253,7 +278,7 @@ const Header = () => {
                   </MenuItem>
                 </Menu>
               </Box>
-            </>
+            </Box>
           )}
         </Toolbar>
       </AppBar>

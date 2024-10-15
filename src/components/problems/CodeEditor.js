@@ -4,25 +4,22 @@
  * The language and theme dropdowns are defined in CodeEditorToolbar.js.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import AceEditor from 'react-ace'
-import { executeCode } from '../../api'
 import 'ace-builds/src-noconflict/theme-monokai'
-import 'ace-builds/src-noconflict/theme-github'
-import 'ace-builds/src-noconflict/theme-solarized_dark'
-import 'ace-builds/src-noconflict/theme-dracula'
-import 'ace-builds/src-noconflict/theme-one_dark'
-import 'ace-builds/src-noconflict/theme-terminal'
-import 'ace-builds/src-noconflict/theme-xcode'
 import 'ace-builds/src-noconflict/mode-python'
 import 'ace-builds/src-noconflict/ext-language_tools'
-import { Button, Stack, Box } from '@mui/material'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import Box from '@mui/material/Box'
 import SendIcon from '@mui/icons-material/Send'
 import PlayArrow from '@mui/icons-material/PlayArrow'
-import CodeEditorToolbar from './CodeEditorToolbar'
-import { getCurrentUserId, saveSubmission } from '../../api'
+import CircularProgress from '@mui/material/CircularProgress'
 import FeedbackDialog from '../problems/FeedbackDialog'
+import { executeCode, getCurrentUserId, saveSubmission } from '../../api'
+import { loadTheme, loadMode } from '../utility/aceImports'
+import CodeEditorToolbar from './CodeEditorToolbar'
 
 const themeStyles = {
   monokai: {
@@ -67,7 +64,9 @@ const EditorButtons = ({
   handleRunCode,
   handleSubmitCode,
   currentThemeStyle,
-  isDisabled, //! if true, the buttons will be disabled
+  isDisabled,
+  isSubmitting,
+  isRunning,
 }) => (
   <Box sx={{ pt: 1, pr: 1 }}>
     <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
@@ -75,25 +74,38 @@ const EditorButtons = ({
         size="small"
         onClick={handleRunCode}
         variant="text"
-        startIcon={<PlayArrow />}
+        startIcon={
+          isRunning ? (
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            <PlayArrow />
+          )
+        }
         sx={{ color: currentThemeStyle.color }}
-        disabled={isDisabled} //! if true, the button will be disabled
+        disabled={isDisabled || isRunning}
       >
-        Run
+        {isRunning ? '' : 'Run'}
       </Button>
       <Button
         size="small"
         onClick={handleSubmitCode}
         variant="contained"
-        endIcon={<SendIcon />}
+        endIcon={
+          isSubmitting ? (
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            <SendIcon />
+          )
+        }
         sx={{
           backgroundColor: 'green',
           '&:hover': { backgroundColor: 'darkgreen' },
           borderRadius: (theme) => theme.spacing(2),
+          minWidth: '100px',
         }}
-        disabled={isDisabled} //! if true, the button will be disabled
+        disabled={isDisabled || isSubmitting}
       >
-        Submit
+        {isSubmitting ? '' : 'Submit'}
       </Button>
     </Stack>
   </Box>
@@ -122,42 +134,75 @@ const OutputWindow = ({ output, currentThemeStyle }) => (
   </Box>
 )
 
-const CodeEditor = ({ code, setCode, setOutput, output }) => {
+const CodeEditor = ({
+  code,
+  setCode,
+  setOutput,
+  output,
+  enableFeedback = false,
+}) => {
   const [theme, setTheme] = useState('monokai')
   const [language, setLanguage] = useState('python')
   const { problemId } = useParams() // get problem ID from URL
   const [feedbackOpen, setFeedbackOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isRunning, setIsRunning] = useState(false)
+  //! limit number of judge0 runs and reset limit after 12 hours
+  const MAX_RUN_SUBMIT_COUNT = 10
+  const RESET_INTERVAL = 12 * 60 * 60 * 1000 // 12 hours in milliseconds
 
-  //! limit the number of runs and submissions to prevent abuse
-  const MAX_RUN_SUBMIT_COUNT = 5
   const [runSubmitCount, setRunSubmitCount] = useState(() => {
     const savedCount = localStorage.getItem('runSubmitCount')
-    const savedDate = localStorage.getItem('runSubmitDate')
-    const today = new Date().toDateString()
+    const lastResetTime = localStorage.getItem('lastResetTime')
+    const currentTime = Date.now()
 
-    if (savedDate !== today) {
-      // new day, reset the count
-      localStorage.setItem('runSubmitDate', today)
+    if (
+      !lastResetTime ||
+      currentTime - parseInt(lastResetTime, 10) >= RESET_INTERVAL
+    ) {
+      // if it's been more than 12 hours since the last reset, reset the count
+      localStorage.setItem('lastResetTime', currentTime.toString())
+      localStorage.setItem('runSubmitCount', '0')
       return 0
     }
+
     return savedCount ? parseInt(savedCount, 10) : 0
   })
 
   useEffect(() => {
-    localStorage.setItem('runSubmitCount', runSubmitCount)
-    localStorage.setItem('runSubmitDate', new Date().toDateString())
+    const checkAndResetCount = () => {
+      const lastResetTime = localStorage.getItem('lastResetTime')
+      const currentTime = Date.now()
+
+      if (currentTime - parseInt(lastResetTime, 10) >= RESET_INTERVAL) {
+        setRunSubmitCount(0)
+        localStorage.setItem('lastResetTime', currentTime.toString())
+        localStorage.setItem('runSubmitCount', '0')
+      }
+    }
+
+    // check and reset count on component mount and every minute
+    checkAndResetCount()
+    const intervalId = setInterval(checkAndResetCount, 60000)
+
+    return () => clearInterval(intervalId)
+  }, [RESET_INTERVAL])
+
+  useEffect(() => {
+    localStorage.setItem('runSubmitCount', runSubmitCount.toString())
   }, [runSubmitCount])
 
-  //! if true, the buttons will be disabled
   const isDisabled = runSubmitCount >= MAX_RUN_SUBMIT_COUNT
 
   const handleRunCode = async () => {
-    //! limit the number of runs and submissions to prevent abuse
-    if (runSubmitCount >= MAX_RUN_SUBMIT_COUNT) {
-      setOutput('You have reached the maximum number of runs for today.')
+    if (isDisabled) {
+      setOutput(
+        'You have reached the maximum number of runs. Please wait for the limit to reset.'
+      )
       return
     }
 
+    setIsRunning(true)
     try {
       const result = await executeCode(code)
       if (result.status.id === 3) {
@@ -174,16 +219,20 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
       setRunSubmitCount((prevCount) => prevCount + 1)
     } catch (error) {
       setOutput('Error executing code: ' + error.message)
+    } finally {
+      setIsRunning(false)
     }
   }
 
   const handleSubmitCode = async () => {
-    //! limit the number of runs and submissions to prevent abuse
-    if (runSubmitCount >= MAX_RUN_SUBMIT_COUNT) {
-      setOutput('You have reached the maximum number of submissions for today.')
+    if (isDisabled) {
+      setOutput(
+        'You have reached the maximum number of submissions. Please wait for the limit to reset.'
+      )
       return
     }
 
+    setIsSubmitting(true)
     try {
       const result = await executeCode(code)
 
@@ -233,13 +282,16 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
       }
       setOutput(outputMessage)
 
-      //! increment the run submit count
       setRunSubmitCount((prevCount) => prevCount + 1)
 
-      // open feedback dialog after 3 seconds
-      setTimeout(() => setFeedbackOpen(true), 3000)
+      // open feedback dialog after 3 seconds, only if enableFeedback is true
+      if (enableFeedback) {
+        setTimeout(() => setFeedbackOpen(true), 3000)
+      }
     } catch (error) {
       setOutput('Error submitting code: ' + error.message)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -250,6 +302,36 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
   }
 
   const currentThemeStyle = themeStyles[theme]
+
+  // Function to handle theme changes
+  const handleThemeChange = useCallback(
+    async (newTheme) => {
+      if (newTheme === theme) return // No change needed
+
+      // Load the new theme if it's not already loaded
+      if (newTheme !== 'monokai') {
+        await loadTheme(newTheme)
+      }
+
+      setTheme(newTheme)
+    },
+    [theme]
+  )
+
+  // Function to handle language changes (if you decide to support more modes)
+  const handleLanguageChange = useCallback(
+    async (newLanguage) => {
+      if (newLanguage === language) return // No change needed
+
+      // Load the new mode if it's not already loaded
+      if (newLanguage !== 'python') {
+        await loadMode(newLanguage)
+      }
+
+      setLanguage(newLanguage)
+    },
+    [language]
+  )
 
   return (
     <Box
@@ -267,9 +349,11 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
       <CodeEditorToolbar
         theme={theme}
         language={language}
-        setTheme={setTheme}
-        setLanguage={setLanguage}
+        setTheme={handleThemeChange}
+        setLanguage={handleLanguageChange}
         currentThemeStyle={currentThemeStyle}
+        MAX_RUN_SUBMIT_COUNT={MAX_RUN_SUBMIT_COUNT}
+        runSubmitCount={runSubmitCount}
       />
       <AceEditor
         mode={language}
@@ -297,13 +381,17 @@ const CodeEditor = ({ code, setCode, setOutput, output }) => {
         handleSubmitCode={handleSubmitCode}
         currentThemeStyle={currentThemeStyle}
         isDisabled={isDisabled}
+        isRunning={isRunning}
+        isSubmitting={isSubmitting}
       />
       <OutputWindow output={output} currentThemeStyle={currentThemeStyle} />
-      <FeedbackDialog
-        open={feedbackOpen}
-        onClose={() => setFeedbackOpen(false)}
-        onSubmit={handleFeedbackSubmit}
-      />
+      {enableFeedback && (
+        <FeedbackDialog
+          open={feedbackOpen}
+          onClose={() => setFeedbackOpen(false)}
+          onSubmit={handleFeedbackSubmit}
+        />
+      )}
     </Box>
   )
 }
