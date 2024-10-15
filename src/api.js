@@ -63,25 +63,51 @@ export async function sendChatMessage(convoId, input) {
   }
 }
 
+export const checkExecutionLimits = async (userId) => {
+  try {
+    const response = await axios.post(`${API_GATEWAY_URL}/executionLimit`, {
+      userId: userId,
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error checking execution limits:', error)
+    throw new Error('Failed to check execution limits')
+  }
+}
+
 // Function to execute code using Judge0 API
 // Passes source code and language to the API
 // and returns the result
+// Function to check execution limits and execute code if within limit
 export const executeCode = async (sourceCode, language = 'python') => {
-  const options = {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY,
-      'X-RapidAPI-Host': process.env.REACT_APP_RAPIDAPI_HOST,
-    },
-    body: JSON.stringify({
-      language_id: 71, // python judge0 language id = 71
-      source_code: sourceCode,
-      stdin: '',
-    }),
-  }
-
   try {
+    // get current user
+    const userId = await getCurrentUserId()
+
+    // check the execution limits
+    const limitResponse = await checkExecutionLimits(userId)
+
+    // if the limit is reached, halt and notify the user
+    if (limitResponse.message === 'Execution limit reached') {
+      alert('You have reached your execution limit.')
+      return { error: 'Execution limit reached' }
+    }
+
+    // if execution is allowed, proceed to execute the code
+    const options = {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY,
+        'X-RapidAPI-Host': process.env.REACT_APP_RAPIDAPI_HOST,
+      },
+      body: JSON.stringify({
+        language_id: 71, // python judge0 language id = 71
+        source_code: sourceCode,
+        stdin: '',
+      }),
+    }
+
     const response = await fetch(process.env.REACT_APP_RAPID_API_URL, options)
     const data = await response.json()
     const token = data.token
@@ -105,11 +131,10 @@ export const executeCode = async (sourceCode, language = 'python') => {
 
     return result
   } catch (error) {
-    console.error('Error:', error)
+    console.error('Error during code execution:', error)
     throw error
   }
 }
-
 // function to save a submission to the database
 export async function saveSubmission(submissionData) {
   try {
