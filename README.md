@@ -50,6 +50,12 @@ For more details on the technology and architecture, visit our [Architecture](#�
 
 <!-- MOTIVATION -->
 
+## 🖥️ Video/Demo
+
+[(Click to watch)](https://www.youtube.com/watch?v=h4pg-E1RxY0)
+
+[![Watch the video](https://img.youtube.com/vi/h4pg-E1RxY0/0.jpg)](https://www.youtube.com/watch?v=h4pg-E1RxY0)
+
 ## 🚀 Motivation
 
 The primary motivation for Code Coach is to address the challenges students face in preparing for competitive programming contests and technical job interviews. Research shows that early engagement in competitive programming can significantly enhance problem-solving skills, boost confidence, and improve academic performance.
