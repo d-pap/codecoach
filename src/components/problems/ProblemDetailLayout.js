@@ -1,203 +1,236 @@
-import React, { useState, useEffect, useRef } from 'react'
-import styled, { createGlobalStyle } from 'styled-components'
-import HorizontalResizableColumn from '../utility/HorizontalResizableColumn'
-import CodeEditor from './CodeEditor'
-import { IconButton, Drawer, Box } from '@mui/material'
-import ChatBox from './llm-components/ChatBox'
+import React, { useState, useEffect } from 'react'
+import { Box, Container, Drawer, IconButton } from '@mui/material'
 import ChatIcon from '@mui/icons-material/Chat'
-import { Container } from '@mui/material'
+import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels'
+import styled from 'styled-components'
+import CodeEditor from './CodeEditor'
+import ChatBox from './llm-components/ChatBox'
 
-// const GlobalStyle = createGlobalStyle`
-//   * {
-//     margin: 0;
-//     padding: 0;
-//   }
-
-//   html, body {
-//     height: 100%;
-//   }
-// `
-
-const LayoutContainer = styled.div`
+const StyledPanelResizeHandle = styled(PanelResizeHandle)`
+  background-color: #ccc;
+  border-radius: 10px;
+  width: 5px;
+  cursor: ew-resize;
   display: flex;
-  height: calc(100vh - 85px);
-  background-color: #f0f0f0;
-`
-
-const LeftPanel = styled.div`
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-  background-color: #f0f0f0;
-`
-
-const RightPanel = styled.div`
-  flex: 1;
-  padding-left: 20px;
-  padding-right: 20px;
-  height: 100%;
-  background-color: #f0f0f0;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-`
-
-const EditorContainer = styled.div`
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  border-radius: 6px;
-`
-
-const OutputArea = styled.div`
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding: 10px;
-  background-color: #272822;
-  color: #f8f8f2;
-  border: 1px solid #75715e;
-  border-radius: 6px;
-  font-family: monospace;
-  white-space: pre-wrap;
-  height: 200px;
-  overflow-y: auto;
-  ::selection {
-    background: #49483e;
-  }
-`
-
-const ChatBubble = styled.div`
-  position: fixed;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  z-index: 10;
-  padding: 10px 5px;
-  background-color: #3f51b5;
-  border-radius: 5px 0 0 5px;
-  transition:
-    transform 0.3s ease,
-    background-color 0.3s ease;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
 
   &:hover {
-    transform: translate(-5px, -50%);
-    background-color: #303f9f;
+    background-color: #888;
+  }
+
+  &::before {
+    content: '|';
+    color: #888;
+    font-size: 18px;
   }
 `
 
-const ChatLedger = styled(Box)`
-  width: 300px;
-  width: 25vw;
-  height: 98vh;
-  padding: 20px;
-  background-color: white;
-  border-radius: 4px 4px 0 0;
-`
+const pythonDefaultCode = `# Your code goes here 
+def example_function():
+  print("Hello, world!")`
 
-const pythonDefaultCode = `# Your code goes here \ndef example_function():\n  print("Hello, world!")`
-
-const ProblemDetailLayout = ({ problem, problemDetails, codeEditor }) => {
-  const [horizontalProps, setHorizontalProps] = useState(
-    getResizableHorizontalColumnProps()
-  )
-  const rightPanelRef = useRef(null)
+const ProblemDetailLayout = ({ problem, problemDetails }) => {
   const [code, setCode] = useState(pythonDefaultCode)
   const [output, setOutput] = useState('')
   const [isChatOpen, setIsChatOpen] = useState(false)
+  const [drawerWidth, setDrawerWidth] = useState(35) // Width in percentage (default is 35%)
+
+  // **Lifted ChatBox State**
+  const [chatHistory, setChatHistory] = useState({
+    conversation_id: null,
+    data: [],
+  })
+  const [isLoading, setIsLoading] = useState(false)
+  const [chatCount, setChatCount] = useState(0)
+  const [showSettings, setShowSettings] = useState(false)
+
+  // **New State for Scroll Position**
+  const [chatScrollPosition, setChatScrollPosition] = useState(0)
+
+  // Load chat history from localStorage on mount or when problem changes
+  useEffect(() => {
+    const history = getChatHistory(problem._id)
+    if (Array.isArray(history.data)) {
+      setChatHistory(history)
+    } else {
+      setChatHistory({ conversation_id: null, data: [] })
+    }
+  }, [problem._id])
+
+  // Functions to manage chat state
+  const updateChatHistory = (newHistory) => {
+    setChatHistory(newHistory)
+    saveChatHistory(problem._id, newHistory)
+  }
+
+  const incrementChatCount = () => {
+    setChatCount((prevCount) => {
+      const newCount = prevCount + 1
+      localStorage.setItem('chatCount', newCount)
+      localStorage.setItem('chatDate', new Date().toDateString())
+      return newCount
+    })
+  }
+
+  const resetChatCountIfNeeded = () => {
+    const savedDate = localStorage.getItem('chatDate')
+    const today = new Date().toDateString()
+    if (savedDate !== today) {
+      localStorage.setItem('chatDate', today)
+      setChatCount(0)
+    } else {
+      const savedCount = localStorage.getItem('chatCount')
+      setChatCount(savedCount ? parseInt(savedCount, 10) : 0)
+    }
+  }
 
   useEffect(() => {
-    const handleResize = () => {
-      setHorizontalProps(getResizableHorizontalColumnProps())
-    }
-
-    window.addEventListener('resize', handleResize)
-    handleResize()
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
+    resetChatCountIfNeeded()
   }, [])
-
-  function getResizableHorizontalColumnProps() {
-    const windowWidth = window.innerWidth
-    const minWidth = windowWidth * 0.3
-    const maxWidth = windowWidth * 0.7
-    const initialWidth = windowWidth * 0.5
-    return { initialWidth, maxWidth, minWidth }
-  }
 
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen)
   }
 
+  // **Handler to Receive Scroll Position from ChatBox**
+  const handleScrollPositionChange = (position) => {
+    setChatScrollPosition(position)
+  }
+
   return (
-    <>
-      {/* <GlobalStyle /> */}
-      <Container maxWidth="false">
-        <LayoutContainer>
-          <HorizontalResizableColumn
-            initialWidth={horizontalProps.initialWidth}
-            maxWidth={horizontalProps.maxWidth}
-            minWidth={horizontalProps.minWidth}
-          >
+    <Container maxWidth={false}>
+      <Box
+        sx={{
+          display: 'flex',
+          height: 'calc(100vh - 66px)',
+          backgroundColor: (theme) => theme.palette.background.default,
+        }}
+      >
+        <PanelGroup direction="horizontal">
+          <Panel defaultSize={50} minSize={20}>
             <Box
               sx={{
-                flex: 1,
-                padding: '0',
+                pt: 2,
+                backgroundColor: (theme) => theme.palette.background.default,
+                display: 'flex',
+                flexDirection: 'column',
                 height: '100%',
-                backgroundColor: '#f0f0f0',
+                overflowY: 'auto',
+              }}
+            >
+              {problemDetails}
+            </Box>
+          </Panel>
+          <StyledPanelResizeHandle />
+          <Panel minSize={20}>
+            <Box
+              sx={{
+                pt: 2,
+                pl: 2,
+                height: '100%',
+                backgroundColor: (theme) => theme.palette.background.default,
                 display: 'flex',
                 flexDirection: 'column',
                 overflowY: 'auto',
-                boxSizing: 'border-box',
               }}
             >
-              <LeftPanel>{problemDetails}</LeftPanel>
-            </Box>
-          </HorizontalResizableColumn>
-          <Box
-            sx={{
-              flex: 1,
-              padding: '20px',
-              height: '100%',
-              backgroundColor: '#f0f0f0',
-              display: 'flex',
-              flexDirection: 'column',
-              overflowY: 'auto',
-              boxSizing: 'border-box',
-            }}
-          >
-            <RightPanel ref={rightPanelRef}>
-              <EditorContainer>
+              <Box
+                sx={{
+                  flex: 1,
+                  display: 'flex',
+                  borderRadius: 1,
+                }}
+              >
                 <CodeEditor
                   code={code}
                   setCode={setCode}
                   setOutput={setOutput}
+                  output={output}
                 />
-              </EditorContainer>
-              <OutputArea>{output}</OutputArea>
-              <ChatBubble>
-                <IconButton onClick={toggleChat} color="blue" size="large">
+              </Box>
+              <Box
+                sx={{
+                  position: 'fixed',
+                  top: '50%',
+                  right: 0,
+                  transform: 'translateY(-50%)',
+                  zIndex: 10,
+                }}
+              >
+                <IconButton
+                  onClick={toggleChat}
+                  sx={{
+                    backgroundColor: '#3f51b5',
+                    borderRadius: '7px 0 0 7px',
+                    scale: '1.4',
+                    transition:
+                      'transform 0.3s ease, background-color 0.3s ease',
+                    '&:hover': {
+                      transform: 'translate(-5px, -50%) scale(1.1)',
+                      backgroundColor: '#303f9f',
+                    },
+                  }}
+                >
                   <ChatIcon />
                 </IconButton>
-              </ChatBubble>
+              </Box>
               <Drawer
                 anchor="right"
                 open={isChatOpen}
                 onClose={toggleChat}
-                PaperProps={{ style: { width: '25vw' } }}
+                PaperProps={{ style: { width: `${drawerWidth}vw` } }}
+                // Remove keepMounted to prevent ResizeObserver issues
               >
-                <ChatLedger>
-                  <ChatBox problem={problem} />
-                </ChatLedger>
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    p: 2,
+                    backgroundColor: 'white',
+                    borderRadius: '4px 4px 0 0',
+                  }}
+                >
+                  <ChatBox
+                    problem={problem}
+                    drawerWidth={drawerWidth}
+                    setDrawerWidth={setDrawerWidth}
+                    chatHistory={chatHistory}
+                    setChatHistory={updateChatHistory}
+                    isLoading={isLoading}
+                    setIsLoading={setIsLoading}
+                    chatCount={chatCount}
+                    setChatCount={incrementChatCount}
+                    showSettings={showSettings}
+                    setShowSettings={setShowSettings}
+                    // **Pass Scroll Props**
+                    initialScrollPosition={chatScrollPosition}
+                    onScrollPositionChange={handleScrollPositionChange}
+                  />
+                </Box>
               </Drawer>
-            </RightPanel>
-          </Box>
-        </LayoutContainer>
-      </Container>
-    </>
+            </Box>
+          </Panel>
+        </PanelGroup>
+      </Box>
+    </Container>
   )
+}
+
+// Helper functions (ensure these are included or imported appropriately)
+const getChatHistory = (problemId) => {
+  try {
+    const history = localStorage.getItem(`chatHistory-${problemId}`)
+    return history ? JSON.parse(history) : { conversation_id: null, data: [] }
+  } catch (error) {
+    console.error('Failed to parse chat history:', error)
+    return { conversation_id: null, data: [] }
+  }
+}
+
+const saveChatHistory = (problemId, history) => {
+  localStorage.setItem(`chatHistory-${problemId}`, JSON.stringify(history))
 }
 
 export default ProblemDetailLayout

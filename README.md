@@ -60,9 +60,9 @@ For more details on the technology and architecture, visit our [Architecture](#�
 
 The primary motivation for Code Coach is to address the challenges students face in preparing for competitive programming contests and technical job interviews. Research shows that early engagement in competitive programming can significantly enhance problem-solving skills, boost confidence, and improve academic performance.
 
-> "The participation of freshmen in competitions has a positive effect in early motivation and retention, as well as on their final grade in introductory courses."
+> "The participation of freshmen in competitions has a positive effect in early motivation and retention, as well as on their final grade in introductory courses." 
+  > — Ribeiro & Guerreiro, *[Early Introduction of Competitive Programming](https://www.researchgate.net/publication/228411471_Early_introduction_of_competitive_programming)*
 
-    — Ribeiro & Guerreiro, <a href="https://www.researchgate.net/publication/228411471_Early_introduction_of_competitive_programming" target="_blank">*Early Introduction of Competitive Programming*</a>
 
 Our platform aims to create a supportive environment that encourages students to start early, practice consistently, and ultimately excel in these critical areas. By integrating AI assistance, a curated problem database, and a collaborative community, Code Coach empowers students to achieve their full potential.
 

@@ -1,0 +1,67 @@
+/* styles.css */
+
+.container {
+    padding: 16px; /* Adjust as needed */
+    max-width: 600px; /* To prevent the content from stretching too wide */
+    margin: 0 auto; /* Center align the container */
+}
+
+.dropzone {
+    border: 2px dashed #007bff;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition */
+    margin-bottom: 16px; /* Add space below the dropzone */
+}
+
+/* When a file is dragged over the dropzone */
+.dropzone.active {
+    background-color: rgba(0, 123, 255, 0.1); /* Light blue background */
+    border-color: #0056b3;
+}
+
+.dropzone:hover {
+    border-color: #0056b3;
+}
+
+/* File name styling */
+.file-name {
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+/* Button styling */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Space between buttons */
+}
+
+/* Submit button styling */
+.submit-button {
+    margin-top: 16px;
+}
+
+/* Upload button styling */
+.upload-button {
+    margin-top: 16px;
+}
+
+/* Dropzone text styling */
+.dropzone-text {
+    margin-top: 8px;
+}
+
+.parsed-data {
+    margin-top: 16px;
+}
+
+.json-output {
+    white-space: pre-wrap; /* Allows text to wrap and preserve whitespace */
+    word-wrap: break-word; /* Breaks long words at the edge of the container */
+    background-color: #f5f5f5; /* Light background for better readability */
+    padding: 8px; /* Optional padding */
+    border-radius: 4px; /* Optional border-radius */
+    overflow-x: auto; /* Allows horizontal scroll if needed */
+}

@@ -10,21 +10,20 @@ like "Problems", "About", etc.
 * {
   margin: 0;
   padding: 0;
-
 }
 
 /* Apply global fonts: 
 Fonts we imported from Google Fonts in `public/index.html`.
 this changes font of links, footer links */
 body {
-  font-family: 'Ubuntu', sans-serif;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
 
 /* this didnt change anything when removed:*/
 html,
 body {
   overflow-x: hidden;
-} 
+}
 
 /* this changes the font of the header text */
 h1,
@@ -33,5 +32,5 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Ubuntu', sans-serif; /* this changes h1 and header text */
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif; /* this changes h1 and header text */
 }

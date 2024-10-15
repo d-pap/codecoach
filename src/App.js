@@ -3,58 +3,231 @@
  * Central hub where we assemble our other components and
  * tie everything together like layout, routes, etc.
  */
-
-import React from 'react'
-import './App.css'
-// import Navbar from "./components/Navbar"
+import React, { useEffect, useState, Suspense, lazy } from 'react'
+import { Amplify, Auth } from 'aws-amplify'
+// eslint-disable-next-line
+import '@aws-amplify/ui-react/styles.css'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom'
+import { ThemeProvider } from '@mui/material'
+import Box from '@mui/material/Box'
+import CenteredCircleLoader from './components/utility/CenteredLoader'
+import awsExports from './aws-exports'
 import Header from './components/Header-Footer/Header'
 import Footer from './components/Header-Footer/Footer'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Home from './pages'
-import About from './pages/nav/about'
-import Problems from './pages/nav/problems'
-import SignUp from './pages/nav/signup'
-import ProblemDetail from './pages/problems/problemDetail'
-import AddProblems from './pages/nav/addProblems'
-import ICPC from './pages/problems/problem-types/ICPC'
-import Interview from './pages/problems/problem-types/Interview'
-import Programming from './pages/problems/problem-types/Programming'
-import { Box } from '@mui/material'
+import ProtectedRoute from './components/auth/ProtectedRoute'
+import theme from './theme'
+import AuthModal from './components/auth/AuthModal'
+import CenteredLoader from './components/utility/CenteredLoader'
+import ICPC from './pages/Problems'
+import ProblemDetail from './pages/ProblemSolving'
+import './App.css'
+import ScrollToTop from './components/utility/ScrollToTop'
+import AddCourseContent from './pages/AddCourseContent'
+
+// Dynamic Imports
+const LandingPage = lazy(() => import('./pages/LandingPage'))
+const Home = lazy(() => import('./pages/Home'))
+const Courses = lazy(() => import('./pages/Courses'))
+const ManageProblemsPage = lazy(() => import('./pages/problems/ManageProblems'))
+const SingleFormLayout = lazy(
+  () => import('./pages/problems/add-problems/ICPCSingleForm')
+)
+const ICPCMultipleForm = lazy(
+  () => import('./pages/problems/add-problems/ICPCMultipleForm')
+)
+const InterviewForm = lazy(
+  () => import('./pages/problems/add-problems/InterviewForm')
+)
+
+const Interview = lazy(() => import('./pages/Interview'))
+const NotFound = lazy(() => import('./pages/NotFound'))
+
+Amplify.configure(awsExports)
 
 function App() {
+  const [showAuth, setShowAuth] = useState(false)
+  const [authScreen, setAuthScreen] = useState('signin')
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    checkAuthStatus()
+  }, [])
+
+  const checkAuthStatus = async () => {
+    try {
+      await Auth.currentAuthenticatedUser()
+      setIsAuthenticated(true)
+    } catch (error) {
+      setIsAuthenticated(false)
+    }
+    setIsLoading(false)
+  }
+
+  const handleShowAuth = (mode) => {
+    setAuthScreen(mode)
+    setShowAuth(true)
+  }
+
+  const handleCloseAuth = () => {
+    setShowAuth(false)
+  }
+  const handleAuthenticated = () => {
+    setIsAuthenticated(true)
+    setShowAuth(false)
+  }
+
+  if (isLoading) {
+    return <CenteredCircleLoader />
+  }
+
   return (
     <Router>
-      <Box // wrap the entire app in a flex container to make app take full viewport height
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          minHeight: '100vh', // make app take up the full height of the screen
-        }}
-      >
-        {/* <Navbar /> */}
-        <Header />
-        <Box // wrap main content area in a flex container to push footer down on pages with little content
-          component="main"
+      <ThemeProvider theme={theme}>
+        <Box
           sx={{
-            flexGrow: 1, // main area grows to push footer down
             display: 'flex',
             flexDirection: 'column',
+            minHeight: '100vh',
           }}
         >
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/problems" element={<Problems />} />
-            <Route path="/problems/:id" element={<ProblemDetail />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/addProblems" element={<AddProblems />} />
-            <Route path="/problems/icpc" element={<ICPC />} />
-            <Route path="/problems/interview" element={<Interview />} />
-            <Route path="/problems/programming" element={<Programming />} />
-          </Routes>
+          {isAuthenticated && <Header />}
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <ScrollToTop />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  isAuthenticated ? (
+                    <Navigate to="/home" replace />
+                  ) : (
+                    <>
+                      <Suspense fallback={<CenteredLoader />}>
+                        <LandingPage onGetStarted={handleShowAuth} />
+                      </Suspense>
+                      <AuthModal
+                        open={showAuth}
+                        onClose={handleCloseAuth}
+                        initialState={authScreen}
+                        onAuthenticated={handleAuthenticated}
+                      />
+                    </>
+                  )
+                }
+              />
+              <Route
+                path="/home"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
+                      <Home />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/courses"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
+                      <Courses />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/courses/:courseId/add-content"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <AddCourseContent />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/problems/:problemId"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <ProblemDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
+                      <ManageProblemsPage />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/add-single-icpc"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
+                      <SingleFormLayout />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/add-multiple-icpc"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
+                      <ICPCMultipleForm />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-problems/add-interview"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
+                      <InterviewForm />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/problems"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <ICPC />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/interviews"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <Suspense fallback={<CenteredLoader />}>
+                      <Interview />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              {/* Add this catch-all route at the end */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Box>
+          <Footer />
         </Box>
-        <Footer />
-      </Box>
+      </ThemeProvider>
     </Router>
   )
 }
