@@ -215,13 +215,13 @@ const Header = () => {
                   Interview Prep
                 </PageLinks>
 
-                <PageLinks
+                {/* <PageLinks
                   component={NavLink}
                   to="/manage-problems"
                   activeClassName="active"
                 >
                   Manage Problems
-                </PageLinks>
+                </PageLinks> */}
               </Box>
               <Divider
                 orientation="vertical"
