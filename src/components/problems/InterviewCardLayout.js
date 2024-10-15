@@ -125,7 +125,7 @@ const InterviewCardLayout = ({ interview = {} }) => {
             <Box display="flex" justifyContent="space-between" alignItems="center">
               {/* Topics on the left */}
               <Box flex={1}>
-                <Typography variant="caption" color="textSecondary">
+                <Typography variant="overline" color="primary.light500">
                   {interview.topics && interview.topics.length > 0
                     ? interview.topics.join(', ')
                     : 'No Topics Available'}
@@ -134,7 +134,7 @@ const InterviewCardLayout = ({ interview = {} }) => {
               {/* Difficulty in the middle */}
               <Box flex={0}>
                 <Typography
-                  variant="overline"
+                  variant="overline" color="primary.light500"
                   style={{ color: difficultyColor(interview.difficulty) }}
                 >
                   {interview.difficulty || 'Unknown Difficulty'}
@@ -142,7 +142,7 @@ const InterviewCardLayout = ({ interview = {} }) => {
               </Box>
               {/* Companies on the right */}
               <Box flex={1} textAlign="right">
-                <Typography variant="caption" color="textSecondary">
+                <Typography variant="overline" color="primary.light500">
                   {interview.companies && interview.companies.length > 0
                     ? interview.companies.join(', ')
                     : 'No Companies Available'}
@@ -150,11 +150,11 @@ const InterviewCardLayout = ({ interview = {} }) => {
               </Box>
             </Box>
             {/* Title */}
-            <CardTitle variant="h5" gutterBottom>
+            <CardTitle variant="body1" gutterBottom>
               {interview.title || 'Untitled Question'}
             </CardTitle>
             {/* Description */}
-            <CardBody variant="body1">
+            <CardBody variant="small">
               {interview.description || 'No description provided.'}
             </CardBody>
           </StyledCardContent>
