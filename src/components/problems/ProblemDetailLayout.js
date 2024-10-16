@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Box,
-  Container,
-  Drawer,
-  IconButton,
-  Fab,
-  Tooltip,
-  useTheme,
-} from '@mui/material'
-import ChatIcon from '@mui/icons-material/Chat'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import Drawer from '@mui/material/Drawer'
+import Fab from '@mui/material/Fab'
+import { useTheme } from '@mui/material'
+import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded'
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels'
 import styled from 'styled-components'
 import CodeEditor from './CodeEditor'
@@ -203,7 +199,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                     },
                   }}
                 >
-                  <ChatIcon />
+                  <AutoAwesomeRoundedIcon sx={{ fontSize: 32 }} />
                 </Fab>
               </Box>
               <Drawer
