@@ -183,7 +183,7 @@ const SkeletonProblemList = () => (
         align="center"
         sx={{ mb: 2 }}
       >
-        ICPC Problems
+        Problems
       </Typography>
       <FilterToolbar region="all" subregion="all" year="all" />
       <Grid

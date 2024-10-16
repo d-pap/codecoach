@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Container, Drawer, IconButton } from '@mui/material'
+import {
+  Box,
+  Container,
+  Drawer,
+  IconButton,
+  Fab,
+  Tooltip,
+  useTheme,
+} from '@mui/material'
 import ChatIcon from '@mui/icons-material/Chat'
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels'
 import styled from 'styled-components'
@@ -99,6 +107,8 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
     setChatScrollPosition(position)
   }
 
+  const theme = useTheme()
+
   return (
     <Container maxWidth={false}>
       <Box
@@ -159,22 +169,42 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                   zIndex: 10,
                 }}
               >
-                <IconButton
+                <Fab
+                  aria-label="chat"
                   onClick={toggleChat}
                   sx={{
-                    backgroundColor: '#3f51b5',
-                    borderRadius: '7px 0 0 7px',
-                    scale: '1.4',
-                    transition:
-                      'transform 0.3s ease, background-color 0.3s ease',
+                    position: 'fixed',
+                    bottom: theme.spacing(4),
+                    right: theme.spacing(4),
+                    transition: 'all 0.3s ease',
+                    background:
+                      'linear-gradient(45deg, #0e0725, #5c03bc, #e536ab, #f4e5f0)',
+                    backgroundSize: '400% 400%',
+                    animation: 'gradient 5s ease infinite',
+                    animationPlayState: 'paused',
                     '&:hover': {
-                      transform: 'translate(-5px, -50%) scale(1.1)',
-                      backgroundColor: '#303f9f',
+                      transform: 'scale(1.1)',
+                      boxShadow: theme.shadows[10],
+                      animationPlayState: 'running',
+                    },
+                    '& .MuiSvgIcon-root': {
+                      color: 'white',
+                    },
+                    '@keyframes gradient': {
+                      '0%': {
+                        backgroundPosition: '0% 50%',
+                      },
+                      '50%': {
+                        backgroundPosition: '100% 50%',
+                      },
+                      '100%': {
+                        backgroundPosition: '0% 50%',
+                      },
                     },
                   }}
                 >
                   <ChatIcon />
-                </IconButton>
+                </Fab>
               </Box>
               <Drawer
                 anchor="right"
