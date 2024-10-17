@@ -82,17 +82,18 @@ const TestCaseInput = ({ testCase, setTestCase, currentThemeStyle }) => (
       borderRadius: (theme) => theme.spacing(2),
       '& .MuiOutlinedInput-root': {
         color: currentThemeStyle.color,
-        backgroundColor: currentThemeStyle.backgroundColor,
+        //backgroundColor: currentThemeStyle.backgroundColor,
         borderRadius: (theme) => theme.spacing(2),
         fontFamily: (theme) => theme.typography.code,
         '& fieldset': {
-          border: 'none',
+          borderColor: currentThemeStyle.borderColor,
         },
         '&:hover fieldset': {
-          border: 'none',
+          borderColor: currentThemeStyle.borderColor,
         },
         '&.Mui-focused fieldset': {
-          border: 'none',
+          borderColor: currentThemeStyle.borderColor,
+          border: '1px solid',
         },
       },
     }}
