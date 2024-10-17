@@ -13,6 +13,7 @@ import 'ace-builds/src-noconflict/ext-language_tools'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import SendIcon from '@mui/icons-material/Send'
 import PlayArrow from '@mui/icons-material/PlayArrow'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -20,6 +21,11 @@ import FeedbackDialog from '../problems/FeedbackDialog'
 import { executeCode, getCurrentUserId, saveSubmission } from '../../api'
 import { loadTheme, loadMode } from '../utility/aceImports'
 import CodeEditorToolbar, { languageOptions } from './CodeEditorToolbar'
+import TextField from '@mui/material/TextField'
+import IconButton from '@mui/material/IconButton'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import ButtonBase from '@mui/material/ButtonBase'
 
 const themeStyles = {
   monokai: {
@@ -60,6 +66,39 @@ const themeStyles = {
   },
 }
 
+const TestCaseInput = ({ testCase, setTestCase, currentThemeStyle }) => (
+  <TextField
+    multiline
+    rows={2}
+    variant="outlined"
+    placeholder="Enter custom test case here..."
+    value={testCase}
+    onChange={(e) => setTestCase(e.target.value)}
+    sx={{
+      backgroundColor: currentThemeStyle.backgroundColor,
+      color: currentThemeStyle.color,
+      mt: 1,
+      mx: 1,
+      borderRadius: (theme) => theme.spacing(2),
+      '& .MuiOutlinedInput-root': {
+        color: currentThemeStyle.color,
+        backgroundColor: currentThemeStyle.backgroundColor,
+        borderRadius: (theme) => theme.spacing(2),
+        fontFamily: (theme) => theme.typography.code,
+        '& fieldset': {
+          border: 'none',
+        },
+        '&:hover fieldset': {
+          border: 'none',
+        },
+        '&.Mui-focused fieldset': {
+          border: 'none',
+        },
+      },
+    }}
+  />
+)
+
 const EditorButtons = ({
   handleRunCode,
   handleSubmitCode,
@@ -67,49 +106,100 @@ const EditorButtons = ({
   isDisabled,
   isSubmitting,
   isRunning,
-}) => (
-  <Box sx={{ pt: 1, pr: 1 }}>
-    <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
-      <Button
-        size="small"
-        onClick={handleRunCode}
-        variant="text"
-        startIcon={
-          isRunning ? (
-            <CircularProgress size={20} color="inherit" />
-          ) : (
-            <PlayArrow />
-          )
-        }
-        sx={{ color: currentThemeStyle.color }}
-        disabled={isDisabled || isRunning}
-      >
-        {isRunning ? '' : 'Run'}
-      </Button>
-      <Button
-        size="small"
-        onClick={handleSubmitCode}
-        variant="contained"
-        endIcon={
-          isSubmitting ? (
-            <CircularProgress size={20} color="inherit" />
-          ) : (
-            <SendIcon />
-          )
-        }
-        sx={{
-          backgroundColor: 'green',
-          '&:hover': { backgroundColor: 'darkgreen' },
-          borderRadius: (theme) => theme.spacing(2),
-          minWidth: '100px',
-        }}
-        disabled={isDisabled || isSubmitting}
-      >
-        {isSubmitting ? '' : 'Submit'}
-      </Button>
-    </Stack>
-  </Box>
-)
+  showTestCase,
+  setShowTestCase,
+}) => {
+  const toggleTestCase = () => setShowTestCase(!showTestCase)
+
+  return (
+    <Box
+      sx={{
+        pt: 1,
+        px: 1,
+      }}
+    >
+      <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end' }}>
+        <ButtonBase
+          onClick={toggleTestCase}
+          disableRipple
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            color: currentThemeStyle.color,
+            '&:hover': { opacity: 0.7, transition: 'opacity 0.2s' },
+            borderRadius: (theme) => theme.spacing(2),
+          }}
+        >
+          <IconButton sx={{ color: 'inherit', p: 0.5 }}>
+            {showTestCase ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </IconButton>
+          <Typography
+            variant="body2"
+            sx={{
+              ml: 0.5,
+              color: currentThemeStyle.color,
+              fontWeight: 500,
+              fontSize: '0.8rem',
+              letterSpacing: '0.03071em',
+            }}
+          >
+            Test Cases
+          </Typography>
+        </ButtonBase>
+
+        <Button
+          size="small"
+          onClick={handleRunCode}
+          variant="text"
+          startIcon={
+            isRunning ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              <PlayArrow />
+            )
+          }
+          sx={{
+            color: currentThemeStyle.color,
+            fontWeight: 500,
+            fontSize: '0.8rem',
+            letterSpacing: '0.03071em',
+            '&:hover': { opacity: 0.7, transition: 'opacity 0.2s' },
+          }}
+          disabled={isDisabled || isRunning}
+        >
+          {isRunning ? '' : 'Run'}
+        </Button>
+        <Button
+          size="small"
+          onClick={handleSubmitCode}
+          variant="contained"
+          endIcon={
+            isSubmitting ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              <SendIcon />
+            )
+          }
+          sx={{
+            backgroundColor: 'green',
+            fontSize: '0.8rem',
+            fontWeight: 500,
+            letterSpacing: '0.03071em',
+            '&:hover': {
+              backgroundColor: 'darkgreen',
+              transition: 'background-color 0.2s',
+            },
+            borderRadius: (theme) => theme.spacing(2),
+            minWidth: '100px',
+          }}
+          disabled={isDisabled || isSubmitting}
+        >
+          {isSubmitting ? '' : 'Submit'}
+        </Button>
+      </Stack>
+    </Box>
+  )
+}
 
 const OutputWindow = ({ output, currentThemeStyle }) => (
   <Box
@@ -176,6 +266,8 @@ const CodeEditor = ({
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
+  const [testCase, setTestCase] = useState('')
+  const [showTestCase, setShowTestCase] = useState(false)
 
   //! limit number of judge0 runs and reset limit after 12 hours
   const MAX_RUN_SUBMIT_COUNT = 10
@@ -243,7 +335,7 @@ const CodeEditor = ({
       )
       const language_id = selectedLanguage.id
 
-      const result = await executeCode(editorCode, '', language_id)
+      const result = await executeCode(editorCode, testCase, language_id)
       if (result.status.id === 3) {
         setOutput(result.stdout || 'No output')
       } else if (result.status.id === 6) {
@@ -278,7 +370,7 @@ const CodeEditor = ({
       )
       const language_id = selectedLanguage.id
 
-      const result = await executeCode(editorCode, '', language_id)
+      const result = await executeCode(editorCode, testCase, language_id)
 
       // determine the status of the result
       let status = 'Unknown Error'
@@ -432,7 +524,16 @@ const CodeEditor = ({
         isDisabled={isDisabled}
         isRunning={isRunning}
         isSubmitting={isSubmitting}
+        showTestCase={showTestCase}
+        setShowTestCase={setShowTestCase}
       />
+      {showTestCase && (
+        <TestCaseInput
+          testCase={testCase}
+          setTestCase={setTestCase}
+          currentThemeStyle={currentThemeStyle}
+        />
+      )}
       <OutputWindow output={output} currentThemeStyle={currentThemeStyle} />
       {enableFeedback && (
         <FeedbackDialog
