@@ -9,6 +9,7 @@ import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels'
 import styled from 'styled-components'
 import CodeEditor from './CodeEditor'
 import ChatBox from './llm-components/ChatBox'
+import aiChatIcon from '../../images/aiChatIcon.svg'
 
 const StyledPanelResizeHandle = styled(PanelResizeHandle)`
   background-color: #ccc;
@@ -189,9 +190,9 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                       boxShadow: theme.shadows[10],
                       animationPlayState: 'running',
                     },
-                    '& .MuiSvgIcon-root': {
-                      color: 'white',
-                      fontSize: { xs: 20, sm: 24, md: 28 },
+                    '& img': {
+                      width: { xs: '20px', sm: '24px', md: '28px' },
+                      height: 'auto',
                     },
                     '@keyframes gradient': {
                       '0%': {
@@ -206,7 +207,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                     },
                   }}
                 >
-                  <AutoAwesomeRoundedIcon />
+                  <img src={aiChatIcon} alt="AI Chat" />
                 </Fab>
               </Box>
               <Drawer

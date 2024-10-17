@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 import {
   Box,
   TextField,
@@ -9,6 +9,7 @@ import {
   Typography,
   Collapse,
   Tooltip,
+  Avatar,
 } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -20,6 +21,8 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
 import { useTheme } from '@mui/material/styles'
 import SendChat from './AIChat'
+import rocketImg from '../../../images/rocket.svg'
+import aiAvatar from '../../../images/aiAvatar.svg'
 
 // Function to clear chat history from localStorage
 const clearChatHistory = (problemId) => {
@@ -51,6 +54,22 @@ const ChatBox = ({
 
   // **Ref for Scrollable Container**
   const scrollContainerRef = useRef(null)
+
+  const scrollToBottom = useCallback(() => {
+    if (scrollContainerRef.current) {
+      const { scrollHeight, scrollTop, clientHeight } =
+        scrollContainerRef.current
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100 // 100px threshold
+      if (isNearBottom) {
+        scrollContainerRef.current.scrollTop =
+          scrollContainerRef.current.scrollHeight
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [chatHistory, scrollToBottom])
 
   useEffect(() => {
     // **Restore Scroll Position on Mount**
@@ -132,6 +151,9 @@ const ChatBox = ({
       }
 
       setChatHistory(updatedHistory)
+
+      // Scroll to bottom after state update
+      setTimeout(scrollToBottom, 100)
     } catch (error) {
       console.error('Failed to send chat:', error)
       const updatedHistory = {
@@ -178,37 +200,92 @@ const ChatBox = ({
             //* formatting markdown for ai messages
             // paragraphs formatting
             p: ({ node, ...props }) => (
-              <Typography {...props} sx={{ mb: 0.5 }} />
+              <Typography
+                {...props}
+                sx={{
+                  mb: 0.5,
+                  fontSize: '0.875rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
+              />
             ),
 
             // headings
             h1: ({ node, ...props }) => (
-              <Typography variant="h4" {...props} sx={{ mb: 1 }} />
+              <Typography
+                variant="h4"
+                {...props}
+                sx={{
+                  mb: 1,
+                  fontSize: '1.25rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
+              />
             ),
             h2: ({ node, ...props }) => (
-              <Typography variant="h5" {...props} sx={{ mb: 1 }} />
+              <Typography
+                variant="h5"
+                {...props}
+                sx={{
+                  mb: 1,
+                  fontSize: '1.125rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
+              />
             ),
             h3: ({ node, ...props }) => (
-              <Typography variant="h6" {...props} sx={{ mb: 1 }} />
+              <Typography
+                variant="h6"
+                {...props}
+                sx={{
+                  mb: 1,
+                  fontSize: '1rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
+              />
             ),
 
             // lists formatting
             ul: ({ node, ...props }) => (
               <ul
                 {...props}
-                style={{ paddingLeft: '1.5em', marginBottom: '0.5em' }}
+                style={{
+                  paddingLeft: '1.5em',
+                  marginBottom: '0.5em',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
               />
             ),
             ol: ({ node, ...props }) => (
               <ol
                 {...props}
-                style={{ paddingLeft: '1.5em', marginBottom: '0.5em' }}
+                style={{
+                  paddingLeft: '1.5em',
+                  marginBottom: '0.5em',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
               />
             ),
 
             // list items formatting
             li: ({ node, ...props }) => (
-              <li {...props} style={{ marginBottom: '0.5em' }} />
+              <li
+                {...props}
+                style={{
+                  marginBottom: '0.5em',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
+              />
             ),
 
             // blockquotes formatting
@@ -220,6 +297,9 @@ const ChatBox = ({
                   paddingLeft: '1em',
                   color: '#666',
                   marginBottom: '0.5em',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
                 }}
               />
             ),
@@ -233,7 +313,13 @@ const ChatBox = ({
                   style={oneDark}
                   language={hasLanguage[1]}
                   PreTag="div"
-                  customStyle={{ borderRadius: '12px', marginBottom: '0.5em' }}
+                  customStyle={{
+                    borderRadius: '12px',
+                    marginBottom: '0.5em',
+                    fontSize: '0.875rem',
+                    lineHeight: '1.5',
+                    letterSpacing: '0.01em',
+                  }}
                   {...props}
                 >
                   {String(children).replace(/\n$/, '')}
@@ -247,6 +333,9 @@ const ChatBox = ({
                     padding: '0.2em 0.4em',
                     borderRadius: '6px',
                     fontFamily: 'monospace',
+                    fontSize: '0.875rem',
+                    lineHeight: '1.5',
+                    letterSpacing: '0.01em',
                   }}
                 >
                   {children}
@@ -291,8 +380,8 @@ const ChatBox = ({
         <Tooltip title="During development, the number of AI messages is limited per day. Each hint, solution, and user message costs 1 run. You can see how many runs you have left in the input field placeholder text.">
           <InfoRoundedIcon sx={{ color: theme.palette.text.secondary }} />
         </Tooltip>
-        <Typography variant="h6" sx={{ flexGrow: 1, textAlign: 'center' }}>
-          Get help from your Code Coach
+        <Typography variant="h3" sx={{ flexGrow: 1, textAlign: 'center' }}>
+          codecoach
         </Typography>
         <IconButton onClick={() => setShowSettings(!showSettings)}>
           <SettingsIcon sx={{ color: theme.palette.text.secondary }} />
@@ -323,62 +412,78 @@ const ChatBox = ({
           border: 'none',
         }}
       >
+        {/* Add avatar and call-to-action message */}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            mb: 2,
+          }}
+        >
+          <Avatar
+            alt="AI Robot"
+            src={aiAvatar}
+            sx={{ width: 80, height: 80, mb: 1 }}
+          />
+          <Typography
+            variant="subtitle1"
+            sx={{ fontWeight: 'bold', textAlign: 'center' }}
+          >
+            codecoach answers your questions instantly!
+          </Typography>
+        </Box>
+
         {Array.isArray(chatHistory.data) &&
           chatHistory.data.map((chat, index) => (
             <Box
               key={index}
               sx={{
-                alignSelf: chat.role === 'user' ? 'flex-end' : 'flex-start',
-                bgcolor:
-                  chat.role === 'user'
-                    ? theme.palette.primary.main
-                    : theme.palette.grey[200],
-                color:
-                  chat.role === 'user'
-                    ? theme.palette.text.white
-                    : theme.palette.text.primary,
-                borderRadius:
-                  chat.role === 'user'
-                    ? '15px 15px 5px 15px'
-                    : '15px 15px 15px 5px',
-                p: 2,
-
+                display: 'flex',
+                justifyContent:
+                  chat.role === 'user' ? 'flex-end' : 'flex-start',
                 mb: 2,
-                maxWidth: '100%',
-                wordBreak: 'break-word',
-                position: 'relative',
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  bottom: 0,
-                  width: 0,
-                  height: 0,
-                  border: '10px solid transparent',
-                  ...(chat.role === 'user'
-                    ? {
-                        borderTopColor: theme.palette.primary.main,
-                        right: -7,
-                        transform: 'rotate(180deg)',
-                      }
-                    : {
-                        borderTopColor: theme.palette.grey[200],
-                        left: -7,
-                        transform: 'rotate(180deg)',
-                      }),
-                },
               }}
             >
-              {chat.role === 'assistant' ? (
-                formatChatContent(chat.content)
-              ) : (
-                <Typography
-                  sx={{
-                    color: theme.palette.text.white,
-                  }}
-                >
-                  {chat.content}
-                </Typography>
+              {chat.role === 'assistant' && (
+                <Avatar
+                  alt="AI"
+                  src={aiAvatar}
+                  sx={{ width: 30, height: 30, mr: 1, alignSelf: 'flex-end' }}
+                />
               )}
+              <Box
+                sx={{
+                  bgcolor:
+                    chat.role === 'user'
+                      ? theme.palette.primary.main
+                      : theme.palette.grey[200],
+                  color:
+                    chat.role === 'user'
+                      ? theme.palette.text.white
+                      : theme.palette.text.primary,
+                  borderRadius:
+                    chat.role === 'user'
+                      ? '20px 20px 5px 20px'
+                      : '20px 20px 20px 5px',
+                  p: 2,
+                  maxWidth: '70%',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {chat.role === 'assistant' ? (
+                  formatChatContent(chat.content)
+                ) : (
+                  <Typography
+                    sx={{
+                      color: theme.palette.text.white,
+                      fontSize: '0.875rem',
+                    }}
+                  >
+                    {chat.content}
+                  </Typography>
+                )}
+              </Box>
             </Box>
           ))}
         {isLoading && (
@@ -435,17 +540,21 @@ const ChatBox = ({
           variant="contained"
           disabled={isLoading}
           sx={{
-            bgcolor: theme.palette.error.main,
+            bgcolor: '#fcdada',
+            color: theme.palette.error.main,
+            //bgcolor: theme.palette.error.light,
             width: '30%',
             mx: 0.5,
             mb: 1,
+            border: '1px solid #dc2626',
             '&:hover': {
-              bgcolor: theme.palette.error.dark,
+              bgcolor: '#fcdada',
+              color: theme.palette.error.main,
             },
           }}
           onClick={handleDelete}
         >
-          Delete Chat
+          Clear Chat
         </Button>
       </Box>
 
