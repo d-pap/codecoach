@@ -124,7 +124,8 @@ const theme = createTheme({
     },
     code: {
       // for code output window Box
-      fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+      fontFamily:
+        'JetBrains Mono, Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
       fontSize: '0.889rem', // match ace editor font size
     },
     button: {

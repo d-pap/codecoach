@@ -9,6 +9,8 @@ import { useParams } from 'react-router-dom'
 import AceEditor from 'react-ace'
 import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/mode-python'
+import 'ace-builds/src-noconflict/mode-java'
+import 'ace-builds/src-noconflict/mode-c_cpp'
 import 'ace-builds/src-noconflict/ext-language_tools'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
@@ -19,7 +21,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import FeedbackDialog from '../problems/FeedbackDialog'
 import { executeCode, getCurrentUserId, saveSubmission } from '../../api'
 import { loadTheme, loadMode } from '../utility/aceImports'
-import CodeEditorToolbar from './CodeEditorToolbar'
+import CodeEditorToolbar, { languageOptions } from './CodeEditorToolbar'
 
 const themeStyles = {
   monokai: {
@@ -134,8 +136,27 @@ const OutputWindow = ({ output, currentThemeStyle }) => (
   </Box>
 )
 
+const defaultCode = {
+  python: `def main():
+    print("Hello, World!")
+
+if __name__ == "__main__":
+    main()`,
+  java: `public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}`,
+  c: `#include <stdio.h>
+
+int main() {
+    printf("Hello, World!\\n");
+    return 0;
+}`,
+}
+
 const CodeEditor = ({
-  code,
+  initialCode,
   setCode,
   setOutput,
   output,
@@ -143,10 +164,14 @@ const CodeEditor = ({
 }) => {
   const [theme, setTheme] = useState('monokai')
   const [language, setLanguage] = useState('python')
+  const [editorCode, setEditorCode] = useState(
+    initialCode || defaultCode.python
+  )
   const { problemId } = useParams() // get problem ID from URL
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
+
   //! limit number of judge0 runs and reset limit after 12 hours
   const MAX_RUN_SUBMIT_COUNT = 10
   const RESET_INTERVAL = 12 * 60 * 60 * 1000 // 12 hours in milliseconds
@@ -192,6 +217,10 @@ const CodeEditor = ({
     localStorage.setItem('runSubmitCount', runSubmitCount.toString())
   }, [runSubmitCount])
 
+  useEffect(() => {
+    setEditorCode(defaultCode[language] || '')
+  }, [language])
+
   const isDisabled = runSubmitCount >= MAX_RUN_SUBMIT_COUNT
 
   const handleRunCode = async () => {
@@ -204,7 +233,12 @@ const CodeEditor = ({
 
     setIsRunning(true)
     try {
-      const result = await executeCode(code)
+      const selectedLanguage = languageOptions.find(
+        (lang) => lang.value === language
+      )
+      const language_id = selectedLanguage.id
+
+      const result = await executeCode(editorCode, '', language_id) // Use editorCode instead of code
       if (result.status.id === 3) {
         setOutput(result.stdout || 'No output')
       } else if (result.status.id === 6) {
@@ -234,7 +268,12 @@ const CodeEditor = ({
 
     setIsSubmitting(true)
     try {
-      const result = await executeCode(code)
+      const selectedLanguage = languageOptions.find(
+        (lang) => lang.value === language
+      )
+      const language_id = selectedLanguage.id
+
+      const result = await executeCode(editorCode, '', language_id)
 
       // determine the status of the result
       let status = 'Unknown Error'
@@ -255,7 +294,8 @@ const CodeEditor = ({
       const submissionData = {
         userId,
         problemId,
-        code,
+        code: editorCode,
+        language_id,
         result: {
           stdout: result.stdout,
           stderr: result.stderr,
@@ -276,7 +316,7 @@ const CodeEditor = ({
       if (result.stderr) {
         outputMessage += `\nError: ${result.stderr}`
       }
-      // add compilation output if any //!(only if we add compiled languages in the future)
+      // add compilation output if any
       if (result.compile_output) {
         outputMessage += `\nCompilation Error: ${result.compile_output}`
       }
@@ -318,17 +358,20 @@ const CodeEditor = ({
     [theme]
   )
 
-  // Function to handle language changes (if you decide to support more modes)
+  // Function to handle language changes
   const handleLanguageChange = useCallback(
     async (newLanguage) => {
       if (newLanguage === language) return // No change needed
+
+      setLanguage(newLanguage)
 
       // Load the new mode if it's not already loaded
       if (newLanguage !== 'python') {
         await loadMode(newLanguage)
       }
 
-      setLanguage(newLanguage)
+      //! set default code for the new language if needed????
+      //setEditorCode(defaultCode[newLanguage] || '')
     },
     [language]
   )
@@ -356,23 +399,26 @@ const CodeEditor = ({
         runSubmitCount={runSubmitCount}
       />
       <AceEditor
-        mode={language}
+        mode={language === 'c' ? 'c_cpp' : language}
         theme={theme}
         name="codeEditor"
-        onChange={(newCode) => setCode(newCode)}
+        onChange={(newCode) => {
+          setEditorCode(newCode)
+          setCode(newCode)
+        }}
         fontSize={14}
         lineHeight={19}
         showPrintMargin={false}
         showGutter={true}
         highlightActiveLine={true}
-        value={code}
+        value={editorCode}
         editorProps={{ $blockScrolling: true }}
         setOptions={{
           enableBasicAutocompletion: true,
           enableLiveAutocompletion: true,
           showLineNumbers: true,
           tabSize: 2,
-          fontFamily: 'monospace',
+          fontFamily: 'JetBrains Mono, monospace',
         }}
         style={{ flex: 1, width: '100%', height: '100%' }}
       />
