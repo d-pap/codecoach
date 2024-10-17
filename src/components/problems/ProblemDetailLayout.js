@@ -159,25 +159,31 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
               <Box
                 sx={{
                   position: 'fixed',
-                  top: '50%',
-                  right: 0,
-                  transform: 'translateY(-50%)',
-                  zIndex: 10,
+                  bottom: {
+                    xs: theme.spacing(2),
+                    sm: theme.spacing(3),
+                  },
+                  right: {
+                    xs: theme.spacing(2),
+                    sm: theme.spacing(3),
+                  },
+                  zIndex: 1200,
                 }}
               >
                 <Fab
                   aria-label="chat"
                   onClick={toggleChat}
+                  size="small"
                   sx={{
-                    position: 'fixed',
-                    bottom: theme.spacing(4),
-                    right: theme.spacing(4),
                     transition: 'all 0.3s ease',
                     background:
                       'linear-gradient(45deg, #0e0725, #5c03bc, #e536ab, #f4e5f0)',
                     backgroundSize: '400% 400%',
                     animation: 'gradient 5s ease infinite',
                     animationPlayState: 'paused',
+                    width: { xs: 40, sm: 48 },
+                    height: { xs: 40, sm: 48 },
+                    minHeight: 'auto',
                     '&:hover': {
                       transform: 'scale(1.1)',
                       boxShadow: theme.shadows[10],
@@ -185,6 +191,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                     },
                     '& .MuiSvgIcon-root': {
                       color: 'white',
+                      fontSize: { xs: 20, sm: 24, md: 28 },
                     },
                     '@keyframes gradient': {
                       '0%': {
@@ -199,7 +206,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                     },
                   }}
                 >
-                  <AutoAwesomeRoundedIcon sx={{ fontSize: 32 }} />
+                  <AutoAwesomeRoundedIcon />
                 </Fab>
               </Box>
               <Drawer
