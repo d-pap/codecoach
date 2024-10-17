@@ -9,8 +9,6 @@ import { useParams } from 'react-router-dom'
 import AceEditor from 'react-ace'
 import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/mode-python'
-import 'ace-builds/src-noconflict/mode-java'
-import 'ace-builds/src-noconflict/mode-c_cpp'
 import 'ace-builds/src-noconflict/ext-language_tools'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
@@ -147,6 +145,13 @@ if __name__ == "__main__":
         System.out.println("Hello, World!");
     }
 }`,
+  cpp: `#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello, World!" << endl;
+    return 0;
+}`,
   c: `#include <stdio.h>
 
 int main() {
@@ -238,7 +243,7 @@ const CodeEditor = ({
       )
       const language_id = selectedLanguage.id
 
-      const result = await executeCode(editorCode, '', language_id) // Use editorCode instead of code
+      const result = await executeCode(editorCode, '', language_id)
       if (result.status.id === 3) {
         setOutput(result.stdout || 'No output')
       } else if (result.status.id === 6) {
@@ -343,12 +348,10 @@ const CodeEditor = ({
 
   const currentThemeStyle = themeStyles[theme]
 
-  // Function to handle theme changes
+  // function to handle theme changes
   const handleThemeChange = useCallback(
     async (newTheme) => {
-      if (newTheme === theme) return // No change needed
-
-      // Load the new theme if it's not already loaded
+      if (newTheme === theme) return
       if (newTheme !== 'monokai') {
         await loadTheme(newTheme)
       }
@@ -358,18 +361,17 @@ const CodeEditor = ({
     [theme]
   )
 
-  // Function to handle language changes
+  // function to handle language changes
   const handleLanguageChange = useCallback(
     async (newLanguage) => {
-      if (newLanguage === language) return // No change needed
+      if (newLanguage === language) return
 
       setLanguage(newLanguage)
 
-      // Load the new mode if it's not already loaded
+      // load the new mode if not already loaded
       if (newLanguage !== 'python') {
         await loadMode(newLanguage)
       }
-
       //! set default code for the new language if needed????
       //setEditorCode(defaultCode[newLanguage] || '')
     },
@@ -399,7 +401,8 @@ const CodeEditor = ({
         runSubmitCount={runSubmitCount}
       />
       <AceEditor
-        mode={language === 'c' ? 'c_cpp' : language}
+        //! if language is c or cpp, set mode to c_cpp mode because (ace-builds uses the c_cpp mode for c AND cpp). for other languages, use the language name as the mode
+        mode={language === 'c' || language === 'cpp' ? 'c_cpp' : language}
         theme={theme}
         name="codeEditor"
         onChange={(newCode) => {

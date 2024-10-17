@@ -66,6 +66,7 @@ export const languageOptions = [
   { value: 'python', label: 'Python', id: 71 },
   { value: 'java', label: 'Java', id: 62 },
   { value: 'c', label: 'C', id: 50 },
+  { value: 'cpp', label: 'C++', id: 54 },
   // Add more languages as needed
 ]
 

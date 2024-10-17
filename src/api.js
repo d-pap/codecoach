@@ -118,7 +118,7 @@ export const executeCode = async (
     // poll for results
     let result
     do {
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // wait for 1 second
+      await new Promise((resolve) => setTimeout(resolve, 100)) // wait for .1 second
       const statusResponse = await fetch(
         `${process.env.REACT_APP_RAPID_API_URL}/${token}`,
         {
