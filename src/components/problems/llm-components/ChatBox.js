@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Box,
   TextField,
@@ -9,6 +9,9 @@ import {
   Typography,
   Collapse,
   Tooltip,
+  FormControlLabel,
+  Switch,
+  Divider, // Import Switch and FormControlLabel
 } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -39,12 +42,16 @@ const ChatBox = ({
   setChatCount,
   showSettings,
   setShowSettings,
-  // **New Props for Scroll Handling**
   initialScrollPosition,
   onScrollPositionChange,
+  code,
 }) => {
   const theme = useTheme()
-  const [input, setInput] = React.useState('')
+  const [input, setInput] = useState('')
+  const [includeCode, setIncludeCode] = useState(false)
+  const [tooltipsEnabled, setTooltipsEnabled] = useState(true)
+  const [tooltipOpen, setTooltipOpen] = useState(false)
+  const [isHovering, setIsHovering] = useState(false)
 
   //! limit the number of chats to prevent abuse
   const MAX_CHAT_COUNT = 10
@@ -78,21 +85,24 @@ const ChatBox = ({
 
     let message = ''
 
-    //! limit the number of chats to prevent abuse
+    // Limit the number of chats to prevent abuse
     if (chatCount >= MAX_CHAT_COUNT) {
       alert('You have reached the maximum number of messages for today.')
       return
     } else if (command === 'user') {
-      message = input
-      // increment chat count
+      message = `${input}\n`
+      if (includeCode && code != null) {
+        message += `User Code: ${code}`
+      }
+      // Increment chat count
       setChatCount((prevCount) => prevCount + 1)
     } else if (command === 'hint') {
       message = 'Requesting a hint...'
-      // increment chat count
+      // Increment chat count
       setChatCount((prevCount) => prevCount + 1)
     } else if (command === 'solution') {
       message = 'Requesting a solution...'
-      // increment chat count
+      // Increment chat count
       setChatCount((prevCount) => prevCount + 1)
     } else {
       console.error('Invalid command:', command)
@@ -116,7 +126,8 @@ const ChatBox = ({
         problem.description,
         message,
         conversation_id,
-        command
+        command,
+        code // Pass the code to SendChat
       )
 
       const updatedHistory = {
@@ -166,6 +177,34 @@ const ChatBox = ({
         return
       }
       handleSend('user')
+    }
+  }
+
+  // Effect to handle tooltip visibility based on switch state and hover
+  useEffect(() => {
+    if (tooltipsEnabled) {
+      setTooltipOpen(true)
+    } else if (!isHovering) {
+      setTooltipOpen(false)
+    }
+  }, [tooltipsEnabled, isHovering])
+
+  const handleToggle = () => {
+    setTooltipsEnabled((prev) => !prev)
+    setTooltipOpen(false) // Close tooltip immediately on toggle
+  }
+
+  const handleMouseEnter = () => {
+    setIsHovering(true)
+    if (tooltipsEnabled) {
+      setTooltipOpen(true)
+    }
+  }
+
+  const handleMouseLeave = () => {
+    setIsHovering(false)
+    if (tooltipsEnabled) {
+      setTooltipOpen(false)
     }
   }
 
@@ -300,17 +339,61 @@ const ChatBox = ({
       </Box>
 
       <Collapse in={showSettings}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 1 }}>
-          <IconButton onClick={incrementDrawerWidth}>
-            <AddIcon />
-          </IconButton>
-          <Box sx={{ display: 'flex', alignItems: 'center', mx: 1 }}>
-            {drawerWidth}%
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            m: 1,
+          }}
+        >
+          {/* Drawer Width Controls */}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Tooltip title="Increase the width of the chat history drawer">
+              <IconButton onClick={incrementDrawerWidth}>
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
+            <Box sx={{ display: 'flex', alignItems: 'center', mx: 1 }}>
+              {drawerWidth}%
+            </Box>
+            <Tooltip title="Decrease the width of the chat history drawer">
+              <IconButton onClick={decrementDrawerWidth}>
+                <RemoveIcon />
+              </IconButton>
+            </Tooltip>
           </Box>
-          <IconButton onClick={decrementDrawerWidth}>
-            <RemoveIcon />
-          </IconButton>
+
+          {/* Switch for Tooltips */}
+          <Tooltip
+            title="Disables annoying tooltip text (like the one you are reading now) from the buttons below"
+            disableHoverListener={!tooltipsEnabled}
+            open={tooltipOpen}
+            onOpen={() => {
+              if (!tooltipsEnabled) return
+              setTooltipOpen(true)
+            }}
+            onClose={() => {
+              if (!tooltipsEnabled) return
+              setTooltipOpen(false)
+            }}
+            leaveDelay={200}
+          >
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={tooltipsEnabled}
+                  onChange={handleToggle}
+                  color="primary"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                />
+              }
+              label="Enable Button Popups"
+            />
+          </Tooltip>
         </Box>
+        <Divider></Divider>
       </Collapse>
 
       <Box
@@ -408,45 +491,102 @@ const ChatBox = ({
           mb: 1,
         }}
       >
-        <Tooltip title={'Prompts the coach to give a hint'} enterDelay={500}>
+        <Tooltip
+          title={'Prompts the coach to give a hint'}
+          enterDelay={500}
+          disableHoverListener={!tooltipsEnabled} // Respect the tooltipsEnabled state
+        >
           <Button
             variant="outlined"
             disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-            sx={{ width: '30%', mx: 0.5, mb: 1 }}
+            sx={{ width: '24%', mx: 0.5, mb: 1 }}
             onClick={() => handleSend('hint')}
           >
             Get a Hint
           </Button>
         </Tooltip>
-        <Tooltip
+        {/* <Tooltip
           title={'Prompts the coach to give a solution'}
           enterDelay={500}
+          disableHoverListener={!tooltipsEnabled}
         >
           <Button
             variant="outlined"
             disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-            sx={{ width: '30%', mx: 0.5, mb: 1 }}
+            sx={{ width: '24%', mx: 0.5, mb: 1 }}
             onClick={() => handleSend('solution')}
           >
             Get a Solution
           </Button>
-        </Tooltip>
-        <Button
-          variant="contained"
-          disabled={isLoading}
-          sx={{
-            bgcolor: theme.palette.error.main,
-            width: '30%',
-            mx: 0.5,
-            mb: 1,
-            '&:hover': {
-              bgcolor: theme.palette.error.dark,
-            },
-          }}
-          onClick={handleDelete}
+        </Tooltip> */}
+        <Tooltip
+          title={
+            includeCode
+              ? 'Your code will be included in the next message.'
+              : 'Your code will not be included in the next message.'
+          }
+          enterDelay={500}
+          disableHoverListener={!tooltipsEnabled} // Respect the tooltipsEnabled state
         >
-          Delete Chat
-        </Button>
+          <Button
+            variant="outlined"
+            disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
+            sx={{
+              width: '24%',
+              mx: 0.5,
+              mb: 1,
+              backgroundColor: includeCode
+                ? theme.palette.primary.main
+                : 'inherit',
+              color: includeCode
+                ? theme.palette.common.white
+                : theme.palette.text.primary,
+              '&:hover': {
+                backgroundColor: includeCode
+                  ? theme.palette.primary.dark // Darker shade when active
+                  : theme.palette.action.hover, // Default hover color
+                color: includeCode
+                  ? theme.palette.common.white // Keep text white when active
+                  : theme.palette.text.primary, // Keep text dark when not active
+                borderColor: includeCode
+                  ? theme.palette.common.white // make this highlight white and be thicker when active
+                  : theme.palette.secondary,
+              },
+              transition: theme.transitions.create(
+                ['background-color', 'border-color', 'color'],
+                {
+                  duration: theme.transitions.duration.short,
+                }
+              ),
+            }}
+            onClick={() => setIncludeCode(!includeCode)}
+          >
+            {includeCode ? 'Exclude My Code' : 'Analyze My Code'}
+          </Button>
+        </Tooltip>
+
+        <Tooltip
+          title={'Delete the chat history'}
+          enterDelay={500}
+          disableHoverListener={!tooltipsEnabled} // Respect the tooltipsEnabled state
+        >
+          <Button
+            variant="contained"
+            disabled={isLoading}
+            sx={{
+              bgcolor: theme.palette.error.main,
+              width: '24%',
+              mx: 0.5,
+              mb: 1,
+              '&:hover': {
+                bgcolor: theme.palette.error.dark,
+              },
+            }}
+            onClick={handleDelete}
+          >
+            Delete Chat
+          </Button>
+        </Tooltip>
       </Box>
 
       <Box
@@ -460,7 +600,7 @@ const ChatBox = ({
         <TextField
           value={input}
           onChange={handleInputChange}
-          onKeyDown={handleOnPressEnter} // Updated to onKeyDown
+          onKeyDown={handleOnPressEnter}
           placeholder={`Type a message (${MAX_CHAT_COUNT - chatCount} messages left today)...`}
           variant="outlined"
           fullWidth
@@ -475,9 +615,10 @@ const ChatBox = ({
         <Tooltip
           title={`You have ${MAX_CHAT_COUNT - chatCount} messages left for today.`}
           enterDelay={500}
+          disableHoverListener={!tooltipsEnabled} // Respect the tooltipsEnabled state
         >
           <Button
-            onClick={() => handleSend('user')} // Use arrow function
+            onClick={() => handleSend('user')}
             disabled={
               isLoading || chatCount >= MAX_CHAT_COUNT || input.trim() === ''
             }

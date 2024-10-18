@@ -207,6 +207,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                     // **Pass Scroll Props**
                     initialScrollPosition={chatScrollPosition}
                     onScrollPositionChange={handleScrollPositionChange}
+                    code={code}
                   />
                 </Box>
               </Drawer>
