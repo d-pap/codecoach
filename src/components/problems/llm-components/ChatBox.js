@@ -51,7 +51,6 @@ const ChatBox = ({
   const [includeCode, setIncludeCode] = useState(false)
   const [tooltipsEnabled, setTooltipsEnabled] = useState(true)
   const [tooltipOpen, setTooltipOpen] = useState(false)
-  const [isHovering, setIsHovering] = useState(false)
 
   //! limit the number of chats to prevent abuse
   const MAX_CHAT_COUNT = 10
@@ -156,6 +155,8 @@ const ChatBox = ({
     } finally {
       setIsLoading(false)
     }
+
+    code = null // Reset the code after sending it
   }
 
   // Function to delete chat history
@@ -180,32 +181,11 @@ const ChatBox = ({
     }
   }
 
-  // Effect to handle tooltip visibility based on switch state and hover
-  useEffect(() => {
-    if (tooltipsEnabled) {
-      setTooltipOpen(true)
-    } else if (!isHovering) {
-      setTooltipOpen(false)
-    }
-  }, [tooltipsEnabled, isHovering])
-
   const handleToggle = () => {
+    // Toggle the tooltip enabled state
     setTooltipsEnabled((prev) => !prev)
-    setTooltipOpen(false) // Close tooltip immediately on toggle
-  }
-
-  const handleMouseEnter = () => {
-    setIsHovering(true)
-    if (tooltipsEnabled) {
-      setTooltipOpen(true)
-    }
-  }
-
-  const handleMouseLeave = () => {
-    setIsHovering(false)
-    if (tooltipsEnabled) {
-      setTooltipOpen(false)
-    }
+    // Immediately close the tooltip if it's open
+    setTooltipOpen(false)
   }
 
   const formatChatContent = (content) => {
@@ -369,14 +349,8 @@ const ChatBox = ({
             title="Disables annoying tooltip text (like the one you are reading now) from the buttons below"
             disableHoverListener={!tooltipsEnabled}
             open={tooltipOpen}
-            onOpen={() => {
-              if (!tooltipsEnabled) return
-              setTooltipOpen(true)
-            }}
-            onClose={() => {
-              if (!tooltipsEnabled) return
-              setTooltipOpen(false)
-            }}
+            onOpen={() => setTooltipOpen(true)}
+            onClose={() => setTooltipOpen(false)}
             leaveDelay={200}
           >
             <FormControlLabel
@@ -384,9 +358,7 @@ const ChatBox = ({
                 <Switch
                   checked={tooltipsEnabled}
                   onChange={handleToggle}
-                  color="primary"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
+                  color="primary" // Optional: Customize the switch color
                 />
               }
               label="Enable Button Popups"
