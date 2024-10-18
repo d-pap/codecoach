@@ -477,26 +477,23 @@ const ChatBox = ({
           enterDelay={500}
           disableHoverListener={!tooltipsEnabled}
         >
-          <div>
-            <Button
-              variant="outlined"
-              disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-              sx={{
-                flex: '1 1 auto',
-                mx: 0.5,
-                mb: 1,
-                whiteSpace: 'nowrap',
-                fontSize: 'calc(0.5em + 0.5vw)',
-                minWidth: '80px',
-              }}
-              onClick={() => handleSend('hint')}
-            >
-              Get a Hint
-            </Button>
-          </div>
+          <Button
+            variant="outlined"
+            disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
+            sx={{
+              flex: '1 1 0', // Updated flex property
+              mx: 0.5,
+              mb: 1,
+              whiteSpace: 'nowrap',
+              fontSize: 'calc(0.5em + 0.5vw)',
+              minWidth: '80px',
+            }}
+            onClick={() => handleSend('hint')}
+          >
+            Get a Hint
+          </Button>
         </Tooltip>
 
-        {/* Repeat the same styling adjustments for each button */}
         <Tooltip
           title={
             includeCode
@@ -506,46 +503,44 @@ const ChatBox = ({
           enterDelay={500}
           disableHoverListener={!tooltipsEnabled}
         >
-          <div>
-            <Button
-              variant="outlined"
-              disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-              sx={{
-                flex: '1 1 auto',
-                mx: 0.5,
-                mb: 1,
-                whiteSpace: 'nowrap',
-                fontSize: 'calc(0.5em + 0.5vw)',
-                minWidth: '80px',
+          <Button
+            variant="outlined"
+            disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
+            sx={{
+              flex: '1 1 0', // Updated flex property
+              mx: 0.5,
+              mb: 1,
+              whiteSpace: 'nowrap',
+              fontSize: 'calc(0.5em + 0.5vw)',
+              minWidth: '80px',
+              backgroundColor: includeCode
+                ? theme.palette.primary.main
+                : 'inherit',
+              color: includeCode
+                ? theme.palette.common.white
+                : theme.palette.text.primary,
+              '&:hover': {
                 backgroundColor: includeCode
-                  ? theme.palette.primary.main
-                  : 'inherit',
+                  ? theme.palette.primary.dark
+                  : theme.palette.action.hover,
                 color: includeCode
                   ? theme.palette.common.white
                   : theme.palette.text.primary,
-                '&:hover': {
-                  backgroundColor: includeCode
-                    ? theme.palette.primary.dark
-                    : theme.palette.action.hover,
-                  color: includeCode
-                    ? theme.palette.common.white
-                    : theme.palette.text.primary,
-                  borderColor: includeCode
-                    ? theme.palette.common.white
-                    : theme.palette.secondary,
-                },
-                transition: theme.transitions.create(
-                  ['background-color', 'border-color', 'color'],
-                  {
-                    duration: theme.transitions.duration.short,
-                  }
-                ),
-              }}
-              onClick={() => setIncludeCode(!includeCode)}
-            >
-              {includeCode ? 'Exclude My Code' : 'Analyze My Code'}
-            </Button>
-          </div>
+                borderColor: includeCode
+                  ? theme.palette.common.white
+                  : theme.palette.secondary.main, // Ensure correct color reference
+              },
+              transition: theme.transitions.create(
+                ['background-color', 'border-color', 'color'],
+                {
+                  duration: theme.transitions.duration.short,
+                }
+              ),
+            }}
+            onClick={() => setIncludeCode(!includeCode)}
+          >
+            {includeCode ? 'Exclude My Code' : 'Analyze My Code'}
+          </Button>
         </Tooltip>
 
         <Tooltip
@@ -553,27 +548,25 @@ const ChatBox = ({
           enterDelay={500}
           disableHoverListener={!tooltipsEnabled}
         >
-          <div>
-            <Button
-              variant="contained"
-              disabled={isLoading}
-              sx={{
-                flex: '1 1 auto',
-                mx: 0.5,
-                mb: 1,
-                whiteSpace: 'nowrap',
-                fontSize: 'calc(0.5em + 0.5vw)',
-                minWidth: '80px',
-                bgcolor: theme.palette.error.main,
-                '&:hover': {
-                  bgcolor: theme.palette.error.dark,
-                },
-              }}
-              onClick={handleDelete}
-            >
-              Delete Chat
-            </Button>
-          </div>
+          <Button
+            variant="contained"
+            disabled={isLoading}
+            sx={{
+              flex: '1 1 0', // Updated flex property
+              mx: 0.5,
+              mb: 1,
+              whiteSpace: 'nowrap',
+              fontSize: 'calc(0.5em + 0.5vw)',
+              minWidth: '80px',
+              bgcolor: theme.palette.error.main,
+              '&:hover': {
+                bgcolor: theme.palette.error.dark,
+              },
+            }}
+            onClick={handleDelete}
+          >
+            Delete Chat
+          </Button>
         </Tooltip>
       </Box>
 
