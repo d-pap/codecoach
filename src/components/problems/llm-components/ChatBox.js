@@ -308,7 +308,9 @@ const ChatBox = ({
         }}
       >
         <Tooltip title="During development, the number of AI messages is limited per day. Each hint, solution, and user message costs 1 run. You can see how many runs you have left in the input field placeholder text.">
-          <InfoRoundedIcon sx={{ color: theme.palette.text.secondary }} />
+          <div>
+            <InfoRoundedIcon sx={{ color: theme.palette.text.secondary }} />
+          </div>
         </Tooltip>
         <Typography variant="h6" sx={{ flexGrow: 1, textAlign: 'center' }}>
           Get help from your Code Coach
@@ -330,39 +332,45 @@ const ChatBox = ({
           {/* Drawer Width Controls */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Tooltip title="Increase the width of the chat history drawer">
-              <IconButton onClick={incrementDrawerWidth}>
-                <AddIcon />
-              </IconButton>
+              <div>
+                <IconButton onClick={incrementDrawerWidth}>
+                  <AddIcon />
+                </IconButton>
+              </div>
             </Tooltip>
             <Box sx={{ display: 'flex', alignItems: 'center', mx: 1 }}>
               {drawerWidth}%
             </Box>
             <Tooltip title="Decrease the width of the chat history drawer">
-              <IconButton onClick={decrementDrawerWidth}>
-                <RemoveIcon />
-              </IconButton>
+              <div>
+                <IconButton onClick={decrementDrawerWidth}>
+                  <RemoveIcon />
+                </IconButton>
+              </div>
             </Tooltip>
           </Box>
 
           {/* Switch for Tooltips */}
           <Tooltip
-            title="Disables annoying tooltip text (like the one you are reading now) from the buttons below"
+            title="Disables tooltip text (like the one you are reading now) from the buttons below"
             disableHoverListener={!tooltipsEnabled}
             open={tooltipOpen}
             onOpen={() => setTooltipOpen(true)}
             onClose={() => setTooltipOpen(false)}
             leaveDelay={200}
           >
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={tooltipsEnabled}
-                  onChange={handleToggle}
-                  color="primary" // Optional: Customize the switch color
-                />
-              }
-              label="Enable Button Popups"
-            />
+            <div>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={tooltipsEnabled}
+                    onChange={handleToggle}
+                    color="primary" // Optional: Customize the switch color
+                  />
+                }
+                label="Enable Button Popups"
+              />
+            </div>
           </Tooltip>
         </Box>
         <Divider></Divider>
@@ -461,36 +469,34 @@ const ChatBox = ({
           justifyContent: 'center',
           alignItems: 'center',
           mb: 1,
+          width: '100%',
         }}
       >
         <Tooltip
           title={'Prompts the coach to give a hint'}
           enterDelay={500}
-          disableHoverListener={!tooltipsEnabled} // Respect the tooltipsEnabled state
-        >
-          <Button
-            variant="outlined"
-            disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-            sx={{ width: '24%', mx: 0.5, mb: 1 }}
-            onClick={() => handleSend('hint')}
-          >
-            Get a Hint
-          </Button>
-        </Tooltip>
-        {/* <Tooltip
-          title={'Prompts the coach to give a solution'}
-          enterDelay={500}
           disableHoverListener={!tooltipsEnabled}
         >
-          <Button
-            variant="outlined"
-            disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-            sx={{ width: '24%', mx: 0.5, mb: 1 }}
-            onClick={() => handleSend('solution')}
-          >
-            Get a Solution
-          </Button>
-        </Tooltip> */}
+          <div>
+            <Button
+              variant="outlined"
+              disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
+              sx={{
+                flex: '1 1 auto',
+                mx: 0.5,
+                mb: 1,
+                whiteSpace: 'nowrap',
+                fontSize: 'calc(0.5em + 0.5vw)',
+                minWidth: '80px',
+              }}
+              onClick={() => handleSend('hint')}
+            >
+              Get a Hint
+            </Button>
+          </div>
+        </Tooltip>
+
+        {/* Repeat the same styling adjustments for each button */}
         <Tooltip
           title={
             includeCode
@@ -498,66 +504,76 @@ const ChatBox = ({
               : 'Your code will not be included in the next message.'
           }
           enterDelay={500}
-          disableHoverListener={!tooltipsEnabled} // Respect the tooltipsEnabled state
+          disableHoverListener={!tooltipsEnabled}
         >
-          <Button
-            variant="outlined"
-            disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-            sx={{
-              width: '24%',
-              mx: 0.5,
-              mb: 1,
-              backgroundColor: includeCode
-                ? theme.palette.primary.main
-                : 'inherit',
-              color: includeCode
-                ? theme.palette.common.white
-                : theme.palette.text.primary,
-              '&:hover': {
+          <div>
+            <Button
+              variant="outlined"
+              disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
+              sx={{
+                flex: '1 1 auto',
+                mx: 0.5,
+                mb: 1,
+                whiteSpace: 'nowrap',
+                fontSize: 'calc(0.5em + 0.5vw)',
+                minWidth: '80px',
                 backgroundColor: includeCode
-                  ? theme.palette.primary.dark // Darker shade when active
-                  : theme.palette.action.hover, // Default hover color
+                  ? theme.palette.primary.main
+                  : 'inherit',
                 color: includeCode
-                  ? theme.palette.common.white // Keep text white when active
-                  : theme.palette.text.primary, // Keep text dark when not active
-                borderColor: includeCode
-                  ? theme.palette.common.white // make this highlight white and be thicker when active
-                  : theme.palette.secondary,
-              },
-              transition: theme.transitions.create(
-                ['background-color', 'border-color', 'color'],
-                {
-                  duration: theme.transitions.duration.short,
-                }
-              ),
-            }}
-            onClick={() => setIncludeCode(!includeCode)}
-          >
-            {includeCode ? 'Exclude My Code' : 'Analyze My Code'}
-          </Button>
+                  ? theme.palette.common.white
+                  : theme.palette.text.primary,
+                '&:hover': {
+                  backgroundColor: includeCode
+                    ? theme.palette.primary.dark
+                    : theme.palette.action.hover,
+                  color: includeCode
+                    ? theme.palette.common.white
+                    : theme.palette.text.primary,
+                  borderColor: includeCode
+                    ? theme.palette.common.white
+                    : theme.palette.secondary,
+                },
+                transition: theme.transitions.create(
+                  ['background-color', 'border-color', 'color'],
+                  {
+                    duration: theme.transitions.duration.short,
+                  }
+                ),
+              }}
+              onClick={() => setIncludeCode(!includeCode)}
+            >
+              {includeCode ? 'Exclude My Code' : 'Analyze My Code'}
+            </Button>
+          </div>
         </Tooltip>
 
         <Tooltip
           title={'Delete the chat history'}
           enterDelay={500}
-          disableHoverListener={!tooltipsEnabled} // Respect the tooltipsEnabled state
+          disableHoverListener={!tooltipsEnabled}
         >
-          <Button
-            variant="contained"
-            disabled={isLoading}
-            sx={{
-              bgcolor: theme.palette.error.main,
-              width: '24%',
-              mx: 0.5,
-              mb: 1,
-              '&:hover': {
-                bgcolor: theme.palette.error.dark,
-              },
-            }}
-            onClick={handleDelete}
-          >
-            Delete Chat
-          </Button>
+          <div>
+            <Button
+              variant="contained"
+              disabled={isLoading}
+              sx={{
+                flex: '1 1 auto',
+                mx: 0.5,
+                mb: 1,
+                whiteSpace: 'nowrap',
+                fontSize: 'calc(0.5em + 0.5vw)',
+                minWidth: '80px',
+                bgcolor: theme.palette.error.main,
+                '&:hover': {
+                  bgcolor: theme.palette.error.dark,
+                },
+              }}
+              onClick={handleDelete}
+            >
+              Delete Chat
+            </Button>
+          </div>
         </Tooltip>
       </Box>
 
@@ -589,15 +605,17 @@ const ChatBox = ({
           enterDelay={500}
           disableHoverListener={!tooltipsEnabled} // Respect the tooltipsEnabled state
         >
-          <Button
-            onClick={() => handleSend('user')}
-            disabled={
-              isLoading || chatCount >= MAX_CHAT_COUNT || input.trim() === ''
-            }
-            variant="contained"
-          >
-            Send
-          </Button>
+          <div>
+            <Button
+              onClick={() => handleSend('user')}
+              disabled={
+                isLoading || chatCount >= MAX_CHAT_COUNT || input.trim() === ''
+              }
+              variant="contained"
+            >
+              Send
+            </Button>
+          </div>
         </Tooltip>
       </Box>
     </Paper>

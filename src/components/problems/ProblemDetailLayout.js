@@ -192,23 +192,25 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                     borderRadius: '4px 4px 0 0',
                   }}
                 >
-                  <ChatBox
-                    problem={problem}
-                    drawerWidth={drawerWidth}
-                    setDrawerWidth={setDrawerWidth}
-                    chatHistory={chatHistory}
-                    setChatHistory={updateChatHistory}
-                    isLoading={isLoading}
-                    setIsLoading={setIsLoading}
-                    chatCount={chatCount}
-                    setChatCount={incrementChatCount}
-                    showSettings={showSettings}
-                    setShowSettings={setShowSettings}
-                    // **Pass Scroll Props**
-                    initialScrollPosition={chatScrollPosition}
-                    onScrollPositionChange={handleScrollPositionChange}
-                    code={code}
-                  />
+                  <ErrorBoundary>
+                    <ChatBox
+                      problem={problem}
+                      drawerWidth={drawerWidth}
+                      setDrawerWidth={setDrawerWidth}
+                      chatHistory={chatHistory}
+                      setChatHistory={updateChatHistory}
+                      isLoading={isLoading}
+                      setIsLoading={setIsLoading}
+                      chatCount={chatCount}
+                      setChatCount={incrementChatCount}
+                      showSettings={showSettings}
+                      setShowSettings={setShowSettings}
+                      // **Pass Scroll Props**
+                      initialScrollPosition={chatScrollPosition}
+                      onScrollPositionChange={handleScrollPositionChange}
+                      code={code}
+                    />
+                  </ErrorBoundary>
                 </Box>
               </Drawer>
             </Box>
@@ -232,6 +234,22 @@ const getChatHistory = (problemId) => {
 
 const saveChatHistory = (problemId, history) => {
   localStorage.setItem(`chatHistory-${problemId}`, JSON.stringify(history))
+}
+
+// Ignore ResizeObserver loop limit exceeded error
+class ErrorBoundary extends React.Component {
+  componentDidCatch(error) {
+    if (error.message.includes('ResizeObserver loop limit exceeded')) {
+      // Ignore the error
+    } else {
+      // Handle other errors
+      console.error(error)
+    }
+  }
+
+  render() {
+    return this.props.children
+  }
 }
 
 export default ProblemDetailLayout
