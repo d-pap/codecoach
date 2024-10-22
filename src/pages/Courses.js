@@ -161,6 +161,9 @@ const CourseList = () => {
   const [selectedProblems, setSelectedProblems] = useState([])
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [courseToDelete, setCourseToDelete] = useState(null)
+  const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
+  const [selectedCourseName, setSelectedCourseName] = useState('')
+  const [SelectedCourseIdForInvite, setSelectedCourseIdForInvite] = useState(null)
 
   // use react query to fetch all courses
   const {
@@ -335,6 +338,29 @@ const CourseList = () => {
     setCourseToDelete(null)
   }
 
+  const handleInviteStudentClick = (courseId, courseName) => {
+    // console.log('Invite Student Clicked:', courseId, courseName)
+    setSelectedCourseIdForInvite(courseId)
+    setSelectedCourseName(courseName)
+    setInviteDialogOpen(true)
+  }
+
+  const InviteStudentDialog = ({ open, onClose, courseName, courseId }) => {
+    console.log('InviteStudentDialog open:', open)
+    return (
+      <Dialog open={open} onClose={onClose}>
+        <DialogTitle>Invite Student</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">Course Name: {courseName}</Typography>
+          <Typography variant="body1">Course ID: {courseId}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    )
+  }
+
   return (
     <Box sx={{ minHeight: '100vh', py: 4 }}>
       <Container maxWidth="lg">
@@ -405,9 +431,13 @@ const CourseList = () => {
                       >
                         View problems
                       </Button>
-                      <Button variant="outlined" startIcon={<GroupAddIcon />}>
+                      <Button variant="outlined" startIcon={<GroupAddIcon />} onClick={() => handleInviteStudentClick(
+                        course._id,
+                        course.courseName
+                      )}>
                         Invite student
                       </Button>
+
                       <Button
                         variant="text"
                         sx={{
@@ -477,6 +507,12 @@ const CourseList = () => {
                     </Button>
                   </ListItem>
                 )}
+                <InviteStudentDialog
+                        open={inviteDialogOpen}
+                        onClose={() => setInviteDialogOpen(false)}
+                        courseName={selectedCourseName}
+                        courseId={SelectedCourseIdForInvite}
+                      />
               </List>
             </Paper>
           </Grid>
