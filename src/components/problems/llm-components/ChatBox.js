@@ -25,7 +25,6 @@ import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useTheme } from '@mui/material/styles'
 import SendChat from './AIChat'
-import rocketImg from '../../../images/rocket.svg'
 import aiAvatar from '../../../images/aiAvatar.svg'
 
 // Function to clear chat history from localStorage
