@@ -412,10 +412,7 @@ const CourseList = () => {
                         variant="text"
                         sx={{
                           marginLeft: 'auto',
-                          color: theme.palette.error.light,
-                          '&:hover': {
-                            color: theme.palette.error.main,
-                          },
+                          color: theme.palette.error.main,
                           // make the button a perfect circle
                           borderRadius: '50%',
                           minWidth: '40px',

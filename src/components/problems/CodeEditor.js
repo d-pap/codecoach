@@ -13,13 +13,19 @@ import 'ace-builds/src-noconflict/ext-language_tools'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import SendIcon from '@mui/icons-material/Send'
 import PlayArrow from '@mui/icons-material/PlayArrow'
 import CircularProgress from '@mui/material/CircularProgress'
 import FeedbackDialog from '../problems/FeedbackDialog'
 import { executeCode, getCurrentUserId, saveSubmission } from '../../api'
 import { loadTheme, loadMode } from '../utility/aceImports'
-import CodeEditorToolbar from './CodeEditorToolbar'
+import CodeEditorToolbar, { languageOptions } from './CodeEditorToolbar'
+import TextField from '@mui/material/TextField'
+import IconButton from '@mui/material/IconButton'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import ButtonBase from '@mui/material/ButtonBase'
 
 const themeStyles = {
   monokai: {
@@ -60,6 +66,40 @@ const themeStyles = {
   },
 }
 
+const TestCaseInput = ({ testCase, setTestCase, currentThemeStyle }) => (
+  <TextField
+    multiline
+    rows={2}
+    variant="outlined"
+    placeholder="Enter custom test case here..."
+    value={testCase}
+    onChange={(e) => setTestCase(e.target.value)}
+    sx={{
+      backgroundColor: currentThemeStyle.backgroundColor,
+      color: currentThemeStyle.color,
+      mt: 1,
+      mx: 1,
+      borderRadius: (theme) => theme.spacing(2),
+      '& .MuiOutlinedInput-root': {
+        color: currentThemeStyle.color,
+        //backgroundColor: currentThemeStyle.backgroundColor,
+        borderRadius: (theme) => theme.spacing(2),
+        fontFamily: (theme) => theme.typography.code,
+        '& fieldset': {
+          borderColor: currentThemeStyle.borderColor,
+        },
+        '&:hover fieldset': {
+          borderColor: currentThemeStyle.borderColor,
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: currentThemeStyle.borderColor,
+          border: '1px solid',
+        },
+      },
+    }}
+  />
+)
+
 const EditorButtons = ({
   handleRunCode,
   handleSubmitCode,
@@ -67,49 +107,100 @@ const EditorButtons = ({
   isDisabled,
   isSubmitting,
   isRunning,
-}) => (
-  <Box sx={{ pt: 1, pr: 1 }}>
-    <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
-      <Button
-        size="small"
-        onClick={handleRunCode}
-        variant="text"
-        startIcon={
-          isRunning ? (
-            <CircularProgress size={20} color="inherit" />
-          ) : (
-            <PlayArrow />
-          )
-        }
-        sx={{ color: currentThemeStyle.color }}
-        disabled={isDisabled || isRunning}
-      >
-        {isRunning ? '' : 'Run'}
-      </Button>
-      <Button
-        size="small"
-        onClick={handleSubmitCode}
-        variant="contained"
-        endIcon={
-          isSubmitting ? (
-            <CircularProgress size={20} color="inherit" />
-          ) : (
-            <SendIcon />
-          )
-        }
-        sx={{
-          backgroundColor: 'green',
-          '&:hover': { backgroundColor: 'darkgreen' },
-          borderRadius: (theme) => theme.spacing(2),
-          minWidth: '100px',
-        }}
-        disabled={isDisabled || isSubmitting}
-      >
-        {isSubmitting ? '' : 'Submit'}
-      </Button>
-    </Stack>
-  </Box>
-)
+  showTestCase,
+  setShowTestCase,
+}) => {
+  const toggleTestCase = () => setShowTestCase(!showTestCase)
+
+  return (
+    <Box
+      sx={{
+        pt: 1,
+        px: 1,
+      }}
+    >
+      <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end' }}>
+        <ButtonBase
+          onClick={toggleTestCase}
+          disableRipple
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            color: currentThemeStyle.color,
+            '&:hover': { opacity: 0.7, transition: 'opacity 0.2s' },
+            borderRadius: (theme) => theme.spacing(2),
+          }}
+        >
+          <IconButton sx={{ color: 'inherit', p: 0.5 }}>
+            {showTestCase ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </IconButton>
+          <Typography
+            variant="body2"
+            sx={{
+              ml: 0.5,
+              color: currentThemeStyle.color,
+              fontWeight: 500,
+              fontSize: '0.8rem',
+              letterSpacing: '0.03071em',
+            }}
+          >
+            Test Cases
+          </Typography>
+        </ButtonBase>
+
+        <Button
+          size="small"
+          onClick={handleRunCode}
+          variant="text"
+          startIcon={
+            isRunning ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              <PlayArrow />
+            )
+          }
+          sx={{
+            color: currentThemeStyle.color,
+            fontWeight: 500,
+            fontSize: '0.8rem',
+            letterSpacing: '0.03071em',
+            '&:hover': { opacity: 0.7, transition: 'opacity 0.2s' },
+          }}
+          disabled={isDisabled || isRunning}
+        >
+          {isRunning ? '' : 'Run'}
+        </Button>
+        <Button
+          size="small"
+          onClick={handleSubmitCode}
+          variant="contained"
+          endIcon={
+            isSubmitting ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              <SendIcon />
+            )
+          }
+          sx={{
+            backgroundColor: 'green',
+            fontSize: '0.8rem',
+            fontWeight: 500,
+            letterSpacing: '0.03071em',
+            '&:hover': {
+              backgroundColor: 'darkgreen',
+              transition: 'background-color 0.2s',
+            },
+            borderRadius: (theme) => theme.spacing(2),
+            minWidth: '100px',
+          }}
+          disabled={isDisabled || isSubmitting}
+        >
+          {isSubmitting ? '' : 'Submit'}
+        </Button>
+      </Stack>
+    </Box>
+  )
+}
 
 const OutputWindow = ({ output, currentThemeStyle }) => (
   <Box
@@ -134,8 +225,34 @@ const OutputWindow = ({ output, currentThemeStyle }) => (
   </Box>
 )
 
+const defaultCode = {
+  python: `def main():
+    print("Hello, World!")
+
+if __name__ == "__main__":
+    main()`,
+  java: `public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}`,
+  cpp: `#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello, World!" << endl;
+    return 0;
+}`,
+  c: `#include <stdio.h>
+
+int main() {
+    printf("Hello, World!\\n");
+    return 0;
+}`,
+}
+
 const CodeEditor = ({
-  code,
+  initialCode,
   setCode,
   setOutput,
   output,
@@ -143,10 +260,16 @@ const CodeEditor = ({
 }) => {
   const [theme, setTheme] = useState('monokai')
   const [language, setLanguage] = useState('python')
+  const [editorCode, setEditorCode] = useState(
+    initialCode || defaultCode.python
+  )
   const { problemId } = useParams() // get problem ID from URL
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
+  const [testCase, setTestCase] = useState('')
+  const [showTestCase, setShowTestCase] = useState(false)
+
   //! limit number of judge0 runs and reset limit after 12 hours
   const MAX_RUN_SUBMIT_COUNT = 10
   const RESET_INTERVAL = 12 * 60 * 60 * 1000 // 12 hours in milliseconds
@@ -192,6 +315,10 @@ const CodeEditor = ({
     localStorage.setItem('runSubmitCount', runSubmitCount.toString())
   }, [runSubmitCount])
 
+  useEffect(() => {
+    setEditorCode(defaultCode[language] || '')
+  }, [language])
+
   const isDisabled = runSubmitCount >= MAX_RUN_SUBMIT_COUNT
 
   const handleRunCode = async () => {
@@ -204,7 +331,12 @@ const CodeEditor = ({
 
     setIsRunning(true)
     try {
-      const result = await executeCode(code)
+      const selectedLanguage = languageOptions.find(
+        (lang) => lang.value === language
+      )
+      const language_id = selectedLanguage.id
+
+      const result = await executeCode(editorCode, testCase, language_id)
       if (result.status.id === 3) {
         setOutput(result.stdout || 'No output')
       } else if (result.status.id === 6) {
@@ -234,7 +366,12 @@ const CodeEditor = ({
 
     setIsSubmitting(true)
     try {
-      const result = await executeCode(code)
+      const selectedLanguage = languageOptions.find(
+        (lang) => lang.value === language
+      )
+      const language_id = selectedLanguage.id
+
+      const result = await executeCode(editorCode, testCase, language_id)
 
       // determine the status of the result
       let status = 'Unknown Error'
@@ -255,7 +392,8 @@ const CodeEditor = ({
       const submissionData = {
         userId,
         problemId,
-        code,
+        code: editorCode,
+        language_id,
         result: {
           stdout: result.stdout,
           stderr: result.stderr,
@@ -276,7 +414,7 @@ const CodeEditor = ({
       if (result.stderr) {
         outputMessage += `\nError: ${result.stderr}`
       }
-      // add compilation output if any //!(only if we add compiled languages in the future)
+      // add compilation output if any
       if (result.compile_output) {
         outputMessage += `\nCompilation Error: ${result.compile_output}`
       }
@@ -303,12 +441,10 @@ const CodeEditor = ({
 
   const currentThemeStyle = themeStyles[theme]
 
-  // Function to handle theme changes
+  // function to handle theme changes
   const handleThemeChange = useCallback(
     async (newTheme) => {
-      if (newTheme === theme) return // No change needed
-
-      // Load the new theme if it's not already loaded
+      if (newTheme === theme) return
       if (newTheme !== 'monokai') {
         await loadTheme(newTheme)
       }
@@ -318,17 +454,19 @@ const CodeEditor = ({
     [theme]
   )
 
-  // Function to handle language changes (if you decide to support more modes)
+  // function to handle language changes
   const handleLanguageChange = useCallback(
     async (newLanguage) => {
-      if (newLanguage === language) return // No change needed
+      if (newLanguage === language) return
 
-      // Load the new mode if it's not already loaded
+      setLanguage(newLanguage)
+
+      // load the new mode if not already loaded
       if (newLanguage !== 'python') {
         await loadMode(newLanguage)
       }
-
-      setLanguage(newLanguage)
+      //! set default code for the new language if needed????
+      //setEditorCode(defaultCode[newLanguage] || '')
     },
     [language]
   )
@@ -356,23 +494,27 @@ const CodeEditor = ({
         runSubmitCount={runSubmitCount}
       />
       <AceEditor
-        mode={language}
+        //! if language is c or cpp, set mode to c_cpp mode because (ace-builds uses the c_cpp mode for c AND cpp). for other languages, use the language name as the mode
+        mode={language === 'c' || language === 'cpp' ? 'c_cpp' : language}
         theme={theme}
         name="codeEditor"
-        onChange={(newCode) => setCode(newCode)}
+        onChange={(newCode) => {
+          setEditorCode(newCode)
+          setCode(newCode)
+        }}
         fontSize={14}
         lineHeight={19}
         showPrintMargin={false}
         showGutter={true}
         highlightActiveLine={true}
-        value={code}
+        value={editorCode}
         editorProps={{ $blockScrolling: true }}
         setOptions={{
           enableBasicAutocompletion: true,
           enableLiveAutocompletion: true,
           showLineNumbers: true,
           tabSize: 2,
-          fontFamily: 'monospace',
+          fontFamily: 'JetBrains Mono, monospace',
         }}
         style={{ flex: 1, width: '100%', height: '100%' }}
       />
@@ -383,7 +525,16 @@ const CodeEditor = ({
         isDisabled={isDisabled}
         isRunning={isRunning}
         isSubmitting={isSubmitting}
+        showTestCase={showTestCase}
+        setShowTestCase={setShowTestCase}
       />
+      {showTestCase && (
+        <TestCaseInput
+          testCase={testCase}
+          setTestCase={setTestCase}
+          currentThemeStyle={currentThemeStyle}
+        />
+      )}
       <OutputWindow output={output} currentThemeStyle={currentThemeStyle} />
       {enableFeedback && (
         <FeedbackDialog

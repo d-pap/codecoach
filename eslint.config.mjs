@@ -13,6 +13,12 @@ export default [
   pluginJs.configs.recommended,
   pluginReact.configs.flat.recommended,
   {
+    env: {
+      browser: true,
+      node: true, // include node environment to allow use of process.env
+    },
+  },
+  {
     rules: {
       'react/prop-types': 'off',
       'no-undef': 'warn',

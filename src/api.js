@@ -79,15 +79,17 @@ export const checkExecutionLimits = async (userId) => {
 // Passes source code and language to the API
 // and returns the result
 // Function to check execution limits and execute code if within limit
-export const executeCode = async (sourceCode, language = 'python') => {
+export const executeCode = async (
+  sourceCode,
+  customTestCases = '',
+  language_id = 71
+) => {
   try {
     // get current user
     const userId = await getCurrentUserId()
 
     // check the execution limits
     const limitResponse = await checkExecutionLimits(userId)
-
-    // if the limit is reached, halt and notify the user
     if (limitResponse.message === 'Execution limit reached') {
       alert('You have reached your execution limit.')
       return { error: 'Execution limit reached' }
@@ -102,9 +104,10 @@ export const executeCode = async (sourceCode, language = 'python') => {
         'X-RapidAPI-Host': process.env.REACT_APP_RAPIDAPI_HOST,
       },
       body: JSON.stringify({
-        language_id: 71, // python judge0 language id = 71
+        language_id: language_id,
         source_code: sourceCode,
-        stdin: '',
+        stdin: customTestCases,
+        //!cpu_time_limit: 5,
       }),
     }
 
@@ -115,7 +118,7 @@ export const executeCode = async (sourceCode, language = 'python') => {
     // poll for results
     let result
     do {
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // wait for 1 second
+      await new Promise((resolve) => setTimeout(resolve, 100)) // wait for .1 second
       const statusResponse = await fetch(
         `${process.env.REACT_APP_RAPID_API_URL}/${token}`,
         {
