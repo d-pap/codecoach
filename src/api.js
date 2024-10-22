@@ -342,13 +342,13 @@ export function getUserByEmail(email) {
 }
 
 // Function to create a new course
-export function createCourse(courseId, teacherId, problemIds = []) {
+export function createCourse(courseName, courseId, teacherId, problemIds = []) {
   const newCourse = {
     _id: `course-${Date.now()}`,
     courseId,
     teacherId,
     problemIds,
-    courseName: `Course ${courseId}`,
+    courseName: courseName,
   }
   db.courses.push(newCourse)
   return newCourse
