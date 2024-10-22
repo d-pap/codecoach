@@ -19,6 +19,7 @@ import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import SettingsIcon from '@mui/icons-material/Settings'
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { useTheme } from '@mui/material/styles'
 import SendChat from './AIChat'
 import rocketImg from '../../../images/rocket.svg'
@@ -410,6 +411,8 @@ const ChatBox = ({
           mb: theme.spacing(2),
           p: theme.spacing(2),
           border: 'none',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
         {/* Add avatar and call-to-action message */}
@@ -467,7 +470,7 @@ const ChatBox = ({
                       ? '20px 20px 5px 20px'
                       : '20px 20px 20px 5px',
                   p: 2,
-                  maxWidth: '70%',
+                  maxWidth: '80%',
                   wordBreak: 'break-word',
                 }}
               >
@@ -503,59 +506,47 @@ const ChatBox = ({
             <CircularProgress size={20} />
           </Box>
         )}
-      </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          mb: 1,
-        }}
-      >
-        <Tooltip title={'Prompts the coach to give a hint'} enterDelay={500}>
-          <Button
-            variant="outlined"
-            disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-            sx={{ width: '30%', mx: 0.5, mb: 1 }}
-            onClick={() => handleSend('hint')}
-          >
-            Get a Hint
-          </Button>
-        </Tooltip>
-        <Tooltip
-          title={'Prompts the coach to give a solution'}
-          enterDelay={500}
-        >
-          <Button
-            variant="outlined"
-            disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-            sx={{ width: '30%', mx: 0.5, mb: 1 }}
-            onClick={() => handleSend('solution')}
-          >
-            Get a Solution
-          </Button>
-        </Tooltip>
-        <Button
-          variant="contained"
-          disabled={isLoading}
+
+        {/* Quick action buttons */}
+        <Box
           sx={{
-            bgcolor: '#fcdada',
-            color: theme.palette.error.main,
-            //bgcolor: theme.palette.error.light,
-            width: '30%',
-            mx: 0.5,
-            mb: 1,
-            border: '1px solid #dc2626',
-            '&:hover': {
-              bgcolor: '#fcdada',
-              color: theme.palette.error.main,
-            },
+            display: 'flex',
+            justifyContent: 'flex-end',
+            mt: 'auto', // Push to the bottom
+            pt: 2,
           }}
-          onClick={handleDelete}
         >
-          Clear Chat
-        </Button>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+              maxWidth: '70%',
+            }}
+          >
+            <Button
+              variant="contained"
+              disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
+              sx={{
+                mb: 1,
+                borderRadius: '20px 20px 5px 20px',
+              }}
+              onClick={() => handleSend('hint')}
+            >
+              Get a Hint
+            </Button>
+            <Button
+              variant="contained"
+              disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
+              sx={{
+                borderRadius: '20px 20px 5px 20px',
+              }}
+              onClick={() => handleSend('solution')}
+            >
+              Get a Solution
+            </Button>
+          </Box>
+        </Box>
       </Box>
 
       <Box
@@ -591,6 +582,12 @@ const ChatBox = ({
               isLoading || chatCount >= MAX_CHAT_COUNT || input.trim() === ''
             }
             variant="contained"
+            sx={{
+              bgcolor: theme.palette.primary.main,
+              '&:hover': {
+                bgcolor: theme.palette.primary.main,
+              },
+            }}
           >
             Send
           </Button>
