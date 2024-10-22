@@ -43,9 +43,6 @@ const ChatBox = ({
   setChatCount,
   showSettings,
   setShowSettings,
-  // **New Props for Scroll Handling**
-  initialScrollPosition,
-  onScrollPositionChange,
 }) => {
   const theme = useTheme()
   const [input, setInput] = React.useState('')
@@ -53,7 +50,7 @@ const ChatBox = ({
   //! limit the number of chats to prevent abuse
   const MAX_CHAT_COUNT = 10
 
-  // **Ref for Scrollable Container**
+  //! ref for scrollable container
   const scrollContainerRef = useRef(null)
 
   const scrollToBottom = useCallback(() => {
@@ -71,22 +68,6 @@ const ChatBox = ({
   useEffect(() => {
     scrollToBottom()
   }, [chatHistory, scrollToBottom])
-
-  useEffect(() => {
-    // **Restore Scroll Position on Mount**
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTop = initialScrollPosition
-    }
-  }, [initialScrollPosition])
-
-  useEffect(() => {
-    // **Capture Scroll Position before Unmounting**
-    return () => {
-      if (scrollContainerRef.current) {
-        onScrollPositionChange(scrollContainerRef.current.scrollTop)
-      }
-    }
-  }, [onScrollPositionChange])
 
   const handleInputChange = (e) => {
     setInput(e.target.value)
@@ -153,7 +134,7 @@ const ChatBox = ({
 
       setChatHistory(updatedHistory)
 
-      // Scroll to bottom after state update
+      //! scroll to bottom after state update
       setTimeout(scrollToBottom, 100)
     } catch (error) {
       console.error('Failed to send chat:', error)
@@ -415,7 +396,7 @@ const ChatBox = ({
           flexDirection: 'column',
         }}
       >
-        {/* Add avatar and call-to-action message */}
+        {/* avatar and message */}
         <Box
           sx={{
             display: 'flex',
@@ -507,12 +488,12 @@ const ChatBox = ({
           </Box>
         )}
 
-        {/* Quick action buttons */}
+        {/* quick action buttons */}
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'flex-end',
-            mt: 'auto', // Push to the bottom
+            mt: 'auto',
             pt: 2,
           }}
         >
@@ -560,7 +541,7 @@ const ChatBox = ({
         <TextField
           value={input}
           onChange={handleInputChange}
-          onKeyDown={handleOnPressEnter} // Updated to onKeyDown
+          onKeyDown={handleOnPressEnter}
           placeholder={`Type a message (${MAX_CHAT_COUNT - chatCount} messages left today)...`}
           variant="outlined"
           fullWidth
@@ -568,7 +549,7 @@ const ChatBox = ({
             mr: 1,
             '& fieldset': { borderRadius: theme.spacing(2) },
           }}
-          disabled={isLoading || chatCount >= MAX_CHAT_COUNT} //! disable the input field if the user has reached the maximum number of messages for the day
+          disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
           multiline
           maxRows={4}
         />
@@ -577,7 +558,7 @@ const ChatBox = ({
           enterDelay={500}
         >
           <Button
-            onClick={() => handleSend('user')} // Use arrow function
+            onClick={() => handleSend('user')}
             disabled={
               isLoading || chatCount >= MAX_CHAT_COUNT || input.trim() === ''
             }
