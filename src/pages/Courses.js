@@ -198,8 +198,14 @@ const CourseList = () => {
         throw new Error('User not authenticated')
       }
 
+      // generate a short id for the course
+      const shortId = Math.floor(Math.random() * 1000000000) + 100000000
+      const sanitizedCourseName = courseName.replace(/[^a-zA-Z0-9 ]/g, '').trim()
+      const sanitizedCourseId = `${shortId}-${sanitizedCourseName}`
+
       const newCourse = {
         courseName: courseName,
+        link: sanitizedCourseId, 
         students: 0,
         problemIds: [],
       }
@@ -432,7 +438,7 @@ const CourseList = () => {
                         View problems
                       </Button>
                       <Button variant="outlined" startIcon={<GroupAddIcon />} onClick={() => handleInviteStudentClick(
-                        course._id,
+                        course.link,
                         course.courseName
                       )}>
                         Invite student
