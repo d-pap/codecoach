@@ -461,12 +461,11 @@ const CodeEditor = ({
 
       setLanguage(newLanguage)
 
-      // load the new mode if not already loaded
-      if (newLanguage !== 'python') {
-        await loadMode(newLanguage)
-      }
-      //! set default code for the new language if needed????
-      //setEditorCode(defaultCode[newLanguage] || '')
+      // load the new mode
+      await loadMode(newLanguage)
+
+      // set default code for the new language
+      setEditorCode(defaultCode[newLanguage] || '')
     },
     [language]
   )
@@ -494,7 +493,6 @@ const CodeEditor = ({
         runSubmitCount={runSubmitCount}
       />
       <AceEditor
-        //! if language is c or cpp, set mode to c_cpp mode because (ace-builds uses the c_cpp mode for c AND cpp). for other languages, use the language name as the mode
         mode={language === 'c' || language === 'cpp' ? 'c_cpp' : language}
         theme={theme}
         name="codeEditor"

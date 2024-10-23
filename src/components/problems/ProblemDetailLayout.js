@@ -242,63 +242,64 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                   alignItems: 'flex-end',
                 }}
               >
-                <Grow
-                  in={isChatOpen}
-                  style={{ transformOrigin: 'bottom right' }}
-                >
-                  <div ref={chatRef}>
-                    <ResizableBox
-                      width={chatSize.width}
-                      height={chatSize.height}
-                      onResize={onResize}
-                      minConstraints={[300, 300]}
-                      maxConstraints={[1000, 800]}
-                      resizeHandles={['w', 'n', 'nw']}
-                      handle={(handleAxis, ref) => (
-                        <FullEdgeHandle handleAxis={handleAxis} ref={ref} />
-                      )}
-                    >
-                      <Paper
-                        elevation={3}
-                        sx={{
-                          width: '100%',
-                          height: '100%',
-                          mb: 2,
-                          overflow: 'hidden',
-                          display: isChatOpen ? 'block' : 'none',
-                        }}
+                {isChatOpen && (
+                  <Grow
+                    in={isChatOpen}
+                    style={{ transformOrigin: 'bottom right' }}
+                  >
+                    <div ref={chatRef}>
+                      <ResizableBox
+                        width={chatSize.width}
+                        height={chatSize.height}
+                        onResize={onResize}
+                        minConstraints={[300, 300]}
+                        maxConstraints={[1000, 800]}
+                        resizeHandles={['w', 'n', 'nw']}
+                        handle={(handleAxis, ref) => (
+                          <FullEdgeHandle handleAxis={handleAxis} ref={ref} />
+                        )}
                       >
-                        <Box
+                        <Paper
+                          elevation={3}
                           sx={{
                             width: '100%',
                             height: '100%',
-                            p: 2,
-                            backgroundColor: (theme) =>
-                              theme.palette.background.default,
-                            borderRadius: '4px',
-                            overflow: 'auto',
+                            mb: 2,
+                            overflow: 'hidden',
                           }}
                         >
-                          <ChatBox
-                            problem={problem}
-                            drawerWidth={chatSize.width}
-                            setDrawerWidth={(width) =>
-                              setChatSize((prev) => ({ ...prev, width }))
-                            }
-                            chatHistory={chatHistory}
-                            setChatHistory={updateChatHistory}
-                            isLoading={isLoading}
-                            setIsLoading={setIsLoading}
-                            chatCount={chatCount}
-                            setChatCount={incrementChatCount}
-                            showSettings={showSettings}
-                            setShowSettings={setShowSettings}
-                          />
-                        </Box>
-                      </Paper>
-                    </ResizableBox>
-                  </div>
-                </Grow>
+                          <Box
+                            sx={{
+                              width: '100%',
+                              height: '100%',
+                              p: 2,
+                              backgroundColor: (theme) =>
+                                theme.palette.background.default,
+                              borderRadius: '4px',
+                              overflow: 'auto',
+                            }}
+                          >
+                            <ChatBox
+                              problem={problem}
+                              drawerWidth={chatSize.width}
+                              setDrawerWidth={(width) =>
+                                setChatSize((prev) => ({ ...prev, width }))
+                              }
+                              chatHistory={chatHistory}
+                              setChatHistory={updateChatHistory}
+                              isLoading={isLoading}
+                              setIsLoading={setIsLoading}
+                              chatCount={chatCount}
+                              setChatCount={incrementChatCount}
+                              showSettings={showSettings}
+                              setShowSettings={setShowSettings}
+                            />
+                          </Box>
+                        </Paper>
+                      </ResizableBox>
+                    </div>
+                  </Grow>
+                )}
                 <Fab
                   aria-label="chat"
                   onClick={toggleChat}

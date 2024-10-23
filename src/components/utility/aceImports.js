@@ -35,9 +35,10 @@ export const loadMode = async (language) => {
       await import('ace-builds/src-noconflict/mode-java')
       break
     case 'c':
+    case 'cpp':
       await import('ace-builds/src-noconflict/mode-c_cpp')
       break
-    // Add more cases for other languages as needed
+    // add more cases for other languages as needed
     default:
       console.warn(`Unsupported language: ${language}`)
   }
