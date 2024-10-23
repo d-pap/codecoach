@@ -275,6 +275,8 @@ class ErrorBoundary extends React.Component {
   componentDidCatch(error) {
     if (error.message.includes('ResizeObserver loop limit exceeded')) {
       // Ignore the error
+    } else if (error.message.includes('ResizeObserver loop completed with undelivered notifications.')){
+      // Ignore the error
     } else {
       // Handle other errors
       console.error(error)
