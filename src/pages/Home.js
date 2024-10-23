@@ -16,7 +16,6 @@ import { styled } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
 import { CardMedia } from '@mui/material'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
-import grad16 from '../images/Grad_16.png'
 import competitionImage from '../images/competitions2.svg'
 import interviewsImage from '../images/interviewsbw.svg'
 import problemsImage from '../images/problemsbw.svg'
@@ -24,6 +23,7 @@ import signUpImage from '../images/howtosignup.svg'
 import prepareImage from '../images/howtoprepare.svg'
 import behaviorImage from '../images/behavioral.svg'
 import resumeResourcesImage from '../images/resumeresources.svg'
+import grad16webp from '../images/Grad_16.webp'
 
 /**
  * section title component
@@ -367,10 +367,22 @@ export const Home = () => {
         height={{ xs: '60vh', sm: '70vh', md: '80vh' }}
         overflow="hidden"
         sx={{
-          backgroundImage: `url(${grad16})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
+          position: 'relative',
+          zIndex: 1,
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: `url(${grad16webp})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.7,
+            zIndex: -1,
+          },
         }}
       >
         <Typography

@@ -9,7 +9,6 @@ import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels'
 import styled from 'styled-components'
 import CodeEditor from './CodeEditor'
 import ChatBox from './llm-components/ChatBox'
-import aiChatIcon from '../../images/aiChatIcon.svg'
 import Grow from '@mui/material/Grow'
 import Paper from '@mui/material/Paper'
 import { ResizableBox } from 'react-resizable'
@@ -336,7 +335,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                     },
                   }}
                 >
-                  <img src={aiChatIcon} alt="AI Chat" />
+                  <AutoAwesomeRoundedIcon sx={{ color: 'white' }} />
                 </Fab>
               </Box>
             </Box>

@@ -14,10 +14,10 @@ import Typography from '@mui/material/Typography'
 import DoubleArrowRoundedIcon from '@mui/icons-material/DoubleArrowRounded'
 import { styled } from '@mui/system'
 import logo from '../images/logo-with-text.svg'
-import grad12 from '../images/Grad_12.png'
 import rocket from '../images/rocket.svg'
-import compilerImg from '../images/compiler3.png'
 import communityImg from '../images/resumeresources.svg'
+import grad12webp from '../images/Grad_12.webp'
+import compilerImgwebp from '../images/compiler.webp'
 /********************************************************************************
  * styling for header nav bar
  ********************************************************************************/
@@ -304,13 +304,25 @@ const LandingPage = ({ onGetStarted }) => {
         height={{ xs: '70vh', md: '75vh', lg: '75vh', xl: '80vh' }}
         overflow="hidden"
         sx={{
-          backgroundImage: `url(${grad12})`,
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'bottom 30% left 10%',
-          '@media (max-width: 600px)': {
-            backgroundSize: '200%',
-            backgroundPosition: 'center 60%',
+          position: 'relative',
+          zIndex: 1,
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: `url(${grad12webp})`,
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'bottom 30% left 10%',
+            opacity: 0.7,
+            zIndex: -1,
+            '@media (max-width: 600px)': {
+              backgroundSize: '200%',
+              backgroundPosition: 'center 60%',
+            },
           },
         }}
       >
@@ -384,7 +396,7 @@ const LandingPage = ({ onGetStarted }) => {
                 </SectionContentBodyText>
               </>
             }
-            image={compilerImg}
+            image={compilerImgwebp}
             imageAlt="Real-time Compiler"
           />
           <LanguageLogos />
