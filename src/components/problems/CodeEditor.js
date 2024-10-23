@@ -5,6 +5,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react'
+import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router-dom'
 import AceEditor from 'react-ace'
 import 'ace-builds/src-noconflict/theme-monokai'
@@ -131,7 +132,7 @@ const EditorButtons = ({
             borderRadius: (theme) => theme.spacing(2),
           }}
         >
-          <IconButton sx={{ color: 'inherit', p: 0.5 }}>
+          <IconButton component='div' sx={{ color: 'inherit', p: 0.5 }}>
             {showTestCase ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
           <Typography
@@ -258,8 +259,6 @@ const CodeEditor = ({
   output,
   enableFeedback = false,
 }) => {
-  const [theme, setTheme] = useState('monokai')
-  const [language, setLanguage] = useState('python')
   const [editorCode, setEditorCode] = useState(
     initialCode || defaultCode.python
   )
@@ -269,6 +268,23 @@ const CodeEditor = ({
   const [isRunning, setIsRunning] = useState(false)
   const [testCase, setTestCase] = useState('')
   const [showTestCase, setShowTestCase] = useState(false)
+  const [cookies, setCookie] = useCookies(['userConsent', 'theme', 'language']);
+
+  const [theme, setTheme] = useState(() => {
+    if (cookies.userConsent) {
+      return cookies.theme || 'monokai';
+    } else {
+      return 'monokai';
+    }
+  });
+
+  const [language, setLanguage] = useState(() => {
+    if (cookies.userConsent) {
+      return cookies.language || 'python';
+    } else {
+      return 'python';
+    }
+  });
 
   //! limit number of judge0 runs and reset limit after 12 hours
   const MAX_RUN_SUBMIT_COUNT = 10
@@ -444,32 +460,45 @@ const CodeEditor = ({
   // function to handle theme changes
   const handleThemeChange = useCallback(
     async (newTheme) => {
-      if (newTheme === theme) return
-      if (newTheme !== 'monokai') {
-        await loadTheme(newTheme)
+      if (newTheme === theme) return;
+      
+      setTheme(newTheme);
+      if (cookies.userConsent) {
+        setCookie('theme', newTheme, { path: '/codecoach' });
       }
 
-      setTheme(newTheme)
+      if (newTheme !== 'monokai') {
+        await loadTheme(newTheme);
+      }
     },
-    [theme]
-  )
+    [theme, setCookie, cookies.userConsent]
+  );
 
   // function to handle language changes
   const handleLanguageChange = useCallback(
     async (newLanguage) => {
-      if (newLanguage === language) return
+      if (newLanguage === language) return;
 
-      setLanguage(newLanguage)
-
-      // load the new mode if not already loaded
-      if (newLanguage !== 'python') {
-        await loadMode(newLanguage)
+      setLanguage(newLanguage);
+      if (cookies.userConsent) {
+        setCookie('language', newLanguage, { path: '/codecoach' });
       }
-      //! set default code for the new language if needed????
-      //setEditorCode(defaultCode[newLanguage] || '')
+
+      if (newLanguage !== 'python') {
+        await loadMode(newLanguage);
+      }
     },
-    [language]
-  )
+    [language, setCookie, cookies.userConsent]
+  );
+
+  useEffect(() => {
+    if (theme !== 'monokai') {
+      loadTheme(theme);
+    }
+    if (language !== 'python') {
+      loadMode(language);
+    }
+  }, []);
 
   return (
     <Box

@@ -17,6 +17,10 @@ const theme = createTheme({
       main: '#0f172a', //! main text and button
       darker: '#0D0B20',
       darkest: '#0F0716',
+      blue: '#2563eb',
+      green: '#2dd881',
+      teal: '#2dd881',
+      black: '#333333',
     },
     error: {
       main: '#ef4444', //! delete buttons

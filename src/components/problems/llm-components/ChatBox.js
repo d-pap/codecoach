@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
+import { useCookies } from 'react-cookie'
 import {
   Box,
   TextField,
@@ -11,7 +12,7 @@ import {
   Tooltip,
   FormControlLabel,
   Switch,
-  Divider, // Import Switch and FormControlLabel
+  Divider,
   Avatar,
 } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
@@ -52,10 +53,30 @@ const ChatBox = ({
   const theme = useTheme()
   const [input, setInput] = useState('')
   const [includeCode, setIncludeCode] = useState(false)
-  const [tooltipsEnabled, setTooltipsEnabled] = useState(true)
   const [tooltipOpen, setTooltipOpen] = useState(false)
 
-  //! limit the number of chats to prevent abuse
+  // Initialize cookies
+  const [cookies, setCookie] = useCookies(['userConsent', 'tooltipsEnabled'])
+
+  // Initialize tooltipsEnabled from cookies if userConsent is true
+  const [tooltipsEnabled, setTooltipsEnabled] = useState(() => {
+    if (cookies.userConsent) {
+      console.log('Cookies:', cookies)
+      const tooltipEnabledValue =
+        cookies.tooltipsEnabled !== undefined
+          ? JSON.parse(cookies.tooltipsEnabled)
+          : true
+      setTooltipOpen(tooltipEnabledValue)
+      return tooltipEnabledValue
+    } else {
+      setTooltipOpen(true)
+      return true
+    }
+  })
+
+
+
+  // Limit the number of chats to prevent abuse
   const MAX_CHAT_COUNT = 20
 
   // **Ref for Scrollable Container**
@@ -204,11 +225,19 @@ const ChatBox = ({
   }
 
   const handleToggle = () => {
-    // Toggle the tooltip enabled state
-    setTooltipsEnabled((prev) => !prev)
-    // Immediately close the tooltip if it's open
+    setTooltipsEnabled((prev) => {
+      const newValue = !prev
+      if (cookies.userConsent) {
+        setCookie('tooltipsEnabled', newValue.toString(), { path: '/codecoach' })
+        console.log('Cookie updated:', newValue)
+      }
+      return newValue
+    })
     setTooltipOpen(false)
   }
+
+
+
 
   const formatChatContent = (content) => {
     return (
@@ -216,7 +245,7 @@ const ChatBox = ({
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
-            //* formatting markdown for ai messages
+            // formatting markdown for ai messages
             // paragraphs formatting
             p: ({ node, ...props }) => (
               <Typography
@@ -529,13 +558,9 @@ const ChatBox = ({
               <Box
                 sx={{
                   bgcolor:
-                    chat.role === 'user'
-                      ? 'primary.main'
-                      : 'grey.200',
+                    chat.role === 'user' ? 'primary.main' : 'grey.200',
                   color:
-                    chat.role === 'user'
-                      ? 'common.white'
-                      : 'text.primary',
+                    chat.role === 'user' ? 'common.white' : 'text.primary',
                   borderRadius:
                     chat.role === 'user'
                       ? '20px 20px 5px 20px'
@@ -616,37 +641,34 @@ const ChatBox = ({
               enterDelay={500}
               disableHoverListener={!tooltipsEnabled}
             >
-              <Button
-                variant="outlined"
-                disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-                sx={{
-                  mb: 1,
-                  borderRadius: '20px 20px 5px 20px',
-                  backgroundColor: isLoading
-                    ? theme.palette.grey[300]
-                    : includeCode
-                      ? 'common.white'
-                      : 'primary.main',
-                  color: includeCode
-                    ? 'text.primary'
-                    : 'common.white',
-                  '&:hover': {
-                    backgroundColor: includeCode
-                      ? 'action.hover'
-                      : 'primary.dark',
-                    color: includeCode
-                      ? 'text.primary'
-                      : 'common.white',
-                    borderColor: includeCode
-                      ? 'secondary.main'
-                      : 'common.white',
-                  },
-                  transition: 'background-color 0.3s, border-color 0.3s, color 0.3s',
-                }}
-                onClick={() => setIncludeCode(!includeCode)}
-              >
-                {includeCode ? 'Exclude My Code' : 'Analyze My Code'}
-              </Button>
+              <div>
+                <Button
+                  variant="outlined"
+                  disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
+                  sx={{
+                    mb: 1,
+                    borderRadius: '20px 20px 5px 20px',
+                    backgroundColor: isLoading
+                      ? theme.palette.grey[300]
+                      : includeCode
+                        ? 'common.white'
+                        : 'primary.main',
+                    color: includeCode ? 'text.primary' : 'common.white',
+                    '&:hover': {
+                      backgroundColor: includeCode
+                        ? 'action.hover'
+                        : 'primary.dark',
+                      color: includeCode ? 'text.primary' : 'common.white',
+                      borderColor: includeCode ? 'secondary.main' : 'common.white',
+                    },
+                    transition:
+                      'background-color 0.3s, border-color 0.3s, color 0.3s',
+                  }}
+                  onClick={() => setIncludeCode(!includeCode)}
+                >
+                  {includeCode ? 'Exclude My Code' : 'Analyze My Code'}
+                </Button>
+              </div>
             </Tooltip>
           </Box>
         </Box>
@@ -666,15 +688,17 @@ const ChatBox = ({
           enterDelay={500}
           disableHoverListener={!tooltipsEnabled}
         >
-          <IconButton
-            disabled={isLoading}
-            sx={{
-              color: 'error.main',
-            }}
-            onClick={handleDelete}
-          >
-            <DeleteIcon />
-          </IconButton>
+          <div>
+            <IconButton
+              disabled={isLoading}
+              sx={{
+                color: 'error.main',
+              }}
+              onClick={handleDelete}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </div>
         </Tooltip>
 
         <TextField
@@ -698,27 +722,27 @@ const ChatBox = ({
           enterDelay={500}
           disableHoverListener={!tooltipsEnabled}
         >
-          <Button
-            onClick={() => handleSend('user')}
-            disabled={
-              isLoading ||
-              chatCount >= MAX_CHAT_COUNT ||
-              input.trim() === ''
-            }
-            variant="contained"
-            sx={{
-              bgcolor: 'primary.main',
-              '&:hover': {
+          <div>
+            <Button
+              onClick={() => handleSend('user')}
+              disabled={
+                isLoading || chatCount >= MAX_CHAT_COUNT || input.trim() === ''
+              }
+              variant="contained"
+              sx={{
                 bgcolor: 'primary.main',
-              },
-            }}
-          >
-            Send
-          </Button>
+                '&:hover': {
+                  bgcolor: 'primary.main',
+                },
+              }}
+            >
+              Send
+            </Button>
+          </div>
         </Tooltip>
       </Box>
     </Paper>
-  );
-};
+  )
+}
 
 export default ChatBox
