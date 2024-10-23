@@ -1,6 +1,6 @@
 import React from 'react'
 import { useCookies } from 'react-cookie'
-import { Box, Container, Grid, Typography, Link } from '@mui/material'
+import { Box, Container, Grid, Typography, Link, Tooltip } from '@mui/material'
 import { styled, alpha } from '@mui/material/styles'
 import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import YouTubeIcon from '@mui/icons-material/YouTube'
@@ -159,9 +159,15 @@ const Footer = () => {
             >
               Privacy
             </Typography>
-            <PrivacyLink onClick={disableCookies}>
-              Disable Cookies
-            </PrivacyLink>
+            <Tooltip
+              title="We use cookies to store personal settings and preferences. We do not collect personal data for marketing or profit."
+              placement="top"
+              arrow
+              enterDelay={500}>
+              <PrivacyLink onClick={disableCookies}>
+                Disable Cookies
+              </PrivacyLink>
+            </Tooltip>
           </Grid>
         </Grid>
       </Container>
