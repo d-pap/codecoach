@@ -81,7 +81,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 const StyledDialogContent = styled(DialogContent)(() => ({
     padding: '0px 15px 15px 15px',
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', // Responsive columns
+    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', // Responsive columns
     gap: '15px',
     height: 'calc(80vh - 64px - 52px)',
     overflowY: 'auto',
@@ -113,18 +113,19 @@ const ViewProblemsDialog = ({ open, onClose, problems, isLoading }) => {
                     <CenteredCircleLoader />
                 ) : (
                     <>
-                        {/* Render ICPC Problems */}
-                        {icpcProblems.map((problem) => (
-                            <ProblemCardLayout key={problem._id} problem={problem} />
-                        ))}
-
                         {/* Render Interview Problems */}
                         {interviewProblems.map((problem) => (
                             <InterviewCardLayout key={problem._id} interview={problem} />
                         ))}
+                        {/* Render ICPC Problems */}
+                        {icpcProblems.map((problem) => (
+                            <ProblemCardLayout key={problem._id} problem={problem} />
+                        ))}
                     </>
                 )}
             </StyledDialogContent>
+            {/* do not remove, this is empty bottom padding using DialogActions */}
+            <DialogActions></DialogActions>
         </StyledDialog>
     );
 };
