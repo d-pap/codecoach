@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Container, Drawer, IconButton } from '@mui/material'
-import ChatIcon from '@mui/icons-material/Chat'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import Drawer from '@mui/material/Drawer'
+import Fab from '@mui/material/Fab'
+import { useTheme } from '@mui/material'
+import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded'
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels'
 import styled from 'styled-components'
 import CodeEditor from './CodeEditor'
 import ChatBox from './llm-components/ChatBox'
+import aiChatIcon from '../../images/aiChatIcon.svg'
 
 const StyledPanelResizeHandle = styled(PanelResizeHandle)`
   background-color: #ccc;
@@ -99,6 +104,8 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
     setChatScrollPosition(position)
   }
 
+  const theme = useTheme()
+
   return (
     <Container maxWidth={false}>
       <Box
@@ -153,28 +160,55 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
               <Box
                 sx={{
                   position: 'fixed',
-                  top: '50%',
-                  right: 0,
-                  transform: 'translateY(-50%)',
-                  zIndex: 10,
+                  bottom: {
+                    xs: theme.spacing(2),
+                    sm: theme.spacing(3),
+                  },
+                  right: {
+                    xs: theme.spacing(2),
+                    sm: theme.spacing(3),
+                  },
+                  zIndex: 1200,
                 }}
               >
-                <IconButton
+                <Fab
+                  aria-label="chat"
                   onClick={toggleChat}
+                  size="small"
                   sx={{
-                    backgroundColor: '#3f51b5',
-                    borderRadius: '7px 0 0 7px',
-                    scale: '1.4',
-                    transition:
-                      'transform 0.3s ease, background-color 0.3s ease',
+                    transition: 'all 0.3s ease',
+                    background:
+                      'linear-gradient(45deg, #0e0725, #5c03bc, #e536ab, #f4e5f0)',
+                    backgroundSize: '400% 400%',
+                    animation: 'gradient 5s ease infinite',
+                    animationPlayState: 'paused',
+                    width: { xs: 40, sm: 48 },
+                    height: { xs: 40, sm: 48 },
+                    minHeight: 'auto',
                     '&:hover': {
-                      transform: 'translate(-5px, -50%) scale(1.1)',
-                      backgroundColor: '#303f9f',
+                      transform: 'scale(1.1)',
+                      boxShadow: theme.shadows[10],
+                      animationPlayState: 'running',
+                    },
+                    '& img': {
+                      width: { xs: '20px', sm: '24px', md: '28px' },
+                      height: 'auto',
+                    },
+                    '@keyframes gradient': {
+                      '0%': {
+                        backgroundPosition: '0% 50%',
+                      },
+                      '50%': {
+                        backgroundPosition: '100% 50%',
+                      },
+                      '100%': {
+                        backgroundPosition: '0% 50%',
+                      },
                     },
                   }}
                 >
-                  <ChatIcon />
-                </IconButton>
+                  <img src={aiChatIcon} alt="AI Chat" />
+                </Fab>
               </Box>
               <Drawer
                 anchor="right"
@@ -192,22 +226,25 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                     borderRadius: '4px 4px 0 0',
                   }}
                 >
-                  <ChatBox
-                    problem={problem}
-                    drawerWidth={drawerWidth}
-                    setDrawerWidth={setDrawerWidth}
-                    chatHistory={chatHistory}
-                    setChatHistory={updateChatHistory}
-                    isLoading={isLoading}
-                    setIsLoading={setIsLoading}
-                    chatCount={chatCount}
-                    setChatCount={incrementChatCount}
-                    showSettings={showSettings}
-                    setShowSettings={setShowSettings}
-                    // **Pass Scroll Props**
-                    initialScrollPosition={chatScrollPosition}
-                    onScrollPositionChange={handleScrollPositionChange}
-                  />
+                  <ErrorBoundary>
+                    <ChatBox
+                      problem={problem}
+                      drawerWidth={drawerWidth}
+                      setDrawerWidth={setDrawerWidth}
+                      chatHistory={chatHistory}
+                      setChatHistory={updateChatHistory}
+                      isLoading={isLoading}
+                      setIsLoading={setIsLoading}
+                      chatCount={chatCount}
+                      setChatCount={incrementChatCount}
+                      showSettings={showSettings}
+                      setShowSettings={setShowSettings}
+                      // **Pass Scroll Props**
+                      initialScrollPosition={chatScrollPosition}
+                      onScrollPositionChange={handleScrollPositionChange}
+                      code={code}
+                    />
+                  </ErrorBoundary>
                 </Box>
               </Drawer>
             </Box>
@@ -231,6 +268,24 @@ const getChatHistory = (problemId) => {
 
 const saveChatHistory = (problemId, history) => {
   localStorage.setItem(`chatHistory-${problemId}`, JSON.stringify(history))
+}
+
+// Ignore ResizeObserver loop limit exceeded error
+class ErrorBoundary extends React.Component {
+  componentDidCatch(error) {
+    if (error.message.includes('ResizeObserver loop limit exceeded')) {
+      // Ignore the error
+    } else if (error.message.includes('ResizeObserver loop completed with undelivered notifications.')){
+      // Ignore the error
+    } else {
+      // Handle other errors
+      console.error(error)
+    }
+  }
+
+  render() {
+    return this.props.children
+  }
 }
 
 export default ProblemDetailLayout

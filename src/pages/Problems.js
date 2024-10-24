@@ -183,7 +183,15 @@ const SkeletonProblemList = () => (
         align="center"
         sx={{ mb: 2 }}
       >
-        ICPC Problems
+        Problems
+      </Typography>
+      <Typography
+        variant="subtitle1"
+        align="center"
+        sx={{ mb: 4, color: 'text.secondary' }}
+      >
+        Explore and solve ICPC programming challenges from various regions and
+        years
       </Typography>
       <FilterToolbar region="all" subregion="all" year="all" />
       <Grid
@@ -339,6 +347,10 @@ function ICPC() {
           sx={{ mb: 2 }}
         >
           Problems
+        </Typography>
+        <Typography variant="subtitle1" align="center" sx={{ mb: 4 }}>
+          Explore and solve ICPC programming challenges from various regions and
+          years
         </Typography>
         <FilterToolbar
           region={region}
