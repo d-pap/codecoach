@@ -1,7 +1,7 @@
 /**
  * Courses page
  */
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import Grid from '@mui/material/Grid'
@@ -28,10 +28,18 @@ import { ClassFormDialog, InviteStudentDialog, ViewProblemsDialog, DeleteConfirm
 import {
   getCurrentUserId,
   createCourseInDatabase,
-  deleteCourse,
+  // deleteCourse,
+  getCoursesByUser, // Updated API call to get courses by user
   getAllCourses,
   getCourseByIdProblems,
 } from '../api'
+// import {
+//   getCurrentUserId,
+//   createCourseInDatabase,
+//   deleteCourse,
+//   getAllCourses,
+//   getCourseByIdProblems,
+// } from '../api'
 
 //! Mock user context (replace or integrate with your actual auth context)
 const AuthContext = React.createContext({
@@ -54,23 +62,40 @@ const CourseList = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [viewProblemsDialogOpen, setViewProblemsDialogOpen] = useState(false)
   const [selectedCourseId, setSelectedCourseId] = useState(null)
+  const [userId, setUserId] = useState(null) // State to hold the user ID
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [courseToDelete, setCourseToDelete] = useState(null)
+  // const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  // const [courseToDelete, setCourseToDelete] = useState(null)
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
   const [selectedCourseName, setSelectedCourseName] = useState('')
   const [SelectedCourseIdForInvite, setSelectedCourseIdForInvite] = useState(null)
+
+  // Fetch the authenticated user ID when the component mounts
+  useEffect(() => {
+    const fetchUserId = async () => {
+      const currentUserId = await getCurrentUserId()
+      setUserId(currentUserId)
+    }
+    fetchUserId()
+  }, [])
 
   // use react query to fetch all courses
   const {
     data: courses = [],
     isLoading,
     error,
-  } = useQuery({
-    queryKey: ['courses'],
-    queryFn: getAllCourses,
+  } = useQuery({queryKey: [userId, 'courses'],
+    queryFn: () => getCoursesByUser(userId), // Fetch courses associated with the user
+    enabled: !!userId, // Only run the query when userId is available
   })
+  // const {
+  //   data: courses = [],
+  //   isLoading,
+  //   error,
+  // } = useQuery({queryKey: ['courses'],
+  //   queryFn: getAllCourses,
+  // })
 
   // use react query to fetch all problems for a specific course
   const {
@@ -134,23 +159,23 @@ const CourseList = () => {
   }
 
   //! handle course deletion - need to make lambda function for this
-  const handleDeleteCourse = async (courseId) => {
-    try {
-      deleteCourse(courseId)
+  // const handleDeleteCourse = async (courseId) => {
+  //   try {
+  //     deleteCourse(courseId)
 
-      // update the react query cache
-      queryClient.setQueryData(['courses'], (oldData) =>
-        oldData.filter((course) => course._id !== courseId)
-      )
-    } catch (error) {
-      console.error('Error deleting course:', error)
-    }
-  }
-  // handle delete course click
-  const handleDeleteClick = (courseId) => {
-    setCourseToDelete(courseId)
-    setDeleteDialogOpen(true)
-  }
+  //     // update the react query cache
+  //     queryClient.setQueryData(['courses'], (oldData) =>
+  //       oldData.filter((course) => course._id !== courseId)
+  //     )
+  //   } catch (error) {
+  //     console.error('Error deleting course:', error)
+  //   }
+  // }
+  // // handle delete course click
+  // const handleDeleteClick = (courseId) => {
+  //   setCourseToDelete(courseId)
+  //   setDeleteDialogOpen(true)
+  // }
   // handle invite student click
   const handleInviteStudentClick = (courseId, courseName) => {
     // console.log('Invite Student Clicked:', courseId, courseName)
@@ -248,7 +273,7 @@ const CourseList = () => {
                           minWidth: '40px',
                           padding: '4px',
                         }}
-                        onClick={() => handleDeleteClick(course._id)}
+                        // onClick={() => handleDeleteClick(course._id)}
                       >
                         <DeleteIcon />
                       </Button>
@@ -330,11 +355,11 @@ const CourseList = () => {
         </StyledDialog>
 
         {/* delete confirmation dialog */}
-        <DeleteConfirmationDialog
+        {/* <DeleteConfirmationDialog
           open={deleteDialogOpen}
           onClose={() => setDeleteDialogOpen(false)}
           onConfirm={() => handleDeleteCourse(selectedCourseId)}
-        />
+        /> */}
       </Container>
     </Box>
   )
