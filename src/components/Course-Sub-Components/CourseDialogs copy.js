@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -16,10 +16,6 @@ import {
     styled
 } from '@mui/material';
 import CenteredCircleLoader from '../utility/CenteredLoader';
-import ProblemCardLayout from '../problems/ProblemCardLayout';
-import InterviewCardLayout from '../problems/InterviewCardLayout';
-import CloseIcon from '@mui/icons-material/Close';
-
 // Class Form Dialog
 const ClassFormDialog = ({ open, onClose, onCreate }) => {
     const [className, setClassName] = useState('');
@@ -68,63 +64,60 @@ const InviteStudentDialog = ({ open, onClose, courseName, courseId }) => (
 );
 
 // Styled Dialog for Viewing Problems
-// Styled Dialog for Viewing Problems
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
         borderRadius: theme.spacing(2),
+        width: '800px',
         maxWidth: '90vw',
         height: '80vh',
-
     },
 }));
 
 const StyledDialogContent = styled(DialogContent)(() => ({
-    padding: '0px 15px 15px 15px',
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', // Responsive columns
-    gap: '15px',
-    height: 'calc(80vh - 64px - 52px)',
-    overflowY: 'auto',
+    padding: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    height: 'calc(80vh - 64px - 52px)', // Subtract DialogTitle and DialogActions heights
 }));
 
 // View Problems Dialog
 const ViewProblemsDialog = ({ open, onClose, problems, isLoading }) => {
-    // Filter interview type problems
-    const interviewProblems = useMemo(() => {
-        return problems.filter(
-            (problem) => problem.type && problem.type.toLowerCase() === 'interview'
-        );
-    }, [problems]);
+    // const [selectedProblems, setSelectedProblems] = useState([]);
 
-    // Filter icpc type problems
-    const icpcProblems = useMemo(() => {
-        return problems.filter(
-            (problem) => problem.type && problem.type.toLowerCase() === 'icpc'
-        );
-    }, [problems]);
+    // Functions related to ViewProblemsDialog's internal state management
+    // Removed unused functions and fixed typo
 
     return (
         <StyledDialog open={open} onClose={onClose}>
-            <DialogActions>
-                <Button onClick={onClose}>Close <CloseIcon /></Button>
-            </DialogActions>
             <StyledDialogContent>
                 {isLoading ? (
                     <CenteredCircleLoader />
                 ) : (
-                    <>
-                        {/* Render ICPC Problems */}
-                        {icpcProblems.map((problem) => (
-                            <ProblemCardLayout key={problem._id} problem={problem} />
-                        ))}
-
-                        {/* Render Interview Problems */}
-                        {interviewProblems.map((problem) => (
-                            <InterviewCardLayout key={problem._id} interview={problem} />
-                        ))}
-                    </>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Problem Title</TableCell>
+                                    <TableCell>Description</TableCell>
+                                    <TableCell>Year</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {problems.map((problem) => (
+                                    <TableRow key={problem._id}>
+                                        <TableCell>{problem.title}</TableCell>
+                                        <TableCell>{problem.description}</TableCell>
+                                        <TableCell>{problem.year}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 )}
             </StyledDialogContent>
+            <DialogActions>
+                <Button onClick={onClose}>Close</Button>
+            </DialogActions>
         </StyledDialog>
     );
 };

@@ -18,7 +18,6 @@ import {
 import CenteredCircleLoader from '../utility/CenteredLoader';
 import ProblemCardLayout from '../problems/ProblemCardLayout';
 import InterviewCardLayout from '../problems/InterviewCardLayout';
-import CloseIcon from '@mui/icons-material/Close';
 
 // Class Form Dialog
 const ClassFormDialog = ({ open, onClose, onCreate }) => {
@@ -68,27 +67,28 @@ const InviteStudentDialog = ({ open, onClose, courseName, courseId }) => (
 );
 
 // Styled Dialog for Viewing Problems
-// Styled Dialog for Viewing Problems
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
         borderRadius: theme.spacing(2),
+        width: '800px',
         maxWidth: '90vw',
         height: '80vh',
-
     },
 }));
 
 const StyledDialogContent = styled(DialogContent)(() => ({
-    padding: '0px 15px 15px 15px',
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', // Responsive columns
-    gap: '15px',
-    height: 'calc(80vh - 64px - 52px)',
-    overflowY: 'auto',
+    padding: '300px', // Add padding around the content
+    display: 'flex',
+    // flexDirection: 'row',
+    flexDirection: 'column',
+    gap: '16px', // Spacing between cards
+    height: 'calc(80vh - 64px - 52px)', // Subtract DialogTitle and DialogActions heights
+    overflowY: 'auto', // Allow scrolling for large content
 }));
 
 // View Problems Dialog
 const ViewProblemsDialog = ({ open, onClose, problems, isLoading }) => {
+
     // Filter interview type problems
     const interviewProblems = useMemo(() => {
         return problems.filter(
@@ -105,9 +105,6 @@ const ViewProblemsDialog = ({ open, onClose, problems, isLoading }) => {
 
     return (
         <StyledDialog open={open} onClose={onClose}>
-            <DialogActions>
-                <Button onClick={onClose}>Close <CloseIcon /></Button>
-            </DialogActions>
             <StyledDialogContent>
                 {isLoading ? (
                     <CenteredCircleLoader />
@@ -115,16 +112,19 @@ const ViewProblemsDialog = ({ open, onClose, problems, isLoading }) => {
                     <>
                         {/* Render ICPC Problems */}
                         {icpcProblems.map((problem) => (
-                            <ProblemCardLayout key={problem._id} problem={problem} />
+                            <ProblemCardLayout key={problem._id} problem={problem} style={{ marginBottom: '16px', padding: '16px' }} />
                         ))}
 
                         {/* Render Interview Problems */}
                         {interviewProblems.map((problem) => (
-                            <InterviewCardLayout key={problem._id} interview={problem} />
+                            <InterviewCardLayout key={problem._id} interview={problem} style={{ marginBottom: '16px', padding: '16px' }} />
                         ))}
                     </>
                 )}
             </StyledDialogContent>
+            <DialogActions>
+                <Button onClick={onClose}>Close</Button>
+            </DialogActions>
         </StyledDialog>
     );
 };
