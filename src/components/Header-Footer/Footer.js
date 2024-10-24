@@ -50,19 +50,16 @@ const PrivacyLink = styled(Link)(({ theme }) => ({
 // Footer Component
 
 const Footer = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(['userConsent'])
-
-  // Method to disable cookies
   const disableCookies = () => {
-    // List of cookies to remove
-    const cookieNames = Object.keys(cookies)
+    // list all cookies
+    const allCookies = document.cookie.split(';')
 
-    cookieNames.forEach((cookieName) => {
-      removeCookie(cookieName, { path: '/codecoach' })
-    })
-
-    // Set userConsent to false
-    setCookie('userConsent', false, { path: '/codecoach', maxAge: 0 }) // maxAge: 0 deletes the cookie immediately
+    // delete each cookie
+    for (let cookie of allCookies) {
+      const eqPos = cookie.indexOf('=')
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
+    }
   }
 
   return (
@@ -163,7 +160,8 @@ const Footer = () => {
               title="We use cookies to store personal settings and preferences. We do not collect personal data for marketing or profit."
               placement="top"
               arrow
-              enterDelay={500}>
+              enterDelay={500}
+            >
               <PrivacyLink onClick={disableCookies}>
                 Disable Cookies
               </PrivacyLink>

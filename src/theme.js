@@ -19,7 +19,6 @@ const theme = createTheme({
       darkest: '#0F0716',
       blue: '#2563eb',
       green: '#2dd881',
-      teal: '#2dd881',
       black: '#333333',
     },
     error: {

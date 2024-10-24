@@ -74,8 +74,6 @@ const ChatBox = ({
     }
   })
 
-
-
   // Limit the number of chats to prevent abuse
   const MAX_CHAT_COUNT = 20
 
@@ -228,16 +226,13 @@ const ChatBox = ({
     setTooltipsEnabled((prev) => {
       const newValue = !prev
       if (cookies.userConsent) {
-        setCookie('tooltipsEnabled', newValue.toString(), { path: '/codecoach' })
+        setCookie('tooltipsEnabled', newValue.toString(), { path: '/' })
         console.log('Cookie updated:', newValue)
       }
       return newValue
     })
     setTooltipOpen(false)
   }
-
-
-
 
   const formatChatContent = (content) => {
     return (
@@ -557,10 +552,8 @@ const ChatBox = ({
               )}
               <Box
                 sx={{
-                  bgcolor:
-                    chat.role === 'user' ? 'primary.main' : 'grey.200',
-                  color:
-                    chat.role === 'user' ? 'common.white' : 'text.primary',
+                  bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.200',
+                  color: chat.role === 'user' ? 'common.white' : 'text.primary',
                   borderRadius:
                     chat.role === 'user'
                       ? '20px 20px 5px 20px'
@@ -659,7 +652,9 @@ const ChatBox = ({
                         ? 'action.hover'
                         : 'primary.dark',
                       color: includeCode ? 'text.primary' : 'common.white',
-                      borderColor: includeCode ? 'secondary.main' : 'common.white',
+                      borderColor: includeCode
+                        ? 'secondary.main'
+                        : 'common.white',
                     },
                     transition:
                       'background-color 0.3s, border-color 0.3s, color 0.3s',
