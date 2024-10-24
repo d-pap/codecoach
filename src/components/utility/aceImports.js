@@ -29,17 +29,14 @@ export const loadTheme = async (theme) => {
 export const loadMode = async (language) => {
   switch (language) {
     case 'python':
-      await import('ace-builds/src-noconflict/mode-python')
-      break
+      return import('ace-builds/src-noconflict/mode-python')
     case 'java':
-      await import('ace-builds/src-noconflict/mode-java')
-      break
+      return import('ace-builds/src-noconflict/mode-java')
     case 'c':
     case 'cpp':
-      await import('ace-builds/src-noconflict/mode-c_cpp')
-      break
+      return import('ace-builds/src-noconflict/mode-c_cpp')
     // add more cases for other languages as needed
     default:
-      console.warn(`Unsupported language: ${language}`)
+      throw new Error(`Unsupported language: ${language}`)
   }
 }

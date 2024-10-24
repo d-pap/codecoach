@@ -10,6 +10,8 @@ import AceEditor from 'react-ace'
 import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/mode-python'
 import 'ace-builds/src-noconflict/ext-language_tools'
+//import 'ace-builds/src-noconflict/mode-java'
+//import 'ace-builds/src-noconflict/mode-c_cpp'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
@@ -269,6 +271,7 @@ const CodeEditor = ({
   const [isRunning, setIsRunning] = useState(false)
   const [testCase, setTestCase] = useState('')
   const [showTestCase, setShowTestCase] = useState(false)
+  const [editorMode, setEditorMode] = useState('python')
 
   //! limit number of judge0 runs and reset limit after 12 hours
   const MAX_RUN_SUBMIT_COUNT = 10
@@ -461,11 +464,20 @@ const CodeEditor = ({
 
       setLanguage(newLanguage)
 
-      // load the new mode
-      await loadMode(newLanguage)
+      try {
+        // load the new mode
+        await loadMode(newLanguage)
 
-      // set default code for the new language
-      setEditorCode(defaultCode[newLanguage] || '')
+        // update the editor mode after successful import
+        setEditorMode(
+          newLanguage === 'c' || newLanguage === 'cpp' ? 'c_cpp' : newLanguage
+        )
+
+        // set default code for the new language
+        setEditorCode(defaultCode[newLanguage] || '')
+      } catch (error) {
+        console.error(`Failed to load language mode for ${newLanguage}:`, error)
+      }
     },
     [language]
   )
@@ -493,7 +505,7 @@ const CodeEditor = ({
         runSubmitCount={runSubmitCount}
       />
       <AceEditor
-        mode={language === 'c' || language === 'cpp' ? 'c_cpp' : language}
+        mode={editorMode}
         theme={theme}
         name="codeEditor"
         onChange={(newCode) => {
