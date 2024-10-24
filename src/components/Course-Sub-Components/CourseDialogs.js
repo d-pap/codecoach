@@ -15,7 +15,7 @@ import {
     TableRow,
     styled
 } from '@mui/material';
-    
+import CenteredCircleLoader from '../utility/CenteredLoader';
 // Class Form Dialog
 const ClassFormDialog = ({ open, onClose, onCreate }) => {
     const [className, setClassName] = useState('');
@@ -81,56 +81,39 @@ const StyledDialogContent = styled(DialogContent)(() => ({
 }));
 
 // View Problems Dialog
-const ViewProblemsDialog = ({ open, onClose, problems }) => {
-    const [selectedProblems, setSelectedProblems] = useState([]);
+const ViewProblemsDialog = ({ open, onClose, problems, isLoading }) => {
+    // const [selectedProblems, setSelectedProblems] = useState([]);
 
     // Functions related to ViewProblemsDialog's internal state management
-    const handleDeleteSelectedProblems = () => {
-        console.log('Delete selected problems:', selectedProblems);
-        setSelectedProblems([]);
-    };
-
-    const handleSelectAllClick = (event) => {
-        if (event.target.checked) {
-            const newSelecteds = problems.map((problem) => problem._id);
-            setSelectedProblems(newSelecteds);
-        } else {
-            setSelectedProblems([]);
-        }
-    };
-
-    const handleClick = (id) => {
-        const selectedIndex = selectedProblems.indexOf(id);
-        let newSelected = selectedProblems.filter(item => item !== id);
-        if (selectedIndex === -1) {
-            newSelected.push(id);
-        }
-        setSelectedProblems(newSelected);
-    };
+    // Removed unused functions and fixed typo
 
     return (
         <StyledDialog open={open} onClose={onClose}>
             <StyledDialogContent>
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Problem Title</TableCell>
-                                <TableCell>Description</TableCell>
-                                <TableCell>Year</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {problems.map((problem) => (
-                                <TableRow key={problem._id}>
-                                    <TableCell>{problem.title}</TableCell>
-                                    <TableCell>{problem.description}</TableCell>
-                                    <TableCell>{problem.year}</TableCell>
+                {isLoading ? (
+                    <CenteredCircleLoader />
+                ) : (
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Problem Title</TableCell>
+                                    <TableCell>Description</TableCell>
+                                    <TableCell>Year</TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                            </TableHead>
+                            <TableBody>
+                                {problems.map((problem) => (
+                                    <TableRow key={problem._id}>
+                                        <TableCell>{problem.title}</TableCell>
+                                        <TableCell>{problem.description}</TableCell>
+                                        <TableCell>{problem.year}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                )}
             </StyledDialogContent>
             <DialogActions>
                 <Button onClick={onClose}>Close</Button>

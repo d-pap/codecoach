@@ -190,7 +190,9 @@ const CourseList = () => {
         <Grid container spacing={3}>
           {/* course list section */}
           <Grid item xs={12} md={9}>
-            {courses.length === 0 ? (
+            {isLoading ? (
+              <CenteredCircleLoader /> // Show loader while courses are loading
+            ) : courses.length === 0 ? (
               <Typography>No courses available.</Typography>
             ) : (
               courses.map((course) => (
