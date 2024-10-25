@@ -1,6 +1,5 @@
-import React, { useState, useMemo, useCallback } from 'react'
-import { useLocation } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import React, { useState, useCallback, useEffect } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { styled, alpha } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import Pagination from '@mui/material/Pagination'
@@ -17,7 +16,6 @@ import AppBar from '@mui/material/AppBar'
 import SearchIcon from '@mui/icons-material/Search'
 import { fetchProblems } from '../api'
 import { getSubregions } from '../components/problems/subregions'
-import { ICPCFilter } from '../components/problems/problem-components/ICPCFilter'
 import ProblemCardLayout from '../components/problems/ProblemCardLayout'
 
 const subregions = getSubregions()
@@ -101,6 +99,19 @@ const FilterToolbar = ({
     },
   }
 
+  // Add local state for search input
+  const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery)
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      onSearchChange(localSearchQuery)
+    }
+  }
+
+  const handleSearchInputChange = (event) => {
+    setLocalSearchQuery(event.target.value)
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBarStyled
@@ -163,8 +174,9 @@ const FilterToolbar = ({
             <StyledInputBase
               placeholder="Search questions..."
               inputProps={{ 'aria-label': 'search' }}
-              value={searchQuery}
-              onChange={onSearchChange}
+              value={localSearchQuery}
+              onChange={handleSearchInputChange}
+              onKeyPress={handleKeyPress}
             />
           </Search>
         </Toolbar>
@@ -234,63 +246,75 @@ const SkeletonProblemList = () => (
 )
 
 function ICPC() {
-  const location = useLocation()
-  const problemsFromLocation = location.state?.problems
-
-  const {
-    data: problems = [],
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ['problems'], // Keeping the same query key
-    queryFn: fetchProblems,
-    staleTime: 1000 * 60 * 5,
-    initialData: problemsFromLocation,
-  })
-
   const [region, setRegion] = useState('all')
   const [subregion, setSubregion] = useState('all')
   const [year, setYear] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
   const problemsPerPage = 10
+  const queryClient = useQueryClient() //! to use prefetchQuery
 
-  // Filter problems by type 'icpc' first, then apply other filters
-  const filteredProblems = useMemo(() => {
-    // Step 1: Filter by type 'icpc'
-    const icpcProblems = problems.filter(
-      (problem) => problem.type && problem.type.toLowerCase() === 'icpc'
-    )
+  //! initial query to fetch problems for page 1 (10 problems)
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['problems', currentPage, region, subregion, year, searchQuery],
+    queryFn: () =>
+      fetchProblems({
+        page: currentPage,
+        limit: problemsPerPage,
+        region,
+        subregion,
+        year,
+        searchQuery,
+        type: 'icpc',
+      }),
+    staleTime: 1000 * 60 * 15,
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
+  })
 
-    // Step 2: Apply additional filters (region, subregion, year)
-    const regionFiltered = ICPCFilter(icpcProblems, region, subregion, year)
+  //! after page 1 is loaded, prefetch data for next page
+  useEffect(() => {
+    if (
+      !isLoading &&
+      data &&
+      currentPage < Math.ceil(data.totalProblems / problemsPerPage)
+    ) {
+      //console.log('Prefetching next page data...')
+      queryClient.prefetchQuery({
+        queryKey: [
+          'problems',
+          currentPage + 1,
+          region,
+          subregion,
+          year,
+          searchQuery,
+        ],
+        queryFn: () =>
+          fetchProblems({
+            page: currentPage + 1,
+            limit: problemsPerPage,
+            region,
+            subregion,
+            year,
+            searchQuery,
+            type: 'icpc',
+          }),
+      })
+    }
+  }, [
+    isLoading,
+    data,
+    currentPage,
+    region,
+    subregion,
+    year,
+    searchQuery,
+    queryClient,
+  ])
 
-    // Step 3: Apply search query
-    const searchFiltered = regionFiltered.filter(
-      (problem) =>
-        (problem.title &&
-          problem.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (problem.description &&
-          problem.description
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase())) ||
-        (problem.contestYear &&
-          problem.contestYear
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase())) ||
-        (problem.contestRegion &&
-          problem.contestRegion
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase())) ||
-        (problem.contestSubRegion &&
-          problem.contestSubRegion
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()))
-    )
-
-    return searchFiltered
-  }, [problems, region, subregion, year, searchQuery])
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page)
+  }
 
   const handleRegionChange = (event) => {
     setRegion(event.target.value)
@@ -308,14 +332,10 @@ function ICPC() {
     setCurrentPage(1)
   }
 
-  const handleSearchChange = useCallback((event) => {
-    setSearchQuery(event.target.value)
+  const handleSearchChange = useCallback((newSearchQuery) => {
+    setSearchQuery(newSearchQuery)
     setCurrentPage(1)
   }, [])
-
-  const handlePageChange = (event, page) => {
-    setCurrentPage(page)
-  }
 
   if (isLoading) {
     return <SkeletonProblemList />
@@ -329,12 +349,7 @@ function ICPC() {
     )
   }
 
-  const indexOfLastProblem = currentPage * problemsPerPage
-  const indexOfFirstProblem = indexOfLastProblem - problemsPerPage
-  const currentProblems = filteredProblems.slice(
-    indexOfFirstProblem,
-    indexOfLastProblem
-  )
+  const { problems, totalProblems } = data || { problems: [], totalProblems: 0 }
 
   return (
     <Box sx={{ minHeight: '100vh', py: 4 }}>
@@ -390,15 +405,15 @@ function ICPC() {
               }}
             >
               <Pagination
-                count={Math.ceil(filteredProblems.length / problemsPerPage)}
+                count={Math.ceil(totalProblems / problemsPerPage)}
                 page={currentPage}
                 onChange={handlePageChange}
                 size="small"
               />
             </Box>
-            {currentProblems.length > 0 ? (
+            {problems.length > 0 ? (
               <Stack spacing={2}>
-                {currentProblems.map((problem) => (
+                {problems.map((problem) => (
                   <ProblemCardLayout key={problem._id} problem={problem} />
                 ))}
               </Stack>
@@ -407,7 +422,7 @@ function ICPC() {
             )}
             <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
               <Pagination
-                count={Math.ceil(filteredProblems.length / problemsPerPage)}
+                count={Math.ceil(totalProblems / problemsPerPage)}
                 page={currentPage}
                 onChange={handlePageChange}
                 size="small"
@@ -420,4 +435,5 @@ function ICPC() {
   )
 }
 
+export { SkeletonProblemList }
 export default ICPC

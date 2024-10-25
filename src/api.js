@@ -9,9 +9,53 @@ import { Auth } from 'aws-amplify'
 
 const API_GATEWAY_URL = process.env.REACT_APP_API_URL
 
-export const fetchProblems = async () => {
+/* export const fetchProblems = async () => {
   try {
     const response = await axios.get(`${API_GATEWAY_URL}/problems`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching problems:', error)
+    throw error
+  }
+} */
+
+export const fetchProblems = async (params) => {
+  /**
+   * if no type is provided, then all problems are fetched
+   * if type is 'icpc', then icpc problems are fetched
+   * if type is 'interview', then interview problems are fetched
+   */
+  const {
+    page = 1,
+    limit = 20,
+    // problems page filters
+    region = 'all',
+    subregion = 'all',
+    year = 'all',
+    // interview prep filters
+    difficulty = 'all',
+    company = 'all',
+    topic = 'all',
+    // common filters
+    searchQuery = '',
+    type = 'all',
+  } = params
+
+  try {
+    const response = await axios.get(`${API_GATEWAY_URL}/problems`, {
+      params: {
+        page,
+        limit,
+        region,
+        subregion,
+        year,
+        difficulty,
+        company,
+        topic,
+        searchQuery,
+        type,
+      },
+    })
     return response.data
   } catch (error) {
     console.error('Error fetching problems:', error)
