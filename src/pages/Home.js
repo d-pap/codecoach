@@ -384,11 +384,18 @@ export const Home = () => {
             zIndex: 2,
             mb: 4,
             fontSize: {
-              xs: '10vh',
+              xs: '8vh',
               sm: '10vh',
               md: '12vh',
               lg: '12vh',
               xl: '12vh',
+            },
+            lineHeight: {
+              xs: '6vh',
+              sm: '8vh',
+              md: '10vh',
+              lg: '10vh',
+              xl: '10vh',
             },
             textAlign: 'center',
           }}
@@ -408,6 +415,13 @@ export const Home = () => {
                 xs: '1rem',
                 sm: '1.226rem',
                 md: '1.5rem',
+                lg: '1.8rem',
+                xl: '2rem',
+              },
+              lineHeight: {
+                xs: '1.2rem',
+                sm: '1.4rem',
+                md: '1.6rem',
                 lg: '1.8rem',
                 xl: '2rem',
               },
