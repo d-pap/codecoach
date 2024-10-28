@@ -316,11 +316,11 @@ export const addProblemsToCourse = async (courseId, problemIds) => {
 
 // get all problems for a specific course
 export const getCourseByIdProblems = async (courseId) => {
-  console.log('Fetching course problems for course ID:', courseId) // Add this log
+  console.log('Fetching course problems for course ID:', courseId)
   try {
-    const course = await getCourseById(courseId) // Fetch course details
+    const course = await getCourseById(courseId) // fetch course details
     const problemDetails = await Promise.all(
-      course.problemIds.map((id) => fetchProblemById(id)) // Fetch each problem detail by ID
+      course.problemIds.map((id) => fetchProblemById(id)) // fetch each problem detail by ID
     )
     return problemDetails
   } catch (error) {
