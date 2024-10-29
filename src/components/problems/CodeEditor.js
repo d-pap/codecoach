@@ -477,7 +477,7 @@ const CodeEditor = ({
 
   // function to handle language changes
   const handleLanguageChange = useCallback(
-    (newLanguage) => {
+    async (newLanguage) => {
       if (newLanguage === desiredLanguage) return
 
       try {
@@ -485,7 +485,7 @@ const CodeEditor = ({
         await loadMode(newLanguage)
 
         // update the editor mode after successful import
-        setEditorMode(
+        setCurrentLanguage(
           newLanguage === 'c' || newLanguage === 'cpp' ? 'c_cpp' : newLanguage
         )
 
@@ -493,6 +493,7 @@ const CodeEditor = ({
         setEditorCode(defaultCode[newLanguage] || '')
       } catch (error) {
         console.error(`Failed to load language mode for ${newLanguage}:`, error)
+      }
 
       setDesiredLanguage(newLanguage)
       if (cookies.userConsent) {
