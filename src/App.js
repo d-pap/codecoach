@@ -86,10 +86,6 @@ function App() {
     return <CenteredCircleLoader />
   }
 
-  const handleAcceptCookies = () => {
-    localStorage.setItem('userConsent', 'true')
-  }
-
   return (
     <Router>
       <ThemeProvider theme={theme}>

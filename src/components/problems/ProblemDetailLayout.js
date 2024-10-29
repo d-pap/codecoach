@@ -339,43 +339,6 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                   <AutoAwesomeRoundedIcon sx={{ color: 'white' }} />
                 </Fab>
               </Box>
-              <Drawer
-                anchor="right"
-                open={isChatOpen}
-                onClose={toggleChat}
-                PaperProps={{ style: { width: `${drawerWidth}vw` } }}
-                // Remove keepMounted to prevent ResizeObserver issues
-              >
-                <Box
-                  sx={{
-                    width: '100%',
-                    height: '100%',
-                    p: 2,
-                    backgroundColor: 'white',
-                    borderRadius: '4px 4px 0 0',
-                  }}
-                >
-                  <ErrorBoundary>
-                    <ChatBox
-                      problem={problem}
-                      drawerWidth={drawerWidth}
-                      setDrawerWidth={setDrawerWidth}
-                      chatHistory={chatHistory}
-                      setChatHistory={updateChatHistory}
-                      isLoading={isLoading}
-                      setIsLoading={setIsLoading}
-                      chatCount={chatCount}
-                      setChatCount={incrementChatCount}
-                      showSettings={showSettings}
-                      setShowSettings={setShowSettings}
-                      // **Pass Scroll Props**
-                      initialScrollPosition={chatScrollPosition}
-                      onScrollPositionChange={handleScrollPositionChange}
-                      code={code}
-                    />
-                  </ErrorBoundary>
-                </Box>
-              </Drawer>
             </Box>
           </Panel>
         </PanelGroup>
@@ -397,24 +360,6 @@ const getChatHistory = (problemId) => {
 
 const saveChatHistory = (problemId, history) => {
   localStorage.setItem(`chatHistory-${problemId}`, JSON.stringify(history))
-}
-
-// Ignore ResizeObserver loop limit exceeded error
-class ErrorBoundary extends React.Component {
-  componentDidCatch(error) {
-    if (error.message.includes('ResizeObserver loop limit exceeded')) {
-      // Ignore the error
-    } else if (error.message.includes('ResizeObserver loop completed with undelivered notifications.')){
-      // Ignore the error
-    } else {
-      // Handle other errors
-      console.error(error)
-    }
-  }
-
-  render() {
-    return this.props.children
-  }
 }
 
 export default ProblemDetailLayout

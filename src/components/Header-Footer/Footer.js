@@ -1,21 +1,22 @@
 import React from 'react'
-import { useCookies } from 'react-cookie'
-import { Box, Container, Grid, Typography, Link, Tooltip } from '@mui/material'
+import { Box, Container, Grid, Typography, Link } from '@mui/material'
 import { styled, alpha } from '@mui/material/styles'
 import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import YouTubeIcon from '@mui/icons-material/YouTube'
 import InstagramIcon from '@mui/icons-material/Instagram'
 
-// Styled Components
-
 const FooterContainer = styled(Box)(({ theme }) => ({
   backgroundColor: 'transparent',
-  padding: theme.spacing(4, 0), // Increased padding for better spacing
+  padding: theme.spacing(2, 0), // padding top and bottom=32px (4*8px=32), no padding on the sides
   marginTop: 'auto',
   borderTop: '2px solid #e0e0e0',
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(2, 0),
+  },
 }))
 
 const EmailLink = styled(Link)({
+  //color: '#9cdba6',
   color: 'inherit',
   textDecoration: 'none',
   '&:hover': {
@@ -25,9 +26,8 @@ const EmailLink = styled(Link)({
 
 const SocialIcon = styled(Box)(({ theme }) => ({
   display: 'inline-flex',
-  marginRight: theme.spacing(2),
+  marginRight: theme.spacing(1),
   '& a': {
-    color: 'inherit',
     '&:hover': {
       color: alpha(theme.palette.text.primary, 0.5),
       transition: 'color 0.2s ease',
@@ -35,50 +35,23 @@ const SocialIcon = styled(Box)(({ theme }) => ({
   },
 }))
 
-// Removed the invalid 'align' property
-const PrivacyLink = styled(Link)(({ theme }) => ({
-  color: 'inherit',
-  textDecoration: 'none',
-  cursor: 'pointer',
-  '&:hover': {
-    textDecoration: 'underline',
-    color: alpha(theme.palette.text.primary, 0.5),
-    transition: 'color 0.2s ease',
-  },
-}))
-
-// Footer Component
-
 const Footer = () => {
-  const disableCookies = () => {
-    // list all cookies
-    const allCookies = document.cookie.split(';')
-
-    // delete each cookie
-    for (let cookie of allCookies) {
-      const eqPos = cookie.indexOf('=')
-      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
-      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
-    }
-  }
-
   return (
     <FooterContainer>
       <Container maxWidth="lg">
-        <Grid container spacing={4} justifyContent="center" alignItems="center">
-          {/* Contact Us Section */}
+        <Grid container spacing={2} justifyContent="center">
           <Grid item xs={12} sm={6} md={4}>
             <Typography
               variant="h6"
               gutterBottom
-              align="center"
-              sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}
+              align="left"
+              sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}
             >
               Contact Us
             </Typography>
             <Typography
               align="left"
-              sx={{ fontSize: { xs: '1rem', sm: '1.125rem' }, marginBottom: 1 }}
+              sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
             >
               General Inquiries:{' '}
               <EmailLink href="mailto:team@codecoach.com">
@@ -87,7 +60,7 @@ const Footer = () => {
             </Typography>
             <Typography
               align="left"
-              sx={{ fontSize: { xs: '1rem', sm: '1.125rem' } }}
+              sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
             >
               Support:{' '}
               <EmailLink href="mailto:support@codecoach.com">
@@ -95,26 +68,24 @@ const Footer = () => {
               </EmailLink>
             </Typography>
           </Grid>
-
-          {/* Social Section */}
           <Grid item xs={12} sm={6} md={4}>
             <Typography
               variant="h6"
               gutterBottom
-              align="center"
-              sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}
+              align="left"
+              sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}
             >
               Social
             </Typography>
-            <Box display="flex" justifyContent="center">
+            <Box display="flex" alignItems="center">
               <SocialIcon>
                 <Link
                   href="https://www.linkedin.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="LinkedIn"
+                  color="inherit"
                 >
-                  <LinkedInIcon fontSize="large" />
+                  <LinkedInIcon />
                 </Link>
               </SocialIcon>
               <SocialIcon>
@@ -122,9 +93,9 @@ const Footer = () => {
                   href="https://www.youtube.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="YouTube"
+                  color="inherit"
                 >
-                  <YouTubeIcon fontSize="large" />
+                  <YouTubeIcon />
                 </Link>
               </SocialIcon>
               <SocialIcon>
@@ -132,40 +103,12 @@ const Footer = () => {
                   href="https://www.instagram.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Instagram"
+                  color="inherit"
                 >
-                  <InstagramIcon fontSize="large" />
+                  <InstagramIcon />
                 </Link>
               </SocialIcon>
             </Box>
-          </Grid>
-
-          {/* Privacy Section */}
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            md={4}
-            sx={{ textAlign: 'center' }} // Added textAlign center here
-          >
-            <Typography
-              variant="h6"
-              gutterBottom
-              align="center"
-              sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}
-            >
-              Privacy
-            </Typography>
-            <Tooltip
-              title="We use cookies to store personal settings and preferences. We do not collect personal data for marketing or profit."
-              placement="top"
-              arrow
-              enterDelay={500}
-            >
-              <PrivacyLink onClick={disableCookies}>
-                Disable Cookies
-              </PrivacyLink>
-            </Tooltip>
           </Grid>
         </Grid>
       </Container>

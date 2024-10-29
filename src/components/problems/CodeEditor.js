@@ -5,7 +5,6 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { useCookies } from 'react-cookie'
 import { useParams } from 'react-router-dom'
 import AceEditor from 'react-ace'
 import 'ace-builds/src-noconflict/theme-monokai'
@@ -134,7 +133,7 @@ const EditorButtons = ({
             borderRadius: (theme) => theme.spacing(2),
           }}
         >
-          <IconButton component="div" sx={{ color: 'inherit', p: 0.5 }}>
+          <IconButton sx={{ color: 'inherit', p: 0.5 }}>
             {showTestCase ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
           <Typography
@@ -261,6 +260,8 @@ const CodeEditor = ({
   output,
   enableFeedback = false,
 }) => {
+  const [theme, setTheme] = useState('monokai')
+  const [language, setLanguage] = useState('python')
   const [editorCode, setEditorCode] = useState(
     initialCode || defaultCode.python
   )
@@ -270,26 +271,7 @@ const CodeEditor = ({
   const [isRunning, setIsRunning] = useState(false)
   const [testCase, setTestCase] = useState('')
   const [showTestCase, setShowTestCase] = useState(false)
-  const [cookies, setCookie] = useCookies(['userConsent', 'theme', 'language'])
-
-  const [desiredTheme, setDesiredTheme] = useState(() => {
-    if (cookies.userConsent) {
-      return cookies.theme || 'monokai'
-    } else {
-      return 'monokai'
-    }
-  })
-  const [currentTheme, setCurrentTheme] = useState('monokai')
-
-  // Introduce desired and current language state variables
-  const [desiredLanguage, setDesiredLanguage] = useState(() => {
-    if (cookies.userConsent) {
-      return cookies.language || 'python'
-    } else {
-      return 'python'
-    }
-  })
-  const [currentLanguage, setCurrentLanguage] = useState('python')
+  const [editorMode, setEditorMode] = useState('python')
 
   //! limit number of judge0 runs and reset limit after 12 hours
   const MAX_RUN_SUBMIT_COUNT = 10
@@ -337,8 +319,8 @@ const CodeEditor = ({
   }, [runSubmitCount])
 
   useEffect(() => {
-    setEditorCode(defaultCode[currentLanguage] || '')
-  }, [currentLanguage])
+    setEditorCode(defaultCode[language] || '')
+  }, [language])
 
   const isDisabled = runSubmitCount >= MAX_RUN_SUBMIT_COUNT
 
@@ -353,7 +335,7 @@ const CodeEditor = ({
     setIsRunning(true)
     try {
       const selectedLanguage = languageOptions.find(
-        (lang) => lang.value === currentLanguage
+        (lang) => lang.value === language
       )
       const language_id = selectedLanguage.id
 
@@ -388,7 +370,7 @@ const CodeEditor = ({
     setIsSubmitting(true)
     try {
       const selectedLanguage = languageOptions.find(
-        (lang) => lang.value === currentLanguage
+        (lang) => lang.value === language
       )
       const language_id = selectedLanguage.id
 
@@ -460,25 +442,27 @@ const CodeEditor = ({
     console.log(feedback)
   }
 
-  const currentThemeStyle = themeStyles[currentTheme]
+  const currentThemeStyle = themeStyles[theme]
 
   // function to handle theme changes
   const handleThemeChange = useCallback(
-    (newTheme) => {
-      if (newTheme === desiredTheme) return
-
-      setDesiredTheme(newTheme)
-      if (cookies.userConsent) {
-        setCookie('theme', newTheme, { path: '/' })
+    async (newTheme) => {
+      if (newTheme === theme) return
+      if (newTheme !== 'monokai') {
+        await loadTheme(newTheme)
       }
+
+      setTheme(newTheme)
     },
-    [desiredTheme, setCookie, cookies.userConsent]
+    [theme]
   )
 
   // function to handle language changes
   const handleLanguageChange = useCallback(
-    (newLanguage) => {
-      if (newLanguage === desiredLanguage) return
+    async (newLanguage) => {
+      if (newLanguage === language) return
+
+      setLanguage(newLanguage)
 
       try {
         // load the new mode
@@ -493,64 +477,10 @@ const CodeEditor = ({
         setEditorCode(defaultCode[newLanguage] || '')
       } catch (error) {
         console.error(`Failed to load language mode for ${newLanguage}:`, error)
-
-      setDesiredLanguage(newLanguage)
-      if (cookies.userConsent) {
-        setCookie('language', newLanguage, { path: '/' })
       }
     },
-    [desiredLanguage, setCookie, cookies.userConsent]
+    [language]
   )
-
-  useEffect(() => {
-    const loadAndSetTheme = async () => {
-      if (desiredTheme !== currentTheme) {
-        try {
-          if (desiredTheme !== 'monokai') {
-            await loadTheme(desiredTheme)
-          }
-          setCurrentTheme(desiredTheme)
-        } catch (error) {
-          console.error(`Error loading theme ${desiredTheme}:`, error)
-        }
-      }
-    }
-    loadAndSetTheme()
-  }, [desiredTheme, currentTheme])
-
-  useEffect(() => {
-    const loadAndSetLanguage = async () => {
-      if (desiredLanguage !== currentLanguage) {
-        try {
-          if (desiredLanguage !== 'python') {
-            await loadMode(desiredLanguage)
-          }
-          setCurrentLanguage(desiredLanguage)
-          // Update editor code with default code for the new language
-          setEditorCode(defaultCode[desiredLanguage] || '')
-        } catch (error) {
-          console.error(`Error loading language ${desiredLanguage}:`, error)
-        }
-      }
-    }
-    loadAndSetLanguage()
-  }, [desiredLanguage, currentLanguage])
-
-  useEffect(() => {
-    const initializeThemeAndLanguage = async () => {
-      try {
-        if (currentTheme !== 'monokai') {
-          await loadTheme(currentTheme)
-        }
-        if (currentLanguage !== 'python') {
-          await loadMode(currentLanguage)
-        }
-      } catch (error) {
-        console.error('Error initializing theme or language:', error)
-      }
-    }
-    initializeThemeAndLanguage()
-  }, [currentTheme, currentLanguage])
 
   return (
     <Box
@@ -566,8 +496,8 @@ const CodeEditor = ({
       }}
     >
       <CodeEditorToolbar
-        theme={currentTheme}
-        language={currentLanguage}
+        theme={theme}
+        language={language}
         setTheme={handleThemeChange}
         setLanguage={handleLanguageChange}
         currentThemeStyle={currentThemeStyle}
@@ -575,13 +505,8 @@ const CodeEditor = ({
         runSubmitCount={runSubmitCount}
       />
       <AceEditor
-        //! if language is c or cpp, set mode to c_cpp mode because (ace-builds uses the c_cpp mode for c AND cpp). for other languages, use the language name as the mode
-        mode={
-          currentLanguage === 'c' || currentLanguage === 'cpp'
-            ? 'c_cpp'
-            : currentLanguage
-        }
-        theme={currentTheme}
+        mode={editorMode}
+        theme={theme}
         name="codeEditor"
         onChange={(newCode) => {
           setEditorCode(newCode)
