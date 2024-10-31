@@ -10,6 +10,7 @@ import { styled, alpha } from '@mui/material/styles'
 import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import YouTubeIcon from '@mui/icons-material/YouTube'
 import InstagramIcon from '@mui/icons-material/Instagram'
+import logo from '../../images/logo-with-text.svg'
 
 const FooterContainer = styled(Box)(({ theme }) => ({
   backgroundColor: 'transparent',
@@ -19,6 +20,7 @@ const FooterContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(2, 0),
   },
+  //backgroundImage: 'linear-gradient(to bottom, #eeeeee, #000)',
 }))
 
 const EmailLink = styled(Link)({
@@ -151,6 +153,9 @@ const Footer = () => {
           </Grid>
         </Grid>
       </Container>
+      <Box display="flex" justifyContent="center" alignItems="center">
+        <img src={logo} alt="CodeCoach Logo" width="50%" />
+      </Box>
     </FooterContainer>
   )
 }
