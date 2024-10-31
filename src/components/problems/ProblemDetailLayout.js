@@ -83,7 +83,6 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
   const [code, setCode] = useState(pythonDefaultCode)
   const [output, setOutput] = useState('')
   const [isChatOpen, setIsChatOpen] = useState(false)
-  const [drawerWidth, setDrawerWidth] = useState(35) // Width in percentage (default is 35%)
 
   //! state for chat history
   const [chatHistory, setChatHistory] = useState({
@@ -92,7 +91,6 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
   })
   const [isLoading, setIsLoading] = useState(false)
   const [chatCount, setChatCount] = useState(0)
-  const [showSettings, setShowSettings] = useState(false)
 
   //! state for scroll position
   const [chatScrollPosition, setChatScrollPosition] = useState(0)
@@ -246,7 +244,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                   <Grow
                     in={isChatOpen}
                     style={{ transformOrigin: 'bottom right' }}
-                    unmountOnExit // Add this line
+                    unmountOnExit
                   >
                     <div ref={chatRef}>
                       <ResizableBox
@@ -292,8 +290,6 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                               setIsLoading={setIsLoading}
                               chatCount={chatCount}
                               setChatCount={incrementChatCount}
-                              showSettings={showSettings}
-                              setShowSettings={setShowSettings}
                               initialScrollPosition={chatScrollPosition}
                               onScrollPositionChange={
                                 handleScrollPositionChange
