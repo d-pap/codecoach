@@ -19,6 +19,7 @@ const FooterContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(2, 0),
   },
+  //backgroundImage: 'linear-gradient(to bottom, #eeeeee, #000)',
 }))
 
 const EmailLink = styled(Link)({

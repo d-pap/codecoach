@@ -147,7 +147,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
 
   const theme = useTheme()
 
-  const [chatSize, setChatSize] = useState({ width: 400, height: 500 })
+  const [chatSize, setChatSize] = useState({ width: 600, height: 800 })
 
   const onResize = (event, { size }) => {
     setChatSize({ width: size.width, height: size.height })
