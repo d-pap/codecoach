@@ -62,6 +62,14 @@ const EditorSelect = ({ value, onChange, options, currentThemeStyle, sx }) => {
   )
 }
 
+export const languageOptions = [
+  { value: 'python', label: 'Python', id: 71 },
+  { value: 'java', label: 'Java', id: 62 },
+  { value: 'c', label: 'C', id: 50 },
+  { value: 'cpp', label: 'C++', id: 54 },
+  // Add more languages as needed
+]
+
 const CodeEditorToolbar = ({
   theme,
   language,
@@ -71,11 +79,6 @@ const CodeEditorToolbar = ({
   MAX_RUN_SUBMIT_COUNT,
   runSubmitCount,
 }) => {
-  const languageOptions = [
-    { value: 'python', label: 'Python' },
-    // add more languages here
-  ]
-
   const themeOptions = [
     { value: 'monokai', label: 'Monokai' },
     { value: 'dracula', label: 'Dracula' },

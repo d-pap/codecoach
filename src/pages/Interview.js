@@ -1,12 +1,10 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import React, { useState, useCallback, useEffect } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { styled, alpha } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import Pagination from '@mui/material/Pagination'
 import Toolbar from '@mui/material/Toolbar'
 import Select from '@mui/material/Select'
-import Skeleton from '@mui/material/Skeleton'
 import MenuItem from '@mui/material/MenuItem'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
@@ -17,12 +15,12 @@ import AppBar from '@mui/material/AppBar'
 import SearchIcon from '@mui/icons-material/Search'
 import { fetchProblems } from '../api'
 import InterviewCardLayout from '../components/problems/InterviewCardLayout'
-import InterviewFilter from '../components/problems/problem-components/InterviewFilter'
 import {
+  getDifficulties,
   getCompanies,
   getTopics,
-  getDifficulties,
 } from '../components/problems/InterviewOptions'
+import { SkeletonProblemList } from './Problems'
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
   backgroundColor: 'transparent',
@@ -96,10 +94,23 @@ const FilterToolbar = ({
   companies,
   topics,
 }) => {
+  // local state for search input
+  const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery)
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      onSearchChange(localSearchQuery)
+    }
+  }
+
+  const handleSearchInputChange = (event) => {
+    setLocalSearchQuery(event.target.value)
+  }
+
   const menuProps = {
     PaperProps: {
       style: {
-        maxHeight: 300, // height of menu dropdowns of filters
+        maxHeight: 300,
       },
     },
   }
@@ -115,43 +126,36 @@ const FilterToolbar = ({
             <StyledSelect
               value={difficulty}
               onChange={onDifficultyChange}
-              sx={{
-                height: '40px',
-                minWidth: '150px',
-                padding: '0 10px',
-              }}
               MenuProps={menuProps}
             >
               <MenuItem value="all">All Difficulties</MenuItem>
-              {difficulties.map((difficultyOption) => (
-                <MenuItem key={difficultyOption} value={difficultyOption}>
-                  {difficultyOption}
+              {difficulties?.map((diff) => (
+                <MenuItem key={diff} value={diff.toLowerCase()}>
+                  {diff}
                 </MenuItem>
               ))}
             </StyledSelect>
             <StyledSelect
               value={company}
               onChange={onCompanyChange}
-              sx={{ height: '40px', minWidth: '150px', padding: '0 10px' }}
               MenuProps={menuProps}
             >
               <MenuItem value="all">All Companies</MenuItem>
-              {companies.map((companyOption) => (
-                <MenuItem key={companyOption} value={companyOption}>
-                  {companyOption}
+              {companies?.map((comp) => (
+                <MenuItem key={comp} value={comp}>
+                  {comp}
                 </MenuItem>
               ))}
             </StyledSelect>
             <StyledSelect
               value={topic}
               onChange={onTopicChange}
-              sx={{ height: '40px', minWidth: '150px', padding: '0 10px' }}
               MenuProps={menuProps}
             >
               <MenuItem value="all">All Topics</MenuItem>
-              {topics.map((topicOption) => (
-                <MenuItem key={topicOption} value={topicOption}>
-                  {topicOption}
+              {topics?.map((top) => (
+                <MenuItem key={top} value={top}>
+                  {top}
                 </MenuItem>
               ))}
             </StyledSelect>
@@ -163,8 +167,9 @@ const FilterToolbar = ({
             <StyledInputBase
               placeholder="Search questions..."
               inputProps={{ 'aria-label': 'search' }}
-              value={searchQuery}
-              onChange={onSearchChange}
+              value={localSearchQuery}
+              onChange={handleSearchInputChange}
+              onKeyDown={handleKeyPress}
             />
           </Search>
         </Toolbar>
@@ -173,142 +178,100 @@ const FilterToolbar = ({
   )
 }
 
-const SkeletonProblemList = () => (
-  <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 4 }}>
-    <Container maxWidth="lg">
-      <Typography
-        variant="h2"
-        component="h1"
-        gutterBottom
-        align="center"
-        sx={{ mb: 2 }}
-      >
-        Interview Questions
-      </Typography>
-      <FilterToolbar
-        difficulty="all"
-        company="all"
-        topic="all"
-        searchQuery=""
-        difficulties={[]}
-        companies={[]}
-        topics={[]}
-      />
-      <Grid
-        container
-        spacing={0}
-        sx={{
-          display: 'flex',
-          flexWrap: 'nowrap',
-          boxShadow:
-            '0px 4px 5px -2px rgba(0, 0, 0, 0.2), 4px 0px 5px -2px rgba(0, 0, 0, 0.2), -4px 0px 5px -2px rgba(0, 0, 0, 0.2)',
-          borderRadius: (theme) => theme.spacing(2),
-        }}
-      >
-        <Box sx={{ flexGrow: 1, padding: (theme) => theme.spacing(2) }}>
-          <Box sx={{ display: 'flex', justifyContent: 'right' }}>
-            <Skeleton variant="text" width={150} sx={{ fontSize: '2rem' }} />
-          </Box>
-          <Stack spacing={2}>
-            {[...Array(5)].map((_, index) => (
-              <Skeleton
-                key={index}
-                variant="rectangular"
-                height={120}
-                sx={{ borderRadius: 1 }}
-              />
-            ))}
-          </Stack>
-          <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
-            <Skeleton
-              variant="rectangular"
-              width={150}
-              height={40}
-              sx={{ mt: 2 }}
-            />
-          </Box>
-        </Box>
-      </Grid>
-    </Container>
-  </Box>
-)
-
 function Interview() {
-  const location = useLocation()
-  const problemsFromLocation = location.state?.problems
-
-  const {
-    data: problems = [],
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ['problems'],
-    queryFn: fetchProblems,
-    staleTime: 1000 * 60 * 5,
-    initialData: problemsFromLocation,
-  })
-
   const [difficulty, setDifficulty] = useState('all')
   const [company, setCompany] = useState('all')
   const [topic, setTopic] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
-  const [difficulties, setDifficulties] = useState([])
-  const [companies, setCompanies] = useState([])
-  const [topics, setTopics] = useState([])
   const problemsPerPage = 10
+  const queryClient = useQueryClient()
 
-  // Fetch the predefined lists for difficulties, companies, and topics
-  useEffect(() => {
-    const fetchFilterOptions = async () => {
-      const [difficultiesList, companiesList, topicsList] = await Promise.all([
-        getDifficulties(),
-        getCompanies(),
-        getTopics(),
-      ])
-      setDifficulties(difficultiesList)
-      setCompanies(companiesList)
-      setTopics(topicsList)
-    }
+  //! CHANGE THIS--------------------------------------------------------------------
+  // fetching filter data (difficulties, companies, topics)
+  const { data: difficulties } = useQuery({
+    queryKey: ['difficulties'],
+    queryFn: getDifficulties,
+  })
 
-    fetchFilterOptions()
-  }, [])
+  const { data: companies } = useQuery({
+    queryKey: ['companies'],
+    queryFn: getCompanies,
+  })
 
-  // Ensure only problems of type 'interview' are considered
-  const interviewProblems = useMemo(() => {
-    return problems.filter(
-      (problem) => problem.type && problem.type.toLowerCase() === 'interview'
-    )
-  }, [problems])
+  const { data: topics } = useQuery({
+    queryKey: ['topics'],
+    queryFn: getTopics,
+  })
 
-  // Filter problems using InterviewFilter
-  const filteredProblems = useMemo(() => {
-    let filtered = InterviewFilter(
-      interviewProblems,
+  // fetch interview problems
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: [
+      'interviewProblems',
+      currentPage,
+      problemsPerPage,
       difficulty,
       company,
-      topic
-    )
+      topic,
+      searchQuery,
+    ],
+    queryFn: () => {
+      return fetchProblems({
+        page: currentPage,
+        limit: problemsPerPage,
+        difficulty,
+        company,
+        topic,
+        searchQuery,
+        type: 'interview',
+      })
+    },
+    staleTime: 1000 * 60 * 15,
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
+  })
 
-    // Apply search query
-    if (searchQuery.trim() !== '') {
-      const query = searchQuery.toLowerCase()
-      filtered = filtered.filter((problem) => {
-        return (
-          (problem.title && problem.title.toLowerCase().includes(query)) ||
-          (problem.description &&
-            problem.description.toLowerCase().includes(query)) ||
-          (problem.hint && problem.hint.toLowerCase().includes(query)) ||
-          (problem.company && problem.company.toLowerCase().includes(query)) ||
-          (problem.topic && problem.topic.toLowerCase().includes(query))
-        )
+  // prefetch  next page in the background
+  useEffect(() => {
+    if (
+      !isLoading &&
+      data &&
+      currentPage < Math.ceil(data.totalProblems / problemsPerPage)
+    ) {
+      queryClient.prefetchQuery({
+        queryKey: [
+          'interviewProblems',
+          currentPage + 1,
+          problemsPerPage,
+          difficulty,
+          company,
+          topic,
+          searchQuery,
+        ],
+        queryFn: () =>
+          fetchProblems({
+            page: currentPage + 1,
+            limit: problemsPerPage,
+            difficulty,
+            company,
+            topic,
+            searchQuery,
+            type: 'interview',
+          }),
       })
     }
+  }, [
+    isLoading,
+    data,
+    currentPage,
+    difficulty,
+    company,
+    topic,
+    searchQuery,
+    queryClient,
+  ])
 
-    return filtered
-  }, [interviewProblems, difficulty, company, topic, searchQuery])
-
+  // handle filter changes
   const handleDifficultyChange = (event) => {
     setDifficulty(event.target.value)
     setCurrentPage(1)
@@ -324,8 +287,8 @@ function Interview() {
     setCurrentPage(1)
   }
 
-  const handleSearchChange = useCallback((event) => {
-    setSearchQuery(event.target.value)
+  const handleSearchChange = useCallback((newSearchQuery) => {
+    setSearchQuery(newSearchQuery)
     setCurrentPage(1)
   }, [])
 
@@ -333,10 +296,7 @@ function Interview() {
     setCurrentPage(page)
   }
 
-  if (isLoading) {
-    return <SkeletonProblemList />
-  }
-
+  if (isLoading) return <SkeletonProblemList />
   if (isError) {
     return (
       <Typography variant="body1">
@@ -345,24 +305,23 @@ function Interview() {
     )
   }
 
-  const indexOfLastProblem = currentPage * problemsPerPage
-  const indexOfFirstProblem = indexOfLastProblem - problemsPerPage
-  const currentProblems = filteredProblems.slice(
-    indexOfFirstProblem,
-    indexOfLastProblem
-  )
+  const { problems, totalProblems } = data || { problems: [], totalProblems: 0 }
 
   return (
     <Box sx={{ minHeight: '100vh', py: 4 }}>
       <Container maxWidth="lg">
         <Typography
-          variant="h1"
+          variant="h2"
           component="h1"
           gutterBottom
           align="center"
           sx={{ mb: 2 }}
         >
           Interview Questions
+        </Typography>
+        <Typography variant="subtitle1" align="center" sx={{ mb: 4 }}>
+          Practice and prepare for technical interviews with a wide range of
+          interview questions from top companies
         </Typography>
         <FilterToolbar
           difficulty={difficulty}
@@ -373,9 +332,9 @@ function Interview() {
           onCompanyChange={handleCompanyChange}
           onTopicChange={handleTopicChange}
           onSearchChange={handleSearchChange}
-          difficulties={difficulties}
-          companies={companies}
-          topics={topics}
+          difficulties={difficulties || []}
+          companies={companies || []}
+          topics={topics || []}
         />
         <Grid
           container
@@ -397,23 +356,17 @@ function Interview() {
               boxShadow: 'none',
             }}
           >
-            <Box
-              sx={{
-                p: 1,
-                display: 'flex',
-                justifyContent: 'right',
-              }}
-            >
+            <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
               <Pagination
-                count={Math.ceil(filteredProblems.length / problemsPerPage)}
+                count={Math.ceil(totalProblems / problemsPerPage)}
                 page={currentPage}
                 onChange={handlePageChange}
                 size="small"
               />
             </Box>
-            {currentProblems.length > 0 ? (
+            {problems.length > 0 ? (
               <Stack spacing={2}>
-                {currentProblems.map((problem) => (
+                {problems.map((problem) => (
                   <InterviewCardLayout key={problem._id} interview={problem} />
                 ))}
               </Stack>
@@ -422,7 +375,7 @@ function Interview() {
             )}
             <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
               <Pagination
-                count={Math.ceil(filteredProblems.length / problemsPerPage)}
+                count={Math.ceil(totalProblems / problemsPerPage)}
                 page={currentPage}
                 onChange={handlePageChange}
                 size="small"

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 import {
   Box,
   TextField,
@@ -9,6 +9,7 @@ import {
   Typography,
   Collapse,
   Tooltip,
+  Avatar,
 } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -18,8 +19,11 @@ import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import SettingsIcon from '@mui/icons-material/Settings'
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { useTheme } from '@mui/material/styles'
 import SendChat from './AIChat'
+import rocketImg from '../../../images/rocket.svg'
+import aiAvatar from '../../../images/aiAvatar.svg'
 
 // Function to clear chat history from localStorage
 const clearChatHistory = (problemId) => {
@@ -39,9 +43,6 @@ const ChatBox = ({
   setChatCount,
   showSettings,
   setShowSettings,
-  // **New Props for Scroll Handling**
-  initialScrollPosition,
-  onScrollPositionChange,
 }) => {
   const theme = useTheme()
   const [input, setInput] = React.useState('')
@@ -49,24 +50,24 @@ const ChatBox = ({
   //! limit the number of chats to prevent abuse
   const MAX_CHAT_COUNT = 10
 
-  // **Ref for Scrollable Container**
+  //! ref for scrollable container
   const scrollContainerRef = useRef(null)
 
-  useEffect(() => {
-    // **Restore Scroll Position on Mount**
+  const scrollToBottom = useCallback(() => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTop = initialScrollPosition
-    }
-  }, [initialScrollPosition])
-
-  useEffect(() => {
-    // **Capture Scroll Position before Unmounting**
-    return () => {
-      if (scrollContainerRef.current) {
-        onScrollPositionChange(scrollContainerRef.current.scrollTop)
+      const { scrollHeight, scrollTop, clientHeight } =
+        scrollContainerRef.current
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100 // 100px threshold
+      if (isNearBottom) {
+        scrollContainerRef.current.scrollTop =
+          scrollContainerRef.current.scrollHeight
       }
     }
-  }, [onScrollPositionChange])
+  }, [])
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [chatHistory, scrollToBottom])
 
   const handleInputChange = (e) => {
     setInput(e.target.value)
@@ -132,6 +133,9 @@ const ChatBox = ({
       }
 
       setChatHistory(updatedHistory)
+
+      //! scroll to bottom after state update
+      setTimeout(scrollToBottom, 100)
     } catch (error) {
       console.error('Failed to send chat:', error)
       const updatedHistory = {
@@ -178,37 +182,92 @@ const ChatBox = ({
             //* formatting markdown for ai messages
             // paragraphs formatting
             p: ({ node, ...props }) => (
-              <Typography {...props} sx={{ mb: 0.5 }} />
+              <Typography
+                {...props}
+                sx={{
+                  mb: 0.5,
+                  fontSize: '0.875rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
+              />
             ),
 
             // headings
             h1: ({ node, ...props }) => (
-              <Typography variant="h4" {...props} sx={{ mb: 1 }} />
+              <Typography
+                variant="h4"
+                {...props}
+                sx={{
+                  mb: 1,
+                  fontSize: '1.25rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
+              />
             ),
             h2: ({ node, ...props }) => (
-              <Typography variant="h5" {...props} sx={{ mb: 1 }} />
+              <Typography
+                variant="h5"
+                {...props}
+                sx={{
+                  mb: 1,
+                  fontSize: '1.125rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
+              />
             ),
             h3: ({ node, ...props }) => (
-              <Typography variant="h6" {...props} sx={{ mb: 1 }} />
+              <Typography
+                variant="h6"
+                {...props}
+                sx={{
+                  mb: 1,
+                  fontSize: '1rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
+              />
             ),
 
             // lists formatting
             ul: ({ node, ...props }) => (
               <ul
                 {...props}
-                style={{ paddingLeft: '1.5em', marginBottom: '0.5em' }}
+                style={{
+                  paddingLeft: '1.5em',
+                  marginBottom: '0.5em',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
               />
             ),
             ol: ({ node, ...props }) => (
               <ol
                 {...props}
-                style={{ paddingLeft: '1.5em', marginBottom: '0.5em' }}
+                style={{
+                  paddingLeft: '1.5em',
+                  marginBottom: '0.5em',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
               />
             ),
 
             // list items formatting
             li: ({ node, ...props }) => (
-              <li {...props} style={{ marginBottom: '0.5em' }} />
+              <li
+                {...props}
+                style={{
+                  marginBottom: '0.5em',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
+              />
             ),
 
             // blockquotes formatting
@@ -220,6 +279,9 @@ const ChatBox = ({
                   paddingLeft: '1em',
                   color: '#666',
                   marginBottom: '0.5em',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
                 }}
               />
             ),
@@ -233,7 +295,13 @@ const ChatBox = ({
                   style={oneDark}
                   language={hasLanguage[1]}
                   PreTag="div"
-                  customStyle={{ borderRadius: '12px', marginBottom: '0.5em' }}
+                  customStyle={{
+                    borderRadius: '12px',
+                    marginBottom: '0.5em',
+                    fontSize: '0.875rem',
+                    lineHeight: '1.5',
+                    letterSpacing: '0.01em',
+                  }}
                   {...props}
                 >
                   {String(children).replace(/\n$/, '')}
@@ -247,6 +315,9 @@ const ChatBox = ({
                     padding: '0.2em 0.4em',
                     borderRadius: '6px',
                     fontFamily: 'monospace',
+                    fontSize: '0.875rem',
+                    lineHeight: '1.5',
+                    letterSpacing: '0.01em',
                   }}
                 >
                   {children}
@@ -291,8 +362,8 @@ const ChatBox = ({
         <Tooltip title="During development, the number of AI messages is limited per day. Each hint, solution, and user message costs 1 run. You can see how many runs you have left in the input field placeholder text.">
           <InfoRoundedIcon sx={{ color: theme.palette.text.secondary }} />
         </Tooltip>
-        <Typography variant="h6" sx={{ flexGrow: 1, textAlign: 'center' }}>
-          Get help from your Code Coach
+        <Typography variant="h3" sx={{ flexGrow: 1, textAlign: 'center' }}>
+          codecoach
         </Typography>
         <IconButton onClick={() => setShowSettings(!showSettings)}>
           <SettingsIcon sx={{ color: theme.palette.text.secondary }} />
@@ -321,64 +392,82 @@ const ChatBox = ({
           mb: theme.spacing(2),
           p: theme.spacing(2),
           border: 'none',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
+        {/* avatar and message */}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            mb: 2,
+          }}
+        >
+          <Avatar
+            alt="AI Robot"
+            src={aiAvatar}
+            sx={{ width: 80, height: 80, mb: 1 }}
+          />
+          <Typography
+            variant="subtitle1"
+            sx={{ fontWeight: 'bold', textAlign: 'center' }}
+          >
+            codecoach answers your questions instantly!
+          </Typography>
+        </Box>
+
         {Array.isArray(chatHistory.data) &&
           chatHistory.data.map((chat, index) => (
             <Box
               key={index}
               sx={{
-                alignSelf: chat.role === 'user' ? 'flex-end' : 'flex-start',
-                bgcolor:
-                  chat.role === 'user'
-                    ? theme.palette.primary.main
-                    : theme.palette.grey[200],
-                color:
-                  chat.role === 'user'
-                    ? theme.palette.text.white
-                    : theme.palette.text.primary,
-                borderRadius:
-                  chat.role === 'user'
-                    ? '15px 15px 5px 15px'
-                    : '15px 15px 15px 5px',
-                p: 2,
-
+                display: 'flex',
+                justifyContent:
+                  chat.role === 'user' ? 'flex-end' : 'flex-start',
                 mb: 2,
-                maxWidth: '100%',
-                wordBreak: 'break-word',
-                position: 'relative',
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  bottom: 0,
-                  width: 0,
-                  height: 0,
-                  border: '10px solid transparent',
-                  ...(chat.role === 'user'
-                    ? {
-                        borderTopColor: theme.palette.primary.main,
-                        right: -7,
-                        transform: 'rotate(180deg)',
-                      }
-                    : {
-                        borderTopColor: theme.palette.grey[200],
-                        left: -7,
-                        transform: 'rotate(180deg)',
-                      }),
-                },
               }}
             >
-              {chat.role === 'assistant' ? (
-                formatChatContent(chat.content)
-              ) : (
-                <Typography
-                  sx={{
-                    color: theme.palette.text.white,
-                  }}
-                >
-                  {chat.content}
-                </Typography>
+              {chat.role === 'assistant' && (
+                <Avatar
+                  alt="AI"
+                  src={aiAvatar}
+                  sx={{ width: 30, height: 30, mr: 1, alignSelf: 'flex-end' }}
+                />
               )}
+              <Box
+                sx={{
+                  bgcolor:
+                    chat.role === 'user'
+                      ? theme.palette.primary.main
+                      : theme.palette.grey[200],
+                  color:
+                    chat.role === 'user'
+                      ? theme.palette.text.white
+                      : theme.palette.text.primary,
+                  borderRadius:
+                    chat.role === 'user'
+                      ? '20px 20px 5px 20px'
+                      : '20px 20px 20px 5px',
+                  p: 2,
+                  maxWidth: '80%',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {chat.role === 'assistant' ? (
+                  formatChatContent(chat.content)
+                ) : (
+                  <Typography
+                    sx={{
+                      color: theme.palette.text.white,
+                      fontSize: '0.875rem',
+                    }}
+                  >
+                    {chat.content}
+                  </Typography>
+                )}
+              </Box>
             </Box>
           ))}
         {isLoading && (
@@ -398,55 +487,47 @@ const ChatBox = ({
             <CircularProgress size={20} />
           </Box>
         )}
-      </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          mb: 1,
-        }}
-      >
-        <Tooltip title={'Prompts the coach to give a hint'} enterDelay={500}>
-          <Button
-            variant="outlined"
-            disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-            sx={{ width: '30%', mx: 0.5, mb: 1 }}
-            onClick={() => handleSend('hint')}
-          >
-            Get a Hint
-          </Button>
-        </Tooltip>
-        <Tooltip
-          title={'Prompts the coach to give a solution'}
-          enterDelay={500}
-        >
-          <Button
-            variant="outlined"
-            disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-            sx={{ width: '30%', mx: 0.5, mb: 1 }}
-            onClick={() => handleSend('solution')}
-          >
-            Get a Solution
-          </Button>
-        </Tooltip>
-        <Button
-          variant="contained"
-          disabled={isLoading}
+
+        {/* quick action buttons */}
+        <Box
           sx={{
-            bgcolor: theme.palette.error.main,
-            width: '30%',
-            mx: 0.5,
-            mb: 1,
-            '&:hover': {
-              bgcolor: theme.palette.error.dark,
-            },
+            display: 'flex',
+            justifyContent: 'flex-end',
+            mt: 'auto',
+            pt: 2,
           }}
-          onClick={handleDelete}
         >
-          Delete Chat
-        </Button>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+              maxWidth: '70%',
+            }}
+          >
+            <Button
+              variant="contained"
+              disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
+              sx={{
+                mb: 1,
+                borderRadius: '20px 20px 5px 20px',
+              }}
+              onClick={() => handleSend('hint')}
+            >
+              Get a Hint
+            </Button>
+            <Button
+              variant="contained"
+              disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
+              sx={{
+                borderRadius: '20px 20px 5px 20px',
+              }}
+              onClick={() => handleSend('solution')}
+            >
+              Get a Solution
+            </Button>
+          </Box>
+        </Box>
       </Box>
 
       <Box
@@ -460,7 +541,7 @@ const ChatBox = ({
         <TextField
           value={input}
           onChange={handleInputChange}
-          onKeyDown={handleOnPressEnter} // Updated to onKeyDown
+          onKeyDown={handleOnPressEnter}
           placeholder={`Type a message (${MAX_CHAT_COUNT - chatCount} messages left today)...`}
           variant="outlined"
           fullWidth
@@ -468,7 +549,7 @@ const ChatBox = ({
             mr: 1,
             '& fieldset': { borderRadius: theme.spacing(2) },
           }}
-          disabled={isLoading || chatCount >= MAX_CHAT_COUNT} //! disable the input field if the user has reached the maximum number of messages for the day
+          disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
           multiline
           maxRows={4}
         />
@@ -477,11 +558,17 @@ const ChatBox = ({
           enterDelay={500}
         >
           <Button
-            onClick={() => handleSend('user')} // Use arrow function
+            onClick={() => handleSend('user')}
             disabled={
               isLoading || chatCount >= MAX_CHAT_COUNT || input.trim() === ''
             }
             variant="contained"
+            sx={{
+              bgcolor: theme.palette.primary.main,
+              '&:hover': {
+                bgcolor: theme.palette.primary.main,
+              },
+            }}
           >
             Send
           </Button>

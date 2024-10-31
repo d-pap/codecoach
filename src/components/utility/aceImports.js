@@ -26,16 +26,17 @@ export const loadTheme = async (theme) => {
 }
 
 //TODO: implement more languages when we add them
-export const loadMode = async (mode) => {
-  switch (mode) {
-    case 'javascript':
-      await import('ace-builds/src-noconflict/mode-javascript')
-      break
+export const loadMode = async (language) => {
+  switch (language) {
+    case 'python':
+      return import('ace-builds/src-noconflict/mode-python')
     case 'java':
-      await import('ace-builds/src-noconflict/mode-java')
-      break
+      return import('ace-builds/src-noconflict/mode-java')
+    case 'c':
+    case 'cpp':
+      return import('ace-builds/src-noconflict/mode-c_cpp')
+    // add more cases for other languages as needed
     default:
-      // handle default or unknown modes?
-      break
+      throw new Error(`Unsupported language: ${language}`)
   }
 }

@@ -9,9 +9,53 @@ import { Auth } from 'aws-amplify'
 
 const API_GATEWAY_URL = process.env.REACT_APP_API_URL
 
-export const fetchProblems = async () => {
+/* export const fetchProblems = async () => {
   try {
     const response = await axios.get(`${API_GATEWAY_URL}/problems`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching problems:', error)
+    throw error
+  }
+} */
+
+export const fetchProblems = async (params) => {
+  /**
+   * if no type is provided, then all problems are fetched
+   * if type is 'icpc', then icpc problems are fetched
+   * if type is 'interview', then interview problems are fetched
+   */
+  const {
+    page = 1,
+    limit = 20,
+    // problems page filters
+    region = 'all',
+    subregion = 'all',
+    year = 'all',
+    // interview prep filters
+    difficulty = 'all',
+    company = 'all',
+    topic = 'all',
+    // common filters
+    searchQuery = '',
+    type = 'all',
+  } = params
+
+  try {
+    const response = await axios.get(`${API_GATEWAY_URL}/problems`, {
+      params: {
+        page,
+        limit,
+        region,
+        subregion,
+        year,
+        difficulty,
+        company,
+        topic,
+        searchQuery,
+        type,
+      },
+    })
     return response.data
   } catch (error) {
     console.error('Error fetching problems:', error)
@@ -79,15 +123,17 @@ export const checkExecutionLimits = async (userId) => {
 // Passes source code and language to the API
 // and returns the result
 // Function to check execution limits and execute code if within limit
-export const executeCode = async (sourceCode, language = 'python') => {
+export const executeCode = async (
+  sourceCode,
+  customTestCases = '',
+  language_id = 71
+) => {
   try {
     // get current user
     const userId = await getCurrentUserId()
 
     // check the execution limits
     const limitResponse = await checkExecutionLimits(userId)
-
-    // if the limit is reached, halt and notify the user
     if (limitResponse.message === 'Execution limit reached') {
       alert('You have reached your execution limit.')
       return { error: 'Execution limit reached' }
@@ -102,9 +148,10 @@ export const executeCode = async (sourceCode, language = 'python') => {
         'X-RapidAPI-Host': process.env.REACT_APP_RAPIDAPI_HOST,
       },
       body: JSON.stringify({
-        language_id: 71, // python judge0 language id = 71
+        language_id: language_id,
         source_code: sourceCode,
-        stdin: '',
+        stdin: customTestCases,
+        //!cpu_time_limit: 5,
       }),
     }
 
@@ -115,7 +162,7 @@ export const executeCode = async (sourceCode, language = 'python') => {
     // poll for results
     let result
     do {
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // wait for 1 second
+      await new Promise((resolve) => setTimeout(resolve, 100)) // wait for .1 second
       const statusResponse = await fetch(
         `${process.env.REACT_APP_RAPID_API_URL}/${token}`,
         {
@@ -269,11 +316,11 @@ export const addProblemsToCourse = async (courseId, problemIds) => {
 
 // get all problems for a specific course
 export const getCourseByIdProblems = async (courseId) => {
-  console.log('Fetching course problems for course ID:', courseId) // Add this log
+  console.log('Fetching course problems for course ID:', courseId)
   try {
-    const course = await getCourseById(courseId) // Fetch course details
+    const course = await getCourseById(courseId) // fetch course details
     const problemDetails = await Promise.all(
-      course.problemIds.map((id) => fetchProblemById(id)) // Fetch each problem detail by ID
+      course.problemIds.map((id) => fetchProblemById(id)) // fetch each problem detail by ID
     )
     return problemDetails
   } catch (error) {
@@ -342,13 +389,13 @@ export function getUserByEmail(email) {
 }
 
 // Function to create a new course
-export function createCourse(courseName, courseId, teacherId, problemIds = []) {
+export function createCourse(courseId, teacherId, problemIds = []) {
   const newCourse = {
     _id: `course-${Date.now()}`,
     courseId,
     teacherId,
     problemIds,
-    courseName: courseName,
+    courseName: `Course ${courseId}`,
   }
   db.courses.push(newCourse)
   return newCourse

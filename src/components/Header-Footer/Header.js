@@ -1,10 +1,11 @@
 import React from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { Auth } from 'aws-amplify'
 import { useMediaQuery, useTheme } from '@mui/material'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Button from '@mui/material/Button'
+//import Button from '@Button'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -20,16 +21,23 @@ import Logout from '@mui/icons-material/Logout'
 import logo from '../../images/logo-with-text.svg'
 import CenteredCircleLoader from '../utility/CenteredLoader'
 
-const PageLinks = styled(Button)(({ theme }) => ({
-  color: theme.palette.text.primary,
+const PageLinks = styled(NavLink)(({ theme }) => ({
+  color: theme.palette.primary.light500,
   textDecoration: 'none',
+  fontWeight: 'bold',
+  letterSpacing: '0.01em',
+  fontSize: '0.875rem',
   borderRadius: theme.spacing(2),
   whiteSpace: 'nowrap',
-  margin: theme.spacing(0, 1),
+  //margin: theme.spacing(0, 1),
   padding: theme.spacing(0.5, 1),
+  '&.active': {
+    color: theme.palette.primary.main,
+    //textDecoration: 'underline',
+  },
   '&:hover': {
-    background: alpha(theme.palette.text.primary, 0.1),
-    transition: 'background-color 0.2s ease',
+    color: theme.palette.primary.main,
+    transition: 'color 0.3s ease',
   },
 }))
 
@@ -40,6 +48,7 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [accountMenuAnchorEl, setAccountMenuAnchorEl] = React.useState(null)
   const [loading, setLoading] = React.useState(false) // Loading state
+  const location = useLocation()
 
   const handleLogout = async () => {
     setLoading(true) // Start loading
@@ -186,42 +195,12 @@ const Header = () => {
                   alignItems: 'center',
                 }}
               >
-                <PageLinks
-                  component={NavLink}
-                  to="/home"
-                  activeClassName="active"
-                >
+                <PageLinks to="/home" end>
                   Home
                 </PageLinks>
-                <PageLinks
-                  component={NavLink}
-                  to="/courses"
-                  activeClassName="active"
-                >
-                  Courses
-                </PageLinks>
-                <PageLinks
-                  component={NavLink}
-                  to="/problems"
-                  activeClassName="active"
-                >
-                  Problems
-                </PageLinks>
-                <PageLinks
-                  component={NavLink}
-                  to="/interviews"
-                  activeClassName="active"
-                >
-                  Interview Prep
-                </PageLinks>
-
-                {/* <PageLinks
-                  component={NavLink}
-                  to="/manage-problems"
-                  activeClassName="active"
-                >
-                  Manage Problems
-                </PageLinks> */}
+                <PageLinks to="/courses">Courses</PageLinks>
+                <PageLinks to="/problems">Problems</PageLinks>
+                <PageLinks to="/interviews">Interview Prep</PageLinks>
               </Box>
               <Divider
                 orientation="vertical"
