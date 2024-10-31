@@ -53,7 +53,8 @@ const ConsentBanner = () => {
       sx={{
         position: 'fixed',
         bottom: 0,
-        width: '100%',
+        width: '80%',
+        left: '10%',
         backgroundColor: theme.palette.primary.black,
         color: theme.palette.text.white,
         padding: theme.spacing(2),

@@ -1,4 +1,11 @@
-import React, { useEffect, useRef, useCallback } from 'react'
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useCallback,
+} from 'react'
+import { useCookies } from 'react-cookie'
 import {
   Box,
   TextField,
@@ -7,22 +14,24 @@ import {
   CircularProgress,
   IconButton,
   Typography,
-  Collapse,
+  // Collapse,
   Tooltip,
+  // FormControlLabel,
+  // Switch,
+  // Divider,
   Avatar,
 } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import AddIcon from '@mui/icons-material/Add'
-import RemoveIcon from '@mui/icons-material/Remove'
-import SettingsIcon from '@mui/icons-material/Settings'
+// import AddIcon from '@mui/icons-material/Add'
+// import RemoveIcon from '@mui/icons-material/Remove'
+// import SettingsIcon from '@mui/icons-material/Settings'
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useTheme } from '@mui/material/styles'
 import SendChat from './AIChat'
-import rocketImg from '../../../images/rocket.svg'
 import aiAvatar from '../../../images/aiAvatar.svg'
 
 // Function to clear chat history from localStorage
@@ -33,7 +42,7 @@ const clearChatHistory = (problemId) => {
 // ChatBox component to display chat history and send messages
 const ChatBox = ({
   problem,
-  drawerWidth,
+  // drawerWidth,
   setDrawerWidth,
   chatHistory,
   setChatHistory,
@@ -41,16 +50,40 @@ const ChatBox = ({
   setIsLoading,
   chatCount,
   setChatCount,
-  showSettings,
-  setShowSettings,
+  // showSettings,
+  // setShowSettings,
+  initialScrollPosition,
+  onScrollPositionChange,
+  code,
 }) => {
   const theme = useTheme()
-  const [input, setInput] = React.useState('')
+  const [input, setInput] = useState('')
+  const [includeCode, setIncludeCode] = useState(false)
+  const [tooltipOpen, setTooltipOpen] = useState(false)
 
-  //! limit the number of chats to prevent abuse
-  const MAX_CHAT_COUNT = 10
+  // Initialize cookies
+  const [cookies, setCookie] = useCookies(['userConsent', 'tooltipsEnabled'])
 
-  //! ref for scrollable container
+  // Initialize tooltipsEnabled from cookies if userConsent is true
+  const [tooltipsEnabled, setTooltipsEnabled] = useState(() => {
+    if (cookies.userConsent) {
+      console.log('Cookies:', cookies)
+      const tooltipEnabledValue =
+        cookies.tooltipsEnabled !== undefined
+          ? JSON.parse(cookies.tooltipsEnabled)
+          : true
+      setTooltipOpen(tooltipEnabledValue)
+      return tooltipEnabledValue
+    } else {
+      setTooltipOpen(true)
+      return true
+    }
+  })
+
+  // Limit the number of chats to prevent abuse
+  const MAX_CHAT_COUNT = 20
+
+  // **Ref for Scrollable Container**
   const scrollContainerRef = useRef(null)
 
   const scrollToBottom = useCallback(() => {
@@ -65,9 +98,24 @@ const ChatBox = ({
     }
   }, [])
 
+  // useEffect(() => {
+  //   scrollToBottom()
+  // }, [chatHistory, scrollToBottom])
+
+  useLayoutEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = initialScrollPosition
+    }
+  }, [initialScrollPosition])
+
   useEffect(() => {
-    scrollToBottom()
-  }, [chatHistory, scrollToBottom])
+    // **Capture Scroll Position before Unmounting**
+    return () => {
+      if (scrollContainerRef.current) {
+        onScrollPositionChange(scrollContainerRef.current.scrollTop)
+      }
+    }
+  }, [onScrollPositionChange])
 
   const handleInputChange = (e) => {
     setInput(e.target.value)
@@ -79,21 +127,24 @@ const ChatBox = ({
 
     let message = ''
 
-    //! limit the number of chats to prevent abuse
+    // Limit the number of chats to prevent abuse
     if (chatCount >= MAX_CHAT_COUNT) {
       alert('You have reached the maximum number of messages for today.')
       return
     } else if (command === 'user') {
-      message = input
-      // increment chat count
+      message = `${input}\n`
+      if (includeCode && code != null) {
+        message += `User Code: ${code}`
+      }
+      // Increment chat count
       setChatCount((prevCount) => prevCount + 1)
     } else if (command === 'hint') {
       message = 'Requesting a hint...'
-      // increment chat count
+      // Increment chat count
       setChatCount((prevCount) => prevCount + 1)
     } else if (command === 'solution') {
       message = 'Requesting a solution...'
-      // increment chat count
+      // Increment chat count
       setChatCount((prevCount) => prevCount + 1)
     } else {
       console.error('Invalid command:', command)
@@ -117,7 +168,8 @@ const ChatBox = ({
         problem.description,
         message,
         conversation_id,
-        command
+        command,
+        code // Pass the code to SendChat
       )
 
       const updatedHistory = {
@@ -134,7 +186,7 @@ const ChatBox = ({
 
       setChatHistory(updatedHistory)
 
-      //! scroll to bottom after state update
+      // Scroll to bottom after state update
       setTimeout(scrollToBottom, 100)
     } catch (error) {
       console.error('Failed to send chat:', error)
@@ -149,6 +201,10 @@ const ChatBox = ({
     } finally {
       setIsLoading(false)
     }
+
+    setTimeout(scrollToBottom, 100)
+
+    code = null // Reset the code after sending it
   }
 
   // Function to delete chat history
@@ -173,13 +229,25 @@ const ChatBox = ({
     }
   }
 
+  const handleToggle = () => {
+    setTooltipsEnabled((prev) => {
+      const newValue = !prev
+      if (cookies.userConsent) {
+        setCookie('tooltipsEnabled', newValue.toString(), { path: '/' })
+        console.log('Cookie updated:', newValue)
+      }
+      return newValue
+    })
+    setTooltipOpen(false)
+  }
+
   const formatChatContent = (content) => {
     return (
       <Box sx={{ p: 1 }}>
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
-            //* formatting markdown for ai messages
+            // formatting markdown for ai messages
             // paragraphs formatting
             p: ({ node, ...props }) => (
               <Typography
@@ -332,14 +400,6 @@ const ChatBox = ({
     )
   }
 
-  const incrementDrawerWidth = () => {
-    setDrawerWidth((prevWidth) => Math.min(prevWidth + 5, 70))
-  }
-
-  const decrementDrawerWidth = () => {
-    setDrawerWidth((prevWidth) => Math.max(prevWidth - 5, 20))
-  }
-
   return (
     <Paper
       elevation={3}
@@ -351,6 +411,7 @@ const ChatBox = ({
         boxShadow: 'none',
       }}
     >
+      {/* Header Section */}
       <Box
         sx={{
           display: 'flex',
@@ -360,43 +421,29 @@ const ChatBox = ({
         }}
       >
         <Tooltip title="During development, the number of AI messages is limited per day. Each hint, solution, and user message costs 1 run. You can see how many runs you have left in the input field placeholder text.">
-          <InfoRoundedIcon sx={{ color: theme.palette.text.secondary }} />
+          <div>
+            <InfoRoundedIcon sx={{ color: 'text.secondary' }} />
+          </div>
         </Tooltip>
         <Typography variant="h3" sx={{ flexGrow: 1, textAlign: 'center' }}>
           codecoach
         </Typography>
-        <IconButton onClick={() => setShowSettings(!showSettings)}>
-          <SettingsIcon sx={{ color: theme.palette.text.secondary }} />
-        </IconButton>
       </Box>
 
-      <Collapse in={showSettings}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 1 }}>
-          <IconButton onClick={incrementDrawerWidth}>
-            <AddIcon />
-          </IconButton>
-          <Box sx={{ display: 'flex', alignItems: 'center', mx: 1 }}>
-            {drawerWidth}%
-          </Box>
-          <IconButton onClick={decrementDrawerWidth}>
-            <RemoveIcon />
-          </IconButton>
-        </Box>
-      </Collapse>
-
+      {/* Chat History Section */}
       <Box
         ref={scrollContainerRef}
         sx={{
           flex: 1,
           overflowY: 'auto',
-          mb: theme.spacing(2),
-          p: theme.spacing(2),
+          mb: 2,
+          p: 2,
           border: 'none',
           display: 'flex',
           flexDirection: 'column',
         }}
       >
-        {/* avatar and message */}
+        {/* Avatar and Call-to-Action */}
         <Box
           sx={{
             display: 'flex',
@@ -418,6 +465,7 @@ const ChatBox = ({
           </Typography>
         </Box>
 
+        {/* Chat Messages */}
         {Array.isArray(chatHistory.data) &&
           chatHistory.data.map((chat, index) => (
             <Box
@@ -433,19 +481,18 @@ const ChatBox = ({
                 <Avatar
                   alt="AI"
                   src={aiAvatar}
-                  sx={{ width: 30, height: 30, mr: 1, alignSelf: 'flex-end' }}
+                  sx={{
+                    width: 30,
+                    height: 30,
+                    mr: 1,
+                    alignSelf: 'flex-end',
+                  }}
                 />
               )}
               <Box
                 sx={{
-                  bgcolor:
-                    chat.role === 'user'
-                      ? theme.palette.primary.main
-                      : theme.palette.grey[200],
-                  color:
-                    chat.role === 'user'
-                      ? theme.palette.text.white
-                      : theme.palette.text.primary,
+                  bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.200',
+                  color: chat.role === 'user' ? 'common.white' : 'text.primary',
                   borderRadius:
                     chat.role === 'user'
                       ? '20px 20px 5px 20px'
@@ -460,7 +507,7 @@ const ChatBox = ({
                 ) : (
                   <Typography
                     sx={{
-                      color: theme.palette.text.white,
+                      color: 'common.white',
                       fontSize: '0.875rem',
                     }}
                   >
@@ -470,12 +517,14 @@ const ChatBox = ({
               </Box>
             </Box>
           ))}
+
+        {/* Loading Indicator */}
         {isLoading && (
           <Box
             sx={{
               alignSelf: 'flex-start',
-              bgcolor: theme.palette.background.paper,
-              borderRadius: theme.spacing(2),
+              bgcolor: 'background.paper',
+              borderRadius: 2,
               p: 2,
               mb: 2,
               maxWidth: '100%',
@@ -488,12 +537,12 @@ const ChatBox = ({
           </Box>
         )}
 
-        {/* quick action buttons */}
+        {/* Quick Action Buttons */}
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'flex-end',
-            mt: 'auto',
+            mt: 'auto', // Push to the bottom
             pt: 2,
           }}
         >
@@ -505,6 +554,7 @@ const ChatBox = ({
               maxWidth: '70%',
             }}
           >
+            {/* Get a Hint Button */}
             <Button
               variant="contained"
               disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
@@ -516,28 +566,75 @@ const ChatBox = ({
             >
               Get a Hint
             </Button>
-            <Button
-              variant="contained"
-              disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-              sx={{
-                borderRadius: '20px 20px 5px 20px',
-              }}
-              onClick={() => handleSend('solution')}
+
+            {/* Analyze/Exclude Code Button */}
+            <Tooltip
+              title={'Toggle code analysis'}
+              enterDelay={500}
+              disableHoverListener={!tooltipsEnabled}
             >
-              Get a Solution
-            </Button>
+              <div>
+                <Button
+                  variant="outlined"
+                  disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
+                  sx={{
+                    mb: 1,
+                    borderRadius: '20px 20px 5px 20px',
+                    backgroundColor: isLoading
+                      ? theme.palette.grey[300]
+                      : includeCode
+                        ? 'common.white'
+                        : 'primary.main',
+                    color: includeCode ? 'text.primary' : 'common.white',
+                    '&:hover': {
+                      backgroundColor: includeCode
+                        ? 'action.hover'
+                        : 'primary.dark',
+                      color: includeCode ? 'text.primary' : 'common.white',
+                      borderColor: includeCode
+                        ? 'secondary.main'
+                        : 'common.white',
+                    },
+                    transition:
+                      'background-color 0.3s, border-color 0.3s, color 0.3s',
+                  }}
+                  onClick={() => setIncludeCode(!includeCode)}
+                >
+                  {includeCode ? 'Exclude My Code' : 'Analyze My Code'}
+                </Button>
+              </div>
+            </Tooltip>
           </Box>
         </Box>
       </Box>
 
+      {/* Input Field and Send Button */}
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
-          p: theme.spacing(1),
+          p: 1,
           border: 'none',
         }}
       >
+        <Tooltip
+          title={'Delete the chat history'}
+          enterDelay={500}
+          disableHoverListener={!tooltipsEnabled}
+        >
+          <div>
+            <IconButton
+              disabled={isLoading}
+              sx={{
+                color: 'error.main',
+              }}
+              onClick={handleDelete}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </div>
+        </Tooltip>
+
         <TextField
           value={input}
           onChange={handleInputChange}
@@ -547,31 +644,35 @@ const ChatBox = ({
           fullWidth
           sx={{
             mr: 1,
-            '& fieldset': { borderRadius: theme.spacing(2) },
+            '& fieldset': { borderRadius: 2 },
           }}
           disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
           multiline
           maxRows={4}
         />
+
         <Tooltip
           title={`You have ${MAX_CHAT_COUNT - chatCount} messages left for today.`}
           enterDelay={500}
+          disableHoverListener={!tooltipsEnabled}
         >
-          <Button
-            onClick={() => handleSend('user')}
-            disabled={
-              isLoading || chatCount >= MAX_CHAT_COUNT || input.trim() === ''
-            }
-            variant="contained"
-            sx={{
-              bgcolor: theme.palette.primary.main,
-              '&:hover': {
-                bgcolor: theme.palette.primary.main,
-              },
-            }}
-          >
-            Send
-          </Button>
+          <div>
+            <Button
+              onClick={() => handleSend('user')}
+              disabled={
+                isLoading || chatCount >= MAX_CHAT_COUNT || input.trim() === ''
+              }
+              variant="contained"
+              sx={{
+                bgcolor: 'primary.main',
+                '&:hover': {
+                  bgcolor: 'primary.main',
+                },
+              }}
+            >
+              Send
+            </Button>
+          </div>
         </Tooltip>
       </Box>
     </Paper>
