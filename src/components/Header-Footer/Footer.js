@@ -1,18 +1,24 @@
 import React from 'react'
 import { useCookies } from 'react-cookie'
-import { Box, Container, Grid, Typography, Link, Tooltip } from '@mui/material'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
+import Link from '@mui/material/Link'
+import Tooltip from '@mui/material/Tooltip'
 import { styled, alpha } from '@mui/material/styles'
 import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import YouTubeIcon from '@mui/icons-material/YouTube'
 import InstagramIcon from '@mui/icons-material/Instagram'
 
-// Styled Components
-
 const FooterContainer = styled(Box)(({ theme }) => ({
   backgroundColor: 'transparent',
-  padding: theme.spacing(4, 0), // Increased padding for better spacing
+  padding: theme.spacing(4, 0), // padding top and bottom=32px (4*8px=32), no padding on the sides
   marginTop: 'auto',
   borderTop: '2px solid #e0e0e0',
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(2, 0),
+  },
 }))
 
 const EmailLink = styled(Link)({
@@ -47,8 +53,6 @@ const PrivacyLink = styled(Link)(({ theme }) => ({
   },
 }))
 
-// Footer Component
-
 const Footer = () => {
   const disableCookies = () => {
     // list all cookies
@@ -66,19 +70,13 @@ const Footer = () => {
     <FooterContainer>
       <Container maxWidth="lg">
         <Grid container spacing={4} justifyContent="center" alignItems="center">
-          {/* Contact Us Section */}
           <Grid item xs={12} sm={6} md={4}>
-            <Typography
-              variant="h6"
-              gutterBottom
-              align="center"
-              sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}
-            >
+            <Typography variant="h6" gutterBottom>
               Contact Us
             </Typography>
             <Typography
               align="left"
-              sx={{ fontSize: { xs: '1rem', sm: '1.125rem' }, marginBottom: 1 }}
+              sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
             >
               General Inquiries:{' '}
               <EmailLink href="mailto:team@codecoach.com">
@@ -87,7 +85,7 @@ const Footer = () => {
             </Typography>
             <Typography
               align="left"
-              sx={{ fontSize: { xs: '1rem', sm: '1.125rem' } }}
+              sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
             >
               Support:{' '}
               <EmailLink href="mailto:support@codecoach.com">
@@ -95,26 +93,20 @@ const Footer = () => {
               </EmailLink>
             </Typography>
           </Grid>
-
-          {/* Social Section */}
           <Grid item xs={12} sm={6} md={4}>
-            <Typography
-              variant="h6"
-              gutterBottom
-              align="center"
-              sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}
-            >
+            <Typography variant="h6" gutterBottom>
               Social
             </Typography>
-            <Box display="flex" justifyContent="center">
+            <Box display="flex" alignItems="center">
               <SocialIcon>
                 <Link
                   href="https://www.linkedin.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="LinkedIn"
+                  color="inherit"
                 >
-                  <LinkedInIcon fontSize="large" />
+                  <LinkedInIcon />
                 </Link>
               </SocialIcon>
               <SocialIcon>
@@ -123,8 +115,9 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="YouTube"
+                  color="inherit"
                 >
-                  <YouTubeIcon fontSize="large" />
+                  <YouTubeIcon />
                 </Link>
               </SocialIcon>
               <SocialIcon>
@@ -133,27 +126,16 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
+                  color="inherit"
                 >
-                  <InstagramIcon fontSize="large" />
+                  <InstagramIcon />
                 </Link>
               </SocialIcon>
             </Box>
           </Grid>
-
           {/* Privacy Section */}
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            md={4}
-            sx={{ textAlign: 'center' }} // Added textAlign center here
-          >
-            <Typography
-              variant="h6"
-              gutterBottom
-              align="center"
-              sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}
-            >
+          <Grid item xs={12} sm={12} md={4}>
+            <Typography variant="h6" gutterBottom align="left">
               Privacy
             </Typography>
             <Tooltip

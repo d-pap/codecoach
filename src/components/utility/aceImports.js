@@ -2,24 +2,30 @@
 export const loadTheme = async (theme) => {
   switch (theme) {
     case 'github':
-      return import('ace-builds/src-noconflict/theme-github')
+      await import('ace-builds/src-noconflict/theme-github')
+      break
     case 'solarized_dark':
-      return import('ace-builds/src-noconflict/theme-solarized_dark')
+      await import('ace-builds/src-noconflict/theme-solarized_dark')
+      break
     case 'dracula':
-      return import('ace-builds/src-noconflict/theme-dracula')
+      await import('ace-builds/src-noconflict/theme-dracula')
+      break
     case 'one_dark':
-      return import('ace-builds/src-noconflict/theme-one_dark')
+      await import('ace-builds/src-noconflict/theme-one_dark')
+      break
     case 'terminal':
-      return import('ace-builds/src-noconflict/theme-terminal')
+      await import('ace-builds/src-noconflict/theme-terminal')
+      break
     case 'xcode':
-      return import('ace-builds/src-noconflict/theme-xcode')
+      await import('ace-builds/src-noconflict/theme-xcode')
+      break
     default:
-      console.warn(`Unknown theme: ${theme}. Falling back to default theme.`)
-      return import('ace-builds/src-noconflict/theme-monokai') // or any default theme you prefer
+      // handle default or unknown themes?
+      break
   }
 }
 
-// TODO: implement more languages when we add them
+//TODO: implement more languages when we add them
 export const loadMode = async (language) => {
   switch (language) {
     case 'python':
@@ -27,14 +33,10 @@ export const loadMode = async (language) => {
     case 'java':
       return import('ace-builds/src-noconflict/mode-java')
     case 'c':
-      return import('ace-builds/src-noconflict/mode-c_cpp')
     case 'cpp':
       return import('ace-builds/src-noconflict/mode-c_cpp')
-    // Add more cases for other languages as needed
+    // add more cases for other languages as needed
     default:
-      console.warn(
-        `Unsupported language: ${language}. Falling back to plain text mode.`
-      )
-      return import('ace-builds/src-noconflict/mode-text') // or any default mode you prefer
+      throw new Error(`Unsupported language: ${language}`)
   }
 }

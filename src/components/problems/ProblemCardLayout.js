@@ -9,7 +9,8 @@ import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
-
+import { useQueryClient } from '@tanstack/react-query'
+import { fetchProblemById } from '../../api'
 // Styled components using MUI's styled utility
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -88,18 +89,26 @@ const ProblemCardSkeleton = () => (
   </Box>
 )
 
-// ProblemCardLayout component
 const ProblemCardLayout = ({ problem }) => {
-  const navigate = useNavigate() // Initialize the useNavigate hook
-  const path = `/problems/${problem._id}` // Set the path to the problem details
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+  const path = `/problems/${problem._id}`
 
-  // Handle navigation to the problem details page
-  const handleNavigate = () => {
-    navigate(path, { state: { problem } })
+  const handleNavigate = async () => {
+    try {
+      // fetch the full problem details
+      const fullProblem = await queryClient.fetchQuery({
+        queryKey: ['problemDetails', problem._id],
+        queryFn: () => fetchProblemById(problem._id),
+      })
+
+      // navigate with the fetched data
+      navigate(path, { state: { problem: fullProblem } })
+    } catch (error) {
+      console.error('Error fetching problem details:', error)
+    }
   }
-
   return (
-    // Suspense wraps dynamically imported components
     <Suspense fallback={<ProblemCardSkeleton />}>
       <div
         //* Container for each problem card
@@ -109,10 +118,7 @@ const ProblemCardLayout = ({ problem }) => {
           alignItems: 'center',
         }}
       >
-        <StyledCard
-          onClick={handleNavigate} // Navigate to the problem details on card click
-          variant="outlined"
-        >
+        <StyledCard onClick={handleNavigate} variant="outlined">
           <StyledCardContent>
             {/* Contest Information */}
             <Typography variant="overline" color="primary.light500">

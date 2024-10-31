@@ -259,6 +259,8 @@ const CodeEditor = ({
   output,
   enableFeedback = false,
 }) => {
+  //const [theme, setTheme] = useState('monokai')
+  //const [language, setLanguage] = useState('python')
   const [editorCode, setEditorCode] = useState(
     initialCode || defaultCode.python
   )
@@ -268,6 +270,7 @@ const CodeEditor = ({
   const [isRunning, setIsRunning] = useState(false)
   const [testCase, setTestCase] = useState('')
   const [showTestCase, setShowTestCase] = useState(false)
+  //const [editorMode, setEditorMode] = useState('python')
   const [cookies, setCookie] = useCookies(['userConsent', 'theme', 'language'])
 
   const [desiredTheme, setDesiredTheme] = useState(() => {
@@ -334,6 +337,9 @@ const CodeEditor = ({
     localStorage.setItem('runSubmitCount', runSubmitCount.toString())
   }, [runSubmitCount])
 
+  /* useEffect(() => {
+    setEditorCode(defaultCode[language] || '')
+  }, [language]) */
   useEffect(() => {
     setEditorCode(defaultCode[currentLanguage] || '')
   }, [currentLanguage])
@@ -461,6 +467,18 @@ const CodeEditor = ({
   const currentThemeStyle = themeStyles[currentTheme]
 
   // function to handle theme changes
+  /*   const handleThemeChange = useCallback(
+    async (newTheme) => {
+      if (newTheme === theme) return
+      if (newTheme !== 'monokai') {
+        await loadTheme(newTheme)
+      }
+
+      setTheme(newTheme)
+    },
+    [theme]
+  ) */
+  // function to handle theme changes
   const handleThemeChange = useCallback(
     (newTheme) => {
       if (newTheme === desiredTheme) return
@@ -477,7 +495,6 @@ const CodeEditor = ({
   const handleLanguageChange = useCallback(
     (newLanguage) => {
       if (newLanguage === desiredLanguage) return
-
       setDesiredLanguage(newLanguage)
       if (cookies.userConsent) {
         setCookie('language', newLanguage, { path: '/' })
@@ -485,7 +502,6 @@ const CodeEditor = ({
     },
     [desiredLanguage, setCookie, cookies.userConsent]
   )
-
   useEffect(() => {
     const loadAndSetTheme = async () => {
       if (desiredTheme !== currentTheme) {
@@ -559,7 +575,6 @@ const CodeEditor = ({
         runSubmitCount={runSubmitCount}
       />
       <AceEditor
-        //! if language is c or cpp, set mode to c_cpp mode because (ace-builds uses the c_cpp mode for c AND cpp). for other languages, use the language name as the mode
         mode={
           currentLanguage === 'c' || currentLanguage === 'cpp'
             ? 'c_cpp'

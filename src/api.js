@@ -9,9 +9,53 @@ import { Auth } from 'aws-amplify'
 
 const API_GATEWAY_URL = process.env.REACT_APP_API_URL
 
-export const fetchProblems = async () => {
+/* export const fetchProblems = async () => {
   try {
     const response = await axios.get(`${API_GATEWAY_URL}/problems`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching problems:', error)
+    throw error
+  }
+} */
+
+export const fetchProblems = async (params) => {
+  /**
+   * if no type is provided, then all problems are fetched
+   * if type is 'icpc', then icpc problems are fetched
+   * if type is 'interview', then interview problems are fetched
+   */
+  const {
+    page = 1,
+    limit = 20,
+    // problems page filters
+    region = 'all',
+    subregion = 'all',
+    year = 'all',
+    // interview prep filters
+    difficulty = 'all',
+    company = 'all',
+    topic = 'all',
+    // common filters
+    searchQuery = '',
+    type = 'all',
+  } = params
+
+  try {
+    const response = await axios.get(`${API_GATEWAY_URL}/problems`, {
+      params: {
+        page,
+        limit,
+        region,
+        subregion,
+        year,
+        difficulty,
+        company,
+        topic,
+        searchQuery,
+        type,
+      },
+    })
     return response.data
   } catch (error) {
     console.error('Error fetching problems:', error)
@@ -272,11 +316,11 @@ export const addProblemsToCourse = async (courseId, problemIds) => {
 
 // get all problems for a specific course
 export const getCourseByIdProblems = async (courseId) => {
-  console.log('Fetching course problems for course ID:', courseId) // Add this log
+  console.log('Fetching course problems for course ID:', courseId)
   try {
-    const course = await getCourseById(courseId) // Fetch course details
+    const course = await getCourseById(courseId) // fetch course details
     const problemDetails = await Promise.all(
-      course.problemIds.map((id) => fetchProblemById(id)) // Fetch each problem detail by ID
+      course.problemIds.map((id) => fetchProblemById(id)) // fetch each problem detail by ID
     )
     return problemDetails
   } catch (error) {

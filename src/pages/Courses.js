@@ -394,14 +394,14 @@ const CourseList = () => {
                       <Button
                         variant="outlined"
                         startIcon={<AddIcon />}
-                        onClick={() => handleAddProblemsClick(course._id)}
+                        //onClick={() => handleAddProblemsClick(course._id)}
                       >
                         Add problems
                       </Button>
                       <Button
                         variant="outlined"
                         startIcon={<MenuBookIcon />}
-                        onClick={() => handleViewProblemsClick(course._id)}
+                        //onClick={() => handleViewProblemsClick(course._id)}
                       >
                         View problems
                       </Button>

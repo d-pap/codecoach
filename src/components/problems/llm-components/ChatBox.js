@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react'
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useCallback,
+} from 'react'
 import { useCookies } from 'react-cookie'
 import {
   Box,
@@ -8,20 +14,20 @@ import {
   CircularProgress,
   IconButton,
   Typography,
-  Collapse,
+  // Collapse,
   Tooltip,
-  FormControlLabel,
-  Switch,
-  Divider,
+  // FormControlLabel,
+  // Switch,
+  // Divider,
   Avatar,
 } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import AddIcon from '@mui/icons-material/Add'
-import RemoveIcon from '@mui/icons-material/Remove'
-import SettingsIcon from '@mui/icons-material/Settings'
+// import AddIcon from '@mui/icons-material/Add'
+// import RemoveIcon from '@mui/icons-material/Remove'
+// import SettingsIcon from '@mui/icons-material/Settings'
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useTheme } from '@mui/material/styles'
@@ -36,7 +42,7 @@ const clearChatHistory = (problemId) => {
 // ChatBox component to display chat history and send messages
 const ChatBox = ({
   problem,
-  drawerWidth,
+  // drawerWidth,
   setDrawerWidth,
   chatHistory,
   setChatHistory,
@@ -44,8 +50,8 @@ const ChatBox = ({
   setIsLoading,
   chatCount,
   setChatCount,
-  showSettings,
-  setShowSettings,
+  // showSettings,
+  // setShowSettings,
   initialScrollPosition,
   onScrollPositionChange,
   code,
@@ -92,12 +98,11 @@ const ChatBox = ({
     }
   }, [])
 
-  useEffect(() => {
-    scrollToBottom()
-  }, [chatHistory, scrollToBottom])
+  // useEffect(() => {
+  //   scrollToBottom()
+  // }, [chatHistory, scrollToBottom])
 
-  useEffect(() => {
-    // **Restore Scroll Position on Mount**
+  useLayoutEffect(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = initialScrollPosition
     }
@@ -196,6 +201,8 @@ const ChatBox = ({
     } finally {
       setIsLoading(false)
     }
+
+    setTimeout(scrollToBottom, 100)
 
     code = null // Reset the code after sending it
   }
@@ -393,14 +400,6 @@ const ChatBox = ({
     )
   }
 
-  const incrementDrawerWidth = () => {
-    setDrawerWidth((prevWidth) => Math.min(prevWidth + 5, 70))
-  }
-
-  const decrementDrawerWidth = () => {
-    setDrawerWidth((prevWidth) => Math.max(prevWidth - 5, 20))
-  }
-
   return (
     <Paper
       elevation={3}
@@ -429,67 +428,7 @@ const ChatBox = ({
         <Typography variant="h3" sx={{ flexGrow: 1, textAlign: 'center' }}>
           codecoach
         </Typography>
-        <IconButton onClick={() => setShowSettings(!showSettings)}>
-          <SettingsIcon sx={{ color: 'text.secondary' }} />
-        </IconButton>
       </Box>
-
-      {/* Settings Section */}
-      <Collapse in={showSettings}>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            m: 1,
-          }}
-        >
-          {/* Drawer Width Controls */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Tooltip title="Increase the width of the chat history drawer">
-              <div>
-                <IconButton onClick={incrementDrawerWidth}>
-                  <AddIcon />
-                </IconButton>
-              </div>
-            </Tooltip>
-            <Box sx={{ display: 'flex', alignItems: 'center', mx: 1 }}>
-              {drawerWidth}%
-            </Box>
-            <Tooltip title="Decrease the width of the chat history drawer">
-              <div>
-                <IconButton onClick={decrementDrawerWidth}>
-                  <RemoveIcon />
-                </IconButton>
-              </div>
-            </Tooltip>
-          </Box>
-
-          {/* Switch for Tooltips */}
-          <Tooltip
-            title="Disables tooltip text (like the one you are reading now) from the buttons below"
-            disableHoverListener={!tooltipsEnabled}
-            open={tooltipOpen}
-            onOpen={() => setTooltipOpen(true)}
-            onClose={() => setTooltipOpen(false)}
-            leaveDelay={200}
-          >
-            <div>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={tooltipsEnabled}
-                    onChange={handleToggle}
-                    color="primary"
-                  />
-                }
-                label="Enable Button Popups"
-              />
-            </div>
-          </Tooltip>
-        </Box>
-        <Divider />
-      </Collapse>
 
       {/* Chat History Section */}
       <Box
