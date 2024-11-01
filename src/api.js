@@ -9,16 +9,6 @@ import { Auth } from 'aws-amplify'
 
 const API_GATEWAY_URL = process.env.REACT_APP_API_URL
 
-/* export const fetchProblems = async () => {
-  try {
-    const response = await axios.get(`${API_GATEWAY_URL}/problems`)
-    return response.data
-  } catch (error) {
-    console.error('Error fetching problems:', error)
-    throw error
-  }
-} */
-
 export const fetchProblems = async (params) => {
   /**
    * if no type is provided, then all problems are fetched
@@ -27,7 +17,7 @@ export const fetchProblems = async (params) => {
    */
   const {
     page = 1,
-    limit = 20,
+    limit = 10,
     // problems page filters
     region = 'all',
     subregion = 'all',
@@ -69,6 +59,18 @@ export async function fetchProblemById(id) {
     return response.data
   } catch (error) {
     throw new Error('Failed to fetch problem details')
+  }
+}
+
+// function to fetch additional problem fields only (exampleInputs, exampleOutputs, testCases, hint) instead of all fields to speed up query
+export async function fetchAdditionalProblemFields(id) {
+  try {
+    const response = await axios.get(
+      `${API_GATEWAY_URL}/problems/${id}/?fields=exampleInputs,exampleOutputs,testCases,hint`
+    )
+    return response.data
+  } catch (error) {
+    throw new Error('Failed to fetch additional problem fields')
   }
 }
 

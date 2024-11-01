@@ -24,8 +24,8 @@ import ProtectedRoute from './components/auth/ProtectedRoute'
 import theme from './theme'
 import AuthModal from './components/auth/AuthModal'
 import CenteredLoader from './components/utility/CenteredLoader'
-import ICPC from './pages/Problems'
-import ProblemDetail from './pages/ProblemSolving'
+import Problems from './pages/Problems'
+import ProblemSolving from './pages/ProblemSolving'
 import './App.css'
 import ScrollToTop from './components/utility/ScrollToTop'
 import AddCourseContent from './pages/AddCourseContent'
@@ -182,7 +182,7 @@ function AppContent() {
             path="/problems/:problemId"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <ProblemDetail />
+                <ProblemSolving />
               </ProtectedRoute>
             }
           />
@@ -230,7 +230,7 @@ function AppContent() {
             path="/problems"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <ICPC />
+                <Problems />
               </ProtectedRoute>
             }
           />

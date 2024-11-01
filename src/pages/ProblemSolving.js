@@ -9,22 +9,20 @@ import React from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import CenteredCircleLoader from '../components/utility/CenteredLoader'
-import { fetchProblemById } from '../api'
+import { fetchProblemById, fetchAdditionalProblemFields } from '../api'
 import ProblemDetailLayout from '../components/problems/ProblemDetailLayout'
 import ProblemDetails from '../components/problems/ProblemDetails'
 
-function ProblemDetail() {
+function ProblemSolving() {
   const location = useLocation()
-  const problemFromLocation = location.state?.problem
-  const { problemId } = useParams() // extract problem ID from URL
-  const queryClient = useQueryClient() // get query client instance
-
-  // set problem data in the cache if passed from location
+  const problemFromLocation = location.state?.problem // problem data from Problems page
+  const { problemId } = useParams()
+  const queryClient = useQueryClient()
   if (problemFromLocation) {
     queryClient.setQueryData(['problem', problemId], problemFromLocation)
   }
 
-  // use react query to get cached problem or fetch new problem if not cached
+  // fetch only additional fields if base fields are already cached
   const {
     data: problem,
     isLoading,
@@ -32,17 +30,19 @@ function ProblemDetail() {
     error,
   } = useQuery({
     queryKey: ['problem', problemId],
-    queryFn: () => fetchProblemById(problemId),
-    staleTime: 1000 * 60 * 5,
-    initialData: problemFromLocation,
-    select: (data) => {
-      // remove _id from testCases attribute
-      return {
-        ...data,
-        // eslint-disable-next-line no-unused-vars
-        testCases: data.testCases.map(({ _id, ...rest }) => rest),
+    queryFn: () => {
+      // check if we have the base fields in cache
+      const cachedProblem = queryClient.getQueryData(['problem', problemId])
+      if (cachedProblem) {
+        // if basic fields are cached, fetch only additional fields
+        return fetchAdditionalProblemFields(problemId)
+      } else {
+        // otherwise fetch all fields
+        return fetchProblemById(problemId)
       }
     },
+    staleTime: 1000 * 60 * 15,
+    initialData: problemFromLocation,
   })
 
   if (isLoading) {
@@ -68,4 +68,4 @@ function ProblemDetail() {
   )
 }
 
-export default ProblemDetail
+export default ProblemSolving

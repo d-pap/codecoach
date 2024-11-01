@@ -4,7 +4,7 @@
 import React from 'react'
 import { CookiesProvider } from 'react-cookie'
 import ReactDOM from 'react-dom/client'
-//import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 import App from './App'
@@ -19,7 +19,7 @@ root.render(
       <CookiesProvider>
         <App />
         <ConsentBanner />
-        {/* <ReactQueryDevtools /> */}
+        <ReactQueryDevtools />
       </CookiesProvider>
     </QueryClientProvider>
   </React.StrictMode>
