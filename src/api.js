@@ -210,42 +210,45 @@ export const getCurrentUserId = async () => {
   }
 }
 
-// function to fetch messages from the database
-export async function fetchForumComments(problemId) {
+export const getComments = async (problemId) => {
   try {
-    const response = await axios.get(`${API_GATEWAY_URL}/comment/${problemId}`)
-    return response.data
-  } catch (error) {
-    console.error('Error fetching messages:', error)
-    throw new Error('Failed to fetch messages')
-  }
-}
-
-// function to post a message to the database
-export async function postForumComment(problemId, userId, message) {
-  try {
-    const response = await axios.post(`${API_GATEWAY_URL}/comment`, {
-      problemId,
-      userId,
-      message,
-    })
-    return response.data
-  } catch (error) {
-    console.error('Error posting message:', error)
-    throw new Error('Failed to post message')
-  }
-}
-
-// function to like a message
-export async function likeForumComment(messageId) {
-  try {
-    const response = await axios.post(
-      `${API_GATEWAY_URL}/comment/${messageId}/like`
+    const response = await axios.get(
+      `${API_GATEWAY_URL}/problems/${problemId}/comments`
     )
     return response.data
   } catch (error) {
-    console.error('Error liking message:', error)
-    throw new Error('Failed to like message')
+    console.error('Error fetching comments:', error)
+    throw error
+  }
+}
+
+export const postComment = async (problemId, userId, message) => {
+  try {
+    const response = await axios.post(
+      `${API_GATEWAY_URL}/problems/${problemId}/comments`,
+      {
+        problemId,
+        userId,
+        message,
+      }
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error adding comment:', error)
+    throw error
+  }
+}
+
+export const likeComment = async (problemId, commentId, userId) => {
+  try {
+    const response = await axios.patch(
+      `${API_GATEWAY_URL}/problems/${problemId}/comments/${commentId}`,
+      { userId } // pass userId to toggle like
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error liking/unliking comment:', error)
+    throw error
   }
 }
 
