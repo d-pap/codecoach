@@ -347,12 +347,12 @@ const CodeEditor = ({
   const isDisabled = runSubmitCount >= MAX_RUN_SUBMIT_COUNT
 
   const handleRunCode = async () => {
-    if (isDisabled) {
+    /* if (isDisabled) {
       setOutput(
         'You have reached the maximum number of runs. Please wait for the limit to reset.'
       )
       return
-    }
+    } */
 
     setIsRunning(true)
     try {
@@ -362,7 +362,23 @@ const CodeEditor = ({
       const language_id = selectedLanguage.id
 
       const result = await executeCode(editorCode, testCase, language_id)
-      if (result.status.id === 3) {
+      /* if (result.status.id === 3) {
+        setOutput(result.stdout || 'No output')
+      } else if (result.status.id === 6) {
+        setOutput(`Compilation Error:\n${result.compile_output}`)
+      } else if (result.status.id === 5) {
+        setOutput('Time Limit Exceeded')
+      } else {
+        setOutput(`Error:\n${result.stderr}`)
+      } */
+      if (result.error) {
+        // Handle execution limit reached
+        setOutput(
+          result.error === 'Execution limit reached'
+            ? 'You have reached the maximum number of executions for today.'
+            : `Error executing code: ${result.error}`
+        )
+      } else if (result.status.id === 3) {
         setOutput(result.stdout || 'No output')
       } else if (result.status.id === 6) {
         setOutput(`Compilation Error:\n${result.compile_output}`)
@@ -373,7 +389,7 @@ const CodeEditor = ({
       }
 
       //! increment the run submit count
-      setRunSubmitCount((prevCount) => prevCount + 1)
+      //setRunSubmitCount((prevCount) => prevCount + 1)
     } catch (error) {
       setOutput('Error executing code: ' + error.message)
     } finally {
@@ -382,12 +398,12 @@ const CodeEditor = ({
   }
 
   const handleSubmitCode = async () => {
-    if (isDisabled) {
+    /* if (isDisabled) {
       setOutput(
         'You have reached the maximum number of submissions. Please wait for the limit to reset.'
       )
       return
-    }
+    } */
 
     setIsSubmitting(true)
     try {
@@ -397,6 +413,15 @@ const CodeEditor = ({
       const language_id = selectedLanguage.id
 
       const result = await executeCode(editorCode, testCase, language_id)
+
+      if (result.error) {
+        setOutput(
+          result.error === 'Execution limit reached'
+            ? 'You have reached the maximum number of executions for today.'
+            : `Error executing code: ${result.error}`
+        )
+        return
+      }
 
       // determine the status of the result
       let status = 'Unknown Error'
@@ -445,8 +470,9 @@ const CodeEditor = ({
       }
       setOutput(outputMessage)
 
-      setRunSubmitCount((prevCount) => prevCount + 1)
+      setRunSubmitCount((prevCount) => prevCount + 1) //! increment the run submit count ---
 
+      //! feedback dialog ----------------------------------------------------------
       // open feedback dialog after 3 seconds, only if enableFeedback is true
       if (enableFeedback) {
         setTimeout(() => setFeedbackOpen(true), 3000)
@@ -459,6 +485,7 @@ const CodeEditor = ({
   }
 
   // feedback function
+  //! feedback dialog ----------------------------------------------------------
   const handleFeedbackSubmit = (feedback) => {
     //TODO: implement feedback submission to backend here
     console.log(feedback)
@@ -466,18 +493,6 @@ const CodeEditor = ({
 
   const currentThemeStyle = themeStyles[currentTheme]
 
-  // function to handle theme changes
-  /*   const handleThemeChange = useCallback(
-    async (newTheme) => {
-      if (newTheme === theme) return
-      if (newTheme !== 'monokai') {
-        await loadTheme(newTheme)
-      }
-
-      setTheme(newTheme)
-    },
-    [theme]
-  ) */
   // function to handle theme changes
   const handleThemeChange = useCallback(
     (newTheme) => {

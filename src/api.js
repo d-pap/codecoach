@@ -109,7 +109,7 @@ export async function sendChatMessage(convoId, input) {
   }
 }
 
-export const checkExecutionLimits = async (userId) => {
+/* export const checkExecutionLimits = async (userId) => {
   try {
     const response = await axios.post(`${API_GATEWAY_URL}/executionLimit`, {
       userId: userId,
@@ -119,12 +119,25 @@ export const checkExecutionLimits = async (userId) => {
     console.error('Error checking execution limits:', error)
     throw new Error('Failed to check execution limits')
   }
+} */
+export const checkExecutionLimits = async (userId) => {
+  try {
+    const response = await axios.post(`${API_GATEWAY_URL}/executionLimit`, {
+      userId: userId,
+    })
+    return response.data
+  } catch (error) {
+    console.error(
+      'Error checking execution limits:',
+      error.response ? error.response.data : error.message
+    )
+    throw new Error('Failed to check execution limits')
+  }
 }
 
-// Function to execute code using Judge0 API
-// Passes source code and language to the API
+// function to execute code using Judge0 API
+// passes source code and language to the API
 // and returns the result
-// Function to check execution limits and execute code if within limit
 export const executeCode = async (
   sourceCode,
   customTestCases = '',
