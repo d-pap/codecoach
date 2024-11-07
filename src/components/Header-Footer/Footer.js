@@ -5,11 +5,12 @@ import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Link from '@mui/material/Link'
-import Tooltip from '@mui/material/Tooltip'
 import { styled, alpha } from '@mui/material/styles'
 import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import YouTubeIcon from '@mui/icons-material/YouTube'
 import InstagramIcon from '@mui/icons-material/Instagram'
+import { useNavigate } from 'react-router-dom'
+import logo from '../../images/logo-with-text.svg'
 
 const FooterContainer = styled(Box)(({ theme }) => ({
   backgroundColor: 'transparent',
@@ -55,6 +56,8 @@ const PrivacyLink = styled(Link)(({ theme }) => ({
 }))
 
 const Footer = () => {
+  const navigate = useNavigate()
+
   const disableCookies = () => {
     // list all cookies
     const allCookies = document.cookie.split(';')
@@ -68,43 +71,49 @@ const Footer = () => {
   }
 
   return (
-    <FooterContainer>
-      <Container maxWidth="lg">
-        <Grid container spacing={4} justifyContent="center" alignItems="center">
-          <Grid item xs={12} sm={6} md={4}>
-            <Typography variant="h6" gutterBottom>
-              Contact Us
+    <Container>
+      <Box
+        sx={{
+          border: (theme) => `1px solid ${theme.palette.text.primary}`,
+          padding: (theme) => theme.spacing(4),
+          marginBottom: (theme) => theme.spacing(4),
+        }}
+      >
+        <Grid container spacing={4}>
+          <Grid item xs={6}>
+            <Box
+              component="img"
+              src={logo}
+              alt="codecoach logo"
+              sx={{
+                width: '200px',
+                height: 'auto',
+                marginBottom: (theme) => theme.spacing(2),
+              }}
+            />
+
+            <Typography variant="body2">
+              contact info
+              <br />
+              street address
+              <br />
+              city, state, zip
+              <br />
+              phone number
+              <br />
+              email
             </Typography>
-            <Typography
-              align="left"
-              sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+
+            <Box
+              sx={{
+                marginTop: (theme) => theme.spacing(2),
+              }}
             >
-              General Inquiries:{' '}
-              <EmailLink href="mailto:team@codecoach.com">
-                team@codecoach.com
-              </EmailLink>
-            </Typography>
-            <Typography
-              align="left"
-              sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
-            >
-              Support:{' '}
-              <EmailLink href="mailto:support@codecoach.com">
-                support@codecoach.com
-              </EmailLink>
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Typography variant="h6" gutterBottom>
-              Social
-            </Typography>
-            <Box display="flex" alignItems="center">
               <SocialIcon>
                 <Link
                   href="https://www.linkedin.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="LinkedIn"
                   color="inherit"
                 >
                   <LinkedInIcon />
@@ -115,7 +124,6 @@ const Footer = () => {
                   href="https://www.youtube.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="YouTube"
                   color="inherit"
                 >
                   <YouTubeIcon />
@@ -126,7 +134,6 @@ const Footer = () => {
                   href="https://www.instagram.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Instagram"
                   color="inherit"
                 >
                   <InstagramIcon />
@@ -134,25 +141,109 @@ const Footer = () => {
               </SocialIcon>
             </Box>
           </Grid>
-          {/* Privacy Section */}
-          <Grid item xs={12} sm={12} md={4}>
-            <Typography variant="h6" gutterBottom align="left">
-              Privacy
-            </Typography>
-            <Tooltip
-              title="We use cookies to store personal settings and preferences. We do not collect personal data for marketing or profit."
-              placement="top"
-              arrow
-              enterDelay={500}
+          <Grid
+            item
+            xs={6}
+            sx={{ marginTop: 'auto' }} //! to center horizontally
+          >
+            <Box
+              sx={
+                {
+                  //paddingRight: (theme) => theme.spacing(8),
+                }
+              }
             >
-              <PrivacyLink onClick={disableCookies}>
-                Disable Cookies
-              </PrivacyLink>
-            </Tooltip>
+              <Grid container spacing={8} justifyContent="center">
+                <Grid item>
+                  <Typography
+                    variant="body2"
+                    sx={{ marginBottom: (theme) => theme.spacing(2) }}
+                  >
+                    <Link href="/">Home</Link>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ marginBottom: (theme) => theme.spacing(2) }}
+                  >
+                    <Link href="/">About</Link>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ marginBottom: (theme) => theme.spacing(2) }}
+                  >
+                    <Link href="/">Services</Link>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ marginBottom: (theme) => theme.spacing(2) }}
+                  >
+                    <Link href="/">Support</Link>
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography
+                    variant="body2"
+                    sx={{ marginBottom: (theme) => theme.spacing(2) }}
+                  >
+                    <Link href="/">Contact Us</Link>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ marginBottom: (theme) => theme.spacing(2) }}
+                  >
+                    <Link href="/">FAQ</Link>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ marginBottom: (theme) => theme.spacing(2) }}
+                  >
+                    <Link href="/">Community</Link>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ marginBottom: (theme) => theme.spacing(2) }}
+                  >
+                    <Link href="/">Feedback</Link>
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Box>
           </Grid>
         </Grid>
-      </Container>
-    </FooterContainer>
+      </Box>
+
+      <Grid
+        container
+        spacing={2}
+        sx={{ marginBottom: (theme) => theme.spacing(4) }}
+      >
+        <Grid item xs={12} md={6}>
+          <Grid item>
+            <Typography variant="body2">
+              &copy; {new Date().getFullYear()} codecoach. All rights reserved.
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Grid
+            container
+            spacing={2}
+            justifyContent={{ xs: 'flex-start', md: 'flex-end' }}
+          >
+            <Grid item>
+              <Typography variant="body2">
+                <Link href="mailto:info@yourcompany.com">Terms of Service</Link>
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body2">
+                <Link href="mailto:info@yourcompany.com">Cookie Settings</Link>
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Container>
   )
 }
 
