@@ -33,8 +33,9 @@ const StyledPanelResizeHandle = styled(PanelResizeHandle)`
     color: #888;
     font-size: 18px;
   }
-`
-//! handle for resizing the chat box
+`;
+
+// Handle for resizing the chat box
 const FullEdgeHandle = React.forwardRef(({ handleAxis, ...props }, ref) => {
   return (
     <div
@@ -44,9 +45,9 @@ const FullEdgeHandle = React.forwardRef(({ handleAxis, ...props }, ref) => {
         position: 'absolute',
         backgroundColor: 'transparent',
         cursor: (() => {
-          if (handleAxis === 'n') return 'ns-resize'
-          if (handleAxis === 'w') return 'ew-resize'
-          if (handleAxis === 'nw') return 'nwse-resize'
+          if (handleAxis === 'n') return 'ns-resize';
+          if (handleAxis === 'w') return 'ew-resize';
+          if (handleAxis === 'nw') return 'nwse-resize';
           return 'default'
         })(),
 
@@ -66,7 +67,6 @@ const FullEdgeHandle = React.forwardRef(({ handleAxis, ...props }, ref) => {
         ...(handleAxis === 'nw' && {
           left: 0,
           top: 0,
-
           width: '20px',
           height: '20px',
         }),
@@ -77,23 +77,35 @@ const FullEdgeHandle = React.forwardRef(({ handleAxis, ...props }, ref) => {
 
 const pythonDefaultCode = `# Your code goes here 
 def example_function():
-  print("Hello, world!")`
+  print("Hello, world!")`;
 
 const ProblemDetailLayout = ({ problem, problemDetails }) => {
-  const [code, setCode] = useState(pythonDefaultCode)
-  const [output, setOutput] = useState('')
-  const [isChatOpen, setIsChatOpen] = useState(false)
+  const [code, setCode] = useState(pythonDefaultCode);
+  const [output, setOutput] = useState('');
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
-  //! state for chat history
+  // State for chat history
   const [chatHistory, setChatHistory] = useState({
     conversation_id: null,
     data: [],
   })
-  const [isLoading, setIsLoading] = useState(false)
-  const [chatCount, setChatCount] = useState(0)
+  const [isLoading, setIsLoading] = useState(false);
+  const [chatCount, setChatCount] = useState(0);
 
-  //! state for scroll position
-  const [chatScrollPosition, setChatScrollPosition] = useState(0)
+  // State for scroll position
+  const [chatScrollPosition, setChatScrollPosition] = useState(0);
+
+  // Starting percentage for chat box size
+  const [startingSizePercent, setStartingSizePercent] = useState({
+    widthPercent: 30,
+    heightPercent: 83.5,
+  })
+
+  // State for chat box size in pixels
+  const [chatSize, setChatSize] = useState({ width: 600, height: 800 });
+
+  const theme = useTheme()
+  const chatRef = useRef(null)
 
   // Load chat history from localStorage on mount or when problem changes
   useEffect(() => {
@@ -101,7 +113,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
     if (Array.isArray(history.data)) {
       setChatHistory(history)
     } else {
-      setChatHistory({ conversation_id: null, data: [] })
+      setChatHistory({ conversation_id: null, data: [] });
     }
   }, [problem._id])
 
@@ -109,7 +121,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
   const updateChatHistory = (newHistory) => {
     setChatHistory(newHistory)
     saveChatHistory(problem._id, newHistory)
-  }
+  };
 
   const incrementChatCount = () => {
     setChatCount((prevCount) => {
@@ -140,21 +152,46 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
     setIsChatOpen(!isChatOpen)
   }
 
-  //! handler to receive scroll position from ChatBox
+  // Handler to receive scroll position from ChatBox
   const handleScrollPositionChange = (position) => {
     setChatScrollPosition(position)
   }
 
-  const theme = useTheme()
+  // Update chatSize based on startingSizePercent
+  useEffect(() => {
+    const updateChatSize = () => {
+      setChatSize({
+        width: window.innerWidth * startingSizePercent.widthPercent / 100,
+        height: window.innerHeight * startingSizePercent.heightPercent / 100,
+      })
+    }
 
-  const [chatSize, setChatSize] = useState({ width: 600, height: 800 })
+    // Set initial size
+    updateChatSize()
 
-  const onResize = (event, { size }) => {
-    setChatSize({ width: size.width, height: size.height })
+    // Update size on window resize
+    window.addEventListener('resize', updateChatSize)
+    return () => window.removeEventListener('resize', updateChatSize)
+  }, [startingSizePercent])
+
+  // Function to update starting size percent
+  const updateStartingSizePercent = (newWidthPercent, newHeightPercent) => {
+    setStartingSizePercent({
+      widthPercent: newWidthPercent,
+      heightPercent: newHeightPercent,
+    })
   }
 
-  const chatRef = useRef(null)
+  // Handle resize of the chat box
+  const onResize = (event, { size }) => {
+    setChatSize({ width: size.width, height: size.height })
+    setStartingSizePercent({
+      widthPercent: (size.width / window.innerWidth) * 100,
+      heightPercent: (size.height / window.innerHeight) * 100,
+    })
+  }
 
+  // Close chat when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -162,7 +199,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
         !chatRef.current.contains(event.target) &&
         isChatOpen
       ) {
-        setIsChatOpen(false)
+        setIsChatOpen(false);
       }
     }
 
@@ -170,7 +207,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [isChatOpen])
+  }, [isChatOpen]);
 
   return (
     <Container maxWidth={false}>
@@ -346,7 +383,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
         </PanelGroup>
       </Box>
     </Container>
-  )
+  );
 }
 
 // Helper functions (ensure these are included or imported appropriately)
@@ -364,4 +401,4 @@ const saveChatHistory = (problemId, history) => {
   localStorage.setItem(`chatHistory-${problemId}`, JSON.stringify(history))
 }
 
-export default ProblemDetailLayout
+export default ProblemDetailLayout;
