@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -15,7 +15,11 @@ import {
     TableRow,
     styled
 } from '@mui/material';
-    
+import CenteredCircleLoader from '../utility/CenteredLoader';
+import ProblemCardLayout from '../problems/ProblemCardLayout';
+import InterviewCardLayout from '../problems/InterviewCardLayout';
+import CloseIcon from '@mui/icons-material/Close';
+
 // Class Form Dialog
 const ClassFormDialog = ({ open, onClose, onCreate }) => {
     const [className, setClassName] = useState('');
@@ -64,77 +68,64 @@ const InviteStudentDialog = ({ open, onClose, courseName, courseId }) => (
 );
 
 // Styled Dialog for Viewing Problems
+// Styled Dialog for Viewing Problems
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
         borderRadius: theme.spacing(2),
-        width: '800px',
         maxWidth: '90vw',
         height: '80vh',
+
     },
 }));
 
 const StyledDialogContent = styled(DialogContent)(() => ({
-    padding: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    height: 'calc(80vh - 64px - 52px)', // Subtract DialogTitle and DialogActions heights
+    padding: '0px 15px 15px 15px',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', // Responsive columns
+    gap: '15px',
+    height: 'calc(80vh - 64px - 52px)',
+    overflowY: 'auto',
 }));
 
 // View Problems Dialog
-const ViewProblemsDialog = ({ open, onClose, problems }) => {
-    const [selectedProblems, setSelectedProblems] = useState([]);
+const ViewProblemsDialog = ({ open, onClose, problems, isLoading }) => {
+    // Filter interview type problems
+    const interviewProblems = useMemo(() => {
+        return problems.filter(
+            (problem) => problem.type && problem.type.toLowerCase() === 'interview'
+        );
+    }, [problems]);
 
-    // Functions related to ViewProblemsDialog's internal state management
-    const handleDeleteSelectedProblems = () => {
-        console.log('Delete selected problems:', selectedProblems);
-        setSelectedProblems([]);
-    };
-
-    const handleSelectAllClick = (event) => {
-        if (event.target.checked) {
-            const newSelecteds = problems.map((problem) => problem._id);
-            setSelectedProblems(newSelecteds);
-        } else {
-            setSelectedProblems([]);
-        }
-    };
-
-    const handleClick = (id) => {
-        const selectedIndex = selectedProblems.indexOf(id);
-        let newSelected = selectedProblems.filter(item => item !== id);
-        if (selectedIndex === -1) {
-            newSelected.push(id);
-        }
-        setSelectedProblems(newSelected);
-    };
+    // Filter icpc type problems
+    const icpcProblems = useMemo(() => {
+        return problems.filter(
+            (problem) => problem.type && problem.type.toLowerCase() === 'icpc'
+        );
+    }, [problems]);
 
     return (
         <StyledDialog open={open} onClose={onClose}>
-            <StyledDialogContent>
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Problem Title</TableCell>
-                                <TableCell>Description</TableCell>
-                                <TableCell>Year</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {problems.map((problem) => (
-                                <TableRow key={problem._id}>
-                                    <TableCell>{problem.title}</TableCell>
-                                    <TableCell>{problem.description}</TableCell>
-                                    <TableCell>{problem.year}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </StyledDialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Close</Button>
+                <Button onClick={onClose}>Close <CloseIcon /></Button>
             </DialogActions>
+            <StyledDialogContent>
+                {isLoading ? (
+                    <CenteredCircleLoader />
+                ) : (
+                    <>
+                        {/* Render Interview Problems */}
+                        {interviewProblems.map((problem) => (
+                            <InterviewCardLayout key={problem._id} interview={problem} />
+                        ))}
+                        {/* Render ICPC Problems */}
+                        {icpcProblems.map((problem) => (
+                            <ProblemCardLayout key={problem._id} problem={problem} />
+                        ))}
+                    </>
+                )}
+            </StyledDialogContent>
+            {/* do not remove, this is empty bottom padding using DialogActions */}
+            <DialogActions></DialogActions>
         </StyledDialog>
     );
 };

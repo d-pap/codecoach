@@ -3,7 +3,7 @@
  * This can be temporary if we want to use it for something else
  * or delete it completely. Was initially only made to construct navbar
  */
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import Grid from '@mui/material/Grid'
@@ -48,22 +48,75 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import theme from '../theme'
 import CenteredCircleLoader from '../components/utility/CenteredLoader'
-import { InviteStudentDialog, ViewProblemsDialog, DeleteConfirmationDialog } from '../components/Course-Sub-Components/CourseDialogs'
 import {
   getCurrentUserId,
   createCourseInDatabase,
   deleteCourse,
-  getCoursesByUser, // Updated API call to get courses by user
   getAllCourses,
   getCourseByIdProblems,
 } from '../api'
-// import {
-//   getCurrentUserId,
-//   createCourseInDatabase,
-//   deleteCourse,
-//   getAllCourses,
-//   getCourseByIdProblems,
-// } from '../api'
+/********************************************************************************************************************
+ * CLASSFORMDIALOG CODE
+ ********************************************************************************************************************/
+const ClassFormDialog = ({ open, onClose, onCreate }) => {
+  const [selectedValue, setSelectedValue] = useState('enter')
+  const [className, setClassName] = useState('')
+
+  const handleRadioChange = (event) => {
+    setSelectedValue(event.target.value)
+  }
+
+  const handleClassSubmit = () => {
+    if (className.trim() !== '') {
+      onCreate(className)
+      onClose()
+    }
+  }
+
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>Add New Class</DialogTitle>
+      <DialogContent>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">Name your class</FormLabel>
+          <RadioGroup
+            aria-label="class name option"
+            name="classNameOption"
+            value={selectedValue}
+            onChange={handleRadioChange}
+          >
+            <FormControlLabel
+              value="enter"
+              control={<Radio />}
+              label="Enter your class name"
+            />
+            {selectedValue === 'enter' && (
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="Class name"
+                type="text"
+                fullWidth
+                variant="outlined"
+                placeholder="e.g., Ms. Smith’s 1st period"
+                helperText="This class name is what your students will see."
+                value={className}
+                onChange={(e) => setClassName(e.target.value)}
+              />
+            )}
+          </RadioGroup>
+        </FormControl>
+        <Button color="primary" variant="contained" onClick={handleClassSubmit}>
+          Create New Course
+        </Button>
+      </DialogContent>
+    </Dialog>
+  )
+}
+/********************************************************************************************************************
+ * END CLASSFORMDIALOG CODE
+ ********************************************************************************************************************/
 
 //! Mock user context (replace or integrate with your actual auth context)
 const AuthContext = React.createContext({
@@ -98,14 +151,8 @@ const CourseList = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [viewProblemsDialogOpen, setViewProblemsDialogOpen] = useState(false)
   const [selectedCourseId, setSelectedCourseId] = useState(null)
-  const [userId, setUserId] = useState(null) // State to hold the user ID
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  // const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  // const [courseToDelete, setCourseToDelete] = useState(null)
-  const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
-  const [selectedCourseName, setSelectedCourseName] = useState('')
-  const [SelectedCourseIdForInvite, setSelectedCourseIdForInvite] = useState(null)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [orderBy, setOrderBy] = useState('region')
@@ -115,31 +162,15 @@ const CourseList = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [courseToDelete, setCourseToDelete] = useState(null)
 
-  // Fetch the authenticated user ID when the component mounts
-  useEffect(() => {
-    const fetchUserId = async () => {
-      const currentUserId = await getCurrentUserId()
-      setUserId(currentUserId)
-    }
-    fetchUserId()
-  }, [])
-
   // use react query to fetch all courses
   const {
     data: courses = [],
     isLoading,
     error,
-  } = useQuery({queryKey: [userId, 'courses'],
-    queryFn: () => getCoursesByUser(userId), // Fetch courses associated with the user
-    enabled: !!userId, // Only run the query when userId is available
+  } = useQuery({
+    queryKey: ['courses'],
+    queryFn: getAllCourses,
   })
-  // const {
-  //   data: courses = [],
-  //   isLoading,
-  //   error,
-  // } = useQuery({queryKey: ['courses'],
-  //   queryFn: getAllCourses,
-  // })
 
   // use react query to fetch all problems for a specific course
   const {
@@ -199,29 +230,6 @@ const CourseList = () => {
   }
 
   //! handle course deletion - need to make lambda function for this
-  // const handleDeleteCourse = async (courseId) => {
-  //   try {
-  //     deleteCourse(courseId)
-
-  //     // update the react query cache
-  //     queryClient.setQueryData(['courses'], (oldData) =>
-  //       oldData.filter((course) => course._id !== courseId)
-  //     )
-  //   } catch (error) {
-  //     console.error('Error deleting course:', error)
-  //   }
-  // }
-  // // handle delete course click
-  // const handleDeleteClick = (courseId) => {
-  //   setCourseToDelete(courseId)
-  //   setDeleteDialogOpen(true)
-  // }
-  // handle invite student click
-  const handleInviteStudentClick = (courseId, courseName) => {
-    // console.log('Invite Student Clicked:', courseId, courseName)
-    setSelectedCourseIdForInvite(courseId)
-    setSelectedCourseName(courseName)
-    setInviteDialogOpen(true)
   const handleDeleteCourse = async (courseId) => {
     try {
       await deleteCourse(courseId)
@@ -373,7 +381,7 @@ const CourseList = () => {
                 >
                   <CardContent>
                     <Typography variant="h5" gutterBottom>
-                      {course.courseName}
+                      {course.title}
                     </Typography>
                     <Typography
                       variant="body2"
@@ -388,14 +396,14 @@ const CourseList = () => {
                       <Button
                         variant="outlined"
                         startIcon={<AddIcon />}
-                        //onClick={() => handleAddProblemsClick(course._id)}
+                        onClick={() => handleAddProblemsClick(course._id)}
                       >
                         Add problems
                       </Button>
                       <Button
                         variant="outlined"
                         startIcon={<MenuBookIcon />}
-                        //onClick={() => handleViewProblemsClick(course._id)}
+                        onClick={() => handleViewProblemsClick(course._id)}
                       >
                         View problems
                       </Button>
@@ -412,7 +420,7 @@ const CourseList = () => {
                           minWidth: '40px',
                           padding: '4px',
                         }}
-                        // onClick={() => handleDeleteClick(course._id)}
+                        onClick={() => handleDeleteClick(course._id)}
                       >
                         <DeleteIcon />
                       </Button>
@@ -712,6 +720,6 @@ const CourseList = () => {
       </Container>
     </Box>
   )
-}}
+}
 
 export default CourseList
