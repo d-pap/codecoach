@@ -3,22 +3,26 @@ import { Fab } from '@mui/material'; // Floating Action Button from MUI
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'; // Icon for the button
 import { styled } from '@mui/material/styles';
 
+
 const ScrollToTopButton = styled(Fab)(({ theme }) => ({
     position: 'fixed',
     bottom: theme.spacing(4),
     right: theme.spacing(4),
     zIndex: 1000,
-    backgroundColor: 'rgba(0, 123, 255, 0.3)', // Sheer (semi-transparent) blue color
+    
+    opacity: 0.8,
     color: '#fff',
     boxShadow: "none",
-    Width: '10px', // Smaller width
-    minheight: '10px', // Smaller height
+    minWidth: '10px', 
+    minHeight: '10px', 
     transition: 'background-color 0.3s ease, transform 0.3s ease',
     '&:hover': {
-        backgroundColor: 'rgba(0, 123, 255, 0.9)', // Darker blue on hover
-        transform: 'scale(1.1)', // Slightly increase size on hover
+        backgroundColor: '#0f172a', 
+        transform: 'scale(1.1)', 
+        opacity: 1, 
     },
 }));
+
 
 function ScrollToTop() {
     const [isVisible, setIsVisible] = useState(false);
@@ -46,7 +50,7 @@ function ScrollToTop() {
 
     return (
         <ScrollToTopButton
-            color="primary"
+            color="black"
             size="small"
             onClick={scrollToTop}
             style={{ display: isVisible ? 'flex' : 'none' }}
