@@ -10,6 +10,7 @@ import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import ConsentBanner from './components/utility/ConsentBanner'
+import ScrollToTop from './components/utility/ScrollToTopButton'
 
 const queryClient = new QueryClient()
 const root = ReactDOM.createRoot(document.getElementById('root'))
@@ -19,6 +20,7 @@ root.render(
       <CookiesProvider>
         <App />
         <ConsentBanner />
+        <ScrollToTop />
         {/* <ReactQueryDevtools /> */}
       </CookiesProvider>
     </QueryClientProvider>

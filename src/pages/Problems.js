@@ -314,6 +314,7 @@ function ICPC() {
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   const handleRegionChange = (event) => {
