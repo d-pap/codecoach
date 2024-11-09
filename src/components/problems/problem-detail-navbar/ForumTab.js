@@ -8,6 +8,7 @@ import {
 } from '../../../api'
 import ForumLayout from './forum-elements/ForumLayout'
 import { FILTER_OPTIONS } from './forum-elements/ForumFilter'
+import CenteredCircleLoader from '../../utility/CenteredLoader'
 
 const ForumTab = () => {
   const problemId = window.location.pathname.split('/').pop().trim()
@@ -15,20 +16,20 @@ const ForumTab = () => {
   const [filter, setFilter] = useState(FILTER_OPTIONS.MOST_LIKED)
   const queryClient = useQueryClient()
 
-  // get current user
-  const { data: userId } = useQuery({
+  // Get current user
+  const { data: userId, isLoading: isUserLoading } = useQuery({
     queryKey: ['currentUser'],
     queryFn: getCurrentUserId,
   })
 
-  // get comments
-  const { data: messages = [], isLoading } = useQuery({
+  // Get comments
+  const { data: messages = [], isLoading: isCommentsLoading } = useQuery({
     queryKey: ['comments', problemId],
     queryFn: () => getComments(problemId),
     enabled: !!problemId,
   })
 
-  // post comment mutation
+  // Post comment mutation
   const postCommentMutation = useMutation({
     mutationFn: ({ problemId, userId, message }) =>
       postComment(problemId, userId, message),
@@ -48,18 +49,18 @@ const ForumTab = () => {
     },
   })
 
-  // like comment mutation
+  // Like comment mutation
   const likeCommentMutation = useMutation({
     mutationFn: ({ problemId, messageId, userId }) =>
       likeComment(problemId, messageId, userId),
     onMutate: async ({ messageId }) => {
-      // cancel outgoing refetches
+      // Cancel outgoing refetches
       await queryClient.cancelQueries(['comments', problemId])
 
-      // get current comments
+      // Get current comments
       const previousComments = queryClient.getQueryData(['comments', problemId])
 
-      // optimistic update
+      // Optimistic update
       queryClient.setQueryData(['comments', problemId], (old) =>
         old.map((msg) => {
           if (msg._id === messageId) {
@@ -76,18 +77,18 @@ const ForumTab = () => {
         })
       )
 
-      // return previous comments for rollback
+      // Return previous comments for rollback
       return { previousComments }
     },
     onError: (err, variables, context) => {
-      // on error, roll back to the previous state
+      // On error, roll back to the previous state
       queryClient.setQueryData(
         ['comments', problemId],
         context.previousComments
       )
     },
     onSettled: () => {
-      // always refetch after error or success to ensure consistency
+      // Always refetch after error or success to ensure consistency
       queryClient.invalidateQueries(['comments', problemId])
     },
   })
@@ -126,18 +127,31 @@ const ForumTab = () => {
     }
   }
 
+  // Determine if any loading is happening
+  const isLoading =
+    isUserLoading ||
+    isCommentsLoading ||
+    postCommentMutation.isLoading ||
+    likeCommentMutation.isLoading
+
   return (
-    <ForumLayout
-      messages={getFilteredMessages()}
-      newMessage={newMessage}
-      handleLike={handleLike}
-      handleSubmit={handleSubmit}
-      setNewMessage={setNewMessage}
-      filter={filter}
-      onFilterChange={handleFilterChange}
-      userId={userId}
-      isLoading={isLoading}
-    />
+    <>
+      {isLoading ? (
+        <CenteredCircleLoader />
+      ) : (
+        <ForumLayout
+          messages={getFilteredMessages()}
+          newMessage={newMessage}
+          handleLike={handleLike}
+          handleSubmit={handleSubmit}
+          setNewMessage={setNewMessage}
+          filter={filter}
+          onFilterChange={handleFilterChange}
+          userId={userId}
+          isLoading={isLoading}
+        />
+      )}
+    </>
   )
 }
 

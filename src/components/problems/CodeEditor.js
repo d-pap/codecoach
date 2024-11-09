@@ -258,6 +258,8 @@ const CodeEditor = ({
   setOutput,
   output,
   enableFeedback = false,
+  onLanguageChange,
+  onCodeChange,
 }) => {
   //const [theme, setTheme] = useState('monokai')
   //const [language, setLanguage] = useState('python')
@@ -313,6 +315,18 @@ const CodeEditor = ({
 
     return savedCount ? parseInt(savedCount, 10) : 0
   })
+
+  useEffect(() => {
+    if (onLanguageChange) {
+      onLanguageChange(currentLanguage)
+    }
+  }, [currentLanguage, onLanguageChange])
+
+  useEffect(() => {
+    if (onCodeChange) {
+      onCodeChange(editorCode)
+    }
+  }, [editorCode, onCodeChange])
 
   useEffect(() => {
     const checkAndResetCount = () => {

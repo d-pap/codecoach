@@ -5,85 +5,37 @@ import React, {
   useState,
   useCallback,
 } from 'react'
-import { useCookies } from 'react-cookie'
-import {
-  Box,
-  TextField,
-  Button,
-  Paper,
-  CircularProgress,
-  IconButton,
-  Typography,
-  // Collapse,
-  Tooltip,
-  // FormControlLabel,
-  // Switch,
-  // Divider,
-  Avatar,
-} from '@mui/material'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
-// import AddIcon from '@mui/icons-material/Add'
-// import RemoveIcon from '@mui/icons-material/Remove'
-// import SettingsIcon from '@mui/icons-material/Settings'
+import { Box, Paper, Typography, Tooltip } from '@mui/material'
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { useTheme } from '@mui/material/styles'
 import SendChat from './AIChat'
-import aiAvatar from '../../../images/aiAvatar.svg'
+import Messages from './Messages'
+import ChatInput from './ChatInput'
 
 // Function to clear chat history from localStorage
 const clearChatHistory = (problemId) => {
   localStorage.removeItem(`chatHistory-${problemId}`)
 }
 
-// ChatBox component to display chat history and send messages
 const ChatBox = ({
   problem,
-  // drawerWidth,
-  setDrawerWidth,
   chatHistory,
   setChatHistory,
-  isLoading,
-  setIsLoading,
   chatCount,
   setChatCount,
-  // showSettings,
-  // setShowSettings,
   initialScrollPosition,
   onScrollPositionChange,
-  code,
+  currentCode,
+  currentLanguage,
 }) => {
   const theme = useTheme()
   const [input, setInput] = useState('')
   const [includeCode, setIncludeCode] = useState(false)
-  const [tooltipOpen, setTooltipOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false) // Manage isLoading here
 
-  // Initialize cookies
-  const [cookies, setCookie] = useCookies(['userConsent', 'tooltipsEnabled'])
-
-  // Initialize tooltipsEnabled from cookies if userConsent is true
-  const [tooltipsEnabled, setTooltipsEnabled] = useState(() => {
-    if (cookies.userConsent) {
-      console.log('Cookies:', cookies)
-      const tooltipEnabledValue =
-        cookies.tooltipsEnabled !== undefined
-          ? JSON.parse(cookies.tooltipsEnabled)
-          : true
-      setTooltipOpen(tooltipEnabledValue)
-      return tooltipEnabledValue
-    } else {
-      setTooltipOpen(true)
-      return true
-    }
-  })
-
-  // Limit the number of chats to prevent abuse
   const MAX_CHAT_COUNT = 20
 
-  // **Ref for Scrollable Container**
+  // Ref for Scrollable Container
   const scrollContainerRef = useRef(null)
 
   const scrollToBottom = useCallback(() => {
@@ -98,10 +50,6 @@ const ChatBox = ({
     }
   }, [])
 
-  // useEffect(() => {
-  //   scrollToBottom()
-  // }, [chatHistory, scrollToBottom])
-
   useLayoutEffect(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = initialScrollPosition
@@ -109,17 +57,13 @@ const ChatBox = ({
   }, [initialScrollPosition])
 
   useEffect(() => {
-    // **Capture Scroll Position before Unmounting**
+    // Capture Scroll Position before Unmounting
     return () => {
       if (scrollContainerRef.current) {
         onScrollPositionChange(scrollContainerRef.current.scrollTop)
       }
     }
   }, [onScrollPositionChange])
-
-  const handleInputChange = (e) => {
-    setInput(e.target.value)
-  }
 
   // Function to send a message to the AI model
   const handleSend = async (command = undefined) => {
@@ -133,18 +77,16 @@ const ChatBox = ({
       return
     } else if (command === 'user') {
       message = `${input}\n`
-      if (includeCode && code != null) {
-        message += `User Code: ${code}`
+      if (includeCode && currentCode != null) {
+        message += `\n\nUser Code:\n\n ${currentLanguage} \n\n\n\`\`\`\n${currentCode}\n`
       }
       // Increment chat count
       setChatCount((prevCount) => prevCount + 1)
     } else if (command === 'hint') {
       message = 'Requesting a hint...'
-      // Increment chat count
       setChatCount((prevCount) => prevCount + 1)
     } else if (command === 'solution') {
       message = 'Requesting a solution...'
-      // Increment chat count
       setChatCount((prevCount) => prevCount + 1)
     } else {
       console.error('Invalid command:', command)
@@ -169,7 +111,7 @@ const ChatBox = ({
         message,
         conversation_id,
         command,
-        code // Pass the code to SendChat
+        currentLanguage
       )
 
       const updatedHistory = {
@@ -199,12 +141,10 @@ const ChatBox = ({
       }
       setChatHistory(updatedHistory)
     } finally {
-      setIsLoading(false)
+      setIsLoading(false) // Ensure isLoading is set to false
     }
 
     setTimeout(scrollToBottom, 100)
-
-    code = null // Reset the code after sending it
   }
 
   // Function to delete chat history
@@ -212,192 +152,6 @@ const ChatBox = ({
     clearChatHistory(problem._id)
     setChatHistory({ conversation_id: null, data: [] })
     setInput('')
-  }
-
-  // Handle Enter key press in the input field
-  const handleOnPressEnter = (event) => {
-    if (event.key === 'Enter' && !isLoading) {
-      if (chatCount >= MAX_CHAT_COUNT || input.trim() === '') {
-        // prevent default action and give alert
-        event.preventDefault()
-        if (chatCount >= MAX_CHAT_COUNT) {
-          alert('You have reached the maximum number of messages for today.')
-        }
-        return
-      }
-      handleSend('user')
-    }
-  }
-
-  const handleToggle = () => {
-    setTooltipsEnabled((prev) => {
-      const newValue = !prev
-      if (cookies.userConsent) {
-        setCookie('tooltipsEnabled', newValue.toString(), { path: '/' })
-        console.log('Cookie updated:', newValue)
-      }
-      return newValue
-    })
-    setTooltipOpen(false)
-  }
-
-  const formatChatContent = (content) => {
-    return (
-      <Box sx={{ p: 1 }}>
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            // formatting markdown for ai messages
-            // paragraphs formatting
-            p: ({ node, ...props }) => (
-              <Typography
-                {...props}
-                sx={{
-                  mb: 0.5,
-                  fontSize: '0.875rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-
-            // headings
-            h1: ({ node, ...props }) => (
-              <Typography
-                variant="h4"
-                {...props}
-                sx={{
-                  mb: 1,
-                  fontSize: '1.25rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-            h2: ({ node, ...props }) => (
-              <Typography
-                variant="h5"
-                {...props}
-                sx={{
-                  mb: 1,
-                  fontSize: '1.125rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-            h3: ({ node, ...props }) => (
-              <Typography
-                variant="h6"
-                {...props}
-                sx={{
-                  mb: 1,
-                  fontSize: '1rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-
-            // lists formatting
-            ul: ({ node, ...props }) => (
-              <ul
-                {...props}
-                style={{
-                  paddingLeft: '1.5em',
-                  marginBottom: '0.5em',
-                  fontSize: '0.875rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-            ol: ({ node, ...props }) => (
-              <ol
-                {...props}
-                style={{
-                  paddingLeft: '1.5em',
-                  marginBottom: '0.5em',
-                  fontSize: '0.875rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-
-            // list items formatting
-            li: ({ node, ...props }) => (
-              <li
-                {...props}
-                style={{
-                  marginBottom: '0.5em',
-                  fontSize: '0.875rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-
-            // blockquotes formatting
-            blockquote: ({ node, ...props }) => (
-              <blockquote
-                {...props}
-                style={{
-                  borderLeft: '4px solid #ccc',
-                  paddingLeft: '1em',
-                  color: '#666',
-                  marginBottom: '0.5em',
-                  fontSize: '0.875rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-
-            // code formatting
-            code({ node, inline, className, children, ...props }) {
-              const hasLanguage = /language-(\w+)/.exec(className || '')
-
-              return !inline && hasLanguage ? (
-                <SyntaxHighlighter
-                  style={oneDark}
-                  language={hasLanguage[1]}
-                  PreTag="div"
-                  customStyle={{
-                    borderRadius: '12px',
-                    marginBottom: '0.5em',
-                    fontSize: '0.875rem',
-                    lineHeight: '1.5',
-                    letterSpacing: '0.01em',
-                  }}
-                  {...props}
-                >
-                  {String(children).replace(/\n$/, '')}
-                </SyntaxHighlighter>
-              ) : (
-                // inline code
-                <code
-                  {...props}
-                  style={{
-                    backgroundColor: 'rgba(27,31,35,0.05)',
-                    padding: '0.2em 0.4em',
-                    borderRadius: '6px',
-                    fontFamily: 'monospace',
-                    fontSize: '0.875rem',
-                    lineHeight: '1.5',
-                    letterSpacing: '0.01em',
-                  }}
-                >
-                  {children}
-                </code>
-              )
-            },
-          }}
-        >
-          {content}
-        </ReactMarkdown>
-      </Box>
-    )
   }
 
   return (
@@ -430,251 +184,25 @@ const ChatBox = ({
         </Typography>
       </Box>
 
-      {/* Chat History Section */}
-      <Box
-        ref={scrollContainerRef}
-        sx={{
-          flex: 1,
-          overflowY: 'auto',
-          mb: 2,
-          p: 2,
-          border: 'none',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        {/* Avatar and Call-to-Action */}
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            mb: 2,
-          }}
-        >
-          <Avatar
-            alt="AI Robot"
-            src={aiAvatar}
-            sx={{ width: 80, height: 80, mb: 1 }}
-          />
-          <Typography
-            variant="subtitle1"
-            sx={{ fontWeight: 'bold', textAlign: 'center' }}
-          >
-            codecoach answers your questions instantly!
-          </Typography>
-        </Box>
+      {/* Messages Component */}
+      <Messages
+        chatHistory={chatHistory}
+        isLoading={isLoading}
+        scrollContainerRef={scrollContainerRef}
+      />
 
-        {/* Chat Messages */}
-        {Array.isArray(chatHistory.data) &&
-          chatHistory.data.map((chat, index) => (
-            <Box
-              key={index}
-              sx={{
-                display: 'flex',
-                justifyContent:
-                  chat.role === 'user' ? 'flex-end' : 'flex-start',
-                mb: 2,
-              }}
-            >
-              {chat.role === 'assistant' && (
-                <Avatar
-                  alt="AI"
-                  src={aiAvatar}
-                  sx={{
-                    width: 30,
-                    height: 30,
-                    mr: 1,
-                    alignSelf: 'flex-end',
-                  }}
-                />
-              )}
-              <Box
-                sx={{
-                  bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.200',
-                  color: chat.role === 'user' ? 'common.white' : 'text.primary',
-                  borderRadius:
-                    chat.role === 'user'
-                      ? '20px 20px 5px 20px'
-                      : '20px 20px 20px 5px',
-                  p: 2,
-                  maxWidth: '80%',
-                  wordBreak: 'break-word',
-                }}
-              >
-                {chat.role === 'assistant' ? (
-                  formatChatContent(chat.content)
-                ) : (
-                  <Typography
-                    sx={{
-                      color: 'common.white',
-                      fontSize: '0.875rem',
-                    }}
-                  >
-                    {chat.content}
-                  </Typography>
-                )}
-              </Box>
-            </Box>
-          ))}
-
-        {/* Loading Indicator */}
-        {isLoading && (
-          <Box
-            sx={{
-              alignSelf: 'flex-start',
-              bgcolor: 'background.paper',
-              borderRadius: 2,
-              p: 2,
-              mb: 2,
-              maxWidth: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <CircularProgress size={20} />
-          </Box>
-        )}
-
-        {/* Quick Action Buttons */}
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            mt: 'auto', // Push to the bottom
-            pt: 2,
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-end',
-              maxWidth: '70%',
-            }}
-          >
-            {/* Get a Hint Button */}
-            <Button
-              variant="contained"
-              disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-              sx={{
-                mb: 1,
-                borderRadius: '20px 20px 5px 20px',
-              }}
-              onClick={() => handleSend('hint')}
-            >
-              Get a Hint
-            </Button>
-
-            {/* Analyze/Exclude Code Button */}
-            <Tooltip
-              title={'Toggle code analysis'}
-              enterDelay={500}
-              disableHoverListener={!tooltipsEnabled}
-            >
-              <div>
-                <Button
-                  variant="outlined"
-                  disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-                  sx={{
-                    mb: 1,
-                    borderRadius: '20px 20px 5px 20px',
-                    backgroundColor: isLoading
-                      ? theme.palette.grey[300]
-                      : includeCode
-                        ? 'common.white'
-                        : 'primary.main',
-                    color: includeCode ? 'text.primary' : 'common.white',
-                    '&:hover': {
-                      backgroundColor: includeCode
-                        ? 'action.hover'
-                        : 'primary.dark',
-                      color: includeCode ? 'text.primary' : 'common.white',
-                      borderColor: includeCode
-                        ? 'secondary.main'
-                        : 'common.white',
-                    },
-                    transition:
-                      'background-color 0.3s, border-color 0.3s, color 0.3s',
-                  }}
-                  onClick={() => setIncludeCode(!includeCode)}
-                >
-                  {includeCode ? 'Exclude My Code' : 'Analyze My Code'}
-                </Button>
-              </div>
-            </Tooltip>
-          </Box>
-        </Box>
-      </Box>
-
-      {/* Input Field and Send Button */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          p: 1,
-          border: 'none',
-        }}
-      >
-        <Tooltip
-          title={'Delete the chat history'}
-          enterDelay={500}
-          disableHoverListener={!tooltipsEnabled}
-        >
-          <div>
-            <IconButton
-              disabled={isLoading}
-              sx={{
-                color: 'error.main',
-              }}
-              onClick={handleDelete}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
-        </Tooltip>
-
-        <TextField
-          value={input}
-          onChange={handleInputChange}
-          onKeyDown={handleOnPressEnter}
-          placeholder={`Type a message (${MAX_CHAT_COUNT - chatCount} messages left today)...`}
-          variant="outlined"
-          fullWidth
-          sx={{
-            mr: 1,
-            '& fieldset': { borderRadius: 2 },
-          }}
-          disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-          multiline
-          maxRows={4}
-        />
-
-        <Tooltip
-          title={`You have ${MAX_CHAT_COUNT - chatCount} messages left for today.`}
-          enterDelay={500}
-          disableHoverListener={!tooltipsEnabled}
-        >
-          <div>
-            <Button
-              onClick={() => handleSend('user')}
-              disabled={
-                isLoading || chatCount >= MAX_CHAT_COUNT || input.trim() === ''
-              }
-              variant="contained"
-              sx={{
-                bgcolor: 'primary.main',
-                '&:hover': {
-                  bgcolor: 'primary.main',
-                },
-              }}
-            >
-              Send
-            </Button>
-          </div>
-        </Tooltip>
-      </Box>
+      {/* ChatInput Component */}
+      <ChatInput
+        input={input}
+        setInput={setInput}
+        handleSend={handleSend}
+        isLoading={isLoading}
+        chatCount={chatCount}
+        MAX_CHAT_COUNT={MAX_CHAT_COUNT}
+        handleDelete={handleDelete}
+        includeCode={includeCode}
+        setIncludeCode={setIncludeCode}
+      />
     </Paper>
   )
 }

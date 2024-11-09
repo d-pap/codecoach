@@ -13,6 +13,7 @@ import Grow from '@mui/material/Grow'
 import Paper from '@mui/material/Paper'
 import { ResizableBox } from 'react-resizable'
 import 'react-resizable/css/styles.css'
+import { set } from 'lodash'
 
 const StyledPanelResizeHandle = styled(PanelResizeHandle)`
   background-color: #ccc;
@@ -33,7 +34,7 @@ const StyledPanelResizeHandle = styled(PanelResizeHandle)`
     color: #888;
     font-size: 18px;
   }
-`;
+`
 
 // Handle for resizing the chat box
 const FullEdgeHandle = React.forwardRef(({ handleAxis, ...props }, ref) => {
@@ -45,9 +46,9 @@ const FullEdgeHandle = React.forwardRef(({ handleAxis, ...props }, ref) => {
         position: 'absolute',
         backgroundColor: 'transparent',
         cursor: (() => {
-          if (handleAxis === 'n') return 'ns-resize';
-          if (handleAxis === 'w') return 'ew-resize';
-          if (handleAxis === 'nw') return 'nwse-resize';
+          if (handleAxis === 'n') return 'ns-resize'
+          if (handleAxis === 'w') return 'ew-resize'
+          if (handleAxis === 'nw') return 'nwse-resize'
           return 'default'
         })(),
 
@@ -77,23 +78,33 @@ const FullEdgeHandle = React.forwardRef(({ handleAxis, ...props }, ref) => {
 
 const pythonDefaultCode = `# Your code goes here 
 def example_function():
-  print("Hello, world!")`;
+  print("Hello, world!")`
 
 const ProblemDetailLayout = ({ problem, problemDetails }) => {
-  const [code, setCode] = useState(pythonDefaultCode);
-  const [output, setOutput] = useState('');
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [code, setCode] = useState(pythonDefaultCode)
+  const [output, setOutput] = useState('')
+  const [isChatOpen, setIsChatOpen] = useState(false)
+  const [currentLanguage, setCurrentLanguage] = useState('python')
+  const [currentCode, setCurrentCode] = useState(pythonDefaultCode)
+  const screenHeight = window.innerHeight
+  const screenWidth = window.innerWidth
+
+  const minHeight = screenHeight * 0.2 // 20% of the screen height
+  const minWidth = screenWidth * 0.2 // 20% of the screen width
+
+  const maxHeight = screenHeight * 0.9 // 90% of the screen height
+  const maxWidth = screenWidth * 0.5 // 50% of the screen width
 
   // State for chat history
   const [chatHistory, setChatHistory] = useState({
     conversation_id: null,
     data: [],
   })
-  const [isLoading, setIsLoading] = useState(false);
-  const [chatCount, setChatCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false)
+  const [chatCount, setChatCount] = useState(0)
 
   // State for scroll position
-  const [chatScrollPosition, setChatScrollPosition] = useState(0);
+  const [chatScrollPosition, setChatScrollPosition] = useState(0)
 
   // Starting percentage for chat box size
   const [startingSizePercent, setStartingSizePercent] = useState({
@@ -102,7 +113,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
   })
 
   // State for chat box size in pixels
-  const [chatSize, setChatSize] = useState({ width: 600, height: 800 });
+  const [chatSize, setChatSize] = useState({ width: 600, height: 800 })
 
   const theme = useTheme()
   const chatRef = useRef(null)
@@ -113,7 +124,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
     if (Array.isArray(history.data)) {
       setChatHistory(history)
     } else {
-      setChatHistory({ conversation_id: null, data: [] });
+      setChatHistory({ conversation_id: null, data: [] })
     }
   }, [problem._id])
 
@@ -121,7 +132,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
   const updateChatHistory = (newHistory) => {
     setChatHistory(newHistory)
     saveChatHistory(problem._id, newHistory)
-  };
+  }
 
   const incrementChatCount = () => {
     setChatCount((prevCount) => {
@@ -161,8 +172,8 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
   useEffect(() => {
     const updateChatSize = () => {
       setChatSize({
-        width: window.innerWidth * startingSizePercent.widthPercent / 100,
-        height: window.innerHeight * startingSizePercent.heightPercent / 100,
+        width: (window.innerWidth * startingSizePercent.widthPercent) / 100,
+        height: (window.innerHeight * startingSizePercent.heightPercent) / 100,
       })
     }
 
@@ -199,7 +210,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
         !chatRef.current.contains(event.target) &&
         isChatOpen
       ) {
-        setIsChatOpen(false);
+        setIsChatOpen(false)
       }
     }
 
@@ -207,7 +218,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [isChatOpen]);
+  }, [isChatOpen])
 
   return (
     <Container maxWidth={false}>
@@ -258,6 +269,8 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                   setCode={setCode}
                   setOutput={setOutput}
                   output={output}
+                  onLanguageChange={setCurrentLanguage}
+                  onCodeChange={setCurrentCode}
                 />
               </Box>
               <Box
@@ -288,8 +301,8 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                         width={chatSize.width}
                         height={chatSize.height}
                         onResize={onResize}
-                        minConstraints={[300, 300]}
-                        maxConstraints={[1000, 800]}
+                        minConstraints={[minWidth, minHeight]}
+                        maxConstraints={[maxWidth, maxHeight]}
                         resizeHandles={['w', 'n', 'nw']}
                         handle={(handleAxis, ref) => (
                           <FullEdgeHandle handleAxis={handleAxis} ref={ref} />
@@ -331,7 +344,8 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                               onScrollPositionChange={
                                 handleScrollPositionChange
                               }
-                              code={code}
+                              currentCode={currentCode}
+                              currentLanguage={currentLanguage}
                             />
                           </Box>
                         </Paper>
@@ -383,7 +397,7 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
         </PanelGroup>
       </Box>
     </Container>
-  );
+  )
 }
 
 // Helper functions (ensure these are included or imported appropriately)
@@ -401,4 +415,4 @@ const saveChatHistory = (problemId, history) => {
   localStorage.setItem(`chatHistory-${problemId}`, JSON.stringify(history))
 }
 
-export default ProblemDetailLayout;
+export default ProblemDetailLayout
