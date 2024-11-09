@@ -8,47 +8,68 @@ import { useQuery } from '@tanstack/react-query'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
+import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import { getAllCourses, getCourseByIdProblems } from '../api'
-import theme from '../theme'
-import { Card } from '@mui/material'
-
 // course card component
 const CourseCard = ({ course, comingSoon }) => (
-  <Card sx={{ height: '100%' }}>
-    <CardContent>
-      <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-        {course.title}
-      </Typography>
-      <Typography variant="body2" sx={{ mt: 1 }}>
-        {course.description}
-      </Typography>
-      {comingSoon && (
-        <Button
-          variant="contained"
-          disabled
-          sx={{
-            mt: 2, //! ffde
-            width: '100%',
-          }}
-        >
-          Coming Soon
-        </Button>
-      )}
-      {!comingSoon && (
-        <Button
-          variant="contained" //!ff
-          color="primary"
-          sx={{
-            mt: 2, //! ffde
-            width: '100%',
-          }}
-        >
-          View Course
-        </Button>
-      )}
+  <Card
+    sx={{
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+    }}
+  >
+    <CardContent
+      sx={{
+        flexGrow: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+      }}
+    >
+      <Box>
+        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+          {course.title}
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          {course.description}
+        </Typography>
+      </Box>
+
+      <Box
+        sx={{
+          mt: 'auto',
+          width: '100%',
+        }}
+      >
+        {comingSoon && (
+          <Button
+            variant="contained"
+            disabled
+            sx={{
+              mt: 2,
+              width: '100%',
+            }}
+          >
+            Coming Soon
+          </Button>
+        )}
+        {!comingSoon && (
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              mt: 2,
+              width: '100%',
+            }}
+          >
+            View Course
+          </Button>
+        )}
+      </Box>
     </CardContent>
   </Card>
 )
