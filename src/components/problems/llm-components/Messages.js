@@ -45,47 +45,125 @@ const Messages = ({ chatHistory, isLoading, scrollContainerRef }) => {
                 }}
               />
             ),
-            // ... other elements
+            h2: ({ node, ...props }) => (
+              <Typography
+                variant="h5"
+                {...props}
+                sx={{
+                  mb: 1,
+                  fontSize: '1.125rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                  color: textColor,
+                }}
+              />
+            ),
+            h3: ({ node, ...props }) => (
+              <Typography
+                variant="h6"
+                {...props}
+                sx={{
+                  mb: 1,
+                  fontSize: '1rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                  color: textColor,
+                }}
+              />
+            ),
+            // Lists
+            ul: ({ node, ...props }) => (
+              <ul
+                {...props}
+                style={{
+                  paddingLeft: '1.5em',
+                  marginBottom: '0.5em',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                  color: textColor,
+                }}
+              />
+            ),
+            ol: ({ node, ...props }) => (
+              <ol
+                {...props}
+                style={{
+                  paddingLeft: '1.5em',
+                  marginBottom: '0.5em',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                  color: textColor,
+                }}
+              />
+            ),
+            // List Items
+            li: ({ node, ...props }) => (
+              <li
+                {...props}
+                style={{
+                  marginBottom: '0.5em',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                  color: textColor,
+                }}
+              />
+            ),
+            // Blockquotes
+            blockquote: ({ node, ...props }) => (
+              <blockquote
+                {...props}
+                style={{
+                  borderLeft: '4px solid #ccc',
+                  paddingLeft: '1em',
+                  color: textColor,
+                  marginBottom: '0.5em',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.5',
+                  letterSpacing: '0.01em',
+                }}
+              />
+            ),
             // Code Blocks and Inline Code
             code({ node, inline, className, children, ...props }) {
               const hasLanguage = /language-(\w+)/.exec(className || '')
-              if (!inline && hasLanguage) {
-                return (
-                  <SyntaxHighlighter
-                    style={oneDark}
-                    language={hasLanguage[1]}
-                    PreTag="div"
-                    customStyle={{
-                      borderRadius: '12px',
-                      marginBottom: '0.5em',
-                      fontSize: '0.875rem',
-                      lineHeight: '1.5',
-                      letterSpacing: '0.01em',
-                    }}
-                    {...props}
-                  >
-                    {String(children).replace(/\n$/, '')}
-                  </SyntaxHighlighter>
-                )
-              } else {
-                return (
-                  <code
-                    {...props}
-                    style={{
-                      backgroundColor: 'rgba(27,31,35,0.05)',
-                      padding: '0.2em 0.4em',
-                      borderRadius: '6px',
-                      fontFamily: 'monospace',
-                      fontSize: '0.875rem',
-                      lineHeight: '1.5',
-                      letterSpacing: '0.01em',
-                      color: textColor,
-                    }}
-                  >
-                    {children}
-                  </code>
-                )
-              }
+
+              return !inline && hasLanguage ? (
+                <SyntaxHighlighter
+                  style={oneDark}
+                  language={hasLanguage[1]}
+                  PreTag="div"
+                  customStyle={{
+                    borderRadius: '12px',
+                    marginBottom: '0.5em',
+                    fontSize: '0.875rem',
+                    lineHeight: '1.5',
+                    letterSpacing: '0.01em',
+                  }}
+                  {...props}
+                >
+                  {String(children).replace(/\n$/, '')}
+                </SyntaxHighlighter>
+              ) : (
+                // Inline code
+                <code
+                  {...props}
+                  style={{
+                    backgroundColor: 'rgba(27,31,35,0.05)',
+                    padding: '0.2em 0.4em',
+                    borderRadius: '6px',
+                    fontFamily: 'monospace',
+                    fontSize: '0.875rem',
+                    lineHeight: '1.5',
+                    letterSpacing: '0.01em',
+                    color: textColor,
+                  }}
+                >
+                  {children}
+                </code>
+              )
             },
           }}
         >
