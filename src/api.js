@@ -486,3 +486,16 @@ export function deleteCourseFromUser(userId, courseId) {
     throw new Error('User not found')
   }
 }
+
+// Function to send a resume to the GPT
+export async function sendResume(resume) {
+  try {
+    const response = await axios.post(`${API_GATEWAY_URL}/resume`, {
+      resume,
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error sending resume:', error)
+    throw new Error('Failed to send resume to GPT')
+  }
+}

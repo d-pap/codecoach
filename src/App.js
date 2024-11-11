@@ -46,6 +46,7 @@ const InterviewForm = lazy(
 )
 
 const Interview = lazy(() => import('./pages/Interview'))
+const Resume = lazy(() => import('./pages/Resume'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 Amplify.configure(awsExports)
@@ -241,6 +242,14 @@ function AppContent() {
                 <Suspense fallback={<CenteredLoader />}>
                   <Interview />
                 </Suspense>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resume"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <Resume />
               </ProtectedRoute>
             }
           />

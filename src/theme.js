@@ -22,6 +22,7 @@ const theme = createTheme({
       black: '#333333',
     },
     error: {
+      dark: '#b91c1c',
       main: '#ef4444', //! delete buttons
       light: '#fbe9e9', //! delete buttons bg
     },
