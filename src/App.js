@@ -16,19 +16,13 @@ import {
 } from 'react-router-dom'
 import { ThemeProvider } from '@mui/material'
 import Box from '@mui/material/Box'
-import CenteredCircleLoader from './components/utility/CenteredLoader'
 import awsExports from './aws-exports'
 import Header from './components/Header-Footer/Header'
 import Footer from './components/Header-Footer/Footer'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import theme from './theme'
-import AuthModal from './components/auth/AuthModal'
 import CenteredLoader from './components/utility/CenteredLoader'
-import Problems from './pages/Problems'
-import ProblemSolving from './pages/ProblemSolving'
 import './App.css'
-import ScrollToTop from './components/utility/ScrollToTop'
-import AddCourseContent from './pages/AddCourseContent'
 
 // Dynamic Imports
 const LandingPage = lazy(() => import('./pages/LandingPage'))
@@ -44,12 +38,17 @@ const ICPCMultipleForm = lazy(
 const InterviewForm = lazy(
   () => import('./pages/problems/add-problems/InterviewForm')
 )
+
+const Problems = lazy(() => import('./pages/Problems'))
+const ProblemSolving = lazy(() => import('./pages/ProblemSolving'))
 const Interview = lazy(() => import('./pages/Interview'))
 const Resume = lazy(() => import('./pages/Resume'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const Help = lazy(() => import('./pages/Help'))
 const CookieInfo = lazy(() => import('./pages/CookieInfo'))
 const TermsOfService = lazy(() => import('./pages/TermsOfService'))
+const ScrollToTop = lazy(() => import('./components/utility/ScrollToTop'))
+const AuthModal = lazy(() => import('./components/auth/AuthModal'))
 
 Amplify.configure(awsExports)
 
@@ -107,7 +106,7 @@ function AppContent() {
   }
 
   if (isLoading) {
-    return <CenteredCircleLoader />
+    return <CenteredLoader />
   }
 
   const handleAcceptCookies = () => {
@@ -131,7 +130,9 @@ function AppContent() {
           flexDirection: 'column',
         }}
       >
-        <ScrollToTop />
+        <Suspense fallback={<CenteredLoader />}>
+          <ScrollToTop />
+        </Suspense>
         <Routes>
           <Route
             path="/"
@@ -143,12 +144,14 @@ function AppContent() {
                   <Suspense fallback={<CenteredLoader />}>
                     <LandingPage onGetStarted={handleShowAuth} />
                   </Suspense>
-                  <AuthModal
-                    open={showAuth}
-                    onClose={handleCloseAuth}
-                    initialState={authScreen}
-                    onAuthenticated={handleAuthenticated}
-                  />
+                  <Suspense fallback={<CenteredLoader />}>
+                    <AuthModal
+                      open={showAuth}
+                      onClose={handleCloseAuth}
+                      initialState={authScreen}
+                      onAuthenticated={handleAuthenticated}
+                    />
+                  </Suspense>
                 </>
               )
             }
@@ -174,18 +177,12 @@ function AppContent() {
             }
           />
           <Route
-            path="/courses/:courseId/add-content"
-            element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <AddCourseContent />
-              </ProtectedRoute>
-            }
-          />
-          <Route
             path="/problems/:problemId"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <ProblemSolving />
+                <Suspense fallback={<CenteredLoader />}>
+                  <ProblemSolving />
+                </Suspense>
               </ProtectedRoute>
             }
           />
@@ -233,7 +230,9 @@ function AppContent() {
             path="/problems"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <Problems />
+                <Suspense fallback={<CenteredLoader />}>
+                  <Problems />
+                </Suspense>
               </ProtectedRoute>
             }
           />

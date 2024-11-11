@@ -186,62 +186,22 @@ const FilterToolbar = ({
 }
 
 const SkeletonProblemList = () => (
-  <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 4 }}>
-    <Container maxWidth="lg">
-      <Typography
-        variant="h2"
-        component="h1"
-        gutterBottom
-        align="center"
-        sx={{ mb: 2 }}
-      >
-        Problems
-      </Typography>
-      <Typography
-        variant="subtitle1"
-        align="center"
-        sx={{ mb: 4, color: 'text.secondary' }}
-      >
-        Explore and solve ICPC programming challenges from various regions and
-        years
-      </Typography>
-      <FilterToolbar region="all" subregion="all" year="all" />
-      <Grid
-        container
-        spacing={0}
-        sx={{
-          display: 'flex',
-          flexWrap: 'nowrap',
-          boxShadow:
-            '0px 4px 5px -2px rgba(0, 0, 0, 0.2), 4px 0px 5px -2px rgba(0, 0, 0, 0.2), -4px 0px 5px -2px rgba(0, 0, 0, 0.2)',
-          borderRadius: (theme) => theme.spacing(2),
-        }}
-      >
-        <Box sx={{ flexGrow: 1, padding: (theme) => theme.spacing(2) }}>
-          <Box sx={{ display: 'flex', justifyContent: 'right' }}>
-            <Skeleton variant="text" width={150} sx={{ fontSize: '2rem' }} />
-          </Box>
-          <Stack spacing={2}>
-            {[...Array(5)].map((_, index) => (
-              <Skeleton
-                key={index}
-                variant="rectangular"
-                height={120}
-                sx={{ borderRadius: 1 }}
-              />
-            ))}
-          </Stack>
-          <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
-            <Skeleton
-              variant="rectangular"
-              width={150}
-              height={40}
-              sx={{ mt: 2 }}
-            />
-          </Box>
-        </Box>
-      </Grid>
-    </Container>
+  <Box sx={{ flexGrow: 1 }}>
+    {/* top pagination skeleton */}
+    <Box sx={{ display: 'flex', justifyContent: 'right' }}>
+      <Skeleton variant="text" width={150} sx={{ fontSize: '2rem' }} />
+    </Box>
+    {/* problems list skeleton */}
+    <Stack spacing={2}>
+      {[...Array(5)].map((_, index) => (
+        <Skeleton
+          key={index}
+          variant="rectangular"
+          height={120}
+          sx={{ borderRadius: (theme) => theme.spacing(2) }}
+        />
+      ))}
+    </Stack>
   </Box>
 )
 
@@ -267,9 +227,11 @@ function Problems() {
         searchQuery,
         type: 'icpc',
       }),
-    staleTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 30, //! 30 minutes
+    cacheTime: 1000 * 60 * 60, //! 1 hour
     keepPreviousData: true,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
   })
 
   // after page 1 is loaded, prefetch data for next page
@@ -338,10 +300,6 @@ function Problems() {
     setCurrentPage(1)
   }, [])
 
-  if (isLoading) {
-    return <SkeletonProblemList />
-  }
-
   if (isError) {
     return (
       <Typography variant="body1">
@@ -355,6 +313,7 @@ function Problems() {
   return (
     <Box sx={{ minHeight: '100vh', py: 4 }}>
       <Container maxWidth="lg">
+        {/* page title and subtitle */}
         <Typography
           variant="h2"
           component="h1"
@@ -368,6 +327,7 @@ function Problems() {
           Explore and solve ICPC programming challenges from various regions and
           years
         </Typography>
+        {/* filter toolbar */}
         <FilterToolbar
           region={region}
           subregion={subregion}
@@ -378,6 +338,7 @@ function Problems() {
           onYearChange={handleYearChange}
           onSearchChange={handleSearchChange}
         />
+        {/* problems grid */}
         <Grid
           container
           spacing={0}
@@ -398,37 +359,48 @@ function Problems() {
               boxShadow: 'none',
             }}
           >
-            <Box
-              sx={{
-                p: 1,
-                display: 'flex',
-                justifyContent: 'right',
-              }}
-            >
-              <Pagination
-                count={Math.ceil(totalProblems / problemsPerPage)}
-                page={currentPage}
-                onChange={handlePageChange}
-                size="small"
-              />
-            </Box>
-            {problems.length > 0 ? (
-              <Stack spacing={2}>
-                {problems.map((problem) => (
-                  <ProblemCardLayout key={problem._id} problem={problem} />
-                ))}
-              </Stack>
+            {isLoading ? (
+              <SkeletonProblemList />
             ) : (
-              <Typography variant="body1">No problems found</Typography>
+              <>
+                {/* top pagination */}
+                <Box
+                  sx={{
+                    p: 1,
+                    display: 'flex',
+                    justifyContent: 'right',
+                  }}
+                >
+                  <Pagination
+                    count={Math.ceil(totalProblems / problemsPerPage)}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    size="small"
+                  />
+                </Box>
+
+                {/* problems list */}
+                {problems.length > 0 ? (
+                  <Stack spacing={2}>
+                    {problems.map((problem) => (
+                      <ProblemCardLayout key={problem._id} problem={problem} />
+                    ))}
+                  </Stack>
+                ) : (
+                  <Typography variant="body1">No problems found</Typography>
+                )}
+
+                {/* bottom pagination */}
+                <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
+                  <Pagination
+                    count={Math.ceil(totalProblems / problemsPerPage)}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    size="small"
+                  />
+                </Box>
+              </>
             )}
-            <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
-              <Pagination
-                count={Math.ceil(totalProblems / problemsPerPage)}
-                page={currentPage}
-                onChange={handlePageChange}
-                size="small"
-              />
-            </Box>
           </Box>
         </Grid>
       </Container>

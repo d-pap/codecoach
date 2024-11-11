@@ -226,7 +226,8 @@ function Interview() {
         type: 'interview',
       })
     },
-    staleTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 30, //! 30 minutes
+    cacheTime: 1000 * 60 * 60, //! 1 hour
     keepPreviousData: true,
     refetchOnWindowFocus: false,
   })
@@ -297,7 +298,6 @@ function Interview() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  if (isLoading) return <SkeletonProblemList />
   if (isError) {
     return (
       <Typography variant="body1">
@@ -357,31 +357,50 @@ function Interview() {
               boxShadow: 'none',
             }}
           >
-            <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
-              <Pagination
-                count={Math.ceil(totalProblems / problemsPerPage)}
-                page={currentPage}
-                onChange={handlePageChange}
-                size="small"
-              />
-            </Box>
-            {problems.length > 0 ? (
-              <Stack spacing={2}>
-                {problems.map((problem) => (
-                  <InterviewCardLayout key={problem._id} interview={problem} />
-                ))}
-              </Stack>
+            {isLoading ? (
+              <SkeletonProblemList />
             ) : (
-              <Typography variant="body1">No questions found</Typography>
+              <>
+                {/* top pagination */}
+                <Box
+                  sx={{
+                    p: 1,
+                    display: 'flex',
+                    justifyContent: 'right',
+                  }}
+                >
+                  <Pagination
+                    count={Math.ceil(totalProblems / problemsPerPage)}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    size="small"
+                  />
+                </Box>
+
+                {/* problems list */}
+                {problems.length > 0 ? (
+                  <Stack spacing={2}>
+                    {problems.map((problem) => (
+                      <InterviewCardLayout
+                        key={problem._id}
+                        interview={problem}
+                      />
+                    ))}
+                  </Stack>
+                ) : (
+                  <Typography variant="body1">No questions found</Typography>
+                )}
+                {/* bottom pagination */}
+                <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
+                  <Pagination
+                    count={Math.ceil(totalProblems / problemsPerPage)}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    size="small"
+                  />
+                </Box>
+              </>
             )}
-            <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
-              <Pagination
-                count={Math.ceil(totalProblems / problemsPerPage)}
-                page={currentPage}
-                onChange={handlePageChange}
-                size="small"
-              />
-            </Box>
           </Box>
         </Grid>
       </Container>

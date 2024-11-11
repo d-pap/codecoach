@@ -3,7 +3,7 @@
  * This can be temporary if we want to use it for something else
  * or delete it completely. Was initially only made to construct navbar
  */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
@@ -12,6 +12,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
+import Skeleton from '@mui/material/Skeleton'
 import { getAllCourses, getCourseByIdProblems } from '../api'
 // course card component
 const CourseCard = ({ course, comingSoon }) => (
@@ -74,6 +75,20 @@ const CourseCard = ({ course, comingSoon }) => (
   </Card>
 )
 
+const SkeletonCourseCards = () => (
+  <>
+    {[1, 2, 3].map((item) => (
+      <Grid item xs={12} sm={4} md={4} key={item}>
+        <Skeleton
+          variant="rectangular"
+          height={230}
+          sx={{ borderRadius: (theme) => theme.spacing(2) }}
+        />
+      </Grid>
+    ))}
+  </>
+)
+
 const CourseList = () => {
   // fetch all courses
   const {
@@ -83,6 +98,10 @@ const CourseList = () => {
   } = useQuery({
     queryKey: ['courses'],
     queryFn: getAllCourses,
+    staleTime: 1000 * 60 * 30, //! 30 minutes
+    cacheTime: 1000 * 60 * 60, //! 1 hour
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
 
   // separate courses into categories
@@ -128,11 +147,15 @@ const CourseList = () => {
             Featured Courses
           </Typography>
           <Grid container spacing={2}>
-            {featuredCourses.map((course) => (
-              <Grid item xs={12} sm={4} md={4} key={course._id}>
-                <CourseCard course={course} />
-              </Grid>
-            ))}
+            {isLoading ? (
+              <SkeletonCourseCards />
+            ) : (
+              featuredCourses.map((course) => (
+                <Grid item xs={12} sm={4} md={4} key={course._id}>
+                  <CourseCard course={course} />
+                </Grid>
+              ))
+            )}
           </Grid>
         </Box>
 
@@ -142,11 +165,15 @@ const CourseList = () => {
             Courses
           </Typography>
           <Grid container spacing={2}>
-            {regularCourses.map((course) => (
-              <Grid item xs={12} sm={4} md={4} key={course._id}>
-                <CourseCard course={course} />
-              </Grid>
-            ))}
+            {isLoading ? (
+              <SkeletonCourseCards />
+            ) : (
+              regularCourses.map((course) => (
+                <Grid item xs={12} sm={4} md={4} key={course._id}>
+                  <CourseCard course={course} />
+                </Grid>
+              ))
+            )}
           </Grid>
         </Box>
 
@@ -156,11 +183,15 @@ const CourseList = () => {
             Coming Soon
           </Typography>
           <Grid container spacing={2}>
-            {comingSoonCourses.map((course) => (
-              <Grid item xs={12} sm={4} md={4} key={course._id}>
-                <CourseCard course={course} comingSoon />
-              </Grid>
-            ))}
+            {isLoading ? (
+              <SkeletonCourseCards />
+            ) : (
+              comingSoonCourses.map((course) => (
+                <Grid item xs={12} sm={4} md={4} key={course._id}>
+                  <CourseCard course={course} comingSoon />
+                </Grid>
+              ))
+            )}
           </Grid>
         </Box>
       </Container>
