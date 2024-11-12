@@ -488,10 +488,10 @@ export function deleteCourseFromUser(userId, courseId) {
 }
 
 // Function to send a resume to the GPT
-export async function sendResume(resume) {
+export async function sendResume(input) {
   try {
     const response = await axios.post(`${API_GATEWAY_URL}/resume`, {
-      resume,
+      input,
     })
     return response.data
   } catch (error) {
