@@ -227,7 +227,7 @@ function AppContent() {
             }
           />
           <Route
-            path="/problems"
+            path="/problems/competitions"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <Suspense fallback={<CenteredLoader />}>
@@ -237,7 +237,7 @@ function AppContent() {
             }
           />
           <Route
-            path="/interviews"
+            path="/problems/interviews"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <Suspense fallback={<CenteredLoader />}>

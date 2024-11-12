@@ -4,8 +4,6 @@ import { Auth } from 'aws-amplify'
 import { useMediaQuery, useTheme } from '@mui/material'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import Button from '@mui/material/Button'
-//import Button from '@Button'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -22,24 +20,68 @@ import ContactPageOutlinedIcon from '@mui/icons-material/ContactPageOutlined'
 import Logout from '@mui/icons-material/Logout'
 import logo from '../../images/logo-with-text.svg'
 import CenteredCircleLoader from '../utility/CenteredLoader'
+//import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 
+// component for links without a dropdown menu
 const PageLinks = styled(NavLink)(({ theme }) => ({
   color: theme.palette.primary.light500,
   textDecoration: 'none',
-  fontWeight: 'bold',
   letterSpacing: '0.01em',
-  fontSize: '0.875rem',
+  fontSize: theme.typography.body2.fontSize,
   borderRadius: theme.spacing(2),
   whiteSpace: 'nowrap',
-  //margin: theme.spacing(0, 1),
   padding: theme.spacing(0.5, 1),
   '&.active': {
     color: theme.palette.primary.main,
-    //textDecoration: 'underline',
   },
   '&:hover': {
     color: theme.palette.primary.main,
     transition: 'color 0.3s ease',
+  },
+}))
+
+// component for links with dropdown menu
+const DropdownWrapper = styled(Box)(({ theme }) => ({
+  position: 'relative',
+  display: 'inline-block',
+  height: '100%',
+  '&:hover .MuiBox-root': {
+    display: 'block',
+  },
+}))
+
+// component for links with dropdown menu
+const DropdownContent = styled(Box)(({ theme }) => ({
+  display: 'none',
+  position: 'absolute',
+  backgroundColor: theme.palette.background.paper,
+  minWidth: '160px',
+  boxShadow: 'none',
+  borderRadius: theme.spacing(0, 0, 1, 1),
+  zIndex: 1000,
+  top: 'calc(100% + 19px)',
+  left: '0',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: -20,
+    left: 0,
+    right: 0,
+    height: 20,
+    backgroundColor: 'transparent',
+  },
+}))
+
+// component for links with dropdown menu
+const DropdownLink = styled(NavLink)(({ theme }) => ({
+  color: theme.palette.text.primary,
+  padding: theme.spacing(2),
+  textDecoration: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  fontSize: theme.typography.body2.fontSize,
+  '&:hover': {
+    backgroundColor: 'transparent',
   },
 }))
 
@@ -48,9 +90,9 @@ const Header = () => {
   const navigate = useNavigate()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const [anchorEl, setAnchorEl] = React.useState(null)
-  const [accountMenuAnchorEl, setAccountMenuAnchorEl] = React.useState(null)
   const [loading, setLoading] = React.useState(false) // Loading state
   const location = useLocation()
+  const [accountMenuOpen, setAccountMenuOpen] = React.useState(false)
 
   const handleLogout = async () => {
     setLoading(true) // Start loading
@@ -74,15 +116,191 @@ const Header = () => {
   }
 
   const handleAccountMenu = (event) => {
-    setAccountMenuAnchorEl(event.currentTarget)
+    event.preventDefault()
+    setAccountMenuOpen(!accountMenuOpen)
   }
 
   const handleAccountMenuClose = () => {
-    setAccountMenuAnchorEl(null)
+    setAccountMenuOpen(false)
   }
 
+  const problemsDropdown = [
+    { title: 'Competitions', path: '/problems/competitions' },
+    { title: 'Interviews', path: '/problems/interviews' },
+  ]
+
+  const coursesDropdown = [
+    { title: 'Course Catalog', path: '/courses' }, //! fix link paths
+    { title: 'My Courses', path: '/courses' }, //! fix link paths
+  ]
+
+  // function to check if the current path matches the base path
+  const isPathActive = (basePath) => {
+    return location.pathname.startsWith(basePath)
+  }
+
+  // desktop header component
+  const DesktopNav = () => (
+    <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <PageLinks
+          to="/home"
+          className={location.pathname === '/home' ? 'active' : ''}
+        >
+          Home
+        </PageLinks>
+        <DropdownWrapper>
+          <PageLinks
+            to="/courses"
+            className={isPathActive('/courses') ? 'active' : ''}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            Courses{' '}
+            {/* <KeyboardArrowDownIcon sx={{ fontSize: '0.8rem' }} /> */}
+          </PageLinks>
+          <DropdownContent>
+            {coursesDropdown.map((item) => (
+              <DropdownLink
+                key={item.path}
+                to={item.path}
+                className={location.pathname === item.path ? 'active' : ''}
+              >
+                {item.title}
+              </DropdownLink>
+            ))}
+          </DropdownContent>
+        </DropdownWrapper>
+        <DropdownWrapper>
+          <PageLinks
+            to="/problems/competitions"
+            className={isPathActive('/problems') ? 'active' : ''}
+            sx={{ display: 'flex', alignItems: 'center' }}
+          >
+            Problems{' '}
+            {/* <KeyboardArrowDownIcon sx={{ fontSize: '0.8rem' }} /> */}
+          </PageLinks>
+          <DropdownContent>
+            {problemsDropdown.map((item) => (
+              <DropdownLink
+                key={item.path}
+                to={item.path}
+                className={location.pathname === item.path ? 'active' : ''}
+              >
+                {item.title}
+              </DropdownLink>
+            ))}
+          </DropdownContent>
+        </DropdownWrapper>
+      </Box>
+      <Divider
+        orientation="vertical"
+        flexItem
+        variant="middle"
+        sx={{ mx: 1 }}
+      />
+      <DropdownWrapper className="dropdown-wrapper">
+        <IconButton
+          aria-label="account of current user"
+          aria-controls="account-menu"
+          aria-haspopup="true"
+          onClick={handleAccountMenu}
+          sx={{
+            color: (theme) => theme.palette.text.primary,
+            '&:hover': {
+              background: (theme) => alpha(theme.palette.text.primary, 0.1),
+              transition: 'background-color 0.3s ease',
+            },
+          }}
+        >
+          <AccountCircle />
+        </IconButton>
+        <DropdownContent
+          sx={{
+            display: accountMenuOpen ? 'block' : 'none',
+            right: 0,
+            left: 'auto', // align to right
+          }}
+        >
+          <DropdownLink to="/settings" onClick={handleAccountMenuClose}>
+            <ListItemIcon
+              sx={{ minWidth: 'auto', marginRight: theme.spacing(1) }}
+            >
+              <Settings fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="Settings" />
+          </DropdownLink>
+          <DropdownLink
+            to="#"
+            onClick={() => {
+              handleAccountMenuClose()
+              handleLogout()
+            }}
+          >
+            <ListItemIcon
+              sx={{ minWidth: 'auto', marginRight: theme.spacing(1) }}
+            >
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="Logout" />
+          </DropdownLink>
+        </DropdownContent>
+      </DropdownWrapper>
+    </Box>
+  )
+
+  // mobile header component
+  const mobileMenuItems = (
+    <>
+      <MenuItem component={NavLink} to="/" onClick={handleClose}>
+        Home
+      </MenuItem>
+      <MenuItem onClick={handleClose} sx={{ fontWeight: 'bold' }}>
+        Courses
+      </MenuItem>
+      {coursesDropdown.map((item) => (
+        <MenuItem
+          key={item.path}
+          component={NavLink}
+          to={item.path}
+          onClick={handleClose}
+          sx={{ pl: 4 }}
+        >
+          {item.title}
+        </MenuItem>
+      ))}
+      <MenuItem onClick={handleClose} sx={{ fontWeight: 'bold' }}>
+        Problems
+      </MenuItem>
+      {problemsDropdown.map((item) => (
+        <MenuItem
+          key={item.path}
+          component={NavLink}
+          to={item.path}
+          onClick={handleClose}
+          sx={{ pl: 4 }}
+        >
+          {item.title}
+        </MenuItem>
+      ))}
+      <Divider component="li" variant="middle" />
+      <MenuItem component={NavLink} to="/settings" onClick={handleClose}>
+        Settings
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleClose()
+          handleLogout()
+        }}
+      >
+        Logout
+      </MenuItem>
+    </>
+  )
+
   if (loading) {
-    // Render the loader when loading is true
     return (
       <Box>
         <CenteredCircleLoader />
@@ -124,20 +342,14 @@ const Header = () => {
               cursor: 'pointer',
             }}
           />
-
           {isMobile ? (
             <>
               <IconButton
-                size="large"
                 edge="start"
                 aria-label="menu"
                 onClick={handleMenu}
                 sx={{
                   color: (theme) => theme.palette.text.primary,
-                  '&:hover': {
-                    background: alpha(theme.palette.text.primary, 0.1),
-                    transition: 'background-color 0.3s ease',
-                  },
                 }}
               >
                 <MenuIcon />
@@ -148,168 +360,11 @@ const Header = () => {
                 onClose={handleClose}
                 disableScrollLock={true}
               >
-                <MenuItem component={NavLink} to="/" onClick={handleClose}>
-                  Home
-                </MenuItem>
-                <MenuItem
-                  component={NavLink}
-                  to="/courses"
-                  onClick={handleClose}
-                >
-                  Courses
-                </MenuItem>
-                <MenuItem
-                  component={NavLink}
-                  to="/problems"
-                  onClick={handleClose}
-                >
-                  Problems
-                </MenuItem>
-                <MenuItem
-                  component={NavLink}
-                  to="/interviews"
-                  onClick={handleClose}
-                >
-                  Interview Prep
-                </MenuItem>
-                {/* <MenuItem
-                  component={NavLink}
-                  to="/manage-problems"
-                  onClick={handleClose}
-                >
-                  Manage Problems
-                </MenuItem> */}
-
-                <Divider component="li" variant="middle" />
-                {/* <MenuItem
-                  component={NavLink}
-                  to="/settings"
-                  onClick={handleClose}
-                >
-                  Settings
-                </MenuItem> */}
-                <MenuItem
-                  component={NavLink}
-                  to="/resume"
-                  onClick={handleClose}
-                >
-                  Resume
-                </MenuItem>
-                <MenuItem component={NavLink} to="/help" onClick={handleClose}>
-                  Settings
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    handleClose()
-                    handleLogout()
-                  }}
-                >
-                  Logout
-                </MenuItem>
+                {mobileMenuItems}
               </Menu>
             </>
           ) : (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <PageLinks to="/home" end>
-                  Home
-                </PageLinks>
-                <PageLinks to="/courses">Courses</PageLinks>
-                <PageLinks to="/problems">Problems</PageLinks>
-                <PageLinks to="/interviews">Interview Prep</PageLinks>
-                {/* <PageLinks to="/manage-problems">Manage Problems</PageLinks> */}
-              </Box>
-              <Divider
-                orientation="vertical"
-                flexItem
-                variant="middle"
-                sx={{ mx: 1 }}
-              />
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <IconButton
-                  aria-label="account of current user"
-                  aria-controls="account-menu"
-                  aria-haspopup="true"
-                  onClick={handleAccountMenu}
-                  sx={{
-                    color: (theme) => theme.palette.text.primary,
-                    '&:hover': {
-                      background: alpha(theme.palette.text.primary, 0.1),
-                      transition: 'background-color 0.3s ease',
-                    },
-                  }}
-                >
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  id="account-menu"
-                  anchorEl={accountMenuAnchorEl}
-                  open={Boolean(accountMenuAnchorEl)}
-                  onClose={handleAccountMenuClose}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  disableScrollLock={true}
-                >
-                  {/* <MenuItem
-                    component={NavLink}
-                    to="/settings"
-                    onClick={handleAccountMenuClose}
-                  >
-                    <ListItemIcon>
-                      <Settings fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Settings</ListItemText>
-                  </MenuItem> */}
-                  <MenuItem
-                    component={NavLink}
-                    to="/resume"
-                    onClick={handleAccountMenuClose}
-                  >
-                    <ListItemIcon>
-                      <ContactPageOutlinedIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Resume</ListItemText>
-                  </MenuItem>
-                  <MenuItem
-                    component={NavLink}
-                    to="/help"
-                    onClick={handleAccountMenuClose}
-                  >
-                    <ListItemIcon>
-                      <HelpOutlineOutlinedIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Help</ListItemText>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      handleAccountMenuClose()
-                      handleLogout()
-                    }}
-                  >
-                    <ListItemIcon>
-                      <Logout fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Logout</ListItemText>
-                  </MenuItem>
-                </Menu>
-              </Box>
-            </Box>
+            <DesktopNav />
           )}
         </Toolbar>
       </AppBar>
