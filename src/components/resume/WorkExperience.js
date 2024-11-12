@@ -9,11 +9,8 @@ import {
     Box,
 } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
-import theme from '../../theme'; // Adjust the path if necessary
 
 const WorkExperience = ({ workExperiences, setWorkExperiences }) => {
-    const muiTheme = useTheme();
 
     const handleAdd = () => {
         setWorkExperiences([

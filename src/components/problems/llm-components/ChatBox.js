@@ -1,21 +1,28 @@
+// ChatBox.js
 import React, {
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
   useCallback,
-} from 'react'
-import { Box, Paper, Typography, Tooltip } from '@mui/material'
-import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
-import { useTheme } from '@mui/material/styles'
-import SendChat from './AIChat'
-import Messages from './Messages'
-import ChatInput from './ChatInput'
+  Suspense,
+} from 'react';
+import { Box, Paper, Typography, Tooltip } from '@mui/material';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import { useTheme } from '@mui/material/styles';
+import SendChat from './AIChat';
+import DOMPurify from 'dompurify';
+import CenteredCircleLoader from '../../utility/CenteredLoader';
+
+// Lazy load child components
+const Messages = React.lazy(() => import('./Messages'));
+const ChatInput = React.lazy(() => import('./ChatInput'));
+const ChatButtons = React.lazy(() => import('./ChatButtons'));
 
 // Function to clear chat history from localStorage
 const clearChatHistory = (problemId) => {
-  localStorage.removeItem(`chatHistory-${problemId}`)
-}
+  localStorage.removeItem(`chatHistory-${problemId}`);
+};
 
 const ChatBox = ({
   problem,
@@ -28,131 +35,153 @@ const ChatBox = ({
   currentCode,
   currentLanguage,
 }) => {
-  const theme = useTheme()
-  const [input, setInput] = useState('')
-  const [includeCode, setIncludeCode] = useState(false)
-  const [isLoading, setIsLoading] = useState(false) // Manage isLoading here
+  const theme = useTheme();
+  const [input, setInput] = useState('');
+  const [includeCode, setIncludeCode] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Manage isLoading here
 
-  const MAX_CHAT_COUNT = 20
+  const MAX_CHAT_COUNT = 20;
 
   // Ref for Scrollable Container
-  const scrollContainerRef = useRef(null)
+  const scrollContainerRef = useRef(null);
 
   const scrollToBottom = useCallback(() => {
     if (scrollContainerRef.current) {
-      const { scrollHeight, scrollTop, clientHeight } =
-        scrollContainerRef.current
-      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100 // 100px threshold
-      if (isNearBottom) {
-        scrollContainerRef.current.scrollTop =
-          scrollContainerRef.current.scrollHeight
-      }
+      scrollContainerRef.current.scrollTop =
+        scrollContainerRef.current.scrollHeight;
     }
-  }, [])
+  }, []);
 
   useLayoutEffect(() => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTop = initialScrollPosition
+      scrollContainerRef.current.scrollTop = initialScrollPosition;
     }
-  }, [initialScrollPosition])
+  }, [initialScrollPosition]);
 
   useEffect(() => {
     // Capture Scroll Position before Unmounting
     return () => {
       if (scrollContainerRef.current) {
-        onScrollPositionChange(scrollContainerRef.current.scrollTop)
+        onScrollPositionChange(scrollContainerRef.current.scrollTop);
       }
-    }
-  }, [onScrollPositionChange])
+    };
+  }, [onScrollPositionChange]);
+
+  // Function to sanitize input using DOMPurify
+  const sanitizeInput = (dirtyInput) => {
+    return DOMPurify.sanitize(dirtyInput);
+  };
+
+  // Function to sanitize AI response using DOMPurify
+  const sanitizeResponse = (dirtyResponse) => {
+    return DOMPurify.sanitize(dirtyResponse);
+  };
 
   // Function to send a message to the AI model
-  const handleSend = async (command = undefined) => {
-    if (command === 'user' && input.trim() === '') return
+  const handleSend = async (command = 'user') => {
+    if (command === 'user' && input.trim() === '') return;
 
-    let message = ''
+    let message = '';
 
     // Limit the number of chats to prevent abuse
     if (chatCount >= MAX_CHAT_COUNT) {
-      alert('You have reached the maximum number of messages for today.')
-      return
+      alert('You have reached the maximum number of messages for today.');
+      return;
     } else if (command === 'user') {
-      message = `${input}\n`
+      // Sanitize user input
+      const sanitizedInput = sanitizeInput(input.trim());
+      message = `${sanitizedInput}\n`;
       if (includeCode && currentCode != null) {
-        message += `\n\nUser Code:\n\n ${currentLanguage} \n\n\n\`\`\`\n${currentCode}\n`
+        const sanitizedCode = sanitizeInput(currentCode);
+        message += `\n\nUser Code:\n\n${sanitizeInput(
+          currentLanguage
+        )}\n\n\`\`\`\n${sanitizedCode}\n\`\`\``;
       }
       // Increment chat count
-      setChatCount((prevCount) => prevCount + 1)
+      setChatCount((prevCount) => prevCount + 1);
     } else if (command === 'hint') {
-      message = 'Requesting a hint...'
-      setChatCount((prevCount) => prevCount + 1)
+      message = 'Requesting a hint...';
+      setChatCount((prevCount) => prevCount + 1);
     } else if (command === 'solution') {
-      message = 'Requesting a solution...'
-      setChatCount((prevCount) => prevCount + 1)
+      message = 'Requesting a solution...';
+      setChatCount((prevCount) => prevCount + 1);
     } else {
-      console.error('Invalid command:', command)
-      return
+      console.error('Invalid command:', command);
+      return;
     }
 
+    // Create a new history object with sanitized user message
     const newHistory = {
       ...chatHistory,
-      data: [...chatHistory.data, { role: 'user', content: message }],
-    }
-    setChatHistory(newHistory)
+      data: [
+        ...chatHistory.data,
+        { role: 'user', content: sanitizeInput(message) },
+      ],
+    };
+    setChatHistory(newHistory);
 
-    setInput('')
-    setIsLoading(true)
+    if (command === 'user') {
+      setInput('');
+    }
+    setIsLoading(true);
 
     try {
-      const conversation_id = chatHistory.conversation_id
+      const conversation_id = chatHistory.conversation_id;
 
       const query = await SendChat(
-        problem.title,
-        problem.description,
-        message,
+        sanitizeInput(problem.title),
+        sanitizeInput(problem.description),
+        sanitizeInput(message),
         conversation_id,
         command,
-        currentLanguage
-      )
+        sanitizeInput(currentLanguage)
+      );
+
+      // Sanitize AI response
+      const sanitizedResponse = sanitizeResponse(query.response);
 
       const updatedHistory = {
         ...newHistory,
         data: [
           ...newHistory.data,
-          { role: 'assistant', content: query.response },
+          { role: 'assistant', content: sanitizedResponse },
         ],
-      }
+      };
 
       if (query.conversation_id) {
-        updatedHistory.conversation_id = query.conversation_id
+        updatedHistory.conversation_id = query.conversation_id;
       }
 
-      setChatHistory(updatedHistory)
+      setChatHistory(updatedHistory);
 
       // Scroll to bottom after state update
-      setTimeout(scrollToBottom, 100)
+      setTimeout(scrollToBottom, 100);
     } catch (error) {
-      console.error('Failed to send chat:', error)
+      console.error('Failed to send chat:', error);
       const updatedHistory = {
         ...newHistory,
         data: [
           ...newHistory.data,
-          { role: 'assistant', content: 'Failed to get response from model' },
+          {
+            role: 'assistant',
+            content: sanitizeResponse('Failed to get response from model'),
+          },
         ],
-      }
-      setChatHistory(updatedHistory)
+      };
+      setChatHistory(updatedHistory);
     } finally {
-      setIsLoading(false) // Ensure isLoading is set to false
+      setIsLoading(false); // Ensure isLoading is set to false
     }
 
-    setTimeout(scrollToBottom, 100)
-  }
+    setTimeout(scrollToBottom, 100);
+  };
 
   // Function to delete chat history
   const handleDelete = () => {
-    clearChatHistory(problem._id)
-    setChatHistory({ conversation_id: null, data: [] })
-    setInput('')
-  }
+    clearChatHistory(problem._id);
+    setChatHistory({ conversation_id: null, data: [] });
+    setInput('');
+  };
 
   return (
     <Paper
@@ -184,27 +213,54 @@ const ChatBox = ({
         </Typography>
       </Box>
 
-      {/* Messages Component */}
-      <Messages
-        chatHistory={chatHistory}
-        isLoading={isLoading}
-        scrollContainerRef={scrollContainerRef}
-      />
+      {/* Scrollable content including Messages and ChatButtons */}
+      <Box
+        sx={{
+          flexGrow: 1,
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+        ref={scrollContainerRef}
+      >
+        {/* Messages Component */}
+        <Suspense fallback={<CenteredCircleLoader />}>
+          <Box sx={{ flexGrow: 1 }}>
+            <Messages chatHistory={chatHistory} isLoading={isLoading} />
+          </Box>
+        </Suspense>
 
-      {/* ChatInput Component */}
-      <ChatInput
-        input={input}
-        setInput={setInput}
-        handleSend={handleSend}
-        isLoading={isLoading}
-        chatCount={chatCount}
-        MAX_CHAT_COUNT={MAX_CHAT_COUNT}
-        handleDelete={handleDelete}
-        includeCode={includeCode}
-        setIncludeCode={setIncludeCode}
-      />
+        {/* ChatButtons Component */}
+        <Suspense fallback={<CenteredCircleLoader />}>
+          <Box sx={{ flexShrink: 0 }}>
+            <ChatButtons
+              handleSend={handleSend}
+              isLoading={isLoading}
+              chatCount={chatCount}
+              MAX_CHAT_COUNT={MAX_CHAT_COUNT}
+              includeCode={includeCode}
+              setIncludeCode={setIncludeCode}
+            />
+          </Box>
+        </Suspense>
+      </Box>
+
+      {/* ChatInput Component (outside the scrollable area) */}
+      <Suspense fallback={<CenteredCircleLoader />}>
+        <Box sx={{ flexShrink: 0 }}>
+          <ChatInput
+            input={input}
+            setInput={setInput}
+            handleSend={handleSend}
+            isLoading={isLoading}
+            chatCount={chatCount}
+            MAX_CHAT_COUNT={MAX_CHAT_COUNT}
+            handleDelete={handleDelete}
+          />
+        </Box>
+      </Suspense>
     </Paper>
-  )
-}
+  );
+};
 
-export default ChatBox
+export default ChatBox;

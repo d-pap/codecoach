@@ -1,12 +1,8 @@
 // JobDescription.js
 import React from 'react';
 import { TextField, Typography, Box } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import theme from '../../theme'; // Adjust the path if necessary
 
 const JobDescription = ({ jobDescription, setJobDescription }) => {
-    const muiTheme = useTheme();
-
     return (
         <Box sx={{ mb: 4 }}>
             <Typography variant="h5" component="h2" sx={{ mb: 2 }}>

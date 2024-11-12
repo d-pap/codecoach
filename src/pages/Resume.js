@@ -1,131 +1,124 @@
-// Resume.js
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, Suspense, lazy } from 'react';
 import { sendResume } from '../api';
-import Description from '../components/resume/Description';
-import WorkExperience from '../components/resume/WorkExperience';
-import Education from '../components/resume/Education';
-import Skills from '../components/resume/Skills';
-import Projects from '../components/resume/Projects'; // Import Projects
-import AdditionalActivities from '../components/resume/AdditionalActivities';
-import AdditionalComments from '../components/resume/AdditionalComments';
-import JobDescription from '../components/resume/JobDescription';
-import SensitiveInfoWarning from '../components/resume/SensitiveInfoWarning';
-import CenteredCircleLoader from '../components/utility/CenteredLoader';
-import {
-    Container,
-    Typography,
-    Button,
-    Paper,
-    LinearProgress,
-} from '@mui/material';
+import { Container, Typography, Button, Paper, LinearProgress } from '@mui/material';
 import DoubleArrowRoundedIcon from '@mui/icons-material/DoubleArrowRounded';
 import { useTheme } from '@mui/material/styles';
 import ReactMarkdown from 'react-markdown';
+import DOMPurify from 'dompurify';
+import CenteredCircleLoader from '../components/utility/CenteredLoader';
+
+// Lazy-loaded components
+const Description = lazy(() => import('../components/resume/Description'));
+const WorkExperience = lazy(() => import('../components/resume/WorkExperience'));
+const Education = lazy(() => import('../components/resume/Education'));
+const Skills = lazy(() => import('../components/resume/Skills'));
+const Projects = lazy(() => import('../components/resume/Projects'));
+const AdditionalActivities = lazy(() => import('../components/resume/AdditionalActivities'));
+const AdditionalComments = lazy(() => import('../components/resume/AdditionalComments'));
+const JobDescription = lazy(() => import('../components/resume/JobDescription'));
+const SensitiveInfoWarning = lazy(() => import('../components/resume/SensitiveInfoWarning'));
+
+const SafeMarkdown = ({ content }) => {
+    const sanitizedContent = DOMPurify.sanitize(content);
+    return <ReactMarkdown children={sanitizedContent} />;
+};
 
 const Resume = () => {
     const [description, setDescription] = useState('');
     const [workExperiences, setWorkExperiences] = useState([]);
     const [educations, setEducations] = useState([]);
     const [skills, setSkills] = useState([]);
-    const [projects, setProjects] = useState([]); // Add projects state
+    const [projects, setProjects] = useState([]);
     const [additionalActivities, setAdditionalActivities] = useState([]);
     const [additionalComments, setAdditionalComments] = useState('');
     const [jobDescription, setJobDescription] = useState('');
 
-    // State to control the visibility of the warning dialog
     const [isWarningOpen, setIsWarningOpen] = useState(false);
-
-    // State to store the AI response
     const [aiResponse, setAiResponse] = useState('');
-
-    // State to manage loading
     const [isLoading, setIsLoading] = useState(false);
 
-    // Reference to the response section for scrolling
     const responseRef = useRef(null);
-
     const muiTheme = useTheme();
 
-    // Function to handle the opening of the warning dialog
     const handleGenerateClick = () => {
         setIsWarningOpen(true);
     };
 
-    // Function to handle closing the warning dialog
     const handleCloseWarning = () => {
         setIsWarningOpen(false);
     };
 
-    // Function to handle confirmation and send data to the API
     const handleConfirmWarning = async () => {
-        setIsWarningOpen(false); // Close the dialog
-        setIsLoading(true); // Start loading
+        setIsWarningOpen(false);
+        setIsLoading(true);
+
+        // Sanitize inputs before processing
+        const sanitizedDescription = DOMPurify.sanitize(description);
+        const sanitizedAdditionalComments = DOMPurify.sanitize(additionalComments);
+        const sanitizedJobDescription = DOMPurify.sanitize(jobDescription);
+        // Similarly sanitize other fields as needed
 
         const message = {
-            description,
+            description: sanitizedDescription,
             workExperiences,
             educations,
             skills,
-            projects, // Include projects in the message
+            projects,
             additionalActivities,
-            additionalComments,
-            jobDescription,
+            additionalComments: sanitizedAdditionalComments,
+            jobDescription: sanitizedJobDescription,
         };
 
-        // Format the message into a structured prompt for the AI
         const formattedMessage = `
-I would like to create a professional resume based on the following information:
+            I would like to create a professional resume based on the following information:
 
-*Job Description:*
-${message.jobDescription}
+            *Job Description:*
+            ${message.jobDescription}
 
-*Personal Description:*
-${message.description}
+            *Personal Description:*
+            ${message.description}
 
-**Work Experiences:**
-${message.workExperiences.map((exp, index) => `
-${index + 1}. **Position:** ${exp.position}
-**Company:** ${exp.company}
-**Duration:** ${exp.startDate} - ${exp.endDate}
-**Responsibilities:**
-- ${exp.responsibilities.join('\n  - ')}
-`).join('\n')}
+            **Work Experiences:**
+            ${message.workExperiences.map((exp, index) => `
+            ${index + 1}. **Position:** ${exp.position}
+            **Company:** ${exp.company}
+            **Duration:** ${exp.startDate} - ${exp.endDate}
+            **Responsibilities:**
+            - ${exp.responsibilities.join('\n  - ')}
+            `).join('\n')}
 
-**Education:**
-${message.educations.map((edu, index) => `
-${index + 1}. **Degree:** ${edu.degree}
-**Field of Study:** ${edu.fieldOfStudy}
-**Institution:** ${edu.institution}
-**Duration:** ${edu.startDate} - ${edu.endDate}
-`).join('\n')}
+            **Education:**
+            ${message.educations.map((edu, index) => `
+            ${index + 1}. **Degree:** ${edu.degree}
+            **Field of Study:** ${edu.fieldOfStudy}
+            **Institution:** ${edu.institution}
+            **Duration:** ${edu.startDate} - ${edu.endDate}
+            `).join('\n')}
 
-**Skills:**
-${message.skills.join(', ')}
+            **Skills:**
+            ${message.skills.join(', ')}
 
-**Projects:**
-${message.projects.map((project, index) => `
-${index + 1}. **Project Name:** ${project.name}
-**Role:** ${project.role}
-**Description:** ${project.description}
-`).join('\n')}
+            **Projects:**
+            ${message.projects.map((project, index) => `
+            ${index + 1}. **Project Name:** ${project.name}
+            **Role:** ${project.role}
+            **Description:** ${project.description}
+            `).join('\n')}
 
-**Additional Activities:**
-${message.additionalActivities.join(', ')}
+            **Additional Activities:**
+            ${message.additionalActivities.join(', ')}
 
-**Additional Comments:**
-${message.additionalComments}
+            **Additional Comments:**
+            ${message.additionalComments}
 
-Please organize this information into a well-formatted resume.
-        `;
+            Please organize this information into a well-formatted resume.`;
 
         console.log('Formatted Message:', formattedMessage);
 
         try {
             const response = await sendResume(formattedMessage);
-            // Assuming response contains the AI-generated resume as a string
-            setAiResponse(response); // Update the AI response state
+            setAiResponse(response);
 
-            // Scroll to the response section
             if (responseRef.current) {
                 responseRef.current.scrollIntoView({ behavior: 'smooth' });
             }
@@ -133,9 +126,8 @@ Please organize this information into a well-formatted resume.
             console.log('Resume generated successfully:', response);
         } catch (error) {
             console.error('Error generating resume:', error);
-            // Optionally, you can set an error state here to display an error message to the user
         } finally {
-            setIsLoading(false); // Stop loading
+            setIsLoading(false);
         }
     };
 
@@ -159,7 +151,7 @@ Please organize this information into a well-formatted resume.
                         mb: 4,
                         px: { xs: 2, sm: 4, md: 6 },
                         lineHeight: 1.6,
-                        maxWidth: '80 vw',
+                        maxWidth: '80vw',
                         mx: 'auto',
                     }}
                 >
@@ -167,13 +159,10 @@ Please organize this information into a well-formatted resume.
                     <br />
                     For your privacy and security, avoid including personal information. <br />
                 </Typography>
-
-
             </Container>
 
             {/* Main Content */}
             <Container maxWidth="md">
-                {/* Display Linear Progress Bar when loading */}
                 {isLoading && <LinearProgress sx={{ mb: 2 }} />}
 
                 <Paper
@@ -184,30 +173,33 @@ Please organize this information into a well-formatted resume.
                         position: 'relative',
                     }}
                 >
-                    <Description description={description} setDescription={setDescription} />
-                    <WorkExperience
-                        workExperiences={workExperiences}
-                        setWorkExperiences={setWorkExperiences}
-                    />
-                    <Education educations={educations} setEducations={setEducations} />
-                    <Skills skills={skills} setSkills={setSkills} />
-                    <Projects projects={projects} setProjects={setProjects} /> {/* Add Projects component */}
-                    <AdditionalActivities
-                        additionalActivities={additionalActivities}
-                        setAdditionalActivities={setAdditionalActivities}
-                    />
-                    <AdditionalComments
-                        additionalComments={additionalComments}
-                        setAdditionalComments={setAdditionalComments}
-                    />
-                    <JobDescription
-                        jobDescription={jobDescription}
-                        setJobDescription={setJobDescription}
-                    />
+                    <Suspense fallback={<CenteredCircleLoader />}>
+                        <Description description={description} setDescription={setDescription} />
+                        <WorkExperience
+                            workExperiences={workExperiences}
+                            setWorkExperiences={setWorkExperiences}
+                        />
+                        <Education educations={educations} setEducations={setEducations} />
+                        <Skills skills={skills} setSkills={setSkills} />
+                        <Projects projects={projects} setProjects={setProjects} />
+                        <AdditionalActivities
+                            additionalActivities={additionalActivities}
+                            setAdditionalActivities={setAdditionalActivities}
+                        />
+                        <AdditionalComments
+                            additionalComments={additionalComments}
+                            setAdditionalComments={setAdditionalComments}
+                        />
+                        <JobDescription
+                            jobDescription={jobDescription}
+                            setJobDescription={setJobDescription}
+                        />
+                    </Suspense>
+
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleGenerateClick} // Update the onClick handler
+                        onClick={handleGenerateClick}
                         fullWidth
                         sx={{
                             mt: 4,
@@ -216,17 +208,14 @@ Please organize this information into a well-formatted resume.
                             fontWeight: 'bold',
                             fontSize: { xs: '0.8rem', sm: '1rem', md: '1.1rem' },
                         }}
-                        disabled={isLoading} // Disable button while loading
+                        disabled={isLoading}
                     >
-                        {isLoading ? 'Generating...' : 'Generate Resume'} <DoubleArrowRoundedIcon sx={{ ml: 0.5 }} />
+                        {isLoading ? 'Generating...' : 'Generate Resume'}{' '}
+                        <DoubleArrowRoundedIcon sx={{ ml: 0.5 }} />
                     </Button>
 
-                    {/* Optional: Centered Loader Overlay */}
-                    {isLoading && (
-                        <CenteredCircleLoader />
-                    )}
+                    {isLoading && <CenteredCircleLoader />}
 
-                    {/* AI Response Section */}
                     {aiResponse && (
                         <Paper
                             elevation={2}
@@ -235,25 +224,24 @@ Please organize this information into a well-formatted resume.
                                 p: { xs: 2, sm: 3, md: 4 },
                                 backgroundColor: muiTheme.palette.background.default,
                             }}
-                            ref={responseRef} // Attach the ref here
+                            ref={responseRef}
                         >
                             <Typography variant="h5" gutterBottom>
                                 AI-Generated Resume
                             </Typography>
-                            <ReactMarkdown
-                                children={aiResponse}
-                            />
+                            <SafeMarkdown content={aiResponse} />
                         </Paper>
                     )}
                 </Paper>
             </Container>
 
-            {/* Sensitive Information Warning Dialog */}
-            <SensitiveInfoWarning
-                open={isWarningOpen}
-                onClose={handleCloseWarning}
-                onConfirm={handleConfirmWarning}
-            />
+            <Suspense fallback={<div>Loading...</div>}>
+                <SensitiveInfoWarning
+                    open={isWarningOpen}
+                    onClose={handleCloseWarning}
+                    onConfirm={handleConfirmWarning}
+                />
+            </Suspense>
         </>
     );
 };

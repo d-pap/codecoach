@@ -108,8 +108,8 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
 
   // Starting percentage for chat box size
   const [startingSizePercent, setStartingSizePercent] = useState({
-    widthPercent: 30,
-    heightPercent: 83.5,
+    widthPercent: 40,
+    heightPercent: 80,
   })
 
   // State for chat box size in pixels
@@ -315,8 +315,13 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                             height: '100%',
                             mb: 2,
                             overflow: 'hidden',
+                            border: `2px solid ${theme.palette.primary.light200}`,
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                            borderRadius: 2, 
                           }}
                         >
+
+
                           <Box
                             sx={{
                               width: '100%',

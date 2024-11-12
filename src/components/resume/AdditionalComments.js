@@ -1,11 +1,8 @@
 // AdditionalComments.js
 import React from 'react';
 import { TextField, Typography, Box } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import theme from '../../theme'; // Adjust the path if necessary
 
 const AdditionalComments = ({ additionalComments, setAdditionalComments }) => {
-    const muiTheme = useTheme();
 
     return (
         <Box sx={{ mb: 4 }}>

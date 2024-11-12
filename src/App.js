@@ -249,7 +249,9 @@ function AppContent() {
             path="/resume"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <Resume />
+                <Suspense fallback={<CenteredLoader />}>
+                  <Resume />
+                </Suspense>
               </ProtectedRoute>
             }
           />
