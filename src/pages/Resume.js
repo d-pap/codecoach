@@ -229,7 +229,7 @@ const Resume = () => {
                             <Typography variant="h5" gutterBottom>
                                 AI-Generated Resume
                             </Typography>
-                            <SafeMarkdown content={aiResponse} />
+                                <SafeMarkdown content={aiResponse.response.response} />
                         </Paper>
                     )}
                 </Paper>
