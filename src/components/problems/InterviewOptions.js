@@ -1,6 +1,6 @@
 export const getCompanies = async () => {
   // a list of FAANG companies
-  return ['Facebook', 'Amazon', 'Microsoft', 'LinkedIn', 'Google', ,]
+  return ['Facebook', 'Amazon', 'Microsoft', 'LinkedIn', 'Google','Apple','Netflix',]
 }
 
 export const getTopics = async () => {
