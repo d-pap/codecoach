@@ -317,11 +317,9 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                             overflow: 'hidden',
                             border: `2px solid ${theme.palette.primary.light200}`,
                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                            borderRadius: 2, 
+                            borderRadius: 2,
                           }}
                         >
-
-
                           <Box
                             sx={{
                               width: '100%',
