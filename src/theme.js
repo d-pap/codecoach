@@ -21,6 +21,11 @@ const theme = createTheme({
       green: '#2dd881',
       black: '#333333',
     },
+    secondary: {
+      main: '#4E3ABA',
+    },
+    tertiary: { main: '#A24688' },
+    quaternary: { main: '#DB4E66' },
     error: {
       dark: '#b91c1c',
       main: '#ef4444', //! delete buttons
@@ -28,6 +33,7 @@ const theme = createTheme({
     },
     text: {
       primary: '#0f172a',
+      quaternary: '#DB4E66',
       white: '#f0f0f0',
       red: '#dc2626',
     },
