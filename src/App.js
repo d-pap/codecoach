@@ -49,7 +49,7 @@ const CookieInfo = lazy(() => import('./pages/CookieInfo'))
 const TermsOfService = lazy(() => import('./pages/TermsOfService'))
 const ScrollToTop = lazy(() => import('./components/utility/ScrollToTop'))
 const AuthModal = lazy(() => import('./components/auth/AuthModal'))
-
+const CourseContent = lazy(() => import('./pages/CourseContent'))
 Amplify.configure(awsExports)
 
 function App() {
@@ -172,6 +172,16 @@ function AppContent() {
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <Suspense fallback={<CenteredLoader />}>
                   <Courses />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/courses/:courseId"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <Suspense fallback={<CenteredLoader />}>
+                  <CourseContent />
                 </Suspense>
               </ProtectedRoute>
             }

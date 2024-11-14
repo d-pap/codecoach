@@ -5,6 +5,7 @@
  */
 import React, { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
@@ -13,67 +14,72 @@ import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import Skeleton from '@mui/material/Skeleton'
+
 import { getAllCourses, getCourseByIdProblems } from '../api'
 // course card component
-const CourseCard = ({ course, comingSoon }) => (
-  <Card
-    sx={{
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-    }}
-  >
-    <CardContent
+const CourseCard = ({ course, comingSoon }) => {
+  const navigate = useNavigate()
+  return (
+    <Card
       sx={{
-        flexGrow: 1,
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
       }}
     >
-      <Box>
-        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-          {course.title}
-        </Typography>
-        <Typography variant="body2" sx={{ mt: 1 }}>
-          {course.description}
-        </Typography>
-      </Box>
-
-      <Box
+      <CardContent
         sx={{
-          mt: 'auto',
-          width: '100%',
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
         }}
       >
-        {comingSoon && (
-          <Button
-            variant="contained"
-            disabled
-            sx={{
-              mt: 2,
-              width: '100%',
-            }}
-          >
-            Coming Soon
-          </Button>
-        )}
-        {!comingSoon && (
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              mt: 2,
-              width: '100%',
-            }}
-          >
-            View Course
-          </Button>
-        )}
-      </Box>
-    </CardContent>
-  </Card>
-)
+        <Box>
+          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+            {course.title}
+          </Typography>
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            {course.description}
+          </Typography>
+        </Box>
+
+        <Box
+          sx={{
+            mt: 'auto',
+            width: '100%',
+          }}
+        >
+          {comingSoon && (
+            <Button
+              variant="contained"
+              disabled
+              sx={{
+                mt: 2,
+                width: '100%',
+              }}
+            >
+              Coming Soon
+            </Button>
+          )}
+          {!comingSoon && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => navigate(`/courses/${course._id}`)}
+              sx={{
+                mt: 2,
+                width: '100%',
+              }}
+            >
+              View Course
+            </Button>
+          )}
+        </Box>
+      </CardContent>
+    </Card>
+  )
+}
 
 const SkeletonCourseCards = () => (
   <>
