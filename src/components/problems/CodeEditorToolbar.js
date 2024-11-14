@@ -120,14 +120,11 @@ const CodeEditorToolbar = ({
           options={themeOptions}
           currentThemeStyle={currentThemeStyle}
         />
-        <Typography
-          variant="body2"
-          sx={{ p: 1, ml: 'auto', color: currentThemeStyle.color }}
-        >
-          {`You have ${MAX_RUN_SUBMIT_COUNT - runSubmitCount} runs left for today`}
-        </Typography>
+
         <Tooltip title="In the development version, you have a limited number of runs and submissions per day. Each run or submission costs 1 run.">
-          <InfoRoundedIcon sx={{ color: currentThemeStyle.color, ml: 1 }} />
+          <InfoRoundedIcon
+            sx={{ color: currentThemeStyle.color, ml: 'auto' }}
+          />
         </Tooltip>
       </Toolbar>
     </AppBar>

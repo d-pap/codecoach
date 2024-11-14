@@ -1,404 +1,187 @@
+// ChatBox.js
 import React, {
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
   useCallback,
-} from 'react'
-import { useCookies } from 'react-cookie'
-import {
-  Box,
-  TextField,
-  Button,
-  Paper,
-  CircularProgress,
-  IconButton,
-  Typography,
-  // Collapse,
-  Tooltip,
-  // FormControlLabel,
-  // Switch,
-  // Divider,
-  Avatar,
-} from '@mui/material'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
-// import AddIcon from '@mui/icons-material/Add'
-// import RemoveIcon from '@mui/icons-material/Remove'
-// import SettingsIcon from '@mui/icons-material/Settings'
-import InfoRoundedIcon from '@mui/icons-material/InfoRounded'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { useTheme } from '@mui/material/styles'
-import SendChat from './AIChat'
-import aiAvatar from '../../../images/aiAvatar.svg'
+  Suspense,
+} from 'react';
+import { Box, Paper, Typography, Tooltip } from '@mui/material';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import { useTheme } from '@mui/material/styles';
+import SendChat from './AIChat';
+import DOMPurify from 'dompurify';
+import CenteredCircleLoader from '../../utility/CenteredLoader';
+
+// Lazy load child components
+const Messages = React.lazy(() => import('./Messages'));
+const ChatInput = React.lazy(() => import('./ChatInput'));
+const ChatButtons = React.lazy(() => import('./ChatButtons'));
 
 // Function to clear chat history from localStorage
 const clearChatHistory = (problemId) => {
-  localStorage.removeItem(`chatHistory-${problemId}`)
-}
+  localStorage.removeItem(`chatHistory-${problemId}`);
+};
 
-// ChatBox component to display chat history and send messages
 const ChatBox = ({
   problem,
-  // drawerWidth,
-  setDrawerWidth,
   chatHistory,
   setChatHistory,
-  isLoading,
-  setIsLoading,
   chatCount,
   setChatCount,
-  // showSettings,
-  // setShowSettings,
   initialScrollPosition,
   onScrollPositionChange,
-  code,
+  currentCode,
+  currentLanguage,
 }) => {
-  const theme = useTheme()
-  const [input, setInput] = useState('')
-  const [includeCode, setIncludeCode] = useState(false)
-  const [tooltipOpen, setTooltipOpen] = useState(false)
+  const theme = useTheme();
+  const [input, setInput] = useState('');
+  const [includeCode, setIncludeCode] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Manage isLoading here
 
-  // Initialize cookies
-  const [cookies, setCookie] = useCookies(['userConsent', 'tooltipsEnabled'])
+  const MAX_CHAT_COUNT = 20;
 
-  // Initialize tooltipsEnabled from cookies if userConsent is true
-  const [tooltipsEnabled, setTooltipsEnabled] = useState(() => {
-    if (cookies.userConsent) {
-      console.log('Cookies:', cookies)
-      const tooltipEnabledValue =
-        cookies.tooltipsEnabled !== undefined
-          ? JSON.parse(cookies.tooltipsEnabled)
-          : true
-      setTooltipOpen(tooltipEnabledValue)
-      return tooltipEnabledValue
-    } else {
-      setTooltipOpen(true)
-      return true
-    }
-  })
-
-  // Limit the number of chats to prevent abuse
-  const MAX_CHAT_COUNT = 20
-
-  // **Ref for Scrollable Container**
-  const scrollContainerRef = useRef(null)
+  // Ref for Scrollable Container
+  const scrollContainerRef = useRef(null);
 
   const scrollToBottom = useCallback(() => {
     if (scrollContainerRef.current) {
-      const { scrollHeight, scrollTop, clientHeight } =
-        scrollContainerRef.current
-      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100 // 100px threshold
-      if (isNearBottom) {
-        scrollContainerRef.current.scrollTop =
-          scrollContainerRef.current.scrollHeight
-      }
+      scrollContainerRef.current.scrollTop =
+        scrollContainerRef.current.scrollHeight;
     }
-  }, [])
-
-  // useEffect(() => {
-  //   scrollToBottom()
-  // }, [chatHistory, scrollToBottom])
+  }, []);
 
   useLayoutEffect(() => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTop = initialScrollPosition
+      scrollContainerRef.current.scrollTop = initialScrollPosition;
     }
-  }, [initialScrollPosition])
+  }, [initialScrollPosition]);
 
   useEffect(() => {
-    // **Capture Scroll Position before Unmounting**
+    // Capture Scroll Position before Unmounting
     return () => {
       if (scrollContainerRef.current) {
-        onScrollPositionChange(scrollContainerRef.current.scrollTop)
+        onScrollPositionChange(scrollContainerRef.current.scrollTop);
       }
-    }
-  }, [onScrollPositionChange])
+    };
+  }, [onScrollPositionChange]);
 
-  const handleInputChange = (e) => {
-    setInput(e.target.value)
-  }
+  // Function to sanitize input using DOMPurify
+  const sanitizeInput = (dirtyInput) => {
+    return DOMPurify.sanitize(dirtyInput);
+  };
+
+  // Function to sanitize AI response using DOMPurify
+  const sanitizeResponse = (dirtyResponse) => {
+    return DOMPurify.sanitize(dirtyResponse);
+  };
 
   // Function to send a message to the AI model
-  const handleSend = async (command = undefined) => {
-    if (command === 'user' && input.trim() === '') return
+  const handleSend = async (command = 'user') => {
+    if (command === 'user' && input.trim() === '') return;
 
-    let message = ''
+    let message = '';
 
     // Limit the number of chats to prevent abuse
     if (chatCount >= MAX_CHAT_COUNT) {
-      alert('You have reached the maximum number of messages for today.')
-      return
+      alert('You have reached the maximum number of messages for today.');
+      return;
     } else if (command === 'user') {
-      message = `${input}\n`
-      if (includeCode && code != null) {
-        message += `User Code: ${code}`
+      // Sanitize user input
+      const sanitizedInput = sanitizeInput(input.trim());
+      message = `${sanitizedInput}\n`;
+      if (includeCode && currentCode != null) {
+        const sanitizedCode = sanitizeInput(currentCode);
+        message += `\n\nUser Code:\n\n${sanitizeInput(
+          currentLanguage
+        )}\n\n\`\`\`\n${sanitizedCode}\n\`\`\``;
       }
       // Increment chat count
-      setChatCount((prevCount) => prevCount + 1)
+      setChatCount((prevCount) => prevCount + 1);
     } else if (command === 'hint') {
-      message = 'Requesting a hint...'
-      // Increment chat count
-      setChatCount((prevCount) => prevCount + 1)
+      message = 'Requesting a hint...';
+      setChatCount((prevCount) => prevCount + 1);
     } else if (command === 'solution') {
-      message = 'Requesting a solution...'
-      // Increment chat count
-      setChatCount((prevCount) => prevCount + 1)
+      message = 'Requesting a solution...';
+      setChatCount((prevCount) => prevCount + 1);
     } else {
-      console.error('Invalid command:', command)
-      return
+      console.error('Invalid command:', command);
+      return;
     }
 
+    // Create a new history object with sanitized user message
     const newHistory = {
       ...chatHistory,
-      data: [...chatHistory.data, { role: 'user', content: message }],
-    }
-    setChatHistory(newHistory)
+      data: [
+        ...chatHistory.data,
+        { role: 'user', content: sanitizeInput(message) },
+      ],
+    };
+    setChatHistory(newHistory);
 
-    setInput('')
-    setIsLoading(true)
+    if (command === 'user') {
+      setInput('');
+    }
+    setIsLoading(true);
 
     try {
-      const conversation_id = chatHistory.conversation_id
+      const conversation_id = chatHistory.conversation_id;
 
       const query = await SendChat(
-        problem.title,
-        problem.description,
-        message,
+        sanitizeInput(problem.title),
+        sanitizeInput(problem.description),
+        sanitizeInput(message),
         conversation_id,
         command,
-        code // Pass the code to SendChat
-      )
+        sanitizeInput(currentLanguage)
+      );
+
+      // Sanitize AI response
+      const sanitizedResponse = sanitizeResponse(query.response);
 
       const updatedHistory = {
         ...newHistory,
         data: [
           ...newHistory.data,
-          { role: 'assistant', content: query.response },
+          { role: 'assistant', content: sanitizedResponse },
         ],
-      }
+      };
 
       if (query.conversation_id) {
-        updatedHistory.conversation_id = query.conversation_id
+        updatedHistory.conversation_id = query.conversation_id;
       }
 
-      setChatHistory(updatedHistory)
+      setChatHistory(updatedHistory);
 
       // Scroll to bottom after state update
-      setTimeout(scrollToBottom, 100)
+      setTimeout(scrollToBottom, 100);
     } catch (error) {
-      console.error('Failed to send chat:', error)
+      console.error('Failed to send chat:', error);
       const updatedHistory = {
         ...newHistory,
         data: [
           ...newHistory.data,
-          { role: 'assistant', content: 'Failed to get response from model' },
+          {
+            role: 'assistant',
+            content: sanitizeResponse('Failed to get response from model'),
+          },
         ],
-      }
-      setChatHistory(updatedHistory)
+      };
+      setChatHistory(updatedHistory);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false); // Ensure isLoading is set to false
     }
 
-    setTimeout(scrollToBottom, 100)
-
-    code = null // Reset the code after sending it
-  }
+    setTimeout(scrollToBottom, 100);
+  };
 
   // Function to delete chat history
   const handleDelete = () => {
-    clearChatHistory(problem._id)
-    setChatHistory({ conversation_id: null, data: [] })
-    setInput('')
-  }
-
-  // Handle Enter key press in the input field
-  const handleOnPressEnter = (event) => {
-    if (event.key === 'Enter' && !isLoading) {
-      if (chatCount >= MAX_CHAT_COUNT || input.trim() === '') {
-        // prevent default action and give alert
-        event.preventDefault()
-        if (chatCount >= MAX_CHAT_COUNT) {
-          alert('You have reached the maximum number of messages for today.')
-        }
-        return
-      }
-      handleSend('user')
-    }
-  }
-
-  const handleToggle = () => {
-    setTooltipsEnabled((prev) => {
-      const newValue = !prev
-      if (cookies.userConsent) {
-        setCookie('tooltipsEnabled', newValue.toString(), { path: '/' })
-        console.log('Cookie updated:', newValue)
-      }
-      return newValue
-    })
-    setTooltipOpen(false)
-  }
-
-  const formatChatContent = (content) => {
-    return (
-      <Box sx={{ p: 1 }}>
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            // formatting markdown for ai messages
-            // paragraphs formatting
-            p: ({ node, ...props }) => (
-              <Typography
-                {...props}
-                sx={{
-                  mb: 0.5,
-                  fontSize: '0.875rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-
-            // headings
-            h1: ({ node, ...props }) => (
-              <Typography
-                variant="h4"
-                {...props}
-                sx={{
-                  mb: 1,
-                  fontSize: '1.25rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-            h2: ({ node, ...props }) => (
-              <Typography
-                variant="h5"
-                {...props}
-                sx={{
-                  mb: 1,
-                  fontSize: '1.125rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-            h3: ({ node, ...props }) => (
-              <Typography
-                variant="h6"
-                {...props}
-                sx={{
-                  mb: 1,
-                  fontSize: '1rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-
-            // lists formatting
-            ul: ({ node, ...props }) => (
-              <ul
-                {...props}
-                style={{
-                  paddingLeft: '1.5em',
-                  marginBottom: '0.5em',
-                  fontSize: '0.875rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-            ol: ({ node, ...props }) => (
-              <ol
-                {...props}
-                style={{
-                  paddingLeft: '1.5em',
-                  marginBottom: '0.5em',
-                  fontSize: '0.875rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-
-            // list items formatting
-            li: ({ node, ...props }) => (
-              <li
-                {...props}
-                style={{
-                  marginBottom: '0.5em',
-                  fontSize: '0.875rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-
-            // blockquotes formatting
-            blockquote: ({ node, ...props }) => (
-              <blockquote
-                {...props}
-                style={{
-                  borderLeft: '4px solid #ccc',
-                  paddingLeft: '1em',
-                  color: '#666',
-                  marginBottom: '0.5em',
-                  fontSize: '0.875rem',
-                  lineHeight: '1.5',
-                  letterSpacing: '0.01em',
-                }}
-              />
-            ),
-
-            // code formatting
-            code({ node, inline, className, children, ...props }) {
-              const hasLanguage = /language-(\w+)/.exec(className || '')
-
-              return !inline && hasLanguage ? (
-                <SyntaxHighlighter
-                  style={oneDark}
-                  language={hasLanguage[1]}
-                  PreTag="div"
-                  customStyle={{
-                    borderRadius: '12px',
-                    marginBottom: '0.5em',
-                    fontSize: '0.875rem',
-                    lineHeight: '1.5',
-                    letterSpacing: '0.01em',
-                  }}
-                  {...props}
-                >
-                  {String(children).replace(/\n$/, '')}
-                </SyntaxHighlighter>
-              ) : (
-                // inline code
-                <code
-                  {...props}
-                  style={{
-                    backgroundColor: 'rgba(27,31,35,0.05)',
-                    padding: '0.2em 0.4em',
-                    borderRadius: '6px',
-                    fontFamily: 'monospace',
-                    fontSize: '0.875rem',
-                    lineHeight: '1.5',
-                    letterSpacing: '0.01em',
-                  }}
-                >
-                  {children}
-                </code>
-              )
-            },
-          }}
-        >
-          {content}
-        </ReactMarkdown>
-      </Box>
-    )
-  }
+    clearChatHistory(problem._id);
+    setChatHistory({ conversation_id: null, data: [] });
+    setInput('');
+  };
 
   return (
     <Paper
@@ -430,253 +213,54 @@ const ChatBox = ({
         </Typography>
       </Box>
 
-      {/* Chat History Section */}
+      {/* Scrollable content including Messages and ChatButtons */}
       <Box
-        ref={scrollContainerRef}
         sx={{
-          flex: 1,
+          flexGrow: 1,
           overflowY: 'auto',
-          mb: 2,
-          p: 2,
-          border: 'none',
           display: 'flex',
           flexDirection: 'column',
         }}
+        ref={scrollContainerRef}
       >
-        {/* Avatar and Call-to-Action */}
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            mb: 2,
-          }}
-        >
-          <Avatar
-            alt="AI Robot"
-            src={aiAvatar}
-            sx={{ width: 80, height: 80, mb: 1 }}
+        {/* Messages Component */}
+        <Suspense fallback={<CenteredCircleLoader />}>
+          <Box sx={{ flexGrow: 1 }}>
+            <Messages chatHistory={chatHistory} isLoading={isLoading} />
+          </Box>
+        </Suspense>
+
+        {/* ChatButtons Component */}
+        <Suspense fallback={<CenteredCircleLoader />}>
+          <Box sx={{ flexShrink: 0 }}>
+            <ChatButtons
+              handleSend={handleSend}
+              isLoading={isLoading}
+              chatCount={chatCount}
+              MAX_CHAT_COUNT={MAX_CHAT_COUNT}
+              includeCode={includeCode}
+              setIncludeCode={setIncludeCode}
+            />
+          </Box>
+        </Suspense>
+      </Box>
+
+      {/* ChatInput Component (outside the scrollable area) */}
+      <Suspense fallback={<CenteredCircleLoader />}>
+        <Box sx={{ flexShrink: 0 }}>
+          <ChatInput
+            input={input}
+            setInput={setInput}
+            handleSend={handleSend}
+            isLoading={isLoading}
+            chatCount={chatCount}
+            MAX_CHAT_COUNT={MAX_CHAT_COUNT}
+            handleDelete={handleDelete}
           />
-          <Typography
-            variant="subtitle1"
-            sx={{ fontWeight: 'bold', textAlign: 'center' }}
-          >
-            codecoach answers your questions instantly!
-          </Typography>
         </Box>
-
-        {/* Chat Messages */}
-        {Array.isArray(chatHistory.data) &&
-          chatHistory.data.map((chat, index) => (
-            <Box
-              key={index}
-              sx={{
-                display: 'flex',
-                justifyContent:
-                  chat.role === 'user' ? 'flex-end' : 'flex-start',
-                mb: 2,
-              }}
-            >
-              {chat.role === 'assistant' && (
-                <Avatar
-                  alt="AI"
-                  src={aiAvatar}
-                  sx={{
-                    width: 30,
-                    height: 30,
-                    mr: 1,
-                    alignSelf: 'flex-end',
-                  }}
-                />
-              )}
-              <Box
-                sx={{
-                  bgcolor: chat.role === 'user' ? 'primary.main' : 'grey.200',
-                  color: chat.role === 'user' ? 'common.white' : 'text.primary',
-                  borderRadius:
-                    chat.role === 'user'
-                      ? '20px 20px 5px 20px'
-                      : '20px 20px 20px 5px',
-                  p: 2,
-                  maxWidth: '80%',
-                  wordBreak: 'break-word',
-                }}
-              >
-                {chat.role === 'assistant' ? (
-                  formatChatContent(chat.content)
-                ) : (
-                  <Typography
-                    sx={{
-                      color: 'common.white',
-                      fontSize: '0.875rem',
-                    }}
-                  >
-                    {chat.content}
-                  </Typography>
-                )}
-              </Box>
-            </Box>
-          ))}
-
-        {/* Loading Indicator */}
-        {isLoading && (
-          <Box
-            sx={{
-              alignSelf: 'flex-start',
-              bgcolor: 'background.paper',
-              borderRadius: 2,
-              p: 2,
-              mb: 2,
-              maxWidth: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <CircularProgress size={20} />
-          </Box>
-        )}
-
-        {/* Quick Action Buttons */}
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            mt: 'auto', // Push to the bottom
-            pt: 2,
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-end',
-              maxWidth: '70%',
-            }}
-          >
-            {/* Get a Hint Button */}
-            <Button
-              variant="contained"
-              disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-              sx={{
-                mb: 1,
-                borderRadius: '20px 20px 5px 20px',
-              }}
-              onClick={() => handleSend('hint')}
-            >
-              Get a Hint
-            </Button>
-
-            {/* Analyze/Exclude Code Button */}
-            <Tooltip
-              title={'Toggle code analysis'}
-              enterDelay={500}
-              disableHoverListener={!tooltipsEnabled}
-            >
-              <div>
-                <Button
-                  variant="outlined"
-                  disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-                  sx={{
-                    mb: 1,
-                    borderRadius: '20px 20px 5px 20px',
-                    backgroundColor: isLoading
-                      ? theme.palette.grey[300]
-                      : includeCode
-                        ? 'common.white'
-                        : 'primary.main',
-                    color: includeCode ? 'text.primary' : 'common.white',
-                    '&:hover': {
-                      backgroundColor: includeCode
-                        ? 'action.hover'
-                        : 'primary.dark',
-                      color: includeCode ? 'text.primary' : 'common.white',
-                      borderColor: includeCode
-                        ? 'secondary.main'
-                        : 'common.white',
-                    },
-                    transition:
-                      'background-color 0.3s, border-color 0.3s, color 0.3s',
-                  }}
-                  onClick={() => setIncludeCode(!includeCode)}
-                >
-                  {includeCode ? 'Exclude My Code' : 'Analyze My Code'}
-                </Button>
-              </div>
-            </Tooltip>
-          </Box>
-        </Box>
-      </Box>
-
-      {/* Input Field and Send Button */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          p: 1,
-          border: 'none',
-        }}
-      >
-        <Tooltip
-          title={'Delete the chat history'}
-          enterDelay={500}
-          disableHoverListener={!tooltipsEnabled}
-        >
-          <div>
-            <IconButton
-              disabled={isLoading}
-              sx={{
-                color: 'error.main',
-              }}
-              onClick={handleDelete}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
-        </Tooltip>
-
-        <TextField
-          value={input}
-          onChange={handleInputChange}
-          onKeyDown={handleOnPressEnter}
-          placeholder={`Type a message (${MAX_CHAT_COUNT - chatCount} messages left today)...`}
-          variant="outlined"
-          fullWidth
-          sx={{
-            mr: 1,
-            '& fieldset': { borderRadius: 2 },
-          }}
-          disabled={isLoading || chatCount >= MAX_CHAT_COUNT}
-          multiline
-          maxRows={4}
-        />
-
-        <Tooltip
-          title={`You have ${MAX_CHAT_COUNT - chatCount} messages left for today.`}
-          enterDelay={500}
-          disableHoverListener={!tooltipsEnabled}
-        >
-          <div>
-            <Button
-              onClick={() => handleSend('user')}
-              disabled={
-                isLoading || chatCount >= MAX_CHAT_COUNT || input.trim() === ''
-              }
-              variant="contained"
-              sx={{
-                bgcolor: 'primary.main',
-                '&:hover': {
-                  bgcolor: 'primary.main',
-                },
-              }}
-            >
-              Send
-            </Button>
-          </div>
-        </Tooltip>
-      </Box>
+      </Suspense>
     </Paper>
-  )
-}
+  );
+};
 
-export default ChatBox
+export default ChatBox;

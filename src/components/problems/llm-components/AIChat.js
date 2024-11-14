@@ -2,7 +2,14 @@
  * Allows the user to maintain a conversation with the AI
  */
 
-const SendChat = async (title, description, input, convoId, command) => {
+const SendChat = async (
+  title,
+  description,
+  input,
+  convoId,
+  command,
+  currentLanguage
+) => {
   let id = convoId
   let formattedInput = ''
 
@@ -22,13 +29,16 @@ const SendChat = async (title, description, input, convoId, command) => {
     // Modify the input based on the command type
     if (command === 'hint') {
       formattedInput +=
-        ' Provide the user with a breakdown of the problem. Start the response with "Here is a breakdown of the problem:". Do not provide a solution and do not provide code.'
+        ' Provide the user with a breakdown of the problem. Start the response with "Here is a breakdown of the problem:". Do not provide a solution and do not provide code. Try to do this in the context of ${currentLanguage}.'
     } else if (command === 'solution') {
       formattedInput +=
         ' Provide the user with a solution to the problem. Start the response with "Here is a solution to the problem:". Provide a short explanation afterwards. Be concise.'
     } else {
-      formattedInput += ` User Input: ${input}`
+      formattedInput += ` User Input: (${input}) The user is using: (${currentLanguage})`
     }
+
+    console.log('Formatted Input:', formattedInput)
+    console.log('Conversation ID:', id)
 
     // Send the formatted message to the AI
     const chat = await sendChatMessage(id, formattedInput)
