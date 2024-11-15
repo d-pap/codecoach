@@ -61,7 +61,7 @@ const Resume = () => {
 
   // Chat limit state
   const [chatCount, setChatCount] = useState(0)
-  const chatLimit = 10
+  const chatLimit = 5
 
   const resetChatCountIfNeeded = () => {
     const savedDate = localStorage.getItem('resumeDate')
