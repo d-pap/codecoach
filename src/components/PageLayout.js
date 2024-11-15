@@ -9,7 +9,7 @@ const PageLayout = ({ children, sx = {}, title, description }) => {
       <Typography variant="subtitle1" align="center" gutterBottom>
         {description}
       </Typography>
-      <Box sx={{ mb: 8, ...sx }}>{children}</Box>
+      <Box sx={{ mt: 4, mb: 8, ...sx }}>{children}</Box>
     </Container>
   )
 }

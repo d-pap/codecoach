@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { styled, alpha } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import Pagination from '@mui/material/Pagination'
@@ -21,34 +21,53 @@ import ProblemCardLayout from '../components/problems/ProblemCardLayout'
 import PageLayout from '../components/PageLayout'
 import ProblemsList from '../components/ProblemsList'
 import FilterToolbar from '../components/FilterToolbar'
-
+import { fetchProblemById, getCourseById, getAllCourses } from '../api'
+import ProblemCardSkeleton from '../components/problems/ProblemCardSkeleton'
 function CourseContent() {
-  //! dummy data for problems in a course
-  const problems = [
-    {
-      _id: '1',
-      title: 'Problem 1',
-      description: 'Problem 1 Description',
-      difficulty: 'Easy',
-      topics: ['Array', 'String'],
-      contestRegion: 'Africa',
-      contestYear: 2024,
+  //TODO: get all problem info for the course's problemIds vvvvvv --------------------------------
+  const { courseId } = useParams()
+
+  //! query that has a fallback if nothing is in cache
+  // fetch courses data from cache OR fallback to API if not in cache (for direct access to course content and not the courses page)
+  const queryClient = useQueryClient()
+  const { data: courses = [], isLoading: isCoursesLoading } = useQuery({
+    queryKey: ['courses'],
+    queryFn: async () => {
+      const cachedCourses = queryClient.getQueryData(['courses'])
+      return cachedCourses ?? getAllCourses() // fetch from API if not in cache
     },
-    {
-      _id: '2',
-      title: 'Problem 2',
-      description: 'Problem 2 Description',
-      difficulty: 'Medium',
-      topics: ['Array', 'String'],
-      contestRegion: 'Africa',
-      contestYear: 2024,
+    staleTime: 1000 * 60 * 30,
+    cacheTime: 1000 * 60 * 60,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  })
+
+  // find the specific course from the fetched or cached courses data
+  const course = courses.find((course) => course._id === courseId)
+
+  // use the problemIds to fetch problem details
+  const { data: courseProbs, isLoading: isProblemsLoading } = useQuery({
+    queryKey: ['courseProblems', courseId],
+    queryFn: async () => {
+      if (!course?.problemIds) return [] // return empty array if no problemIds
+      return Promise.all(course.problemIds.map((id) => fetchProblemById(id)))
     },
-  ]
+    enabled: !!course?.problemIds, // only run query if we have problemIds
+    staleTime: 1000 * 60 * 30,
+    cacheTime: 1000 * 60 * 60,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  })
+
+  const isLoading = isCoursesLoading || isProblemsLoading
+
+  //TODO: get all problem info for the course's problemIds ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ --------------------------------
 
   //TODO: need the following for pagination vvvvvv --------------------------------
   const problemsPerPage = 10
   //TODO: get `totalProblems` from the API for `count={Math.ceil(totalProblems / problemsPerPage)}`
-  const totalProblems = 30 //! get from API, react query fetch
+  //const totalProblems = 30 //! get from API, react query fetch
+  const totalProblems = courseProbs?.length ?? 0
   const [currentPage, setCurrentPage] = useState(1)
   const handlePageChange = (event, page) => {
     setCurrentPage(page)
@@ -124,7 +143,7 @@ function CourseContent() {
   //TODO: need the above for filters ^^^^^ --------------------------------
 
   return (
-    <PageLayout title="Course Title" description="Course Description">
+    <PageLayout title={course?.title} description={course?.description}>
       <ProblemsList
         filters={true}
         filterToolbar={
@@ -138,9 +157,13 @@ function CourseContent() {
         topPagination={paginationComponent}
         bottomPagination={paginationComponent}
       >
-        {problems.map((problem) => (
-          <ProblemCardLayout key={problem._id} problem={problem} />
-        ))}
+        {isLoading ? (
+          <ProblemCardSkeleton />
+        ) : (
+          courseProbs?.map((problem) => (
+            <ProblemCardLayout key={problem._id} problem={problem} />
+          ))
+        )}
       </ProblemsList>
     </PageLayout>
   )
