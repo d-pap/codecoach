@@ -61,7 +61,7 @@ const Resume = () => {
 
   // Chat limit state
   const [chatCount, setChatCount] = useState(0)
-  const chatLimit = 5
+  const chatLimit = 10
 
   const resetChatCountIfNeeded = () => {
     const savedDate = localStorage.getItem('resumeDate')
@@ -77,6 +77,12 @@ const Resume = () => {
 
   useEffect(() => {
     resetChatCountIfNeeded()
+
+    // Load last resume from localStorage
+    const savedResume = localStorage.getItem('lastResume')
+    if (savedResume) {
+      setAiResponse(JSON.parse(savedResume))
+    }
   }, [])
 
   const incrementChatCount = () => {
@@ -186,6 +192,7 @@ const Resume = () => {
     try {
       const response = await sendResume(formattedMessage)
       setAiResponse(response)
+      localStorage.setItem('lastResume', JSON.stringify(response)) // Save to localStorage
       incrementChatCount() // Increment count after successful generation
 
       if (responseRef.current) {
@@ -316,7 +323,7 @@ const Resume = () => {
               ref={responseRef}
             >
               <Typography variant="h5" gutterBottom>
-                AI-Generated Resume
+                Your Resume Template
               </Typography>
               <SafeMarkdown content={aiResponse.response.response} />
             </Paper>
