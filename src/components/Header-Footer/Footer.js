@@ -237,7 +237,7 @@ const Footer = () => {
             </Grid>
             <Grid item>
               <Typography variant="body2">
-                <Link href="mailto:info@yourcompany.com">Cookie Settings</Link>
+                <Link href="/cookie-info">Cookie Settings</Link>
               </Typography>
             </Grid>
           </Grid>

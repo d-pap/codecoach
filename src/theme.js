@@ -97,7 +97,7 @@ const theme = createTheme({
       fontSize: '1rem',
       color: '#000000',
       letterSpacing: '0.01071em',
-      lineHeight: '1.75rem', //! new
+      lineHeight: '1.0rem', //! new
     },
     subtitle1: {
       // for section subtitles

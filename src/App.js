@@ -44,10 +44,11 @@ const ICPCMultipleForm = lazy(
 const InterviewForm = lazy(
   () => import('./pages/problems/add-problems/InterviewForm')
 )
-
 const Interview = lazy(() => import('./pages/Interview'))
 const Resume = lazy(() => import('./pages/Resume'))
 const NotFound = lazy(() => import('./pages/NotFound'))
+const Help = lazy(() => import('./pages/Help'))
+const CookieInfo = lazy(() => import('./pages/CookieInfo'))
 
 Amplify.configure(awsExports)
 
@@ -253,6 +254,24 @@ function AppContent() {
                   <Resume />
                 </Suspense>
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/help"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <Suspense fallback={<CenteredLoader />}>
+                  <Help />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cookie-info"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <CookieInfo />
+              </Suspense>
             }
           />
           <Route path="*" element={<NotFound />} />
