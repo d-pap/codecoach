@@ -294,6 +294,7 @@ function Interview() {
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   if (isLoading) return <SkeletonProblemList />

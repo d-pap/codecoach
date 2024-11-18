@@ -245,16 +245,16 @@ const SkeletonProblemList = () => (
   </Box>
 )
 
-function ICPC() {
+function Problems() {
   const [region, setRegion] = useState('all')
   const [subregion, setSubregion] = useState('all')
   const [year, setYear] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
   const problemsPerPage = 10
-  const queryClient = useQueryClient() //! to use prefetchQuery
+  const queryClient = useQueryClient()
 
-  //! initial query to fetch problems for page 1 (10 problems)
+  // initial query to fetch problems for page 1 (10 problems)
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['problems', currentPage, region, subregion, year, searchQuery],
     queryFn: () =>
@@ -272,7 +272,7 @@ function ICPC() {
     refetchOnWindowFocus: false,
   })
 
-  //! after page 1 is loaded, prefetch data for next page
+  // after page 1 is loaded, prefetch data for next page
   useEffect(() => {
     if (
       !isLoading &&
@@ -314,6 +314,7 @@ function ICPC() {
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   const handleRegionChange = (event) => {
@@ -436,4 +437,4 @@ function ICPC() {
 }
 
 export { SkeletonProblemList }
-export default ICPC
+export default Problems

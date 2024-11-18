@@ -13,6 +13,7 @@ import Grow from '@mui/material/Grow'
 import Paper from '@mui/material/Paper'
 import { ResizableBox } from 'react-resizable'
 import 'react-resizable/css/styles.css'
+import { set } from 'lodash'
 
 const StyledPanelResizeHandle = styled(PanelResizeHandle)`
   background-color: #ccc;
@@ -34,7 +35,8 @@ const StyledPanelResizeHandle = styled(PanelResizeHandle)`
     font-size: 18px;
   }
 `
-//! handle for resizing the chat box
+
+// Handle for resizing the chat box
 const FullEdgeHandle = React.forwardRef(({ handleAxis, ...props }, ref) => {
   return (
     <div
@@ -66,7 +68,6 @@ const FullEdgeHandle = React.forwardRef(({ handleAxis, ...props }, ref) => {
         ...(handleAxis === 'nw' && {
           left: 0,
           top: 0,
-
           width: '20px',
           height: '20px',
         }),
@@ -83,19 +84,39 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
   const [code, setCode] = useState(pythonDefaultCode)
   const [output, setOutput] = useState('')
   const [isChatOpen, setIsChatOpen] = useState(false)
-  const [drawerWidth, setDrawerWidth] = useState(35) // Width in percentage (default is 35%)
+  const [currentLanguage, setCurrentLanguage] = useState('python')
+  const [currentCode, setCurrentCode] = useState(pythonDefaultCode)
+  const screenHeight = window.innerHeight
+  const screenWidth = window.innerWidth
 
-  //! state for chat history
+  const minHeight = screenHeight * 0.2 // 20% of the screen height
+  const minWidth = screenWidth * 0.2 // 20% of the screen width
+
+  const maxHeight = screenHeight * 0.9 // 90% of the screen height
+  const maxWidth = screenWidth * 0.5 // 50% of the screen width
+
+  // State for chat history
   const [chatHistory, setChatHistory] = useState({
     conversation_id: null,
     data: [],
   })
   const [isLoading, setIsLoading] = useState(false)
   const [chatCount, setChatCount] = useState(0)
-  const [showSettings, setShowSettings] = useState(false)
 
-  //! state for scroll position
+  // State for scroll position
   const [chatScrollPosition, setChatScrollPosition] = useState(0)
+
+  // Starting percentage for chat box size
+  const [startingSizePercent, setStartingSizePercent] = useState({
+    widthPercent: 40,
+    heightPercent: 80,
+  })
+
+  // State for chat box size in pixels
+  const [chatSize, setChatSize] = useState({ width: 600, height: 800 })
+
+  const theme = useTheme()
+  const chatRef = useRef(null)
 
   // Load chat history from localStorage on mount or when problem changes
   useEffect(() => {
@@ -142,21 +163,46 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
     setIsChatOpen(!isChatOpen)
   }
 
-  //! handler to receive scroll position from ChatBox
+  // Handler to receive scroll position from ChatBox
   const handleScrollPositionChange = (position) => {
     setChatScrollPosition(position)
   }
 
-  const theme = useTheme()
+  // Update chatSize based on startingSizePercent
+  useEffect(() => {
+    const updateChatSize = () => {
+      setChatSize({
+        width: (window.innerWidth * startingSizePercent.widthPercent) / 100,
+        height: (window.innerHeight * startingSizePercent.heightPercent) / 100,
+      })
+    }
 
-  const [chatSize, setChatSize] = useState({ width: 400, height: 500 })
+    // Set initial size
+    updateChatSize()
 
-  const onResize = (event, { size }) => {
-    setChatSize({ width: size.width, height: size.height })
+    // Update size on window resize
+    window.addEventListener('resize', updateChatSize)
+    return () => window.removeEventListener('resize', updateChatSize)
+  }, [startingSizePercent])
+
+  // Function to update starting size percent
+  const updateStartingSizePercent = (newWidthPercent, newHeightPercent) => {
+    setStartingSizePercent({
+      widthPercent: newWidthPercent,
+      heightPercent: newHeightPercent,
+    })
   }
 
-  const chatRef = useRef(null)
+  // Handle resize of the chat box
+  const onResize = (event, { size }) => {
+    setChatSize({ width: size.width, height: size.height })
+    setStartingSizePercent({
+      widthPercent: (size.width / window.innerWidth) * 100,
+      heightPercent: (size.height / window.innerHeight) * 100,
+    })
+  }
 
+  // Close chat when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -223,6 +269,8 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                   setCode={setCode}
                   setOutput={setOutput}
                   output={output}
+                  onLanguageChange={setCurrentLanguage}
+                  onCodeChange={setCurrentCode}
                 />
               </Box>
               <Box
@@ -246,14 +294,15 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                   <Grow
                     in={isChatOpen}
                     style={{ transformOrigin: 'bottom right' }}
+                    unmountOnExit
                   >
                     <div ref={chatRef}>
                       <ResizableBox
                         width={chatSize.width}
                         height={chatSize.height}
                         onResize={onResize}
-                        minConstraints={[300, 300]}
-                        maxConstraints={[1000, 800]}
+                        minConstraints={[minWidth, minHeight]}
+                        maxConstraints={[maxWidth, maxHeight]}
                         resizeHandles={['w', 'n', 'nw']}
                         handle={(handleAxis, ref) => (
                           <FullEdgeHandle handleAxis={handleAxis} ref={ref} />
@@ -266,6 +315,9 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                             height: '100%',
                             mb: 2,
                             overflow: 'hidden',
+                            border: `2px solid ${theme.palette.primary.light200}`,
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                            borderRadius: 2,
                           }}
                         >
                           <Box
@@ -291,8 +343,12 @@ const ProblemDetailLayout = ({ problem, problemDetails }) => {
                               setIsLoading={setIsLoading}
                               chatCount={chatCount}
                               setChatCount={incrementChatCount}
-                              showSettings={showSettings}
-                              setShowSettings={setShowSettings}
+                              initialScrollPosition={chatScrollPosition}
+                              onScrollPositionChange={
+                                handleScrollPositionChange
+                              }
+                              currentCode={currentCode}
+                              currentLanguage={currentLanguage}
                             />
                           </Box>
                         </Paper>
