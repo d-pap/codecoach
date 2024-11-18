@@ -1,24 +1,23 @@
 import React from 'react'
-import {
-  Container,
-  List,
-  ListItem,
-  Typography,
-  IconButton,
-  Box,
-  Paper,
-  TextField,
-  Button,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-  Avatar,
-  Stack,
-} from '@mui/material'
+import Container from '@mui/material/Container'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import Avatar from '@mui/material/Avatar'
+import Stack from '@mui/material/Stack'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined'
 import { FILTER_OPTIONS } from './ForumFilter'
+import CircularProgress from '@mui/material/CircularProgress'
 
 const ForumLayout = ({
   messages,
@@ -29,6 +28,7 @@ const ForumLayout = ({
   filter,
   onFilterChange,
   userId,
+  isPosting,
 }) => {
   return (
     <Box sx={{ maxHeight: '90vh', overflowY: 'auto' }}>
@@ -71,9 +71,10 @@ const ForumLayout = ({
                 type="submit"
                 size="medium"
                 onClick={handleSubmit}
+                disabled={isPosting}
                 sx={{ minWidth: 100, minHeight: 25, ml: 2 }}
               >
-                Post
+                {isPosting ? <CircularProgress size={24} /> : 'Post'}
               </Button>
             </Box>
 
@@ -117,7 +118,7 @@ const ForumLayout = ({
           <List>
             {messages.map((msg, idx) => (
               <ListItem
-                key={idx}
+                key={msg._id} //! must use _id here
                 sx={{
                   mb: 1,
                   backgroundColor: 'background.paper',
@@ -135,15 +136,19 @@ const ForumLayout = ({
                     }}
                   >
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Avatar sx={{ width: 24, height: 24, mr: 1 }}>
-                        {msg.username[0]}
+                      <Avatar
+                        sx={{ width: 24, height: 24, mr: 1 }}
+                        //! use Anonymous below until we configure usernames
+                      >
+                        {msg.username ? msg.username[0] : 'A'}
                         {/* Show the first letter of the username as avatar */}
                       </Avatar>
                       <Typography
                         variant="body1"
                         sx={{ fontWeight: 'bold', fontSize: 14 }}
+                        //! use Anonymous below until we configure usernames
                       >
-                        {msg.username}
+                        {msg.username || 'Anonymous'}
                       </Typography>
                     </Box>
                     <Typography variant="body1" sx={{ fontSize: 14 }}>
@@ -169,15 +174,12 @@ const ForumLayout = ({
                       {new Date(msg.timestamp).toLocaleDateString()}
                     </Typography>
                     <IconButton
-                      edge="end"
-                      onClick={() => handleLike(msg.id)}
-                      size="small"
+                      onClick={() => handleLike(msg._id)} //! must use _id here
+                      color={
+                        msg.likedBy?.includes(userId) ? 'primary' : 'default'
+                      }
                     >
-                      {msg.likedBy.includes(userId) ? (
-                        <ThumbUpIcon fontSize="small" />
-                      ) : (
-                        <ThumbUpAltOutlinedIcon fontSize="small" />
-                      )}
+                      <ThumbUpIcon />
                     </IconButton>
                   </Box>
                 </Box>

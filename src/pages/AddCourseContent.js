@@ -164,6 +164,7 @@ const AddCourseContent = () => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   const handleChangeRowsPerPage = (event) => {

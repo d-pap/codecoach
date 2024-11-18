@@ -1,25 +1,26 @@
-import React from 'react'
-import { NavLink, useNavigate, useLocation } from 'react-router-dom'
-import { Auth } from 'aws-amplify'
-import { useMediaQuery, useTheme } from '@mui/material'
-import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
-import Button from '@mui/material/Button'
+import React from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { Auth } from 'aws-amplify';
+import { useMediaQuery, useTheme } from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
 //import Button from '@Button'
-import IconButton from '@mui/material/IconButton'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-import Box from '@mui/material/Box'
-import Divider from '@mui/material/Divider'
-import ListItemText from '@mui/material/ListItemText'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import { styled, alpha } from '@mui/material/styles'
-import MenuIcon from '@mui/icons-material/Menu'
-import AccountCircle from '@mui/icons-material/AccountCircle'
-import Settings from '@mui/icons-material/Settings'
-import Logout from '@mui/icons-material/Logout'
-import logo from '../../images/logo-with-text.svg'
-import CenteredCircleLoader from '../utility/CenteredLoader'
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import { styled, alpha } from '@mui/material/styles';
+import MenuIcon from '@mui/icons-material/Menu';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Settings from '@mui/icons-material/Settings';
+import ContactPageOutlinedIcon from '@mui/icons-material/ContactPageOutlined';
+import Logout from '@mui/icons-material/Logout';
+import logo from '../../images/logo-with-text.svg';
+import CenteredCircleLoader from '../utility/CenteredLoader';
 
 const PageLinks = styled(NavLink)(({ theme }) => ({
   color: theme.palette.primary.light500,
@@ -39,45 +40,45 @@ const PageLinks = styled(NavLink)(({ theme }) => ({
     color: theme.palette.primary.main,
     transition: 'color 0.3s ease',
   },
-}))
+}));
 
 const Header = () => {
-  const theme = useTheme()
-  const navigate = useNavigate()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  const [anchorEl, setAnchorEl] = React.useState(null)
-  const [accountMenuAnchorEl, setAccountMenuAnchorEl] = React.useState(null)
-  const [loading, setLoading] = React.useState(false) // Loading state
-  const location = useLocation()
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [accountMenuAnchorEl, setAccountMenuAnchorEl] = React.useState(null);
+  const [loading, setLoading] = React.useState(false); // Loading state
+  const location = useLocation();
 
   const handleLogout = async () => {
-    setLoading(true) // Start loading
+    setLoading(true); // Start loading
     try {
-      await Auth.signOut()
-      localStorage.clear()
-      window.location.reload()
+      await Auth.signOut();
+      localStorage.clear();
+      window.location.reload();
     } catch (error) {
-      console.error('Error signing out: ', error)
-      alert('Error signing out. Please try again.')
-      setLoading(false) // Stop loading if there's an error
+      console.error('Error signing out: ', error);
+      alert('Error signing out. Please try again.');
+      setLoading(false); // Stop loading if there's an error
     }
-  }
+  };
 
   const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget)
-  }
+    setAnchorEl(event.currentTarget);
+  };
 
   const handleClose = () => {
-    setAnchorEl(null)
-  }
+    setAnchorEl(null);
+  };
 
   const handleAccountMenu = (event) => {
-    setAccountMenuAnchorEl(event.currentTarget)
-  }
+    setAccountMenuAnchorEl(event.currentTarget);
+  };
 
   const handleAccountMenuClose = () => {
-    setAccountMenuAnchorEl(null)
-  }
+    setAccountMenuAnchorEl(null);
+  };
 
   if (loading) {
     // Render the loader when loading is true
@@ -85,7 +86,7 @@ const Header = () => {
       <Box>
         <CenteredCircleLoader />
       </Box>
-    )
+    );
   }
 
   return (
@@ -110,7 +111,7 @@ const Header = () => {
           <Box
             component="img"
             onClick={() => {
-              navigate('/home')
+              navigate('/home');
             }}
             src={logo}
             alt="logo"
@@ -144,6 +145,7 @@ const Header = () => {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                disableScrollLock={true}
               >
                 <MenuItem component={NavLink} to="/" onClick={handleClose}>
                   Home
@@ -186,9 +188,16 @@ const Header = () => {
                   Settings
                 </MenuItem>
                 <MenuItem
+                  component={NavLink}
+                  to="/resume"
+                  onClick={handleClose}
+                >
+                  Resume
+                </MenuItem>
+                <MenuItem
                   onClick={() => {
-                    handleClose()
-                    handleLogout()
+                    handleClose();
+                    handleLogout();
                   }}
                 >
                   Logout
@@ -251,18 +260,38 @@ const Header = () => {
                     vertical: 'top',
                     horizontal: 'right',
                   }}
+                  disableScrollLock={true}
                 >
-                  <MenuItem onClick={handleAccountMenuClose}>
+                  <MenuItem
+                    component={NavLink}
+                    to="/settings"
+                    onClick={handleAccountMenuClose}
+                  >
                     <ListItemIcon>
                       <Settings fontSize="small" />
                     </ListItemIcon>
                     <ListItemText>Settings</ListItemText>
                   </MenuItem>
-                  <MenuItem onClick={handleAccountMenuClose}>
+                  <MenuItem
+                    component={NavLink}
+                    to="/resume"
+                    onClick={handleAccountMenuClose}
+                  >
+                    <ListItemIcon>
+                      <ContactPageOutlinedIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Resume</ListItemText>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleAccountMenuClose();
+                      handleLogout();
+                    }}
+                  >
                     <ListItemIcon>
                       <Logout fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText onClick={handleLogout}>Logout</ListItemText>
+                    <ListItemText>Logout</ListItemText>
                   </MenuItem>
                 </Menu>
               </Box>
@@ -271,7 +300,7 @@ const Header = () => {
         </Toolbar>
       </AppBar>
     </Box>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

@@ -4,12 +4,13 @@
 import React from 'react'
 import { CookiesProvider } from 'react-cookie'
 import ReactDOM from 'react-dom/client'
-//import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import ConsentBanner from './components/utility/ConsentBanner'
+import ScrollToTop from './components/utility/ScrollToTopButton'
 
 const queryClient = new QueryClient()
 const root = ReactDOM.createRoot(document.getElementById('root'))
@@ -19,6 +20,7 @@ root.render(
       <CookiesProvider>
         <App />
         <ConsentBanner />
+        <ScrollToTop />
         {/* <ReactQueryDevtools /> */}
       </CookiesProvider>
     </QueryClientProvider>

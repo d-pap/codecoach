@@ -94,20 +94,11 @@ const ProblemCardLayout = ({ problem }) => {
   const navigate = useNavigate()
   const path = `/problems/${problem._id}`
 
-  const handleNavigate = async () => {
-    try {
-      // fetch the full problem details
-      const fullProblem = await queryClient.fetchQuery({
-        queryKey: ['problemDetails', problem._id],
-        queryFn: () => fetchProblemById(problem._id),
-      })
-
-      // navigate with the fetched data
-      navigate(path, { state: { problem: fullProblem } })
-    } catch (error) {
-      console.error('Error fetching problem details:', error)
-    }
+  const handleNavigate = () => {
+    // navigate with the already fetched problem data
+    navigate(path, { state: { problem } })
   }
+
   return (
     <Suspense fallback={<ProblemCardSkeleton />}>
       <div
