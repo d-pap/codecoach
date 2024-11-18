@@ -7,8 +7,8 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'DM Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  padding-right: 0 !important; /* prevent scrollbar from appearing when dropdown is open */
-  overflow-y: scroll !important; /* prevent scrollbar from appearing when dropdown is open */
+  /* padding-right: 0 !important; 
+  overflow-y: scroll !important;  */
 }
 
 code {
