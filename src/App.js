@@ -49,6 +49,7 @@ const Resume = lazy(() => import('./pages/Resume'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const Help = lazy(() => import('./pages/Help'))
 const CookieInfo = lazy(() => import('./pages/CookieInfo'))
+const TermsOfService = lazy(() => import('./pages/TermsOfService'))
 
 Amplify.configure(awsExports)
 
@@ -271,6 +272,14 @@ function AppContent() {
             element={
               <Suspense fallback={<CenteredLoader />}>
                 <CookieInfo />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/terms-of-service"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <TermsOfService />
               </Suspense>
             }
           />

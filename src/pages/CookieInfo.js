@@ -15,7 +15,6 @@ import {
 import { styled } from '@mui/system'
 import { useCookies } from 'react-cookie'
 import { useTheme } from '@mui/material/styles'
-import InfoIcon from '@mui/icons-material/Info'
 import CookieIcon from '@mui/icons-material/Cookie'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import CancelIcon from '@mui/icons-material/Cancel'
