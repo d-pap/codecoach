@@ -145,14 +145,7 @@ function CourseContent() {
   return (
     <PageLayout title={course?.title} description={course?.description}>
       <ProblemsList
-        filters={true}
-        filterToolbar={
-          <FilterToolbar
-            filters={filterConfig}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-          />
-        }
+        filters={false}
         pagination={true}
         topPagination={paginationComponent}
         bottomPagination={paginationComponent}
