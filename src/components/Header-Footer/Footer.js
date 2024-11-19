@@ -232,12 +232,12 @@ const Footer = () => {
           >
             <Grid item>
               <Typography variant="body2">
-                <Link href="mailto:info@yourcompany.com">Terms of Service</Link>
+                <Link href="/terms-of-service">Terms of Service</Link>
               </Typography>
             </Grid>
             <Grid item>
               <Typography variant="body2">
-                <Link href="mailto:info@yourcompany.com">Cookie Settings</Link>
+                <Link href="/cookie-info">Cookie Settings</Link>
               </Typography>
             </Grid>
           </Grid>
