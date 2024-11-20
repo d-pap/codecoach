@@ -28,7 +28,9 @@
     "react-router-dom": "^6.26.0",
     "react-scripts": "5.0.1",
     "react-syntax-highlighter": "^15.5.0",
+    "rehype-sanitize": "^6.0.0",
     "remark-gfm": "^4.0.0",
+    "remove-markdown": "^0.5.5",
     "styled-components": "^5.3.10",
     "web-vitals": "^2.1.4"
   },
