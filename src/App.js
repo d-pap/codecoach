@@ -93,6 +93,7 @@ function AppContent() {
   }
 
   const handleShowAuth = (mode) => {
+    console.log(`Auth screen mode: ${mode}`); // Debug log
     setAuthScreen(mode)
     setShowAuth(true)
   }
@@ -121,7 +122,9 @@ function AppContent() {
 
   return (
     <>
-      {isAuthenticated && <Header />}
+
+      <Header isAuthenticated={isAuthenticated} handleShowAuth={handleShowAuth} />
+      {/* {isAuthenticated && <Header />} */}
       <Box
         component="main"
         sx={{
