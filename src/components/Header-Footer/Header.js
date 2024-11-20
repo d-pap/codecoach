@@ -56,7 +56,8 @@ const DropdownContent = styled(Box)(({ theme }) => ({
   position: 'absolute',
   backgroundColor: theme.palette.background.paper,
   minWidth: '160px',
-  boxShadow: 'none',
+  boxShadow: theme.shadows[3],
+  border: `1px solid ${theme.palette.divider}`,
   borderRadius: theme.spacing(0, 0, 1, 1),
   zIndex: 1000,
   top: 'calc(100% + 19px)',
@@ -80,8 +81,10 @@ const DropdownLink = styled(NavLink)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   fontSize: theme.typography.body2.fontSize,
+  cursor: 'pointer', // Add cursor pointer
   '&:hover': {
-    backgroundColor: 'transparent',
+    backgroundColor: theme.palette.action.hover, // Change background color on hover
+    color: theme.palette.primary.main, // Change text color on hover
   },
   '& .MuiListItemIcon-root': {
     minWidth: 'auto',
@@ -91,6 +94,7 @@ const DropdownLink = styled(NavLink)(({ theme }) => ({
     margin: 0,
   },
 }))
+
 
 const Header = () => {
   const theme = useTheme()
