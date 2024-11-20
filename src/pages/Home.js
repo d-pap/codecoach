@@ -212,7 +212,7 @@ export const Home = () => {
     title: 'codecoach',
     subtitles: ['Level up your coding skills', 'with AI-driven feedback'],
     buttonText: 'Explore Problems',
-    buttonLink: '/problems',
+    buttonLink: '/problems/competitions',
   }
 
   /**

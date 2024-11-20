@@ -1,5 +1,4 @@
 import { createTheme } from '@mui/material/styles'
-
 const theme = createTheme({
   palette: {
     mode: 'light',
@@ -45,7 +44,7 @@ const theme = createTheme({
   },
   spacing: 8, // default spacing unit
   typography: {
-    fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
+    fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
     fontSize: 14, // default font size
     lineHeight: 1.6,
     letterSpacing: 0,
@@ -58,7 +57,7 @@ const theme = createTheme({
       letterSpacing: '-0.012em',
     },
     h2: {
-      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Roboto Flex, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 700,
       fontSize: '1.875rem',
       lineHeight: '2.25rem',
@@ -92,7 +91,7 @@ const theme = createTheme({
       color: '#0f172a',
     },
     h7: {
-      fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Roboto, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 500,
       fontSize: '1rem',
       color: '#000000',
@@ -101,7 +100,7 @@ const theme = createTheme({
     },
     subtitle1: {
       // for section subtitles
-      fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Roboto, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       fontSize: '1rem',
       color: '#334155',
@@ -110,7 +109,7 @@ const theme = createTheme({
     },
     subtitle2: {
       // for card subtitles (smaller subtitles)
-      fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Roboto, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       color: '#64748b',
       fontSize: '0.875rem',
@@ -118,14 +117,14 @@ const theme = createTheme({
       letterSpacing: '0.00714em',
     },
     body1: {
-      fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Roboto, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       fontSize: '1rem',
       color: '#0f172a',
       lineHeight: '1.75rem', //! new
     },
     body2: {
-      fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Roboto, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       fontSize: '0.875rem', //! new
       lineHeight: '1.25rem', //! new
@@ -133,7 +132,7 @@ const theme = createTheme({
       letterSpacing: '0.01071em',
     },
     small: {
-      fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Roboto, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       fontSize: '0.875rem',
       lineHeight: '1.25rem',
@@ -141,12 +140,11 @@ const theme = createTheme({
     },
     code: {
       // for code output window Box
-      fontFamily:
-        'JetBrains Mono, Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+      fontFamily: 'JetBrains Mono, Consolas, Monaco, monospace',
       fontSize: '0.889rem', // match ace editor font size
     },
     button: {
-      fontFamily: 'Inter, Roboto, Arial, sans-serif',
+      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       fontSize: '0.875rem',
       lineHeight: 1.75,

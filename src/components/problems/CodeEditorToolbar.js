@@ -121,7 +121,7 @@ const CodeEditorToolbar = ({
           currentThemeStyle={currentThemeStyle}
         />
 
-        <Tooltip title="In the development version, you have a limited number of runs and submissions per day. Each run or submission costs 1 run.">
+        <Tooltip title="You have a limited number of runs and submissions per day. Each run or submission costs 1 run.">
           <InfoRoundedIcon
             sx={{ color: currentThemeStyle.color, ml: 'auto' }}
           />

@@ -31,7 +31,8 @@ function ProblemSolving() {
     queryKey: ['problemBaseFields', problemId],
     queryFn: () => fetchProblemById(problemId), // fetch full fields only if not cached
     enabled: !problemFromLocation, // fetch only if not already cached
-    staleTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 30,
+    cacheTime: 1000 * 60 * 60,
     initialData: problemFromLocation,
   })
 
@@ -43,7 +44,8 @@ function ProblemSolving() {
     queryKey: ['problemAdditionalFields', problemId],
     queryFn: () => fetchAdditionalProblemFields(problemId),
     enabled: !!baseProblemFields, // fetch only when base fields are available
-    staleTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 30,
+    cacheTime: 1000 * 60 * 60,
   })
 
   const fullProblemData = { ...baseProblemFields, ...additionalProblemFields }

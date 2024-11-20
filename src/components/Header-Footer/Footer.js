@@ -91,55 +91,6 @@ const Footer = () => {
                 marginBottom: (theme) => theme.spacing(2),
               }}
             />
-
-            <Typography variant="body2">
-              contact info
-              <br />
-              street address
-              <br />
-              city, state, zip
-              <br />
-              phone number
-              <br />
-              email
-            </Typography>
-
-            <Box
-              sx={{
-                marginTop: (theme) => theme.spacing(2),
-              }}
-            >
-              <SocialIcon>
-                <Link
-                  href="https://www.linkedin.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  color="inherit"
-                >
-                  <LinkedInIcon />
-                </Link>
-              </SocialIcon>
-              <SocialIcon>
-                <Link
-                  href="https://www.youtube.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  color="inherit"
-                >
-                  <YouTubeIcon />
-                </Link>
-              </SocialIcon>
-              <SocialIcon>
-                <Link
-                  href="https://www.instagram.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  color="inherit"
-                >
-                  <InstagramIcon />
-                </Link>
-              </SocialIcon>
-            </Box>
           </Grid>
           <Grid
             item

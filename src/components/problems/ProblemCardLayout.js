@@ -4,13 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
-import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid'
-import Stack from '@mui/material/Stack'
-import Skeleton from '@mui/material/Skeleton'
 import { useQueryClient } from '@tanstack/react-query'
-import { fetchProblemById } from '../../api'
+import CenteredCircleLoader from '../utility/CenteredLoader'
+
 // Styled components using MUI's styled utility
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -47,48 +43,6 @@ const CardBody = styled(Typography)(({ theme }) => ({
   paddingLeft: theme.spacing(0),
 }))
 
-const ProblemCardSkeleton = () => (
-  <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 4 }}>
-    <Container maxWidth="lg">
-      <Grid
-        container
-        spacing={0}
-        sx={{
-          display: 'flex',
-          flexWrap: 'nowrap',
-          boxShadow:
-            '0px 4px 5px -2px rgba(0, 0, 0, 0.2), 4px 0px 5px -2px rgba(0, 0, 0, 0.2), -4px 0px 5px -2px rgba(0, 0, 0, 0.2)',
-          borderRadius: (theme) => theme.spacing(2),
-        }}
-      >
-        <Box sx={{ flexGrow: 1, padding: (theme) => theme.spacing(2) }}>
-          <Box sx={{ display: 'flex', justifyContent: 'right' }}>
-            <Skeleton variant="text" width={150} sx={{ fontSize: '2rem' }} />
-          </Box>
-          <Stack spacing={2}>
-            {[...Array(5)].map((_, index) => (
-              <Skeleton
-                key={index}
-                variant="rectangular"
-                height={120}
-                sx={{ borderRadius: 1 }}
-              />
-            ))}
-          </Stack>
-          <Box sx={{ p: 1, display: 'flex', justifyContent: 'right' }}>
-            <Skeleton
-              variant="rectangular"
-              width={150}
-              height={40}
-              sx={{ mt: 2 }}
-            />
-          </Box>
-        </Box>
-      </Grid>
-    </Container>
-  </Box>
-)
-
 const ProblemCardLayout = ({ problem }) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -100,7 +54,7 @@ const ProblemCardLayout = ({ problem }) => {
   }
 
   return (
-    <Suspense fallback={<ProblemCardSkeleton />}>
+    <Suspense fallback={<CenteredCircleLoader />}>
       <div
         //* Container for each problem card
         style={{
