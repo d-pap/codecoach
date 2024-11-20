@@ -1,5 +1,4 @@
 import { createTheme } from '@mui/material/styles'
-
 const theme = createTheme({
   palette: {
     mode: 'light',
@@ -58,7 +57,7 @@ const theme = createTheme({
       letterSpacing: '-0.012em',
     },
     h2: {
-      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Roboto Flex, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 700,
       fontSize: '1.875rem',
       lineHeight: '2.25rem',

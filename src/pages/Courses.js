@@ -14,6 +14,7 @@ import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import Skeleton from '@mui/material/Skeleton'
+import PageLayout from '../components/PageLayout'
 
 import { getAllCourses, getCourseByIdProblems } from '../api'
 // course card component
@@ -120,88 +121,65 @@ const CourseList = () => {
   )
 
   return (
-    <Box sx={{ minHeight: '100vh', py: 4 }}>
-      <Container maxWidth="lg">
-        <Box sx={{ mb: 8, textAlign: 'center' }}>
-          <Typography
-            variant="h2"
-            component="h1"
-            gutterBottom
-            sx={{ mb: 4, fontWeight: 'bold' }}
-          >
-            Courses
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              maxWidth: '800px',
-              mx: 'auto',
-              color: '#475569',
-              lineHeight: 1.6,
-              textAlign: 'center',
-            }}
-          >
-            Join one of our curated courses to learn and practice coding
-            problems. This is your place to prepare for competitive coding
-            events and technical interviews.
-          </Typography>
-        </Box>
+    <PageLayout
+      title="Courses"
+      description="Join one of our curated courses to learn and practice coding problems. This is your place to prepare for competitive coding events and technical interviews."
+      sx={{ py: 4 }}
+    >
+      {/* Featured Courses Section */}
+      <Box sx={{ mb: 8 }}>
+        <Typography variant="h3" sx={{ mb: 2, fontWeight: 'bold' }}>
+          Featured Courses
+        </Typography>
+        <Grid container spacing={2}>
+          {isLoading ? (
+            <SkeletonCourseCards />
+          ) : (
+            featuredCourses.map((course) => (
+              <Grid item xs={12} sm={4} md={4} key={course._id}>
+                <CourseCard course={course} />
+              </Grid>
+            ))
+          )}
+        </Grid>
+      </Box>
 
-        {/* Featured Courses Section */}
-        <Box sx={{ mb: 8 }}>
-          <Typography variant="h3" sx={{ mb: 2, fontWeight: 'bold' }}>
-            Featured Courses
-          </Typography>
-          <Grid container spacing={2}>
-            {isLoading ? (
-              <SkeletonCourseCards />
-            ) : (
-              featuredCourses.map((course) => (
-                <Grid item xs={12} sm={4} md={4} key={course._id}>
-                  <CourseCard course={course} />
-                </Grid>
-              ))
-            )}
-          </Grid>
-        </Box>
+      {/* Regular Courses Section */}
+      <Box sx={{ mb: 8 }}>
+        <Typography variant="h3" sx={{ mb: 2, fontWeight: 'bold' }}>
+          Courses
+        </Typography>
+        <Grid container spacing={2}>
+          {isLoading ? (
+            <SkeletonCourseCards />
+          ) : (
+            regularCourses.map((course) => (
+              <Grid item xs={12} sm={4} md={4} key={course._id}>
+                <CourseCard course={course} />
+              </Grid>
+            ))
+          )}
+        </Grid>
+      </Box>
 
-        {/* Regular Courses Section */}
-        <Box sx={{ mb: 8 }}>
-          <Typography variant="h3" sx={{ mb: 2, fontWeight: 'bold' }}>
-            Courses
-          </Typography>
-          <Grid container spacing={2}>
-            {isLoading ? (
-              <SkeletonCourseCards />
-            ) : (
-              regularCourses.map((course) => (
-                <Grid item xs={12} sm={4} md={4} key={course._id}>
-                  <CourseCard course={course} />
-                </Grid>
-              ))
-            )}
-          </Grid>
-        </Box>
-
-        {/* Coming Soon Courses Section */}
-        <Box sx={{ mb: 8 }}>
-          <Typography variant="h3" sx={{ mb: 2, fontWeight: 'bold' }}>
-            Coming Soon
-          </Typography>
-          <Grid container spacing={2}>
-            {isLoading ? (
-              <SkeletonCourseCards />
-            ) : (
-              comingSoonCourses.map((course) => (
-                <Grid item xs={12} sm={4} md={4} key={course._id}>
-                  <CourseCard course={course} comingSoon />
-                </Grid>
-              ))
-            )}
-          </Grid>
-        </Box>
-      </Container>
-    </Box>
+      {/* Coming Soon Courses Section */}
+      <Box sx={{ mb: 8 }}>
+        <Typography variant="h3" sx={{ mb: 2, fontWeight: 'bold' }}>
+          Coming Soon
+        </Typography>
+        <Grid container spacing={2}>
+          {isLoading ? (
+            <SkeletonCourseCards />
+          ) : (
+            comingSoonCourses.map((course) => (
+              <Grid item xs={12} sm={4} md={4} key={course._id}>
+                <CourseCard course={course} comingSoon />
+              </Grid>
+            ))
+          )}
+        </Grid>
+      </Box>
+    </PageLayout>
   )
 }
 export default CourseList

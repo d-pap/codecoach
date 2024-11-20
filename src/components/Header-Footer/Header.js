@@ -14,7 +14,6 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import { styled, alpha } from '@mui/material/styles'
 import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircle from '@mui/icons-material/AccountCircle'
-import Settings from '@mui/icons-material/Settings'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import ContactPageOutlinedIcon from '@mui/icons-material/ContactPageOutlined'
 import Logout from '@mui/icons-material/Logout'
@@ -26,6 +25,7 @@ import CenteredCircleLoader from '../utility/CenteredLoader'
 const PageLinks = styled(NavLink)(({ theme }) => ({
   color: theme.palette.primary.light500,
   textDecoration: 'none',
+  fontWeight: 'bold',
   letterSpacing: '0.01em',
   fontSize: theme.typography.body2.fontSize,
   borderRadius: theme.spacing(2),
@@ -82,6 +82,13 @@ const DropdownLink = styled(NavLink)(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
   '&:hover': {
     backgroundColor: 'transparent',
+  },
+  '& .MuiListItemIcon-root': {
+    minWidth: 'auto',
+    marginRight: theme.spacing(1),
+  },
+  '& .MuiListItemText-root': {
+    margin: 0,
   },
 }))
 
@@ -221,16 +228,20 @@ const Header = () => {
           sx={{
             display: accountMenuOpen ? 'block' : 'none',
             right: 0,
-            left: 'auto', // align to right
+            left: 'auto',
           }}
         >
-          <DropdownLink to="/settings" onClick={handleAccountMenuClose}>
-            <ListItemIcon
-              sx={{ minWidth: 'auto', marginRight: theme.spacing(1) }}
-            >
-              <Settings fontSize="small" />
+          <DropdownLink to="/resume" onClick={handleAccountMenuClose}>
+            <ListItemIcon>
+              <ContactPageOutlinedIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText primary="Settings" />
+            <ListItemText primary="Resume" />
+          </DropdownLink>
+          <DropdownLink to="/help" onClick={handleAccountMenuClose}>
+            <ListItemIcon>
+              <HelpOutlineOutlinedIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="Help" />
           </DropdownLink>
           <DropdownLink
             to="#"
@@ -239,9 +250,7 @@ const Header = () => {
               handleLogout()
             }}
           >
-            <ListItemIcon
-              sx={{ minWidth: 'auto', marginRight: theme.spacing(1) }}
-            >
+            <ListItemIcon>
               <Logout fontSize="small" />
             </ListItemIcon>
             <ListItemText primary="Logout" />
