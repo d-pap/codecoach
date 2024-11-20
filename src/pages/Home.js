@@ -147,18 +147,32 @@ const FeaturedProblemsGrid = ({ problems }) => (
     {problems.map((problem) => (
       <Grid item xs={12} sm={6} md={4} key={problem.id}>
         <FeaturedCard elevation={3}>
-          <CardContent sx={{ flexGrow: 1 }}>
+          <CardContent
+            sx={{
+              flexGrow: 1,
+              display: 'flex', //! flex direction column
+              flexDirection: 'column',
+              gap: 1, //! spacing between title and description
+              p: 3, //! padding
+            }}
+          >
             <Typography variant="h7" gutterBottom>
               {problem.title}
             </Typography>
             <Typography variant="body2">{problem.description}</Typography>
           </CardContent>
-          <CardActions>
+          <CardActions
+            sx={{
+              px: 3, //! padding x
+              pb: 3, //! padding bottom
+            }}
+          >
             <Button
               variant="contained"
               size="small"
               color="primary"
               href={problem.link}
+              fullWidth
             >
               Solve Now
             </Button>
@@ -493,11 +507,9 @@ export const Home = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={() =>
-                navigate(
-                  'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations'
-                )
-              }
+              href="https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations"
+              target="_blank"
+              rel="noopener noreferrer"
               sx={{ mt: 2 }}
             >
               Explore UMD ACM
