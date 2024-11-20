@@ -6,7 +6,6 @@ import {
   Container,
   Typography,
 } from '@mui/material'
-import removeMarkdown from 'remove-markdown' // Import the remove-markdown library
 import DOMPurify from 'dompurify'
 
 import ResumeForm from '../components/resume/ResumeForm'
@@ -126,12 +125,12 @@ const Resume = () => {
       ${message.workExperiences
         .map(
           (exp, index) => `
-          ${index + 1}. **Position:** ${exp.position}
-          **Company:** ${exp.company}
-          **Duration:** ${exp.startDate} - ${exp.endDate}
-          **Responsibilities:**
-          - ${exp.responsibilities.join('\n  - ')}
-          `
+        ${index + 1}. **Position:** ${exp.position}
+        **Company:** ${exp.company}
+        **Duration:** ${exp.startDate} - ${exp.endDate}
+        **Responsibilities:**
+        - ${exp.responsibilities.join('\n  - ')}
+        `
         )
         .join('\n')}
 
@@ -139,11 +138,11 @@ const Resume = () => {
       ${message.educations
         .map(
           (edu, index) => `
-          ${index + 1}. **Degree:** ${edu.degree}
-          **Field of Study:** ${edu.fieldOfStudy}
-          **Institution:** ${edu.institution}
-          **Duration:** ${edu.startDate} - ${edu.endDate}
-          `
+        ${index + 1}. **Degree:** ${edu.degree}
+        **Field of Study:** ${edu.fieldOfStudy}
+        **Institution:** ${edu.institution}
+        **Duration:** ${edu.startDate} - ${edu.endDate}
+        `
         )
         .join('\n')}
 
@@ -154,10 +153,10 @@ const Resume = () => {
       ${message.projects
         .map(
           (project, index) => `
-          ${index + 1}. **Project Name:** ${project.name}
-          **Role:** ${project.role}
-          **Description:** ${project.description}
-          `
+        ${index + 1}. **Project Name:** ${project.name}
+        **Role:** ${project.role}
+        **Description:** ${project.description}
+        `
         )
         .join('\n')}
 
@@ -190,22 +189,31 @@ const Resume = () => {
     }
   }
 
-  // Modified handleCopy Function
-  // This function removes Markdown syntax before copying the text
+  // **Modified handleCopy Function**
+  // This function copies the rendered text with formatting preserved
   const handleCopy = () => {
-    if (aiResponse && aiResponse.response && aiResponse.response.response) {
-      const resumeMarkdown = aiResponse.response.response
-      const resumeText = removeMarkdown(resumeMarkdown) // Remove Markdown syntax
-      navigator.clipboard.writeText(resumeText).then(
-        function () {
+    if (responseRef.current) {
+      const resumeElement = responseRef.current
+      const range = document.createRange()
+      range.selectNodeContents(resumeElement)
+      const selection = window.getSelection()
+      selection.removeAllRanges()
+      selection.addRange(range)
+
+      try {
+        const successful = document.execCommand('copy')
+        if (successful) {
           setCopySuccess('Resume copied to clipboard!')
           // Clear the message after a few seconds
           setTimeout(() => setCopySuccess(''), 3000)
-        },
-        function (err) {
-          console.error('Could not copy text: ', err)
+        } else {
+          throw new Error('Copy command was unsuccessful')
         }
-      )
+      } catch (err) {
+        console.error('Could not copy text: ', err)
+      } finally {
+        selection.removeAllRanges()
+      }
     }
   }
 
