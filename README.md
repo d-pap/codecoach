@@ -104,12 +104,20 @@ The landing page of our platform, offering an overview of features, highlighted 
   <img src="assets\home-page1.png" >
   <img src="assets\home-page2.png" >
 
+
+
+
+
 **Problems Page**
+
+
 
 #### ICPC Practice Problems
 
 Explore a curated list of **ICPC practice problems** tailored for competitive programming contests. Problems are categorized by difficulty, year, and region to help students prepare effectively for the ICPC competition.
 <img src="assets\problems-page1.png" >
+
+
 
 #### FAANG Interview Questions
 
@@ -118,17 +126,23 @@ Access a database of **FAANG-style interview questions** designed to help users 
   
   <img src="assets\problems-page2.png" >
 
+
 **Problem Solving Interface**
 
 A dedicated area where users can view problem details and write, test, and submit their code in an integrated editor.
 
   <img src="assets\prob-solving-page1.png">
 
+
+
 **AI Assistant**
 
 - Contextual **hints and suggestions** provided by U-M Maizey AI.
 - Breaks down complex problems into manageable steps.
 <img src="assets\AIAssistant.png" >
+
+
+
 
 **Discussions Tab**
 
