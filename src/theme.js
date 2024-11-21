@@ -57,7 +57,7 @@ const theme = createTheme({
       letterSpacing: '-0.012em',
     },
     h2: {
-      fontFamily: 'Roboto Flex, Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Roboto, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 700,
       fontSize: '1.875rem',
       lineHeight: '2.25rem',

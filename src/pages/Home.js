@@ -224,7 +224,10 @@ export const Home = () => {
 
   const heroContent = {
     title: 'codecoach',
-    subtitles: ['Level up your coding skills', 'with AI-driven feedback'],
+    subtitles: [
+      'AI-powered insights and guidance to help you code smarter, faster, and better.',
+      'Trusted by developers preparing for competitions, interviews, and real-world challenges.',
+    ],
     buttonText: 'Explore Problems',
     buttonLink: '/problems/competitions',
   }
@@ -253,13 +256,15 @@ export const Home = () => {
               ICPC East Central NA Regionals
             </Typography>
             <Typography variant="subtitle2" gutterBottom>
-              Date: November 09, 2024 - November 10, 2024 <br /> Registration Deadline: September 26, 2024 - November 05, 2024
+              Date: November 09, 2024 - November 10, 2024 <br /> Registration
+              Deadline: September 26, 2024 - November 05, 2024
             </Typography>
             <Typography variant="h3" gutterBottom sx={{ mt: 'auto' }}>
               ICPC World Finals
             </Typography>
             <Typography variant="subtitle2" gutterBottom sx={{ mb: 'auto' }}>
-              Date: September 15, 2024 - September 20, 2024 <br /> Registration Deadline: TBD
+              Date: September 15, 2024 - September 20, 2024 <br /> Registration
+              Deadline: TBD
             </Typography>
           </>
         ),
@@ -438,6 +443,11 @@ export const Home = () => {
               zIndex: 2,
               mt: index === 0 ? 2 : 0,
               fontSize: {
+                xs: '0.875rem',
+                md: '1.25rem',
+              },
+              maxWidth: '70%',
+              /* fontSize: {
                 xs: '1rem',
                 sm: '1.226rem',
                 md: '1.5rem',
@@ -450,7 +460,7 @@ export const Home = () => {
                 md: '1.6rem',
                 lg: '1.8rem',
                 xl: '2rem',
-              },
+              }, */
               textAlign: 'center',
             }}
           >
