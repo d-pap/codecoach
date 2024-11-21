@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -12,79 +12,156 @@ import {
   Select,
   MenuItem,
 } from '@mui/material';
-import CustomLabel from '../../../components/add-problems/multiple-problems/custom-elements/CustomLabel';
+import { addProblem } from '../../../api'; // Ensure this path is correct
 
-const InterviewFormDialog = ({ open, onClose, rowData, onSubmit }) => {
+const InterviewFormDialog = ({ rowData, onClose }) => {
   const [formData, setFormData] = useState(rowData);
 
   useEffect(() => {
-    if (rowData) {
-      setFormData(rowData); // Initialize form data when rowData changes
-    }
+    if (rowData) setFormData(rowData);
   }, [rowData]);
 
-  const handleSubmit = () => {
-    onSubmit(formData);
-    onClose();
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const filteredTestCases = formData.testCases.filter(
+        (tc) => tc.input.trim() !== '' && tc.output.trim() !== ''
+      );
+
+      if (filteredTestCases.length === 0) {
+        alert('Please provide at least one test case with input and output.');
+        return;
+      }
+
+      const submissionData = { ...formData, testCases: filteredTestCases };
+      await addProblem(submissionData);
+
+      alert('Problem added successfully!');
+      onClose(); // Close the dialog after successful submission
+    } catch (error) {
+      console.error('Error submitting problem:', error);
+      alert('Failed to add problem. Please try again.');
+    }
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>Submit Interview Problem</DialogTitle>
+    <Dialog>
+      <DialogTitle>Edit Problem</DialogTitle>
       <DialogContent>
         <Stack spacing={2}>
-          <CustomLabel>Title:</CustomLabel>
           <TextField
+            label="Title"
             name="title"
             value={formData.title || ''}
-            label="Title"
+            onChange={handleChange}
             fullWidth
-            InputProps={{ readOnly: true }}
           />
-
-          <CustomLabel>Description:</CustomLabel>
           <TextField
+            label="Description"
             name="description"
             value={formData.description || ''}
-            label="Description"
+            onChange={handleChange}
             fullWidth
             multiline
-            InputProps={{ readOnly: true }}
           />
-
-          <CustomLabel>Example Inputs:</CustomLabel>
           <TextField
+            label="Example Inputs"
             name="exampleInputs"
             value={formData.exampleInputs || ''}
-            label="Example Inputs"
+            onChange={handleChange}
             fullWidth
             multiline
-            InputProps={{ readOnly: true }}
           />
-
-          <CustomLabel>Example Outputs:</CustomLabel>
           <TextField
+            label="Example Outputs"
             name="exampleOutputs"
             value={formData.exampleOutputs || ''}
-            label="Example Outputs"
+            onChange={handleChange}
             fullWidth
             multiline
-            InputProps={{ readOnly: true }}
           />
-
-          <CustomLabel>Difficulty:</CustomLabel>
+          <TextField
+            label="Test Case Input"
+            name="testCaseInput"
+            value={formData.testCases?.[0]?.input || ''}
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                testCases: [{ ...prevData.testCases[0], input: e.target.value }],
+              }))
+            }
+            fullWidth
+            multiline
+          />
+          <TextField
+            label="Test Case Output"
+            name="testCaseOutput"
+            value={formData.testCases?.[0]?.output || ''}
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                testCases: [{ ...prevData.testCases[0], output: e.target.value }],
+              }))
+            }
+            fullWidth
+            multiline
+          />
+          <TextField
+            label="Comments"
+            name="comments"
+            value={formData.comments || ''}
+            onChange={handleChange}
+            fullWidth
+            multiline
+          />
           <FormControl fullWidth>
             <InputLabel>Difficulty</InputLabel>
             <Select
               name="difficulty"
               value={formData.difficulty || ''}
-              readOnly
+              onChange={handleChange}
             >
-              <MenuItem value={formData.difficulty}>{formData.difficulty}</MenuItem>
+              <MenuItem value="Easy">Easy</MenuItem>
+              <MenuItem value="Medium">Medium</MenuItem>
+              <MenuItem value="Hard">Hard</MenuItem>
             </Select>
           </FormControl>
-
-          {/* Additional fields can be added here as necessary */}
+          <TextField
+            label="Companies"
+            name="companies"
+            value={formData.companies?.join(', ') || ''}
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                companies: e.target.value.split(',').map((c) => c.trim()),
+              }))
+            }
+            fullWidth
+          />
+          <TextField
+            label="Topics"
+            name="topics"
+            value={formData.topics?.join(', ') || ''}
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                topics: e.target.value.split(',').map((t) => t.trim()),
+              }))
+            }
+            fullWidth
+          />
+          <TextField
+            label="Hint"
+            name="hint"
+            value={formData.hint || ''}
+            onChange={handleChange}
+            fullWidth
+            multiline
+          />
         </Stack>
       </DialogContent>
       <DialogActions>
