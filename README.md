@@ -101,7 +101,10 @@ Our platform is designed to offer a comprehensive and user-friendly experience, 
 
 The landing page of our platform, offering an overview of features, highlighted problems, and navigation options.
 
-  <img src="assets\home-page1.png" style="border: 1px solid black; box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); ">
+  | Image |
+|-------|
+| ![Description](assets/home-page1.png) |
+  <!-- <img src="assets\home-page1.png" style="border: 1px solid black; box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); "> -->
   <img src="assets\home-page2.png" style="border: 1px solid black; box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); ">
 
 **Problems Page**
