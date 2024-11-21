@@ -34,13 +34,15 @@ const CourseCard = ({ course, comingSoon }) => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
+          gap: 2, //! spacing between title and description
+          p: 3, //! padding
         }}
       >
         <Box>
-          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+          <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
             {course.title}
           </Typography>
-          <Typography variant="body2" sx={{ mt: 1 }}>
+          <Typography variant="body2" sx={{ flexGrow: 1 }}>
             {course.description}
           </Typography>
         </Box>

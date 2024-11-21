@@ -147,18 +147,32 @@ const FeaturedProblemsGrid = ({ problems }) => (
     {problems.map((problem) => (
       <Grid item xs={12} sm={6} md={4} key={problem.id}>
         <FeaturedCard elevation={3}>
-          <CardContent sx={{ flexGrow: 1 }}>
+          <CardContent
+            sx={{
+              flexGrow: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+              p: 3,
+            }}
+          >
             <Typography variant="h7" gutterBottom>
               {problem.title}
             </Typography>
             <Typography variant="body2">{problem.description}</Typography>
           </CardContent>
-          <CardActions>
+          <CardActions
+            sx={{
+              px: 3, //! padding x
+              pb: 3, //! padding bottom
+            }}
+          >
             <Button
               variant="contained"
               size="small"
               color="primary"
               href={problem.link}
+              fullWidth
             >
               Solve Now
             </Button>
@@ -345,11 +359,11 @@ export const Home = () => {
         },
         {
           image: resumeResourcesImage,
-          alt: 'Resume Resources',
-          title: 'Resume Resources',
+          alt: 'Resume Builder',
+          title: 'Resume Builder',
           description:
-            'Craft a standout resume with resources tailored to your career path. Learn how to showcase your skills and experience effectively.',
-          link: 'https://umdearborn.edu/career-services/job-and-internship-prep/resumes-and-cover-letters',
+            'Use our resume builder to craft a standout resume with resources tailored to each job description. Learn how to showcase your skills and experience effectively.',
+          link: '/resume',
         },
       ],
     },
@@ -493,11 +507,9 @@ export const Home = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={() =>
-                navigate(
-                  'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations'
-                )
-              }
+              href="https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations"
+              target="_blank"
+              rel="noopener noreferrer"
               sx={{ mt: 2 }}
             >
               Explore UMD ACM

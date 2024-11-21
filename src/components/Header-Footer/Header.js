@@ -9,17 +9,20 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
-import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import { styled, alpha } from '@mui/material/styles'
+import logo from '../../images/logo-with-text.svg'
+import CenteredCircleLoader from '../utility/CenteredLoader'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import SchoolIcon from '@mui/icons-material/SchoolOutlined'
+import AutoStoriesIcon from '@mui/icons-material/AutoStoriesOutlined'
+import EmojiEventsIcon from '@mui/icons-material/EmojiEventsOutlined'
+import WorkIcon from '@mui/icons-material/WorkOutlineOutlined'
 import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import ContactPageOutlinedIcon from '@mui/icons-material/ContactPageOutlined'
 import Logout from '@mui/icons-material/Logout'
-import logo from '../../images/logo-with-text.svg'
-import CenteredCircleLoader from '../utility/CenteredLoader'
-//import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 
 // component for links without a dropdown menu
 const PageLinks = styled(NavLink)(({ theme }) => ({
@@ -28,7 +31,6 @@ const PageLinks = styled(NavLink)(({ theme }) => ({
   fontWeight: 'bold',
   letterSpacing: '0.01em',
   fontSize: theme.typography.body2.fontSize,
-  borderRadius: theme.spacing(2),
   whiteSpace: 'nowrap',
   padding: theme.spacing(0.5, 1),
   '&.active': {
@@ -40,28 +42,39 @@ const PageLinks = styled(NavLink)(({ theme }) => ({
   },
 }))
 
-// component for links with dropdown menu
+const ArrowIcon = styled(KeyboardArrowDownIcon)(({ theme, isOpen }) => ({
+  transition: 'transform 0.3s ease',
+  marginLeft: theme.spacing(0.5),
+  // rotate icon when dropdown opens
+  transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+}))
+
+// component for header links that have a dropdown menu (courses, problems, account)
 const DropdownWrapper = styled(Box)(({ theme }) => ({
   position: 'relative',
-  display: 'inline-block',
+  display: 'flex',
+  alignItems: 'center',
   height: '100%',
   '&:hover .MuiBox-root': {
     display: 'block',
   },
+  '&:hover .arrow-icon': {
+    transform: 'rotate(180deg)',
+  },
 }))
 
-// component for links with dropdown menu
+// container for opened dropdown menu
 const DropdownContent = styled(Box)(({ theme }) => ({
   display: 'none',
   position: 'absolute',
   backgroundColor: theme.palette.background.paper,
-  minWidth: '160px',
-  boxShadow: theme.shadows[3],
-  border: `1px solid ${theme.palette.divider}`,
-  borderRadius: theme.spacing(0, 0, 1, 1),
+  minWidth: '280px',
+  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+  borderRadius: theme.spacing(0, 0, 2, 2),
   zIndex: 1000,
-  top: 'calc(100% + 19px)',
-  left: '0',
+  top: 'calc(100% + 18px)',
+  border: `1px solid ${theme.palette.divider}`,
+  right: 0,
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -73,28 +86,34 @@ const DropdownContent = styled(Box)(({ theme }) => ({
   },
 }))
 
-// component for links with dropdown menu
+// each link in the dropdown menu
 const DropdownLink = styled(NavLink)(({ theme }) => ({
   color: theme.palette.text.primary,
   padding: theme.spacing(2),
   textDecoration: 'none',
   display: 'flex',
-  alignItems: 'center',
-  fontSize: theme.typography.body2.fontSize,
-  cursor: 'pointer', // Add cursor pointer
+  alignItems: 'flex-start',
+  //fontSize: theme.typography.body2.fontSize,
+  borderRadius: theme.spacing(2),
   '&:hover': {
-    backgroundColor: theme.palette.action.hover, // Change background color on hover
-    color: theme.palette.primary.main, // Change text color on hover
+    backgroundColor: alpha(theme.palette.primary.main, 0.04),
   },
   '& .MuiListItemIcon-root': {
+    // icons in dropdown menu
     minWidth: 'auto',
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(2),
+    marginTop: '2px',
   },
-  '& .MuiListItemText-root': {
-    margin: 0,
+  '& .link-title': {
+    fontWeight: 'bold',
+    fontSize: '0.95rem',
+    marginBottom: '2px',
+  },
+  '& .link-description': {
+    color: theme.palette.primary.light500,
+    fontSize: '0.8rem',
   },
 }))
-
 
 const Header = () => {
   const theme = useTheme()
@@ -136,13 +155,56 @@ const Header = () => {
   }
 
   const problemsDropdown = [
-    { title: 'Competitions', path: '/problems/competitions' },
-    { title: 'Interviews', path: '/problems/interviews' },
+    {
+      title: 'Competitions',
+      path: '/problems/competitions',
+      icon: <EmojiEventsIcon fontSize="small" color="primary" />,
+      description: 'Practice with competitive programming challenges',
+    },
+    {
+      title: 'Interviews',
+      path: '/problems/interviews',
+      icon: <WorkIcon fontSize="small" color="primary" />,
+      description:
+        'Prepare for technical interviews with common FAANG challenges',
+    },
   ]
 
   const coursesDropdown = [
-    { title: 'Course Catalog', path: '/courses' }, //! fix link paths
-    { title: 'My Courses', path: '/courses' }, //! fix link paths
+    {
+      title: 'Course Catalog',
+      path: '/courses',
+      icon: <SchoolIcon fontSize="small" color="primary" />,
+      description: 'Browse our catalog of curated courses ',
+    },
+    {
+      title: 'My Courses',
+      path: '/courses',
+      icon: <AutoStoriesIcon fontSize="small" color="primary" />,
+      description: 'Access your saved courses (coming soon)',
+    },
+  ]
+
+  const accountDropdown = [
+    {
+      title: 'Resume',
+      path: '/resume',
+      icon: <ContactPageOutlinedIcon fontSize="small" color="primary" />,
+      description:
+        'Craft a professional resume with AI tailored to a job description',
+    },
+    {
+      title: 'Help',
+      path: '/help',
+      icon: <HelpOutlineOutlinedIcon fontSize="small" color="primary" />,
+      description: 'Get support and documentation',
+    },
+    {
+      title: 'Logout',
+      path: '#',
+      icon: <Logout fontSize="small" color="primary" />,
+      description: 'Sign out of your account',
+    },
   ]
 
   // function to check if the current path matches the base path
@@ -160,26 +222,26 @@ const Header = () => {
         >
           Home
         </PageLinks>
-        <DropdownWrapper>
+        <DropdownWrapper className="courses-dropdown">
           <PageLinks
             to="/courses"
             className={isPathActive('/courses') ? 'active' : ''}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
+            sx={{ display: 'flex', alignItems: 'center' }}
           >
-            Courses{' '}
-            {/* <KeyboardArrowDownIcon sx={{ fontSize: '0.8rem' }} /> */}
+            Courses <ArrowIcon className="arrow-icon" />
           </PageLinks>
-          <DropdownContent>
+          <DropdownContent className="dropdown-content">
             {coursesDropdown.map((item) => (
               <DropdownLink
                 key={item.path}
                 to={item.path}
                 className={location.pathname === item.path ? 'active' : ''}
               >
-                {item.title}
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <Box>
+                  <div className="link-title">{item.title}</div>
+                  <div className="link-description">{item.description}</div>
+                </Box>
               </DropdownLink>
             ))}
           </DropdownContent>
@@ -190,17 +252,20 @@ const Header = () => {
             className={isPathActive('/problems') ? 'active' : ''}
             sx={{ display: 'flex', alignItems: 'center' }}
           >
-            Problems{' '}
-            {/* <KeyboardArrowDownIcon sx={{ fontSize: '0.8rem' }} /> */}
+            Problems <ArrowIcon className="arrow-icon" />
           </PageLinks>
-          <DropdownContent>
+          <DropdownContent className="dropdown-content">
             {problemsDropdown.map((item) => (
               <DropdownLink
                 key={item.path}
                 to={item.path}
                 className={location.pathname === item.path ? 'active' : ''}
               >
-                {item.title}
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <Box>
+                  <div className="link-title">{item.title}</div>
+                  <div className="link-description">{item.description}</div>
+                </Box>
               </DropdownLink>
             ))}
           </DropdownContent>
@@ -212,7 +277,7 @@ const Header = () => {
         variant="middle"
         sx={{ mx: 1 }}
       />
-      <DropdownWrapper className="dropdown-wrapper">
+      <DropdownWrapper>
         <IconButton
           aria-label="account of current user"
           aria-controls="account-menu"
@@ -220,6 +285,8 @@ const Header = () => {
           onClick={handleAccountMenu}
           sx={{
             color: (theme) => theme.palette.text.primary,
+            padding: theme.spacing(0.5),
+            height: '100%',
             '&:hover': {
               background: (theme) => alpha(theme.palette.text.primary, 0.1),
               transition: 'background-color 0.3s ease',
@@ -231,34 +298,23 @@ const Header = () => {
         <DropdownContent
           sx={{
             display: accountMenuOpen ? 'block' : 'none',
-            right: 0,
-            left: 'auto',
           }}
         >
-          <DropdownLink to="/resume" onClick={handleAccountMenuClose}>
-            <ListItemIcon>
-              <ContactPageOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary="Resume" />
-          </DropdownLink>
-          <DropdownLink to="/help" onClick={handleAccountMenuClose}>
-            <ListItemIcon>
-              <HelpOutlineOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary="Help" />
-          </DropdownLink>
-          <DropdownLink
-            to="#"
-            onClick={() => {
-              handleAccountMenuClose()
-              handleLogout()
-            }}
-          >
-            <ListItemIcon>
-              <Logout fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary="Logout" />
-          </DropdownLink>
+          {accountDropdown.map((item) => (
+            <DropdownLink
+              key={item.path}
+              to={item.path}
+              onClick={
+                item.title === 'Logout' ? handleLogout : handleAccountMenuClose
+              }
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <Box>
+                <div className="link-title">{item.title}</div>
+                <div className="link-description">{item.description}</div>
+              </Box>
+            </DropdownLink>
+          ))}
         </DropdownContent>
       </DropdownWrapper>
     </Box>
@@ -329,7 +385,7 @@ const Header = () => {
           bgcolor: 'transparent',
           borderRadius: '0px',
           boxShadow: 'none',
-          borderBottom: '2px solid #e0e0e0',
+          borderBottom: `2px solid ${theme.palette.divider}`,
         }}
       >
         <Toolbar
