@@ -225,8 +225,8 @@ export const Home = () => {
   const heroContent = {
     title: 'codecoach',
     subtitles: [
-      'AI-powered insights and guidance to help you code smarter, faster, and better.',
-      'Trusted by developers preparing for competitions, interviews, and real-world challenges.',
+      'Powerful, personalized feedback to level up your coding skills and accelerate your growth.',
+      'Unlock your potential with AI-driven coaching tailored just for you.',
     ],
     buttonText: 'Explore Problems',
     buttonLink: '/problems/competitions',
