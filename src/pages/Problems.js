@@ -98,7 +98,7 @@ function Problems() {
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page)
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleSearchChange = useCallback((newSearchQuery) => {
@@ -161,8 +161,9 @@ function Problems() {
 
   return (
     <PageLayout
-      title="Competition Questions"
-      description="Explore and solve ICPC programming challenges from various regions and years"
+      overline="Competition Problems"
+      title="Explore the toughest challenges"
+      subtitle="Sharpen your skills with problems designed for ICPC and other competitive programming events."
     >
       <ProblemsList
         filters={true}
