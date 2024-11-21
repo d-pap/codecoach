@@ -2,10 +2,7 @@
 
 import React, { useState, useRef, useEffect, Suspense } from 'react'
 import { sendResume } from '../api'
-import {
-  Container,
-  Typography,
-} from '@mui/material'
+import { Container, Typography } from '@mui/material'
 import DOMPurify from 'dompurify'
 
 import ResumeForm from '../components/resume/ResumeForm'
@@ -37,7 +34,7 @@ const Resume = () => {
 
   // Chat limit state
   const [chatCount, setChatCount] = useState(0)
-  const chatLimit = 20
+  const chatLimit = 5
 
   // Function to reset chat count if a new day has started
   const resetChatCountIfNeeded = () => {
