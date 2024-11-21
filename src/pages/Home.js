@@ -236,7 +236,7 @@ export const Home = () => {
     {
       title: 'Upcoming Competitions',
       subtitle: 'Check out upcoming competitions and start preparing today',
-      link: 'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations',
+      link: 'https://icpc.global/regionals/finder/na',
       linkText: 'Explore upcoming competitions',
       fullWidthCard: {
         image: competitionImage,
@@ -253,13 +253,13 @@ export const Home = () => {
               ICPC East Central NA Regionals
             </Typography>
             <Typography variant="subtitle2" gutterBottom>
-              Date: Nov. 9, 2024 <br /> Registration Deadline: TBD
+              Date: November 09, 2024 - November 10, 2024 <br /> Registration Deadline: September 26, 2024 - November 05, 2024
             </Typography>
             <Typography variant="h3" gutterBottom sx={{ mt: 'auto' }}>
               ICPC World Finals
             </Typography>
             <Typography variant="subtitle2" gutterBottom sx={{ mb: 'auto' }}>
-              Date: TBD <br /> Registration Deadline: TBD
+              Date: September 15, 2024 - September 20, 2024 <br /> Registration Deadline: TBD
             </Typography>
           </>
         ),

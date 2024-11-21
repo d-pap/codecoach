@@ -116,19 +116,19 @@ const Footer = () => {
                     variant="body2"
                     sx={{ marginBottom: (theme) => theme.spacing(2) }}
                   >
-                    <Link href="/">About</Link>
+                    <Link href="/help">Help</Link>
                   </Typography>
                   <Typography
                     variant="body2"
                     sx={{ marginBottom: (theme) => theme.spacing(2) }}
                   >
-                    <Link href="/">Services</Link>
+                    <Link href="/problems/competitions">Competition</Link>
                   </Typography>
                   <Typography
                     variant="body2"
                     sx={{ marginBottom: (theme) => theme.spacing(2) }}
                   >
-                    <Link href="/">Support</Link>
+                    <Link href="/problems/interviews">Interview</Link>
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -136,25 +136,13 @@ const Footer = () => {
                     variant="body2"
                     sx={{ marginBottom: (theme) => theme.spacing(2) }}
                   >
-                    <Link href="/">Contact Us</Link>
+                    <Link href="/courses">Courses</Link>
                   </Typography>
                   <Typography
                     variant="body2"
                     sx={{ marginBottom: (theme) => theme.spacing(2) }}
                   >
-                    <Link href="/">FAQ</Link>
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ marginBottom: (theme) => theme.spacing(2) }}
-                  >
-                    <Link href="/">Community</Link>
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ marginBottom: (theme) => theme.spacing(2) }}
-                  >
-                    <Link href="/">Feedback</Link>
+                    <Link href="/resume">Resume</Link>
                   </Typography>
                 </Grid>
               </Grid>

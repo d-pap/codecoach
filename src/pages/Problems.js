@@ -161,7 +161,7 @@ function Problems() {
 
   return (
     <PageLayout
-      title="Problems"
+      title="Competition Questions"
       description="Explore and solve ICPC programming challenges from various regions and years"
     >
       <ProblemsList
