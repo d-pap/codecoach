@@ -101,36 +101,34 @@ Our platform is designed to offer a comprehensive and user-friendly experience, 
 
 The landing page of our platform, offering an overview of features, highlighted problems, and navigation options.
 
-|-------|
-| ![Description](assets/home-page1.png) |
-  <!-- <img src="assets\home-page1.png" style="border: 1px solid black; box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); "> -->
-  <img src="assets\home-page2.png" style="border: 1px solid black; box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); ">
+  <img src="assets\home-page1.png" >
+  <img src="assets\home-page2.png" >
 
 **Problems Page**
 
 #### ICPC Practice Problems
 
 Explore a curated list of **ICPC practice problems** tailored for competitive programming contests. Problems are categorized by difficulty, year, and region to help students prepare effectively for the ICPC competition.
-<img src="assets\problems-page1.png" style="border: 1px solid black; box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); ">
+<img src="assets\problems-page1.png" >
 
 #### FAANG Interview Questions
 
 Access a database of **FAANG-style interview questions** designed to help users practice and excel in technical job interviews. Questions can be filtered by category and difficulty to suit individual preparation needs.
 
   
-  <img src="assets\problems-page2.png" style="border: 1px solid black; box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); ">
+  <img src="assets\problems-page2.png" >
 
 **Problem Solving Interface**
 
 A dedicated area where users can view problem details and write, test, and submit their code in an integrated editor.
 
-  <img src="assets\prob-solving-page1.png" style="border: 1px solid black; box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); ">
+  <img src="assets\prob-solving-page1.png">
 
 **AI Assistant**
 
 - Contextual **hints and suggestions** provided by U-M Maizey AI.
 - Breaks down complex problems into manageable steps.
-<img src="assets\AIAssistant.png" style="border: 1px solid black; box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); ">
+<img src="assets\AIAssistant.png" >
 
 **Discussions Tab**
 
