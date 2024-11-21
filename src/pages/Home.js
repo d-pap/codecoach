@@ -150,10 +150,10 @@ const FeaturedProblemsGrid = ({ problems }) => (
           <CardContent
             sx={{
               flexGrow: 1,
-              display: 'flex', //! flex direction column
+              display: 'flex',
               flexDirection: 'column',
-              gap: 1, //! spacing between title and description
-              p: 3, //! padding
+              gap: 1,
+              p: 3,
             }}
           >
             <Typography variant="h7" gutterBottom>
@@ -359,11 +359,11 @@ export const Home = () => {
         },
         {
           image: resumeResourcesImage,
-          alt: 'Resume Resources',
-          title: 'Resume Resources',
+          alt: 'Resume Builder',
+          title: 'Resume Builder',
           description:
-            'Craft a standout resume with resources tailored to your career path. Learn how to showcase your skills and experience effectively.',
-          link: 'https://umdearborn.edu/career-services/job-and-internship-prep/resumes-and-cover-letters',
+            'Use our resume builder to craft a standout resume with resources tailored to each job description. Learn how to showcase your skills and experience effectively.',
+          link: '/resume',
         },
       ],
     },

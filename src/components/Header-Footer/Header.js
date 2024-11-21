@@ -9,7 +9,6 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
-import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import { styled, alpha } from '@mui/material/styles'
 import logo from '../../images/logo-with-text.svg'
@@ -32,7 +31,6 @@ const PageLinks = styled(NavLink)(({ theme }) => ({
   fontWeight: 'bold',
   letterSpacing: '0.01em',
   fontSize: theme.typography.body2.fontSize,
-  borderRadius: theme.spacing(2),
   whiteSpace: 'nowrap',
   padding: theme.spacing(0.5, 1),
   '&.active': {
@@ -51,7 +49,7 @@ const ArrowIcon = styled(KeyboardArrowDownIcon)(({ theme, isOpen }) => ({
   transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
 }))
 
-// component for links with dropdown menu
+// component for header links that have a dropdown menu (courses, problems, account)
 const DropdownWrapper = styled(Box)(({ theme }) => ({
   position: 'relative',
   display: 'flex',
@@ -65,14 +63,14 @@ const DropdownWrapper = styled(Box)(({ theme }) => ({
   },
 }))
 
-// component for links with dropdown menu
+// container for opened dropdown menu
 const DropdownContent = styled(Box)(({ theme }) => ({
   display: 'none',
   position: 'absolute',
   backgroundColor: theme.palette.background.paper,
   minWidth: '280px',
   boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-  borderRadius: theme.spacing(0, 0, 1, 1),
+  borderRadius: theme.spacing(0, 0, 2, 2),
   zIndex: 1000,
   top: 'calc(100% + 18px)',
   border: `1px solid ${theme.palette.divider}`,
@@ -86,36 +84,25 @@ const DropdownContent = styled(Box)(({ theme }) => ({
     height: 20,
     backgroundColor: 'transparent',
   },
-
-  /* '&.dropdown-content': {
-    //! new ------------------------
-    //! added this class for targeting in CSS
-    //! add additional styling here if needed
-    //display: 'block',
-  }, */
 }))
 
-// component for links with dropdown menu
+// each link in the dropdown menu
 const DropdownLink = styled(NavLink)(({ theme }) => ({
   color: theme.palette.text.primary,
   padding: theme.spacing(2),
   textDecoration: 'none',
   display: 'flex',
   alignItems: 'flex-start',
-  fontSize: theme.typography.body2.fontSize,
+  //fontSize: theme.typography.body2.fontSize,
+  borderRadius: theme.spacing(2),
   '&:hover': {
     backgroundColor: alpha(theme.palette.primary.main, 0.04),
   },
-  //! NEW FOR DROPDOWN MENU PAGE TITLES AND DESCRIPTIONS ---------------------------------------------------------------------
   '& .MuiListItemIcon-root': {
-    //! icons in dropdown menu
+    // icons in dropdown menu
     minWidth: 'auto',
     marginRight: theme.spacing(2),
     marginTop: '2px',
-  },
-  '& .MuiListItemText-root': {
-    //! doesnt do anything - can remove it?????????????????????????????????????
-    margin: 0,
   },
   '& .link-title': {
     fontWeight: 'bold',
@@ -123,7 +110,7 @@ const DropdownLink = styled(NavLink)(({ theme }) => ({
     marginBottom: '2px',
   },
   '& .link-description': {
-    color: theme.palette.text.secondary,
+    color: theme.palette.primary.light500,
     fontSize: '0.8rem',
   },
 }))
@@ -298,8 +285,8 @@ const Header = () => {
           onClick={handleAccountMenu}
           sx={{
             color: (theme) => theme.palette.text.primary,
-            padding: theme.spacing(0.5), //! new
-            height: '100%', //! new
+            padding: theme.spacing(0.5),
+            height: '100%',
             '&:hover': {
               background: (theme) => alpha(theme.palette.text.primary, 0.1),
               transition: 'background-color 0.3s ease',
@@ -398,7 +385,7 @@ const Header = () => {
           bgcolor: 'transparent',
           borderRadius: '0px',
           boxShadow: 'none',
-          borderBottom: '2px solid #e0e0e0',
+          borderBottom: `2px solid ${theme.palette.divider}`,
         }}
       >
         <Toolbar
