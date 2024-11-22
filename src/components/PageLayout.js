@@ -8,7 +8,6 @@ const PageLayout = ({ children, title, subtitle, overline, sx = {} }) => {
       maxWidth="lg"
       sx={{
         py: 8,
-        //py: '96px', //! from inspo
       }}
     >
       {/* wrapper for overline, title, subtitle, and optional buttons */}
@@ -16,17 +15,16 @@ const PageLayout = ({ children, title, subtitle, overline, sx = {} }) => {
         sx={{
           textAlign: 'center',
           mb: 4,
-          //mb: '96px', //! from inspo
         }}
       >
         {overline && (
           <Typography
             variant="subtitle2"
             sx={{
-              mb: '12px', //! from inspo
+              mb: '12px',
               fontWeight: 'bold',
               letterSpacing: '0.05em',
-              lineHeight: '24px', //! from inspo
+              lineHeight: '24px',
               color: (theme) => theme.palette.primary.light700,
               fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
             }}
@@ -40,8 +38,8 @@ const PageLayout = ({ children, title, subtitle, overline, sx = {} }) => {
             variant="h2"
             gutterBottom
             sx={{
-              letterSpacing: '-0.02em', //! from inspo
-              mb: '24px', //! from inspo
+              letterSpacing: '-0.02em',
+              mb: '24px',
               fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
             }}
           >
@@ -56,7 +54,7 @@ const PageLayout = ({ children, title, subtitle, overline, sx = {} }) => {
               maxWidth: '800px',
               mx: 'auto',
               mb: 4,
-              lineHeight: '30px', //! from inspo
+              lineHeight: '30px',
               fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
             }}
           >
