@@ -225,8 +225,7 @@ export const Home = () => {
   const heroContent = {
     title: 'codecoach',
     subtitles: [
-      'Powerful, personalized feedback to level up your coding skills and accelerate your growth.',
-      'Unlock your potential with AI-driven coaching tailored just for you.',
+      'Powerful, personalized feedback to level up your skills. Unlock your potential with AI-driven coaching tailored just for you.',
     ],
     buttonText: 'Explore Problems',
     buttonLink: '/problems/competitions',
@@ -414,21 +413,7 @@ export const Home = () => {
             position: 'relative',
             zIndex: 2,
             mb: 4,
-            /* fontSize: {
-              xs: '8vh',
-              sm: '10vh',
-              md: '12vh',
-              lg: '12vh',
-              xl: '12vh',
-            }, */
-            fontSize: '72px',
-            lineHeight: {
-              xs: '6vh',
-              sm: '8vh',
-              md: '10vh',
-              lg: '10vh',
-              xl: '10vh',
-            },
+            fontSize: { xs: '3rem', sm: '4rem', md: '6rem' },
             textAlign: 'center',
           }}
         >
@@ -442,27 +427,12 @@ export const Home = () => {
             sx={{
               position: 'relative',
               zIndex: 2,
-              mt: index === 0 ? 2 : 0,
-              /* fontSize: {
-                xs: '0.875rem',
-                md: '1.25rem',
-              }, */
-              maxWidth: '70%',
-              /* fontSize: {
-                xs: '1rem',
-                sm: '1.226rem',
-                md: '1.5rem',
-                lg: '1.8rem',
-                xl: '2rem',
-              },
-              lineHeight: {
-                xs: '1.2rem',
-                sm: '1.4rem',
-                md: '1.6rem',
-                lg: '1.8rem',
-                xl: '2rem',
-              }, */
-              fontSize: '20px',
+              //mt: index === 0 ? 2 : 0,
+              mt: { xs: 0, sm: 2, md: 4 },
+              fontSize: { xs: '0.875rem', lg: '1.25rem' },
+              maxWidth: { xs: '80%', md: '600px' },
+              lineHeight: { xs: '1rem', md: '1.6rem' },
+              //maxWidth: '60%',
               textAlign: 'center',
             }}
           >
@@ -475,9 +445,9 @@ export const Home = () => {
           size="large"
           onClick={() => navigate(heroContent.buttonLink)}
           sx={{
-            mt: 6,
-            py: 1.5,
-            px: 4,
+            mt: { xs: 4, sm: 6 },
+            py: { xs: 1, md: 1.5 },
+            px: { xs: 3, md: 4 },
             fontWeight: 'bold',
             fontSize: { xs: '0.8rem', sm: '1rem', md: '1.1rem' },
             position: 'relative',
