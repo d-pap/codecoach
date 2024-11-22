@@ -88,10 +88,10 @@ const CookieInfo = () => {
                 <ListItemText
                   primary={
                     <Typography variant="body1">
-                      At CodeCoach, your privacy is our priority. We do not
-                      collect or track any personal information regarding your
-                      usage. This includes how you write code, the duration of
-                      your sessions, or any activities performed on our website.
+                      At CodeCoach, your privacy is our priority. We do not use
+                      cookies to collect or track any personal information
+                      regarding your usage. This includes how you write code,
+                      the duration of your sessions, etc.
                     </Typography>
                   }
                 />
