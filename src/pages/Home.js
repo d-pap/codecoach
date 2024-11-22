@@ -408,7 +408,7 @@ export const Home = () => {
           variant="h1"
           component="h1"
           fontWeight="bold"
-          fontFamily="Helvetica, Arial, sans-serif"
+          //fontFamily="Helvetica,  Arial, sans-serif"
           color="text.primary"
           sx={{
             position: 'relative',
