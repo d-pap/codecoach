@@ -25,13 +25,10 @@ const PageLayout = ({ children, title, subtitle, overline, sx = {} }) => {
             sx={{
               mb: '12px', //! from inspo
               fontWeight: 'bold',
-              //color: '#4e3aba',
-              //fontSize: '0.75rem',
               letterSpacing: '0.05em',
-              //lineHeight: '1rem',
-              //fontSize: '16px', //! from inspo
               lineHeight: '24px', //! from inspo
               color: (theme) => theme.palette.primary.light700,
+              fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
             }}
           >
             {overline}
@@ -43,10 +40,9 @@ const PageLayout = ({ children, title, subtitle, overline, sx = {} }) => {
             variant="h2"
             gutterBottom
             sx={{
-              //fontSize: '48px', //! from inspo - same as normal h1 size in theme.js
-              //lineHeight: '60px', //! from inspo
               letterSpacing: '-0.02em', //! from inspo
               mb: '24px', //! from inspo
+              fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
             }}
           >
             {title}
@@ -60,10 +56,8 @@ const PageLayout = ({ children, title, subtitle, overline, sx = {} }) => {
               maxWidth: '800px',
               mx: 'auto',
               mb: 4,
-              //fontSize: '20px', //! from inspo
               lineHeight: '30px', //! from inspo
-              //fontWeight: 'bold',
-              fontFamily: 'Roboto',
+              fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
             }}
           >
             {subtitle}

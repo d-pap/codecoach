@@ -407,7 +407,7 @@ export const Home = () => {
           variant="h1"
           component="h1"
           fontWeight="bold"
-          //fontFamily="Helvetica, Arial, sans-serif"
+          fontFamily="Inter, Helvetica, Arial, sans-serif"
           color="text.primary"
           sx={{
             position: 'relative',
@@ -428,6 +428,8 @@ export const Home = () => {
               position: 'relative',
               zIndex: 2,
               //mt: index === 0 ? 2 : 0,
+              fontFamily: 'Inter, Helvetica, Arial, sans-serif',
+              fontWeight: 'normal',
               mt: { xs: 0, sm: 2, md: 4 },
               fontSize: { xs: '0.875rem', lg: '1.25rem' },
               maxWidth: { xs: '80%', md: '600px' },
@@ -448,6 +450,7 @@ export const Home = () => {
             mt: { xs: 4, sm: 6 },
             py: { xs: 1, md: 1.5 },
             px: { xs: 3, md: 4 },
+            fontFamily: 'Inter, Helvetica, Arial, sans-serif',
             fontWeight: 'bold',
             fontSize: { xs: '0.8rem', sm: '1rem', md: '1.1rem' },
             position: 'relative',
