@@ -164,6 +164,9 @@ function Problems() {
       overline="Competition Problems"
       title="Explore the toughest challenges"
       subtitle="Sharpen your skills with problems designed for ICPC and other competitive programming events."
+
+      //title="Competition Problems"
+      //subtitle="Sharpen your skills with problems designed for ICPC and other competitive programming events."
     >
       <ProblemsList
         filters={true}

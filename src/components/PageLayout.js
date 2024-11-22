@@ -7,14 +7,16 @@ const PageLayout = ({ children, title, subtitle, overline, sx = {} }) => {
     <Container
       maxWidth="lg"
       sx={{
-        py: '96px', //! from inspo
+        py: 8,
+        //py: '96px', //! from inspo
       }}
     >
       {/* wrapper for overline, title, subtitle, and optional buttons */}
       <Box
         sx={{
           textAlign: 'center',
-          mb: '96px', //! from inspo
+          mb: 4,
+          //mb: '96px', //! from inspo
         }}
       >
         {overline && (
@@ -25,10 +27,11 @@ const PageLayout = ({ children, title, subtitle, overline, sx = {} }) => {
               fontWeight: 'bold',
               //color: '#4e3aba',
               //fontSize: '0.75rem',
-              //letterSpacing: '0.05em',
+              letterSpacing: '0.05em',
               //lineHeight: '1rem',
-              fontSize: '16px', //! from inspo
+              //fontSize: '16px', //! from inspo
               lineHeight: '24px', //! from inspo
+              color: (theme) => theme.palette.primary.light700,
             }}
           >
             {overline}
@@ -37,11 +40,11 @@ const PageLayout = ({ children, title, subtitle, overline, sx = {} }) => {
 
         {title && (
           <Typography
-            variant="h1"
+            variant="h2"
             gutterBottom
             sx={{
-              fontSize: '48px', //! from inspo - same as normal h1 size in theme.js
-              lineHeight: '60px', //! from inspo
+              //fontSize: '48px', //! from inspo - same as normal h1 size in theme.js
+              //lineHeight: '60px', //! from inspo
               letterSpacing: '-0.02em', //! from inspo
               mb: '24px', //! from inspo
             }}
@@ -57,8 +60,10 @@ const PageLayout = ({ children, title, subtitle, overline, sx = {} }) => {
               maxWidth: '800px',
               mx: 'auto',
               mb: 4,
-              fontSize: '20px', //! from inspo
+              //fontSize: '20px', //! from inspo
               lineHeight: '30px', //! from inspo
+              //fontWeight: 'bold',
+              fontFamily: 'Roboto',
             }}
           >
             {subtitle}

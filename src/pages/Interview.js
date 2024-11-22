@@ -158,7 +158,6 @@ function Interview() {
       overline="Interview Problems"
       title="Ace your next interview"
       subtitle="Practice real-world coding challenges asked by top companies. Build confidence and master the art of interviewing."
-      //title="Practice and prepare for technical interviews with a wide range of interview questions from top companies"
     >
       <ProblemsList
         filters={true}

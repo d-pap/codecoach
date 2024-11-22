@@ -408,19 +408,20 @@ export const Home = () => {
           variant="h1"
           component="h1"
           fontWeight="bold"
-          //fontFamily="Helvetica,  Arial, sans-serif"
+          //fontFamily="Helvetica, Arial, sans-serif"
           color="text.primary"
           sx={{
             position: 'relative',
             zIndex: 2,
             mb: 4,
-            fontSize: {
+            /* fontSize: {
               xs: '8vh',
               sm: '10vh',
               md: '12vh',
               lg: '12vh',
               xl: '12vh',
-            },
+            }, */
+            fontSize: '72px',
             lineHeight: {
               xs: '6vh',
               sm: '8vh',
@@ -442,10 +443,10 @@ export const Home = () => {
               position: 'relative',
               zIndex: 2,
               mt: index === 0 ? 2 : 0,
-              fontSize: {
+              /* fontSize: {
                 xs: '0.875rem',
                 md: '1.25rem',
-              },
+              }, */
               maxWidth: '70%',
               /* fontSize: {
                 xs: '1rem',
@@ -461,6 +462,7 @@ export const Home = () => {
                 lg: '1.8rem',
                 xl: '2rem',
               }, */
+              fontSize: '20px',
               textAlign: 'center',
             }}
           >
