@@ -1,5 +1,7 @@
 import React from 'react'
 import { Paper, Typography, IconButton, Box, Tooltip } from '@mui/material'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { useTheme } from '@mui/material/styles'
 import ReactMarkdown from 'react-markdown'
@@ -7,12 +9,98 @@ import rehypeSanitize from 'rehype-sanitize'
 
 // SafeMarkdown component to render and sanitize Markdown content
 const SafeMarkdown = ({ content }) => {
+  const muiTheme = useTheme()
+
   return (
     <ReactMarkdown
       children={content}
       rehypePlugins={[rehypeSanitize]}
       components={{
-        hr: () => null,
+        h1: ({ children }) => (
+          <Typography
+            variant="h1"
+            sx={{
+              fontWeight: 'bold',
+              fontSize: '1.5rem',
+            }}
+          >
+            {children}
+          </Typography>
+        ),
+        h2: ({ children }) => (
+          <Typography
+            variant="h2"
+            sx={{
+              //marginBottom: '0.5em', //! default margin bottom for h2
+              //lineHeight: '0.5',
+              fontWeight: 'bold',
+              fontSize: '1.25rem',
+            }}
+          >
+            {children}
+          </Typography>
+        ),
+        h3: ({ children }) => (
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 'bold',
+              fontSize: '1.125rem',
+            }}
+          >
+            {children}
+          </Typography>
+        ),
+        h4: ({ children }) => (
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 'bold',
+              fontSize: '1rem',
+            }}
+          >
+            {children}
+          </Typography>
+        ),
+        h5: ({ children }) => (
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: 'bold',
+              fontSize: '1rem',
+            }}
+          >
+            {children}
+          </Typography>
+        ),
+        h6: ({ children }) => (
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 'bold',
+              fontSize: '1rem',
+            }}
+          >
+            {children}
+          </Typography>
+        ),
+        p: ({ children }) => (
+          <Typography variant="body1">{children}</Typography>
+        ),
+        strong: ({ children }) => (
+          <Typography component="span" sx={{ fontWeight: 'bold' }}>
+            {children}
+          </Typography>
+        ),
+        ul: ({ children }) => (
+          <Typography
+            component="ul"
+            sx={{ marginLeft: '1.5em', paddingLeft: 0, marginTop: '0em' }}
+          >
+            {children}
+          </Typography>
+        ),
+        //hr: () => null,
       }}
     />
   )
@@ -25,6 +113,18 @@ const ResumeResult = ({ aiResponse, copySuccess, handleCopy, responseRef }) => {
     return null
   }
 
+  //! clean up the AI response markdown to remove formatting (backticks and "markdown" in AI response)
+  const cleanedAiResponse = aiResponse.response.response
+    .replace(/```markdown\n/g, '') // remove opening markdown block
+    .replace(/```$/g, '') // remove closing backticks
+    .trim() // remove any extra whitespace at start/end
+
+  console.log('Cleaned AI Response:', cleanedAiResponse)
+
+  //! split the cleaned AI response into resume and instructions
+  const [resumeContent, instructionsContent] =
+    cleanedAiResponse.split(/\n---\n\n/)
+
   return (
     <Paper
       elevation={2}
@@ -34,21 +134,13 @@ const ResumeResult = ({ aiResponse, copySuccess, handleCopy, responseRef }) => {
         p: { xs: 2, sm: 3, md: 4 },
         backgroundColor: muiTheme.palette.background.default,
         // Enable horizontal scrolling if needed
-        overflowX: 'auto',
+        //overflowX: 'auto',
+        maxWidth: '100%',
       }}
       ref={responseRef}
     >
       {/* Header with "Your Resume Template" and Copy Button */}
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <Typography variant="h5" gutterBottom>
-          Your Resume Template
-        </Typography>
-
+      <Box display="flex" justifyContent="flex-end" alignItems="center" mb={2}>
         {/* Copy to Clipboard IconButton with Tooltip */}
         <Tooltip title="Copy to clipboard">
           <IconButton
@@ -63,39 +155,23 @@ const ResumeResult = ({ aiResponse, copySuccess, handleCopy, responseRef }) => {
 
       {/* Display success message */}
       {copySuccess && (
-        <Typography variant="body2" color="success.main" sx={{ mb: 2 }}>
-          {copySuccess}
-        </Typography>
+        <Snackbar open={copySuccess} autoHideDuration={6000}>
+          <Alert severity="success">{copySuccess}</Alert>
+        </Snackbar>
       )}
 
       {/* Render the resume with Markdown */}
       <Box
         sx={{
-          // Ensure text wraps and doesn't overflow
+          maxWidth: '100%',
+          overflowX: 'hidden',
+          whiteSpace: 'pre-wrap',
           wordWrap: 'break-word',
           overflowWrap: 'break-word',
           wordBreak: 'break-word',
-          // Styles for lists
-          '& ul': {
-            listStyleType: 'disc',
-            marginLeft: '1.5em', // Adjust indentation
-            paddingLeft: 0,
-          },
-          '& ol': {
-            listStyleType: 'decimal',
-            marginLeft: '1.5em', // Adjust indentation
-            paddingLeft: 0,
-          },
-          '& li': {
-            marginBottom: '0.5em', // Optional spacing between items
-          },
-          // Optional: styles for paragraphs inside list items
-          '& li p': {
-            margin: 0,
-          },
         }}
       >
-        <SafeMarkdown content={aiResponse.response.response} />
+        <SafeMarkdown content={resumeContent} />
       </Box>
     </Paper>
   )

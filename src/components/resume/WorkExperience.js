@@ -92,6 +92,7 @@ const WorkExperience = ({ workExperiences, setWorkExperiences }) => {
                 variant="outlined"
                 margin="normal"
                 fullWidth
+                helperText="Enter each responsibility on a new line"
               />
             </Grid>
             <Grid item xs={1}>

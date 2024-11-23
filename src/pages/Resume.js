@@ -98,73 +98,106 @@ const Resume = () => {
     const sanitizedAdditionalComments = DOMPurify.sanitize(additionalComments)
     const sanitizedJobDescription = DOMPurify.sanitize(jobDescription)
 
+    //! validate and transform work experiences, educations, skills, projects, additional activities
+    // they must be an array
+    const validatedWorkExperiences = workExperiences.map((exp) => ({
+      ...exp,
+      responsibilities: Array.isArray(exp.responsibilities)
+        ? exp.responsibilities
+        : typeof exp.responsibilities === 'string'
+          ? exp.responsibilities
+              .split('\n')
+              .map((resp) => resp.trim())
+              .filter((resp) => resp !== '')
+          : [],
+    }))
+
+    const validatedSkills = Array.isArray(skills)
+      ? skills
+      : typeof skills === 'string'
+        ? skills.split(',').map((skill) => skill.trim())
+        : []
+    const validatedAdditionalActivities = Array.isArray(additionalActivities)
+      ? additionalActivities
+      : typeof additionalActivities === 'string'
+        ? additionalActivities.split(',').map((activity) => activity.trim())
+        : []
+
     const message = {
       description: sanitizedDescription,
-      workExperiences,
+      workExperiences: validatedWorkExperiences,
       educations,
-      skills,
+      skills: validatedSkills,
       projects,
-      additionalActivities,
+      additionalActivities: validatedAdditionalActivities,
       additionalComments: sanitizedAdditionalComments,
       jobDescription: sanitizedJobDescription,
     }
 
     const formattedMessage = `
-      I would like to create a professional resume based on the following information:
+    I would like to create a professional resume based on the following information:
 
-      *Job Description:*
-      ${message.jobDescription}
+    *Job Description:*
+    ${message.jobDescription}
 
-      *Personal Description:*
-      ${message.description}
+    *Personal Description:*
+    ${message.description}
 
-      **Work Experiences:**
-      ${message.workExperiences
-        .map(
-          (exp, index) => `
-        ${index + 1}. **Position:** ${exp.position}
-        **Company:** ${exp.company}
-        **Duration:** ${exp.startDate} - ${exp.endDate}
-        **Responsibilities:** 
-        - ${exp.responsibilities}
-        `
-        )
-        .join('\n')}
+    **Work Experiences:**
+    ${message.workExperiences
+      .map(
+        (exp, index) => `
+      ${index + 1}. **Position:** ${exp.position}
+      **Company:** ${exp.company}
+      **Duration:** ${exp.startDate} - ${exp.endDate}
+      **Responsibilities:**
+      - ${
+        Array.isArray(exp.responsibilities)
+          ? exp.responsibilities.join('\n  - ')
+          : exp.responsibilities
+      }
+      `
+      )
+      .join('\n')}
 
-      **Education:**
-      ${message.educations
-        .map(
-          (edu, index) => `
-        ${index + 1}. **Degree:** ${edu.degree}
-        **Field of Study:** ${edu.fieldOfStudy}
-        **Institution:** ${edu.institution}
-        **Duration:** ${edu.startDate} - ${edu.endDate}
-        `
-        )
-        .join('\n')}
+    **Education:**
+    ${message.educations
+      .map(
+        (edu, index) => `
+      ${index + 1}. **Degree:** ${edu.degree}
+      **Field of Study:** ${edu.fieldOfStudy}
+      **Institution:** ${edu.institution}
+      **Duration:** ${edu.startDate} - ${edu.endDate}
+      `
+      )
+      .join('\n')}
 
-      **Skills:**
-      ${message.skills.join(', ')}
+    **Skills:**
+    ${Array.isArray(message.skills) ? message.skills.join(', ') : message.skills}
 
-      **Projects:**
-      ${message.projects
-        .map(
-          (project, index) => `
-        ${index + 1}. **Project Name:** ${project.name}
-        **Role:** ${project.role}
-        **Description:** ${project.description}
-        `
-        )
-        .join('\n')}
+    **Projects:**
+    ${message.projects
+      .map(
+        (project, index) => `
+      ${index + 1}. **Project Name:** ${project.name}
+      **Role:** ${project.role}
+      **Description:** ${project.description}
+      `
+      )
+      .join('\n')}
 
-      **Additional Activities:**
-      ${message.additionalActivities.join(', ')}
+    **Additional Activities:**
+    ${
+      Array.isArray(message.additionalActivities)
+        ? message.additionalActivities.join(', ')
+        : message.additionalActivities
+    }
 
-      **Additional Comments:**
-      ${message.additionalComments}
+    **Additional Comments:**
+    ${message.additionalComments}
 
-      Please organize this information into a well-formatted resume.
-    `
+    Please organize this information into a well-formatted resume.
+  `
 
     console.log('Formatted Message:', formattedMessage)
 
