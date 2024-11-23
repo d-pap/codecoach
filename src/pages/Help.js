@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import { styled } from '@mui/system'
-
+import PageLayout from '../components/PageLayout'
 // Updated SectionTitle component with titleVariant prop
 const SectionTitle = ({ title, subtitle, titleVariant = 'h4' }) => (
   <>
@@ -59,24 +59,11 @@ const Help = () => {
   ]
 
   return (
-    <Container maxWidth="lg">
-      <Typography
-        variant="h2"
-        component="h1"
-        gutterBottom
-        align="center"
-        sx={{ mb: 2, mt: 4 }}
-      >
-        How to CodeCoach Effectively
-      </Typography>
-      <Typography
-        variant="subtitle1"
-        align="center"
-        sx={{ mb: 4, color: 'text.secondary' }}
-      >
-        Learn about how to solve problems, or build a resume using our website.
-        We have made two videos available to help you get started.
-      </Typography>
+    <PageLayout
+      overline="Help"
+      title="We're here to help"
+      subtitle="Need assistance? Find answers to FAQs, guides, and tips to get the most out of your experience."
+    >
       <Box sx={{ mt: { xs: 4, sm: 6, md: 8 } }}>
         {videos.map((video) => (
           <Box key={video.id} sx={{ mb: { xs: 4, sm: 6, md: 8 } }}>
@@ -110,7 +97,7 @@ const Help = () => {
           </Box>
         ))}
       </Box>
-    </Container>
+    </PageLayout>
   )
 }
 

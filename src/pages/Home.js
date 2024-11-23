@@ -224,7 +224,9 @@ export const Home = () => {
 
   const heroContent = {
     title: 'codecoach',
-    subtitles: ['Level up your coding skills', 'with AI-driven feedback'],
+    subtitles: [
+      'Powerful, personalized feedback to level up your skills. Unlock your potential with AI-driven coaching tailored just for you.',
+    ],
     buttonText: 'Explore Problems',
     buttonLink: '/problems/competitions',
   }
@@ -253,13 +255,15 @@ export const Home = () => {
               ICPC East Central NA Regionals
             </Typography>
             <Typography variant="subtitle2" gutterBottom>
-              Date: November 09, 2024 - November 10, 2024 <br /> Registration Deadline: September 26, 2024 - November 05, 2024
+              Date: November 09, 2024 - November 10, 2024 <br /> Registration
+              Deadline: September 26, 2024 - November 05, 2024
             </Typography>
             <Typography variant="h3" gutterBottom sx={{ mt: 'auto' }}>
               ICPC World Finals
             </Typography>
             <Typography variant="subtitle2" gutterBottom sx={{ mb: 'auto' }}>
-              Date: September 15, 2024 - September 20, 2024 <br /> Registration Deadline: TBD
+              Date: September 15, 2024 - September 20, 2024 <br /> Registration
+              Deadline: TBD
             </Typography>
           </>
         ),
@@ -403,26 +407,13 @@ export const Home = () => {
           variant="h1"
           component="h1"
           fontWeight="bold"
-          fontFamily="Helvetica, Arial, sans-serif"
+          fontFamily="Inter, Helvetica, Arial, sans-serif"
           color="text.primary"
           sx={{
             position: 'relative',
             zIndex: 2,
             mb: 4,
-            fontSize: {
-              xs: '8vh',
-              sm: '10vh',
-              md: '12vh',
-              lg: '12vh',
-              xl: '12vh',
-            },
-            lineHeight: {
-              xs: '6vh',
-              sm: '8vh',
-              md: '10vh',
-              lg: '10vh',
-              xl: '10vh',
-            },
+            fontSize: { xs: '3rem', sm: '4rem', md: '6rem' },
             textAlign: 'center',
           }}
         >
@@ -436,21 +427,14 @@ export const Home = () => {
             sx={{
               position: 'relative',
               zIndex: 2,
-              mt: index === 0 ? 2 : 0,
-              fontSize: {
-                xs: '1rem',
-                sm: '1.226rem',
-                md: '1.5rem',
-                lg: '1.8rem',
-                xl: '2rem',
-              },
-              lineHeight: {
-                xs: '1.2rem',
-                sm: '1.4rem',
-                md: '1.6rem',
-                lg: '1.8rem',
-                xl: '2rem',
-              },
+              //mt: index === 0 ? 2 : 0,
+              fontFamily: 'Inter, Helvetica, Arial, sans-serif',
+              fontWeight: 'normal',
+              mt: { xs: 0, sm: 2, md: 4 },
+              fontSize: { xs: '0.875rem', lg: '1.25rem' },
+              maxWidth: { xs: '80%', md: '600px' },
+              lineHeight: { xs: '1rem', md: '1.6rem' },
+              //maxWidth: '60%',
               textAlign: 'center',
             }}
           >
@@ -463,9 +447,10 @@ export const Home = () => {
           size="large"
           onClick={() => navigate(heroContent.buttonLink)}
           sx={{
-            mt: 6,
-            py: 1.5,
-            px: 4,
+            mt: { xs: 4, sm: 6 },
+            py: { xs: 1, md: 1.5 },
+            px: { xs: 3, md: 4 },
+            fontFamily: 'Inter, Helvetica, Arial, sans-serif',
             fontWeight: 'bold',
             fontSize: { xs: '0.8rem', sm: '1rem', md: '1.1rem' },
             position: 'relative',

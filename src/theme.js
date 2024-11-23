@@ -44,12 +44,12 @@ const theme = createTheme({
   },
   spacing: 8, // default spacing unit
   typography: {
-    fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
+    fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
     fontSize: 14, // default font size
     lineHeight: 1.6,
     letterSpacing: 0,
     h1: {
-      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 800,
       fontSize: '3rem',
       lineHeight: '3rem',
@@ -57,35 +57,35 @@ const theme = createTheme({
       letterSpacing: '-0.012em',
     },
     h2: {
-      fontFamily: 'Roboto Flex, Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Roboto, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 700,
       fontSize: '1.875rem',
       lineHeight: '2.25rem',
       color: '#0f172a',
     },
     h3: {
-      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 700,
       fontSize: '1.5rem',
       lineHeight: '2rem',
       color: '#0f172a',
     },
     h4: {
-      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 500,
       fontSize: '1.25rem',
       lineHeight: '1.75rem',
       color: '#0f172a',
     },
     h5: {
-      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 500,
       fontSize: '1.5rem',
       lineHeight: '2rem',
       color: '#0f172a',
     },
     h6: {
-      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
       fontSize: '1.25rem',
       lineHeight: '1.75rem',
       color: '#0f172a',
@@ -144,7 +144,7 @@ const theme = createTheme({
       fontSize: '0.889rem', // match ace editor font size
     },
     button: {
-      fontFamily: 'Helvetica, Roboto, Arial, sans-serif',
+      fontFamily: 'Inter, Helvetica, Roboto, Arial, sans-serif',
       fontWeight: 400,
       fontSize: '0.875rem',
       lineHeight: 1.75,

@@ -115,10 +115,13 @@ function AppContent() {
 
   //! exclude footer on problem solving page only
   const excludeFooterPaths = ['/problems/']
-  const shouldShowFooter = !excludeFooterPaths.some((path) =>
-    location.pathname.startsWith(path)
-  )
-
+  // const shouldShowFooter = !excludeFooterPaths.some((path) =>
+  //   location.pathname.startsWith(path)
+  // )
+  const shouldShowFooter = !(
+    location.pathname.startsWith('/problems/') &&
+    /^\/problems\/[0-9a-fA-F]{24}$/.test(location.pathname)
+  );
   return (
     <>
       {isAuthenticated && <Header />}

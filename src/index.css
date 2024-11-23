@@ -4,8 +4,7 @@ e.g., margins, default fonts, other foundational styles
 */
 body {
   margin: 10;
-  font-family: -apple-system, BlinkMacSystemFont, 'DM Sans', sans-serif;
-  -webkit-font-smoothing: antialiased;
+/*   font-family: -apple-system, BlinkMacSystemFont, 'DM Sans', sans-serif; */  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* padding-right: 0 !important; 
   overflow-y: scroll !important;  */

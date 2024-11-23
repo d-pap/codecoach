@@ -124,8 +124,10 @@ const CourseList = () => {
 
   return (
     <PageLayout
-      title="Courses"
-      description="Join one of our curated courses to learn and practice coding problems. This is your place to prepare for competitive coding events and technical interviews."
+      overline="Courses"
+      title="Learn and level up your skills"
+      subtitle="Access curated courses designed to boost your programming, problem solving, and technical knowledge. Start learning at your own pace."
+      //description="Join one of our curated courses to learn and practice coding problems. This is your place to prepare for competitive coding events and technical interviews."
       sx={{ py: 4 }}
     >
       {/* Featured Courses Section */}

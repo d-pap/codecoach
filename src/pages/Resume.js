@@ -8,7 +8,7 @@ import DOMPurify from 'dompurify'
 import ResumeForm from '../components/resume/ResumeForm'
 import ResumeResult from '../components/resume/ResumeResult'
 import CenteredCircleLoader from '../components/utility/CenteredLoader'
-
+import PageLayout from '../components/PageLayout'
 const SensitiveInfoWarning = React.lazy(
   () => import('../components/resume/SensitiveInfoWarning')
 )
@@ -215,74 +215,45 @@ const Resume = () => {
   }
 
   return (
-    <>
-      {/* Header Section */}
-      <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-        <Typography
-          variant="h2"
-          component="h1"
-          gutterBottom
-          align="center"
-          sx={{ mb: 2 }}
-        >
-          Resume Builder
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          sx={{
-            mb: 4,
-            px: { xs: 2, sm: 4, md: 6 },
-            lineHeight: 1.6,
-            maxWidth: '80vw',
-            mx: 'auto',
-          }}
-        >
-          Welcome to our AI-powered resume builder! Our AI can help generate a
-          polished template, but it may include inaccuracies. Please review and
-          customize the content carefully to ensure accuracy. <br />
-          <br />
-          For your privacy and security, avoid including personal information.{' '}
-          <br />
-        </Typography>
-      </Container>
-
+    <PageLayout
+      overline="Resume Builder"
+      title="Create your perfect resume"
+      subtitle="Stand out in your next application with ease. Enter your details and let AI create a tailored resume designed to match your dream job's description."
+    >
       {/* Main Content */}
-      <Container maxWidth="md">
-        <ResumeForm
-          description={description}
-          setDescription={setDescription}
-          workExperiences={workExperiences}
-          setWorkExperiences={setWorkExperiences}
-          educations={educations}
-          setEducations={setEducations}
-          skills={skills}
-          setSkills={setSkills}
-          projects={projects}
-          setProjects={setProjects}
-          additionalActivities={additionalActivities}
-          setAdditionalActivities={setAdditionalActivities}
-          additionalComments={additionalComments}
-          setAdditionalComments={setAdditionalComments}
-          jobDescription={jobDescription}
-          setJobDescription={setJobDescription}
-          isLoading={isLoading}
-          chatCount={chatCount}
-          chatLimit={chatLimit}
-          handleGenerateClick={handleGenerateClick}
+      <ResumeForm
+        description={description}
+        setDescription={setDescription}
+        workExperiences={workExperiences}
+        setWorkExperiences={setWorkExperiences}
+        educations={educations}
+        setEducations={setEducations}
+        skills={skills}
+        setSkills={setSkills}
+        projects={projects}
+        setProjects={setProjects}
+        additionalActivities={additionalActivities}
+        setAdditionalActivities={setAdditionalActivities}
+        additionalComments={additionalComments}
+        setAdditionalComments={setAdditionalComments}
+        jobDescription={jobDescription}
+        setJobDescription={setJobDescription}
+        isLoading={isLoading}
+        chatCount={chatCount}
+        chatLimit={chatLimit}
+        handleGenerateClick={handleGenerateClick}
+      />
+
+      {isLoading && <CenteredCircleLoader />}
+
+      {aiResponse && (
+        <ResumeResult
+          aiResponse={aiResponse}
+          copySuccess={copySuccess}
+          handleCopy={handleCopy}
+          responseRef={responseRef}
         />
-
-        {isLoading && <CenteredCircleLoader />}
-
-        {aiResponse && (
-          <ResumeResult
-            aiResponse={aiResponse}
-            copySuccess={copySuccess}
-            handleCopy={handleCopy}
-            responseRef={responseRef}
-          />
-        )}
-      </Container>
+      )}
 
       <Suspense fallback={<div>Loading...</div>}>
         <SensitiveInfoWarning
@@ -291,7 +262,7 @@ const Resume = () => {
           onConfirm={handleConfirmWarning}
         />
       </Suspense>
-    </>
+    </PageLayout>
   )
 }
 
