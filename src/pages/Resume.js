@@ -125,8 +125,8 @@ const Resume = () => {
         ${index + 1}. **Position:** ${exp.position}
         **Company:** ${exp.company}
         **Duration:** ${exp.startDate} - ${exp.endDate}
-        **Responsibilities:**
-        - ${exp.responsibilities.join('\n  - ')}
+        **Responsibilities:** 
+        - ${exp.responsibilities}
         `
         )
         .join('\n')}

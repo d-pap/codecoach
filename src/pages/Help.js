@@ -6,7 +6,6 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import CardMedia from '@mui/material/CardMedia'
 import { styled } from '@mui/system'
 import PageLayout from '../components/PageLayout'
 // Updated SectionTitle component with titleVariant prop
@@ -41,21 +40,21 @@ const Help = () => {
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
-  // Video data
+  // Updated Video data with embed URLs
   const videos = [
     {
       id: 1,
       title: 'Using the Built-in Compiler and AI',
       summary:
         'Learn how to solve programming problems using our built-in compiler. Choose from multiple languages like Python, Java, C, and C++. Customize your coding environment with various themes including dark, light, and color-highlighted options. Utilize the AI chat to break down problems, analyze your code, and receive a score. Explore the problem tab for problem statements, the hint tab for quick hints, and the forum for discussions.',
-      videoUrl: 'https://www.youtube.com/embed/your_video_id_1', // Replace with your video URL
+      videoUrl: 'https://www.youtube.com/embed/YUJ7elRJAbQ?si=HDTL_qkRGZUqG2yB',
     },
     {
       id: 2,
       title: 'Resume Builder Overview',
       summary:
         'Discover how to build your resume using our AI-powered resume builder. Add sections such as education, work experience, projects, and skills. Include the job description and additional commands to the AI for a tailored resume. After completion, press submit to generate a resume ready for you to copy. Please note that the generated resume may contain inaccuracies; users are advised to edit it accordingly.',
-      videoUrl: 'https://www.youtube.com/embed/your_video_id_2', // Replace with your video URL
+      videoUrl: 'https://www.youtube.com/embed/tD5C9ciBcXA?si=jO-QkkNVs5tuAvk0',
     },
   ]
 
@@ -70,16 +69,27 @@ const Help = () => {
           <Box key={video.id} sx={{ mb: { xs: 4, sm: 6, md: 8 } }}>
             <SectionTitle title={video.title} subtitle="" titleVariant="h5" />
             <VideoCard>
-              <CardMedia
-                component="iframe"
-                src={video.videoUrl}
-                title={video.title}
+              <Box
                 sx={{
-                  height: isSmallScreen ? '200px' : '400px',
+                  position: 'relative',
+                  paddingTop: '56.25%', // 16:9 Aspect Ratio
                 }}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+              >
+                <iframe
+                  src={video.videoUrl}
+                  title={video.title}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                  }}
+                ></iframe>
+              </Box>
               <CardContent>
                 <Typography variant="body1">{video.summary}</Typography>
               </CardContent>
