@@ -38,23 +38,30 @@ const WorkExperience = ({ workExperiences, setWorkExperiences }) => {
 
   return (
     <Box sx={{ mb: 4 }}>
-      <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
+      <Typography variant="h5" component="h2">
         Work Experience
+      </Typography>
+      <Typography variant="subtitle1" sx={{ mb: 2 }}>
+        Outline your previous roles and responsibilities to showcase your career
+        progression.
       </Typography>
       {workExperiences.map((experience, index) => (
         <Box key={index} sx={{ mb: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={11}>
               <TextField
-                label="Company"
+                label="Company Name"
+                placeholder="e.g., ABC Corporation"
                 value={experience.company}
                 onChange={(e) => handleChange(index, 'company', e.target.value)}
                 variant="outlined"
                 margin="normal"
                 fullWidth
+                helperText="Enter the full name of the company you worked at."
               />
               <TextField
                 label="Position"
+                placeholder="e.g., Software Engineer"
                 value={experience.position}
                 onChange={(e) =>
                   handleChange(index, 'position', e.target.value)
@@ -62,9 +69,11 @@ const WorkExperience = ({ workExperiences, setWorkExperiences }) => {
                 variant="outlined"
                 margin="normal"
                 fullWidth
+                helperText="Specify your official job title during your employment."
               />
               <TextField
                 label="Start Date"
+                placeholder="e.g., June 2020"
                 value={experience.startDate}
                 onChange={(e) =>
                   handleChange(index, 'startDate', e.target.value)
@@ -72,17 +81,21 @@ const WorkExperience = ({ workExperiences, setWorkExperiences }) => {
                 variant="outlined"
                 margin="normal"
                 fullWidth
+                helperText="Provide the month and year you started this role."
               />
               <TextField
                 label="End Date"
+                placeholder="e.g., December 2023"
                 value={experience.endDate}
                 onChange={(e) => handleChange(index, 'endDate', e.target.value)}
                 variant="outlined"
                 margin="normal"
                 fullWidth
+                helperText="If you're currently employed, enter 'Present'. Otherwise, enter the month and year you left the company."
               />
               <TextField
                 label="Responsibilities"
+                placeholder="e.g., Developed and maintained scalable web applications using React and Node.js, Led a team of 5 in developing and deploying new features..."
                 multiline
                 rows={4}
                 value={experience.responsibilities}
@@ -92,7 +105,7 @@ const WorkExperience = ({ workExperiences, setWorkExperiences }) => {
                 variant="outlined"
                 margin="normal"
                 fullWidth
-                helperText="Enter each responsibility on a new line"
+                helperText="List and quantify your key responsibilities and achievements in this role."
               />
             </Grid>
             <Grid item xs={1}>
@@ -113,7 +126,9 @@ const WorkExperience = ({ workExperiences, setWorkExperiences }) => {
         onClick={handleAdd}
         sx={{ mt: 2 }}
       >
-        Add Work Experience
+        {workExperiences.length > 0
+          ? 'Add More Work Experience'
+          : 'Add Work Experience'}
       </Button>
     </Box>
   )
