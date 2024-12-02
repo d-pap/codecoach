@@ -29,19 +29,24 @@ const Skills = ({ skills, setSkills }) => {
 
   return (
     <Box sx={{ mb: 4 }}>
-      <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
+      <Typography variant="h5" component="h2">
         Skills
+      </Typography>
+      <Typography variant="subtitle1" sx={{ mb: 2 }}>
+        List your key skills to demonstrate your professional capabilities.
       </Typography>
       {skills.map((skill, index) => (
         <Grid container spacing={2} key={index}>
           <Grid item xs={11}>
             <TextField
               label={`Skill ${index + 1}`}
+              placeholder="e.g., JavaScript, React, Node.js"
               value={skill}
               onChange={(e) => handleChange(index, e.target.value)}
               variant="outlined"
               margin="normal"
               fullWidth
+              helperText="Enter your skills separated by commas."
             />
           </Grid>
           <Grid item xs={1}>
@@ -61,7 +66,7 @@ const Skills = ({ skills, setSkills }) => {
         onClick={handleAdd}
         sx={{ mt: 2 }}
       >
-        Add Skill
+        {skills.length > 0 ? 'Add More Skills' : 'Add Skill'}
       </Button>
     </Box>
   )

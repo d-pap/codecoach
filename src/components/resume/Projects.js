@@ -32,8 +32,12 @@ const Projects = ({ projects, setProjects }) => {
 
   return (
     <Box sx={{ mb: 4 }}>
-      <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
+      <Typography variant="h5" component="h2">
         Projects
+      </Typography>
+      <Typography variant="subtitle1" sx={{ mb: 2 }}>
+        Showcase your standout projects to highlight your technical and creative
+        capabilities.
       </Typography>
       {projects.map((project, index) => (
         <Box
@@ -48,22 +52,26 @@ const Projects = ({ projects, setProjects }) => {
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={12} sm={5}>
               <TextField
-                label={`Project Name ${index + 1}`}
+                label="Project Name"
+                placeholder="e.g., E-Commerce Website"
                 value={project.name}
                 onChange={(e) => handleChange(index, 'name', e.target.value)}
                 variant="outlined"
                 margin="normal"
                 fullWidth
+                helperText="Enter the name of the project."
               />
             </Grid>
             <Grid item xs={12} sm={5}>
               <TextField
-                label={`Role ${index + 1}`}
+                label="Role"
+                placeholder="e.g., Lead Developer"
                 value={project.role}
                 onChange={(e) => handleChange(index, 'role', e.target.value)}
                 variant="outlined"
                 margin="normal"
                 fullWidth
+                helperText="Enter your role in the project."
               />
             </Grid>
             <Grid item xs={12} sm={2}>
@@ -79,7 +87,8 @@ const Projects = ({ projects, setProjects }) => {
           <Grid container spacing={2} alignItems="flex-start">
             <Grid item xs={12}>
               <TextField
-                label={`Description ${index + 1}`}
+                label="Description"
+                placeholder="e.g., Developed a full stack e-commerce platform using React and Node.js, implemented secure payment processing and user authentication..."
                 value={project.description}
                 onChange={(e) =>
                   handleChange(index, 'description', e.target.value)
@@ -89,6 +98,7 @@ const Projects = ({ projects, setProjects }) => {
                 fullWidth
                 multiline
                 rows={3} // Increased rows for better visibility
+                helperText="Provide a brief overview of the project's objectives, technologies used, and your contributions."
               />
             </Grid>
           </Grid>
@@ -101,7 +111,7 @@ const Projects = ({ projects, setProjects }) => {
         onClick={handleAdd}
         sx={{ mt: 2 }}
       >
-        Add Project
+        {projects.length > 0 ? 'Add More Projects' : 'Add Project'}
       </Button>
     </Box>
   )

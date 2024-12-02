@@ -32,19 +32,25 @@ const AdditionalActivities = ({
 
   return (
     <Box sx={{ mb: 4 }}>
-      <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
+      <Typography variant="h5" component="h2">
         Additional Activities
+      </Typography>
+      <Typography variant="subtitle1" sx={{ mb: 2 }}>
+        Demonstrate your extracurricular involvement and other relevant
+        activities.
       </Typography>
       {additionalActivities.map((activity, index) => (
         <Grid container spacing={2} key={index}>
           <Grid item xs={11}>
             <TextField
               label={`Activity ${index + 1}`}
+              placeholder="e.g., Coding Club Vice President"
               value={activity}
               onChange={(e) => handleChange(index, e.target.value)}
               variant="outlined"
               margin="normal"
               fullWidth
+              helperText="Enter one activity per field. Click 'Add Activity' to add more."
             />
           </Grid>
           <Grid item xs={1}>
