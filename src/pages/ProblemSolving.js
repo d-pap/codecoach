@@ -4,68 +4,66 @@
  * and submit solutions after selecting a problem
  * from the problems list on the Problems page
  */
-
 import React from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import CenteredCircleLoader from '../components/utility/CenteredLoader'
-import { fetchProblemById } from '../api'
+import { fetchProblemById, fetchAdditionalProblemFields } from '../api'
 import ProblemDetailLayout from '../components/problems/ProblemDetailLayout'
 import ProblemDetails from '../components/problems/ProblemDetails'
 
-function ProblemDetail() {
+function ProblemSolving() {
   const location = useLocation()
-  const problemFromLocation = location.state?.problem
-  const { problemId } = useParams() // extract problem ID from URL
-  const queryClient = useQueryClient() // get query client instance
+  const problemFromLocation = location.state?.problem // problem data from Problems page
+  const { problemId } = useParams()
+  const queryClient = useQueryClient()
 
-  // set problem data in the cache if passed from location
+  // cache problem's base fields from location state if available
   if (problemFromLocation) {
-    queryClient.setQueryData(['problem', problemId], problemFromLocation)
+    queryClient.setQueryData(
+      ['problemBaseFields', problemId],
+      problemFromLocation
+    )
   }
 
-  // use react query to get cached problem or fetch new problem if not cached
-  const {
-    data: problem,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ['problem', problemId],
-    queryFn: () => fetchProblemById(problemId),
-    staleTime: 1000 * 60 * 5,
+  // fetch problem's base fields from cache or fetch from server if needed
+  const { data: baseProblemFields, isLoading: isLoadingBaseFields } = useQuery({
+    queryKey: ['problemBaseFields', problemId],
+    queryFn: () => fetchProblemById(problemId), // fetch full fields only if not cached
+    enabled: !problemFromLocation, // fetch only if not already cached
+    staleTime: 1000 * 60 * 30,
+    cacheTime: 1000 * 60 * 60,
     initialData: problemFromLocation,
-    select: (data) => {
-      // remove _id from testCases attribute
-      return {
-        ...data,
-        // eslint-disable-next-line no-unused-vars
-        testCases: data.testCases.map(({ _id, ...rest }) => rest),
-      }
-    },
   })
 
-  if (isLoading) {
-    return <CenteredCircleLoader /> // You can replace this with a skeleton loader if preferred
+  // fetch additional fields
+  const {
+    data: additionalProblemFields,
+    isLoading: isLoadingAdditionalFields,
+  } = useQuery({
+    queryKey: ['problemAdditionalFields', problemId],
+    queryFn: () => fetchAdditionalProblemFields(problemId),
+    enabled: !!baseProblemFields, // fetch only when base fields are available
+    staleTime: 1000 * 60 * 30,
+    cacheTime: 1000 * 60 * 60,
+  })
+
+  const fullProblemData = { ...baseProblemFields, ...additionalProblemFields }
+
+  if (isLoadingBaseFields || isLoadingAdditionalFields) {
+    return <CenteredCircleLoader />
   }
 
-  if (isError) {
-    return <div>Error loading problem: {error.message}</div>
-  }
-
-  if (!problem) {
+  if (!fullProblemData) {
     return <div>Problem not found</div>
   }
 
-  /**
-   * Page rendering
-   */
   return (
     <ProblemDetailLayout
-      problem={problem}
-      problemDetails={<ProblemDetails problem={problem} />}
+      problem={fullProblemData}
+      problemDetails={<ProblemDetails problem={fullProblemData} />}
     />
   )
 }
 
-export default ProblemDetail
+export default ProblemSolving

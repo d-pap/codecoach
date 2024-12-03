@@ -13,10 +13,8 @@ import {
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
-import icpcImage from '../../images/icpc_logo.png'
-import multipleICPCImage from '../../images/pdf-parser.png'
-import interviewImage from '../../images/interview-icon.jpg'
-
+import multipleICPCImage from '../../images/add-icpc.png'
+import interviewImage from '../../images/add-interview.jpg'
 const CardStyled = styled(Card)(({ theme }) => ({
   height: '100%',
   display: 'flex',

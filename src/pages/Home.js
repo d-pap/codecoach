@@ -16,7 +16,6 @@ import { styled } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
 import { CardMedia } from '@mui/material'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
-import grad16 from '../images/Grad_16.png'
 import competitionImage from '../images/competitions2.svg'
 import interviewsImage from '../images/interviewsbw.svg'
 import problemsImage from '../images/problemsbw.svg'
@@ -24,6 +23,7 @@ import signUpImage from '../images/howtosignup.svg'
 import prepareImage from '../images/howtoprepare.svg'
 import behaviorImage from '../images/behavioral.svg'
 import resumeResourcesImage from '../images/resumeresources.svg'
+import grad16webp from '../images/Grad_16.webp'
 
 /**
  * section title component
@@ -147,18 +147,32 @@ const FeaturedProblemsGrid = ({ problems }) => (
     {problems.map((problem) => (
       <Grid item xs={12} sm={6} md={4} key={problem.id}>
         <FeaturedCard elevation={3}>
-          <CardContent sx={{ flexGrow: 1 }}>
+          <CardContent
+            sx={{
+              flexGrow: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+              p: 3,
+            }}
+          >
             <Typography variant="h7" gutterBottom>
               {problem.title}
             </Typography>
             <Typography variant="body2">{problem.description}</Typography>
           </CardContent>
-          <CardActions>
+          <CardActions
+            sx={{
+              px: 3, //! padding x
+              pb: 3, //! padding bottom
+            }}
+          >
             <Button
               variant="contained"
               size="small"
               color="primary"
               href={problem.link}
+              fullWidth
             >
               Solve Now
             </Button>
@@ -210,9 +224,11 @@ export const Home = () => {
 
   const heroContent = {
     title: 'codecoach',
-    subtitles: ['Level up your coding skills', 'with AI-driven feedback'],
+    subtitles: [
+      'Powerful, personalized feedback to level up your skills. Unlock your potential with AI-driven coaching tailored just for you.',
+    ],
     buttonText: 'Explore Problems',
-    buttonLink: '/problems',
+    buttonLink: '/problems/competitions',
   }
 
   /**
@@ -222,7 +238,7 @@ export const Home = () => {
     {
       title: 'Upcoming Competitions',
       subtitle: 'Check out upcoming competitions and start preparing today',
-      link: 'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations',
+      link: 'https://icpc.global/regionals/finder/na',
       linkText: 'Explore upcoming competitions',
       fullWidthCard: {
         image: competitionImage,
@@ -239,13 +255,15 @@ export const Home = () => {
               ICPC East Central NA Regionals
             </Typography>
             <Typography variant="subtitle2" gutterBottom>
-              Date: Nov. 9, 2024 <br /> Registration Deadline: TBD
+              Date: November 09, 2024 - November 10, 2024 <br /> Registration
+              Deadline: September 26, 2024 - November 05, 2024
             </Typography>
             <Typography variant="h3" gutterBottom sx={{ mt: 'auto' }}>
               ICPC World Finals
             </Typography>
             <Typography variant="subtitle2" gutterBottom sx={{ mb: 'auto' }}>
-              Date: TBD <br /> Registration Deadline: TBD
+              Date: September 15, 2024 - September 20, 2024 <br /> Registration
+              Deadline: TBD
             </Typography>
           </>
         ),
@@ -345,11 +363,11 @@ export const Home = () => {
         },
         {
           image: resumeResourcesImage,
-          alt: 'Resume Resources',
-          title: 'Resume Resources',
+          alt: 'Resume Builder',
+          title: 'Resume Builder',
           description:
-            'Craft a standout resume with resources tailored to your career path. Learn how to showcase your skills and experience effectively.',
-          link: 'https://umdearborn.edu/career-services/job-and-internship-prep/resumes-and-cover-letters',
+            'Use our resume builder to craft a standout resume with resources tailored to each job description. Learn how to showcase your skills and experience effectively.',
+          link: '/resume',
         },
       ],
     },
@@ -367,29 +385,35 @@ export const Home = () => {
         height={{ xs: '60vh', sm: '70vh', md: '80vh' }}
         overflow="hidden"
         sx={{
-          backgroundImage: `url(${grad16})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
+          position: 'relative',
+          zIndex: 1,
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: `url(${grad16webp})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.7,
+            zIndex: -1,
+          },
         }}
       >
         <Typography
           variant="h1"
           component="h1"
           fontWeight="bold"
-          fontFamily="Helvetica, Arial, sans-serif"
+          fontFamily="Inter, Helvetica, Arial, sans-serif"
           color="text.primary"
           sx={{
             position: 'relative',
             zIndex: 2,
             mb: 4,
-            fontSize: {
-              xs: '10vh',
-              sm: '10vh',
-              md: '12vh',
-              lg: '12vh',
-              xl: '12vh',
-            },
+            fontSize: { xs: '3rem', sm: '4rem', md: '6rem' },
             textAlign: 'center',
           }}
         >
@@ -403,14 +427,14 @@ export const Home = () => {
             sx={{
               position: 'relative',
               zIndex: 2,
-              mt: index === 0 ? 2 : 0,
-              fontSize: {
-                xs: '1rem',
-                sm: '1.226rem',
-                md: '1.5rem',
-                lg: '1.8rem',
-                xl: '2rem',
-              },
+              //mt: index === 0 ? 2 : 0,
+              fontFamily: 'Inter, Helvetica, Arial, sans-serif',
+              fontWeight: 'normal',
+              mt: { xs: 0, sm: 2, md: 4 },
+              fontSize: { xs: '0.875rem', lg: '1.25rem' },
+              maxWidth: { xs: '80%', md: '600px' },
+              lineHeight: { xs: '1rem', md: '1.6rem' },
+              //maxWidth: '60%',
               textAlign: 'center',
             }}
           >
@@ -423,9 +447,10 @@ export const Home = () => {
           size="large"
           onClick={() => navigate(heroContent.buttonLink)}
           sx={{
-            mt: 6,
-            py: 1.5,
-            px: 4,
+            mt: { xs: 4, sm: 6 },
+            py: { xs: 1, md: 1.5 },
+            px: { xs: 3, md: 4 },
+            fontFamily: 'Inter, Helvetica, Arial, sans-serif',
             fontWeight: 'bold',
             fontSize: { xs: '0.8rem', sm: '1rem', md: '1.1rem' },
             position: 'relative',
@@ -467,11 +492,9 @@ export const Home = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={() =>
-                navigate(
-                  'https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations'
-                )
-              }
+              href="https://umdearborn.edu/cecs/life-cecs/student-clubs-organizations"
+              target="_blank"
+              rel="noopener noreferrer"
               sx={{ mt: 2 }}
             >
               Explore UMD ACM

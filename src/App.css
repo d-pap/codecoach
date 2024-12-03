@@ -17,7 +17,7 @@ Fonts we imported from Google Fonts in `public/index.html`.
 this changes font of links, footer links */
 body {
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-}
+} 
 
 /* this didnt change anything when removed:*/
 html,
@@ -26,11 +26,11 @@ body {
 }
 
 /* this changes the font of the header text */
-h1,
+/* h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif; /* this changes h1 and header text */
-}
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif; 
+}*/

@@ -62,6 +62,14 @@ const EditorSelect = ({ value, onChange, options, currentThemeStyle, sx }) => {
   )
 }
 
+export const languageOptions = [
+  { value: 'python', label: 'Python', id: 71 },
+  { value: 'java', label: 'Java', id: 62 },
+  { value: 'c', label: 'C', id: 50 },
+  { value: 'cpp', label: 'C++', id: 54 },
+  // Add more languages as needed
+]
+
 const CodeEditorToolbar = ({
   theme,
   language,
@@ -71,11 +79,6 @@ const CodeEditorToolbar = ({
   MAX_RUN_SUBMIT_COUNT,
   runSubmitCount,
 }) => {
-  const languageOptions = [
-    { value: 'python', label: 'Python' },
-    // add more languages here
-  ]
-
   const themeOptions = [
     { value: 'monokai', label: 'Monokai' },
     { value: 'dracula', label: 'Dracula' },
@@ -117,14 +120,11 @@ const CodeEditorToolbar = ({
           options={themeOptions}
           currentThemeStyle={currentThemeStyle}
         />
-        <Typography
-          variant="body2"
-          sx={{ p: 1, ml: 'auto', color: currentThemeStyle.color }}
-        >
-          {`You have ${MAX_RUN_SUBMIT_COUNT - runSubmitCount} runs left for today`}
-        </Typography>
-        <Tooltip title="In the development version, you have a limited number of runs and submissions per day. Each run or submission costs 1 run.">
-          <InfoRoundedIcon sx={{ color: currentThemeStyle.color, ml: 1 }} />
+
+        <Tooltip title="You have a limited number of runs and submissions per day. Each run or submission costs 1 run.">
+          <InfoRoundedIcon
+            sx={{ color: currentThemeStyle.color, ml: 'auto' }}
+          />
         </Tooltip>
       </Toolbar>
     </AppBar>

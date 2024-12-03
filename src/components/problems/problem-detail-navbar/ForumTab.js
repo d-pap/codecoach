@@ -1,130 +1,107 @@
-import React, { useState, useEffect } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import React, { useState } from 'react'
 import {
   getCurrentUserId,
-  postForumComment,
-  likeForumComment,
+  getComments,
+  postComment,
+  likeComment,
 } from '../../../api'
 import ForumLayout from './forum-elements/ForumLayout'
 import { FILTER_OPTIONS } from './forum-elements/ForumFilter'
+import CenteredCircleLoader from '../../utility/CenteredLoader'
 
 const ForumTab = () => {
-  const problemId = window.location.pathname.split('/').pop()
-  const [userId, setUserId] = useState(null)
-  const [messages, setMessages] = useState([])
+  const problemId = window.location.pathname.split('/').pop().trim()
   const [newMessage, setNewMessage] = useState('')
   const [filter, setFilter] = useState(FILTER_OPTIONS.MOST_LIKED)
+  const queryClient = useQueryClient()
 
-  useEffect(() => {
-    const loadUserIdAndMessages = async () => {
-      try {
-        const currentUserId = await getCurrentUserId()
-        setUserId(currentUserId)
+  // Get current user
+  const { data: userId, isLoading: isUserLoading } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: getCurrentUserId,
+  })
 
-        // ------------------- Comment out this block -------------------
-        // const messages = await fetchForumComments(problemId);
+  // Get comments
+  const { data: messages = [], isLoading: isCommentsLoading } = useQuery({
+    queryKey: ['comments', problemId],
+    queryFn: () => getComments(problemId),
+    enabled: !!problemId,
+  })
 
-        const messages = [
-          {
-            id: 1,
-            userId: 1,
-            username: 'John Doe',
-            message: 'First message lorem ipsum dolor sit amet',
-            likes: 5,
-            likedBy: [1, 2],
-            timestamp: new Date('2023-10-01'),
-          },
-          {
-            id: 2,
-            userId: 2,
-            username: 'Alice Smith',
-            message:
-              'Second message lorem ipsum dolor sit amet lorem ipsum dolor sit amet',
-            likes: 2,
-            likedBy: [3],
-            timestamp: new Date('2023-10-02'),
-          },
-          {
-            id: 3,
-            userId: 3,
-            username: 'Bob Brown',
-            message:
-              'Third message lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet',
-            likes: 8,
-            likedBy: [1, 2, 3],
-            timestamp: new Date('2023-10-03'),
-          },
-        ]
+  // Post comment mutation
+  const postCommentMutation = useMutation({
+    mutationFn: ({ problemId, userId, message }) =>
+      postComment(problemId, userId, message),
+    onSuccess: (response) => {
+      queryClient.setQueryData(['comments', problemId], (old) => [
+        ...old,
+        {
+          ...response,
+          message: newMessage,
+          userId,
+          likes: 0,
+          likedBy: [],
+          timestamp: new Date(),
+        },
+      ])
+      setNewMessage('')
+    },
+  })
 
-        setMessages(messages)
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      }
-    }
-    loadUserIdAndMessages()
-  }, [problemId])
+  // Like comment mutation
+  const likeCommentMutation = useMutation({
+    mutationFn: ({ problemId, messageId, userId }) =>
+      likeComment(problemId, messageId, userId),
+    onMutate: async ({ messageId }) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries(['comments', problemId])
+
+      // Get current comments
+      const previousComments = queryClient.getQueryData(['comments', problemId])
+
+      // Optimistic update
+      queryClient.setQueryData(['comments', problemId], (old) =>
+        old.map((msg) => {
+          if (msg._id === messageId) {
+            const hasLiked = msg.likedBy.includes(userId)
+            return {
+              ...msg,
+              likes: hasLiked ? msg.likes - 1 : msg.likes + 1,
+              likedBy: hasLiked
+                ? msg.likedBy.filter((id) => id !== userId)
+                : [...msg.likedBy, userId],
+            }
+          }
+          return msg
+        })
+      )
+
+      // Return previous comments for rollback
+      return { previousComments }
+    },
+    onError: (err, variables, context) => {
+      // On error, roll back to the previous state
+      queryClient.setQueryData(
+        ['comments', problemId],
+        context.previousComments
+      )
+    },
+    onSettled: () => {
+      // Always refetch after error or success to ensure consistency
+      queryClient.invalidateQueries(['comments', problemId])
+    },
+  })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (newMessage.trim()) {
-      try {
-        const response = await postForumComment(problemId, userId, newMessage)
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            ...response,
-            message: newMessage,
-            userId,
-            likes: 0,
-            likedBy: [],
-            timestamp: new Date(),
-          },
-        ])
-        setNewMessage('')
-      } catch (error) {
-        console.error('Error posting message:', error)
-      }
+      postCommentMutation.mutate({ problemId, userId, message: newMessage })
     }
   }
 
   const handleLike = async (messageId) => {
-    try {
-      // Optimistically update the frontend state
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) => {
-          if (msg.id === messageId || msg._id === messageId) {
-            if (msg.likedBy.includes(userId)) {
-              // User has already liked the message; do not allow unliking
-              return msg
-            }
-            return {
-              ...msg,
-              likes: msg.likes + 1,
-              likedBy: [...msg.likedBy, userId],
-            }
-          }
-          return msg
-        })
-      )
-
-      // Call the API to like the comment
-      await likeForumComment(messageId, userId)
-    } catch (error) {
-      console.error('Error liking message:', error)
-      // Optionally, revert the optimistic update if API call fails
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) => {
-          if (msg.id === messageId || msg._id === messageId) {
-            return {
-              ...msg,
-              likes: msg.likes - 1,
-              likedBy: msg.likedBy.filter((id) => id !== userId),
-            }
-          }
-          return msg
-        })
-      )
-      alert(error) // Show error message to the user
-    }
+    likeCommentMutation.mutate({ problemId, messageId, userId })
   }
 
   const handleFilterChange = (newFilter) => {
@@ -150,17 +127,31 @@ const ForumTab = () => {
     }
   }
 
+  // Determine if any loading is happening
+  const isLoading =
+    isUserLoading ||
+    isCommentsLoading ||
+    postCommentMutation.isLoading ||
+    likeCommentMutation.isLoading
+
   return (
-    <ForumLayout
-      messages={getFilteredMessages()}
-      newMessage={newMessage}
-      handleLike={handleLike}
-      handleSubmit={handleSubmit}
-      setNewMessage={setNewMessage}
-      filter={filter}
-      onFilterChange={handleFilterChange}
-      userId={userId}
-    />
+    <>
+      {isLoading ? (
+        <CenteredCircleLoader />
+      ) : (
+        <ForumLayout
+          messages={getFilteredMessages()}
+          newMessage={newMessage}
+          handleLike={handleLike}
+          handleSubmit={handleSubmit}
+          setNewMessage={setNewMessage}
+          filter={filter}
+          onFilterChange={handleFilterChange}
+          userId={userId}
+          isLoading={isLoading}
+        />
+      )}
+    </>
   )
 }
 
